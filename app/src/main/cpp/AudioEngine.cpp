@@ -7,6 +7,7 @@
 #include <thread>
 #include <mutex>
 #include "AudioEngine.h"
+#include "SoundGenerator.h"
 
 constexpr int32_t kBufferSizeInBursts = 2;
 
@@ -17,10 +18,16 @@ aaudio_data_callback_result_t dataCallback(
         int32_t numFrames) {
 
     auto * audioDataFloat = static_cast<float *>(audioData);
-
+    float audioSum = 0.0f;
+    auto * audioEngine = static_cast<class AudioEngine *>(userData);
     for(uint32_t i=0;i<numFrames;i++)
     {
-        *(audioDataFloat + i) = 0.0f;
+        for (uint8_t c=0;c<audioEngine->getNSoundGenerators();c++)
+        {
+            audioSum = audioEngine->getSoundGenerator(c)->getNextSample();
+        }
+        audioSum /= (float)audioEngine->getNSoundGenerators();
+        *(audioDataFloat + i) = audioSum;
     }
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
 }
@@ -91,3 +98,27 @@ void AudioEngine::restart() {
 int32_t AudioEngine::getSamplingRate() const {
     return samplingRate;
 }
+
+int8_t AudioEngine::getNSoundGenerators() {
+    return nSoundGenerators;
+}
+
+AudioEngine::AudioEngine() {
+    nSoundGenerators = 0;
+    soundGenerators=(SoundGenerator**)(64*sizeof(SoundGenerator*));
+}
+
+AudioEngine::~AudioEngine() {
+    free(soundGenerators);
+
+}
+
+SoundGenerator *AudioEngine::getSoundGenerator(uint8_t idx) {
+    if (idx < nSoundGenerators)
+    {
+        return *(soundGenerators + idx);
+    }
+    return nullptr;
+}
+
+

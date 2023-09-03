@@ -27,6 +27,11 @@ project("touchsamplesynth")
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         AudioEngine.cpp
+        SineOscillator.cpp
+        AdrsEnvelope.cpp
+        SoundGenerator.cpp
+        MusicalSoundGenerator.cpp
+        SineMonoSynth.cpp
         jni-bridge.cpp
         native-lib.cpp)
 
