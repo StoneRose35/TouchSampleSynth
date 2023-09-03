@@ -6,14 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".TouchSampleSynthMain">
 
-    <TextView
-        android:id="@+id/sample_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <ch.sr35.touchsamplesynth.views.TouchElement
+        android:id="@+id/touchElement"
+        android:layout_width="166dp"
+        android:layout_height="134dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+         />
+
+    <ImageButton
+        android:id="@+id/buttonStart"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="21dp"
+        android:src="@drawable/buttonplay"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buttonStop"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="11dp"
+        android:src="@drawable/buttonstop"
+        app:layout_constraintEnd_toStartOf="@+id/buttonStart"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ch.sr35.touchsamplesynth.views.vuMeter
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="11dp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonStop"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ch.sr35.touchsamplesynth.views.vuMeter>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

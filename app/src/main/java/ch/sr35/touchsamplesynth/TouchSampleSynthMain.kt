@@ -19,9 +19,8 @@ class TouchSampleSynthMain : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Example of a call to a native method
-        binding.sampleText.text = String.format("Sampling Rate: %d", getSamplingRate()) //stringFromJNI()
 
+        supportActionBar?.hide()
         startEngine()
     }
 
