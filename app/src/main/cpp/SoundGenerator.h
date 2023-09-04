@@ -11,5 +11,13 @@ public:
     virtual float getNextSample();
 };
 
+enum SoundGeneratorType
+{
+    SINE_MONO_SYNTH = 0,
+    ANALOGUE_SYNTH = 1,
+    FM_SYNTH = 2,
+    SAMPLER = 3
+};
+
 
 #endif //TOUCHSAMPLESYNTH_SOUNDGENERATOR_H

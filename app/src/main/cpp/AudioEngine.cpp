@@ -8,6 +8,8 @@
 #include <mutex>
 #include "AudioEngine.h"
 #include "SoundGenerator.h"
+#include "MusicalSoundGenerator.h"
+#include "SineMonoSynth.h"
 
 constexpr int32_t kBufferSizeInBursts = 2;
 
@@ -105,7 +107,7 @@ int8_t AudioEngine::getNSoundGenerators() {
 
 AudioEngine::AudioEngine() {
     nSoundGenerators = 0;
-    soundGenerators=(SoundGenerator**)(64*sizeof(SoundGenerator*));
+    soundGenerators=(MusicalSoundGenerator**)(64*sizeof(MusicalSoundGenerator*));
 }
 
 AudioEngine::~AudioEngine() {
@@ -113,12 +115,30 @@ AudioEngine::~AudioEngine() {
 
 }
 
-SoundGenerator *AudioEngine::getSoundGenerator(uint8_t idx) {
+MusicalSoundGenerator *AudioEngine::getSoundGenerator(uint8_t idx) {
     if (idx < nSoundGenerators)
     {
         return *(soundGenerators + idx);
     }
     return nullptr;
+}
+
+uint32_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
+    SineMonoSynth *  sg;
+    switch(sgt)
+    {
+        case SINE_MONO_SYNTH:
+            sg=new SineMonoSynth();
+            soundGenerators[nSoundGenerators++] = sg;
+            break;
+        case ANALOGUE_SYNTH:
+            break;
+        case FM_SYNTH:
+            break;
+        case SAMPLER:
+            break;
+    }
+    return nSoundGenerators-1;
 }
 
 

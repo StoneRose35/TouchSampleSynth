@@ -9,10 +9,10 @@
 #include "SineOscillator.h"
 #include <stdlib.h>
 
-class SineMonoSynth: MusicalSoundGenerator {
+class SineMonoSynth: public MusicalSoundGenerator {
 private:
-    SineOscillator osc;
-    AdrsEnvelope env;
+    SineOscillator * osc;
+    AdrsEnvelope * env;
     float sampleRate;
     int8_t envelopeUpdateInterval;
     int8_t currentSample;

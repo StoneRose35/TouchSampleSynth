@@ -7,7 +7,7 @@
 
 #include "SoundGenerator.h"
 
-class MusicalSoundGenerator: SoundGenerator {
+class MusicalSoundGenerator: public SoundGenerator {
 public:
     virtual void setNote(float note);
     virtual void switchOn(float velocity);

@@ -11,13 +11,13 @@ static AudioEngine *audioEngine = new AudioEngine();
 extern "C" {
 
 JNIEXPORT void JNICALL
-Java_ch_sr35_touchsamplesynth_TouchSampleSynthMain_touchEvent(JNIEnv *env, jobject obj, jint action) {
+Java_ch_sr35_touchsamplesynth_TouchSampleSynthMain_touchEvent(JNIEnv *env, jobject obj, jint action, jint soundGenerator) {
     switch (action) {
         case AMOTION_EVENT_ACTION_DOWN:
-            //audioEngine->setToneOn(true);
+            audioEngine->getSoundGenerator(soundGenerator)->switchOn(1.0f);
             break;
         case AMOTION_EVENT_ACTION_UP:
-            //audioEngine->setToneOn(false);
+            audioEngine->getSoundGenerator(soundGenerator)->switchOff(1.0f);
             break;
         default:
             break;
@@ -39,5 +39,7 @@ Java_ch_sr35_touchsamplesynth_TouchSampleSynthMain_getSamplingRate(JNIEnv *env, 
 {
     return audioEngine->getSamplingRate();
 }
+
+
 
 }

@@ -5,15 +5,15 @@
 #include "SineMonoSynth.h"
 
 float SineMonoSynth::getNextSample() {
-    if (env.isSounding()) {
-        float nsample = osc.getNextSample();
+    if (env->isSounding()) {
+        float nsample = osc->getNextSample();
         nsample = nsample * (envelopeVals[0] +
                              (envelopeVals[1] - envelopeVals[0]) / (float) envelopeUpdateInterval *
                              (float) currentSample);
         currentSample++;
         if (currentSample == envelopeUpdateInterval) {
             envelopeVals[0] = envelopeVals[1];
-            envelopeVals[1] = env.getValue((float) envelopeUpdateInterval / sampleRate);
+            envelopeVals[1] = env->getValue((float) envelopeUpdateInterval / sampleRate);
             currentSample = 0;
         }
         return  nsample;
@@ -22,8 +22,8 @@ float SineMonoSynth::getNextSample() {
 }
 
 SineMonoSynth::SineMonoSynth() {
-    osc = SineOscillator(48000.0f);
-    env = AdrsEnvelope();
+    osc = new SineOscillator(48000.0f);
+    env = new AdrsEnvelope();
     sampleRate = 48000.0f;
     envelopeVals[0]=0.0f;
     envelopeVals[1]=0.0f;
@@ -32,12 +32,16 @@ SineMonoSynth::SineMonoSynth() {
 }
 
 void SineMonoSynth::setNote(float note) {
-
+    osc->setNote(note);
 }
 
-void SineMonoSynth::switchOn(float velocity) {}
+void SineMonoSynth::switchOn(float velocity) {
+    env->switchOn();
+}
 
-void SineMonoSynth::switchOff(float velocity) {}
+void SineMonoSynth::switchOff(float velocity) {
+    env->switchOff();
+}
 
 SineMonoSynth::~SineMonoSynth() {
 

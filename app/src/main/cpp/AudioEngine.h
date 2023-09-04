@@ -7,6 +7,8 @@
 
 #include "aaudio/AAudio.h"
 #include "SoundGenerator.h"
+#include "MusicalSoundGenerator.h"
+
 class AudioEngine {
 
 public:
@@ -16,14 +18,15 @@ public:
     int32_t getSamplingRate() const;
 
     int8_t getNSoundGenerators();
-    SoundGenerator * getSoundGenerator(uint8_t);
+    MusicalSoundGenerator * getSoundGenerator(uint8_t);
+    uint32_t addSoundGenerator(SoundGeneratorType);
     AudioEngine();
     ~AudioEngine();
 
 private:
     AAudioStream *stream_;
     int32_t samplingRate;
-    SoundGenerator ** soundGenerators;
+    MusicalSoundGenerator ** soundGenerators;
     int8_t nSoundGenerators;
 };
 
