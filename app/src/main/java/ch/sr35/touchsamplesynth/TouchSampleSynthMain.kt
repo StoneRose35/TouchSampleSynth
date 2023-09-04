@@ -7,11 +7,11 @@ import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 class TouchSampleSynthMain : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private external fun stringFromJNI(): String
-    private external fun touchEvent(action: Int)
-    private external fun startEngine()
-    private external fun stopEngine()
-    private external fun getSamplingRate(): Int
+    external fun stringFromJNI(): String
+    external fun touchEvent(action: Int,soundGenerator: Int)
+    external fun startEngine()
+    external fun stopEngine()
+    external fun getSamplingRate(): Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
