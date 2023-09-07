@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.views
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,11 +9,12 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
-
+const val PADDING: Float = 32.0f
+const val EDIT_CIRCLE_OFFSET = 24.0f
 class TouchElement(context: Context, attributes: AttributeSet): View(context,attributes) {
-    private val PADDING: Float = 32.0f
-    private val EDIT_CIRCLE_OFFSET = 24.0f
+
     enum class ActionDir
     {
         HORIZONTAL,
@@ -35,19 +35,19 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
         BOTTOM_RIGHT
     }
 
-    var actionDir: ActionDir = ActionDir.HORIZONTAL
-    var playerId: UInt = 0u
-    val blackLine: Paint = Paint()
-    val fillColor: Paint = Paint()
-    val blackLineFat: Paint = Paint()
-    val blackFill: Paint = Paint()
-    var cornerRadius = 0.0f
-    lateinit var dragStart: TouchElementDragAnchor
-    var px: Float = 0.0f
-    var py: Float = 0.0f
-    var oldWidth: Int = 0
-    var oldHeight: Int = 0
-    private var elementState: TouchElementState = TouchElementState.EDITING
+    private var actionDir: ActionDir = ActionDir.HORIZONTAL
+    private val blackLine: Paint = Paint()
+    private val fillColor: Paint = Paint()
+    private val blackLineFat: Paint = Paint()
+    private val blackFill: Paint = Paint()
+    private var cornerRadius = 0.0f
+    private lateinit var dragStart: TouchElementDragAnchor
+    private var px: Float = 0.0f
+    private var py: Float = 0.0f
+    private var oldWidth: Int = 0
+    private var oldHeight: Int = 0
+    private var elementState: TouchElementState = TouchElementState.PLAYING
+    private var soundGenerator: MusicalSoundGenerator? = null
 
     init {
         blackLine.color = Color.BLACK
@@ -72,9 +72,9 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        val w = (width ?: 0).toFloat()
-        val h = (height ?: 0).toFloat()
-        var arrowSize: Float = 0.0f
+        val w = width.toFloat()
+        val h = height.toFloat()
+        val arrowSize: Float
         // draw oval
         canvas?.drawRoundRect(0.0f+PADDING,0.0f+PADDING,w-PADDING,h-PADDING ,cornerRadius,cornerRadius,fillColor)
         canvas?.drawRoundRect(0.0f+PADDING,0.0f+PADDING,w-PADDING,h-PADDING ,cornerRadius,cornerRadius,blackLine)
@@ -112,91 +112,98 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
 
-    if (w > h)
-    {
-        cornerRadius =  (h/8.0).toFloat()
-    }
-    else
-    {
-        cornerRadius = (w/8.0).toFloat()
-    }
+        cornerRadius = if (w > h)
+        {
+            (h/8.0).toFloat()
+        }
+        else
+        {
+            (w/8.0).toFloat()
+        }
         super.onSizeChanged(w, h, oldw, oldh)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (elementState == TouchElementState.PLAYING) {
             if (event?.action == MotionEvent.ACTION_DOWN) {
-                fillColor.color =
-                    context.resources.getColor(R.color.touchelement_touched, context.theme)
+                performClick()
             } else if (event?.action == MotionEvent.ACTION_UP) {
                 fillColor.color =
                     context.resources.getColor(R.color.touchelement_not_touched, context.theme)
+                soundGenerator?.switchOff(1.0f)
             }
             invalidate()
             return true //super.onTouchEvent(event)
         }
         else
         {
-            if (event?.action == MotionEvent.ACTION_DOWN) {
-                // start a corner drag if a corner has been hit, else move the whole element
-                px = event.x
-                py = event.y
-                val layoutParams: ConstraintLayout.LayoutParams? =  this.layoutParams as ConstraintLayout.LayoutParams?
-                if (layoutParams != null) {
-                    oldHeight = layoutParams.height
-                    oldWidth = layoutParams.width
+            when (event?.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // start a corner drag if a corner has been hit, else move the whole element
+                    px = event.x
+                    py = event.y
+                    val layoutParams: ConstraintLayout.LayoutParams? =  this.layoutParams as ConstraintLayout.LayoutParams?
+                    if (layoutParams != null) {
+                        oldHeight = layoutParams.height
+                        oldWidth = layoutParams.width
+                    }
+                    dragStart = isInCorner(event.x ,event.y )
                 }
-                dragStart = isInCorner(event.x ,event.y )
-            }
-            else if (event?.action == MotionEvent.ACTION_UP)
-            {
+                MotionEvent.ACTION_UP -> {
 
-            }
-            else if (event?.action == MotionEvent.ACTION_MOVE)
-            {
-                val layoutParams: ConstraintLayout.LayoutParams? =  this.layoutParams as ConstraintLayout.LayoutParams?
-                when(dragStart)
-                {
-                    TouchElementDragAnchor.TOP_LEFT -> {
-                        layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                        layoutParams!!.width += px.minus(event.x).toInt()
-                        layoutParams!!.topMargin += event.y.minus(py).toInt()
-                        layoutParams!!.height += py.minus(event.y).toInt()
-
-                    }
-                    TouchElementDragAnchor.TOP_RIGHT ->
-                    {
-                        layoutParams!!.width =oldWidth + event.x.minus(px).toInt()
-                        layoutParams.topMargin += event.y.minus(py).toInt()
-                        layoutParams.height += py.minus(event.y).toInt()
-                    }
-                    TouchElementDragAnchor.BOTTOM_RIGHT ->
-                    {
-                        layoutParams!!.width =oldWidth + event.x.minus(px).toInt()
-                        layoutParams.height = oldHeight + event.y.minus(py).toInt()
-                    }
-                    TouchElementDragAnchor.BOTTOM_LEFT ->
-                    {
-                        layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                        layoutParams!!.width += px.minus(event.x).toInt()
-                        layoutParams!!.height = oldHeight + event.y.minus(py).toInt()
-                    }
-                    else -> {
-                        layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                        layoutParams!!.topMargin += event.y.minus(py).toInt()
-                    }
                 }
-                this.layoutParams = layoutParams
+                MotionEvent.ACTION_MOVE -> {
+                    val layoutParams: ConstraintLayout.LayoutParams? =  this.layoutParams as ConstraintLayout.LayoutParams?
+                    when(dragStart) {
+                        TouchElementDragAnchor.TOP_LEFT -> {
+                            layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                            layoutParams!!.width += px.minus(event.x).toInt()
+                            layoutParams!!.topMargin += event.y.minus(py).toInt()
+                            layoutParams!!.height += py.minus(event.y).toInt()
+
+                        }
+
+                        TouchElementDragAnchor.TOP_RIGHT -> {
+                            layoutParams!!.width =oldWidth + event.x.minus(px).toInt()
+                            layoutParams.topMargin += event.y.minus(py).toInt()
+                            layoutParams.height += py.minus(event.y).toInt()
+                        }
+
+                        TouchElementDragAnchor.BOTTOM_RIGHT -> {
+                            layoutParams!!.width =oldWidth + event.x.minus(px).toInt()
+                            layoutParams.height = oldHeight + event.y.minus(py).toInt()
+                        }
+
+                        TouchElementDragAnchor.BOTTOM_LEFT -> {
+                            layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                            layoutParams!!.width += px.minus(event.x).toInt()
+                            layoutParams!!.height = oldHeight + event.y.minus(py).toInt()
+                        }
+
+                        else -> {
+                            layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                            layoutParams!!.topMargin += event.y.minus(py).toInt()
+                        }
+                    }
+                    this.layoutParams = layoutParams
+                }
             }
-            return true;
+            return true
         }
         //return super.onTouchEvent(event);
     }
 
+    override fun performClick(): Boolean {
+        fillColor.color =
+            context.resources.getColor(R.color.touchelement_touched, context.theme)
+        soundGenerator?.switchOn(1.0f)
+        return super.performClick()
+    }
+
     private fun isInCorner(x: Float, y: Float): TouchElementDragAnchor
     {
-        val w = (width ?: 0).toFloat()
-        val h = (height ?: 0).toFloat()
+        val w = width.toFloat()
+        val h = height.toFloat()
         if (((x-(0.0f+EDIT_CIRCLE_OFFSET))*(x-(0.0f+EDIT_CIRCLE_OFFSET))
                     + (y-(0.0f+EDIT_CIRCLE_OFFSET))*(y-(0.0f+EDIT_CIRCLE_OFFSET)))
             <EDIT_CIRCLE_OFFSET*EDIT_CIRCLE_OFFSET)
@@ -207,23 +214,34 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
                     + (y-(0.0f+EDIT_CIRCLE_OFFSET))*(y-(0.0f+EDIT_CIRCLE_OFFSET)))
             <EDIT_CIRCLE_OFFSET*EDIT_CIRCLE_OFFSET)
         {
-            return TouchElementDragAnchor.TOP_RIGHT;
+            return TouchElementDragAnchor.TOP_RIGHT
         }
         else if (((x-(w-EDIT_CIRCLE_OFFSET))*(x-(w-EDIT_CIRCLE_OFFSET))
                     + (y-(h-EDIT_CIRCLE_OFFSET))*(y-(h-EDIT_CIRCLE_OFFSET)))
             <EDIT_CIRCLE_OFFSET*EDIT_CIRCLE_OFFSET)
         {
-            return TouchElementDragAnchor.BOTTOM_RIGHT;
+            return TouchElementDragAnchor.BOTTOM_RIGHT
         }
         else if (((x-(0.0f+EDIT_CIRCLE_OFFSET))*(x-(0.0f+EDIT_CIRCLE_OFFSET))
                     + (y-(h-EDIT_CIRCLE_OFFSET))*(y-(h-EDIT_CIRCLE_OFFSET)))
             <EDIT_CIRCLE_OFFSET*EDIT_CIRCLE_OFFSET)
         {
-            return TouchElementDragAnchor.BOTTOM_LEFT;
+            return TouchElementDragAnchor.BOTTOM_LEFT
         }
         else
         {
-            return TouchElementDragAnchor.BODY;
+            return TouchElementDragAnchor.BODY
         }
     }
+
+    fun setSoundGenerator(sg: MusicalSoundGenerator)
+    {
+        soundGenerator = sg
+    }
+
+   fun getSoundGenerator(): MusicalSoundGenerator?
+    {
+        return soundGenerator
+    }
+
 }

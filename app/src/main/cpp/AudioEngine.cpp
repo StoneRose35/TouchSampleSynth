@@ -11,7 +11,9 @@
 #include "MusicalSoundGenerator.h"
 #include "SineMonoSynth.h"
 
+#define N_SOUND_GENERATORS 64
 constexpr int32_t kBufferSizeInBursts = 2;
+static AudioEngine *audioEngine = new AudioEngine();
 
 aaudio_data_callback_result_t dataCallback(
         AAudioStream *stream,
@@ -21,12 +23,14 @@ aaudio_data_callback_result_t dataCallback(
 
     auto * audioDataFloat = static_cast<float *>(audioData);
     float audioSum = 0.0f;
-    auto * audioEngine = static_cast<class AudioEngine *>(userData);
+    //auto * audioEngineInstance = static_cast<class AudioEngine *>(userData);
     for(uint32_t i=0;i<numFrames;i++)
     {
-        for (uint8_t c=0;c<audioEngine->getNSoundGenerators();c++)
+        for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
         {
-            audioSum = audioEngine->getSoundGenerator(c)->getNextSample();
+            if (audioEngine->getSoundGenerator(c) != nullptr) {
+                audioSum = audioEngine->getSoundGenerator(c)->getNextSample();
+            }
         }
         audioSum /= (float)audioEngine->getNSoundGenerators();
         *(audioDataFloat + i) = audioSum;
@@ -50,7 +54,7 @@ bool AudioEngine::start() {
     AAudioStreamBuilder_setFormat(streamBuilder, AAUDIO_FORMAT_PCM_FLOAT);
     AAudioStreamBuilder_setChannelCount(streamBuilder, 1);
     AAudioStreamBuilder_setPerformanceMode(streamBuilder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
-    AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallback, this);
+    AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallback, nullptr);
     AAudioStreamBuilder_setErrorCallback(streamBuilder, ::errorCallback, this);
 
     // Opens the stream.
@@ -102,12 +106,24 @@ int32_t AudioEngine::getSamplingRate() const {
 }
 
 int8_t AudioEngine::getNSoundGenerators() {
-    return nSoundGenerators;
+    int8_t cntr = 0;
+    for (uint8_t c=0;c<N_SOUND_GENERATORS;c++)
+    {
+        if (*(soundGenerators+c) != nullptr)
+        {
+            cntr++;
+        }
+    }
+    return cntr;
 }
 
 AudioEngine::AudioEngine() {
-    nSoundGenerators = 0;
-    soundGenerators=(MusicalSoundGenerator**)(64*sizeof(MusicalSoundGenerator*));
+    soundGenerators=(MusicalSoundGenerator**)malloc(N_SOUND_GENERATORS*sizeof(MusicalSoundGenerator*));
+    for (uint16_t c=0;c<N_SOUND_GENERATORS;c++)
+    {
+        *(soundGenerators + c) = nullptr;
+    }
+
 }
 
 AudioEngine::~AudioEngine() {
@@ -115,21 +131,33 @@ AudioEngine::~AudioEngine() {
 
 }
 
-MusicalSoundGenerator *AudioEngine::getSoundGenerator(uint8_t idx) {
-    if (idx < nSoundGenerators)
+MusicalSoundGenerator *AudioEngine::getSoundGenerator(int8_t idx) {
+    if (idx < N_SOUND_GENERATORS && idx >= 0)
     {
         return *(soundGenerators + idx);
     }
     return nullptr;
 }
 
-uint32_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
+int32_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
     SineMonoSynth *  sg;
+    uint16_t idx=N_SOUND_GENERATORS;
+    // get next free slot
+    for (uint16_t c=0;c<N_SOUND_GENERATORS;c++)
+    {
+        if(*(soundGenerators+c)==nullptr)
+        {
+            idx=c;
+            break;
+        }
+    }
     switch(sgt)
     {
         case SINE_MONO_SYNTH:
             sg=new SineMonoSynth();
-            soundGenerators[nSoundGenerators++] = sg;
+            if (idx < N_SOUND_GENERATORS) {
+                soundGenerators[idx] = sg;
+            }
             break;
         case ANALOGUE_SYNTH:
             break;
@@ -138,7 +166,20 @@ uint32_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
         case SAMPLER:
             break;
     }
-    return nSoundGenerators-1;
+    return idx;
+}
+
+void AudioEngine::removeSoundGenerator(int idx) {
+    if (*(soundGenerators + idx)!= nullptr)
+    {
+        delete (*(soundGenerators + idx));
+        *(soundGenerators + idx) = nullptr;
+    }
+}
+
+AudioEngine * getAudioEngine()
+{
+    return audioEngine;
 }
 
 

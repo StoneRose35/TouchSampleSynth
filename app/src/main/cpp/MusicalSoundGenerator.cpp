@@ -15,3 +15,5 @@ void MusicalSoundGenerator::switchOn(float velocity) {
 void MusicalSoundGenerator::switchOff(float velocity) {
 
 }
+
+

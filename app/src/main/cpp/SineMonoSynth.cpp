@@ -23,7 +23,7 @@ float SineMonoSynth::getNextSample() {
 
 SineMonoSynth::SineMonoSynth() {
     osc = new SineOscillator(48000.0f);
-    env = new AdrsEnvelope();
+    env = new AdsrEnvelope();
     sampleRate = 48000.0f;
     envelopeVals[0]=0.0f;
     envelopeVals[1]=0.0f;
@@ -43,6 +43,39 @@ void SineMonoSynth::switchOff(float velocity) {
     env->switchOff();
 }
 
-SineMonoSynth::~SineMonoSynth() {
+int SineMonoSynth::getType() {
+    return SINE_MONO_SYNTH;
+}
 
+
+void SineMonoSynth::setAttack(float a) {
+    env->setAttack(a);
+}
+
+float SineMonoSynth::getAttack() {
+    return env->getAttack();
+}
+
+void SineMonoSynth::setDecay(float d) {
+    env->setDecay(d);
+}
+
+float SineMonoSynth::getDecay() {
+    return env->getDecay();
+}
+
+void SineMonoSynth::setSustain(float s) {
+    env->setSustain(s);
+}
+
+float SineMonoSynth::getSustain() {
+    return env->getSustain();
+}
+
+void SineMonoSynth::setRelease(float r) {
+    env->setRelease(r);
+}
+
+float SineMonoSynth::getRelease() {
+    return env->getRelease();
 }

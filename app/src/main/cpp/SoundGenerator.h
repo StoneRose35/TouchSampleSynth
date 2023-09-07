@@ -9,6 +9,7 @@
 class SoundGenerator {
 public:
     virtual float getNextSample();
+    virtual int getType();
 };
 
 enum SoundGeneratorType

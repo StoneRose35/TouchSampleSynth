@@ -8,6 +8,7 @@
 
 #include "SoundGenerator.h"
 
+
 class SineOscillator: SoundGenerator {
 private:
     float phaseIncrement;
@@ -17,6 +18,7 @@ public:
     float getNextSample();
     void setNote(float);
     SineOscillator(float);
+
     SineOscillator();
 };
 

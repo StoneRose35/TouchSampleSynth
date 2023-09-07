@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TouchSampleSynth</string>
+    <string name="button_start_content_descr">Button to start the audio engine</string>
+    <string name="button_stop_content_descr">Button to stop the audio engine</string>
 </resources>

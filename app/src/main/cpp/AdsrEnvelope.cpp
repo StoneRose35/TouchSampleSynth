@@ -2,52 +2,52 @@
 // Created by philipp on 03.09.23.
 //
 
-#include "AdrsEnvelope.h"
+#include "AdsrEnvelope.h"
 
-void AdrsEnvelope::setAttack(float a) {
+void AdsrEnvelope::setAttack(float a) {
     if (a > 0.0f) {
         attack = a;
     }
 }
 
-float AdrsEnvelope::getAttack() {
+float AdsrEnvelope::getAttack() const {
     return attack;
 }
 
-void AdrsEnvelope::setDecay(float d) {
+void AdsrEnvelope::setDecay(float d) {
     if (d > 0.0f)
     {
         decay = d;
     }
 }
 
-float AdrsEnvelope::getDecay() {
+float AdsrEnvelope::getDecay() const {
     return decay;
 }
 
-void AdrsEnvelope::setSustain(float s) {
+void AdsrEnvelope::setSustain(float s) {
     if (s >= 0.0f && s <= 1.0f)
     {
         sustain = s;
     }
 }
 
-float AdrsEnvelope::getSustain() {
+float AdsrEnvelope::getSustain() const {
     return sustain;
 }
 
-void AdrsEnvelope::setRelease(float r) {
+void AdsrEnvelope::setRelease(float r) {
     if (r > 0.0f)
     {
         release = r;
     }
 }
 
-float AdrsEnvelope::getRelease() {
+float AdsrEnvelope::getRelease() const {
     return release;
 }
 
-float AdrsEnvelope::getValue(float deltaT) {
+float AdsrEnvelope::getValue(float deltaT) {
     float currentVal;
     switch(phase)
     {
@@ -104,16 +104,27 @@ float AdrsEnvelope::getValue(float deltaT) {
     return currentVal;
 }
 
-float AdrsEnvelope::switchOn() {
+float AdsrEnvelope::switchOn() {
     phase = 1;
     return getValue(0.0f);
 }
 
-float AdrsEnvelope::switchOff() {
+float AdsrEnvelope::switchOff() {
     phase = 4;
     return getValue(0.0f);
 }
 
-bool AdrsEnvelope::isSounding() {
+bool AdsrEnvelope::isSounding() const {
     return phase != 0;
 }
+
+AdsrEnvelope::AdsrEnvelope() {
+    attack=0.0f;
+    decay=0.0f;
+    sustain=1.0f;
+    release=0.0f;
+    phase=0;
+    time=0.0f;
+}
+
+

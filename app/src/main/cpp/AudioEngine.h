@@ -9,6 +9,8 @@
 #include "SoundGenerator.h"
 #include "MusicalSoundGenerator.h"
 
+
+
 class AudioEngine {
 
 public:
@@ -18,8 +20,9 @@ public:
     int32_t getSamplingRate() const;
 
     int8_t getNSoundGenerators();
-    MusicalSoundGenerator * getSoundGenerator(uint8_t);
-    uint32_t addSoundGenerator(SoundGeneratorType);
+    MusicalSoundGenerator * getSoundGenerator(int8_t);
+    int32_t addSoundGenerator(SoundGeneratorType);
+    void removeSoundGenerator(int idx);
     AudioEngine();
     ~AudioEngine();
 
@@ -27,9 +30,8 @@ private:
     AAudioStream *stream_;
     int32_t samplingRate;
     MusicalSoundGenerator ** soundGenerators;
-    int8_t nSoundGenerators;
 };
 
-
+AudioEngine * getAudioEngine();
 
 #endif //TOUCHSAMPLESYNTH_AUDIOENGINE_H

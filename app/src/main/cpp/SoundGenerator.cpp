@@ -7,3 +7,7 @@
 float SoundGenerator::getNextSample() {
     return 0;
 }
+
+int SoundGenerator::getType() {
+    return -1;
+}
