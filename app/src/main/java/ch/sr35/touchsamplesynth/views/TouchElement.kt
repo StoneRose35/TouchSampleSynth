@@ -17,7 +17,8 @@ import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
 const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
-class TouchElement(context: Context, attributes: AttributeSet): View(context,attributes) {
+
+open class TouchElement(context: Context,attributeSet: AttributeSet?): View(context,attributeSet) {
 
     enum class ActionDir
     {
@@ -57,6 +58,8 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
     private var rotateRect:Rect=Rect()
     private var setSoundgenRect:Rect=Rect()
     private var deleteRect:Rect=Rect()
+
+
 
     init {
         blackLine.color = Color.BLACK

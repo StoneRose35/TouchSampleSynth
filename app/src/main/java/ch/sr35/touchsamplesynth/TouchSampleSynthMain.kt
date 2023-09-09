@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ToggleButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.SineMonoSynthK
@@ -31,6 +32,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         val stopButton = findViewById<ImageButton>(R.id.buttonStop)
         val newButton = findViewById<Button>(R.id.buttonNew)
         val touchElement = findViewById<TouchElement>(R.id.touchElement)
+
 
         exampleSynth.bindToAudioEngine()
         exampleSynth.setAttack(0.1f)
@@ -78,6 +80,19 @@ class TouchSampleSynthMain : AppCompatActivity() {
             vuMeter.setActive(false)
         }
 
+        newButton.setOnClickListener {
+            val layout=findViewById<ConstraintLayout>(R.id.mainLayout)
+            val lp = ConstraintLayout.LayoutParams(320,320)
+            lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            lp.marginStart = 32
+            lp.topMargin = 32
+            val te = TouchElement(this,null)
+            te.setEditmode(true)
+            te.layoutParams = lp
+            layout.addView(te)
+            touchElements.add(te)
+        }
     }
 
     override fun onDestroy() {
