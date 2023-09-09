@@ -1,10 +1,21 @@
 package ch.sr35.touchsamplesynth
 
 class MusicalPitch {
-    var note: Float = 0.0f
+    var value: Float = 0.0f
     var name: String = ""
 
 
+    override fun equals(other: Any?): Boolean {
+        if (other is MusicalPitch)
+        {
+            return other.name == this.name
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return this.name.hashCode()
+    }
     companion object {
         fun generateAllNotes(): Array<MusicalPitch> {
             val res = ArrayList<MusicalPitch>()
@@ -13,10 +24,11 @@ class MusicalPitch {
             var noteNameIdx = 9
             for (c in 0..88) {
                 p = MusicalPitch()
-                p.note = c.toFloat() - 39.0f
-                p.name = noteNames[noteNameIdx] + String.format("%d", (c - 39) / 12)
+                p.value = c.toFloat() - 39.0f
+                p.name = String.format("%s %d",noteNames[noteNameIdx], (c - 39) / 12)
                 noteNameIdx += 1
                 noteNameIdx %= 12
+                res.add(p)
             }
             return res.toTypedArray()
         }

@@ -40,9 +40,25 @@ class SineMonoSynthK: MusicalSoundGenerator {
         }
     }
 
-    fun getInstance(): Int
+    override fun getInstance(): Int
     {
         return instance
+    }
+
+    override fun getType(): String {
+        return "SineMonoSynth"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if(other is SineMonoSynthK)
+        {
+            return this.instance == other.instance
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return 1000 + instance
     }
 
 

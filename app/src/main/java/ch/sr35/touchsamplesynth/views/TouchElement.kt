@@ -11,9 +11,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+import ch.sr35.touchsamplesynth.fragments.EditTouchElementFragmentDialog
 
 const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
@@ -40,7 +42,7 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
         BOTTOM_RIGHT
     }
 
-    var actionDir: ActionDir = ActionDir.HORIZONTAL
+    private var actionDir: ActionDir = ActionDir.HORIZONTAL
     private val blackLine: Paint = Paint()
     private val fillColor: Paint = Paint()
     private val blackLineFat: Paint = Paint()
@@ -54,7 +56,8 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
     private var oldWidth: Int = 0
     private var oldHeight: Int = 0
     private var elementState: TouchElementState = TouchElementState.PLAYING
-    private var soundGenerator: MusicalSoundGenerator? = null
+    var soundGenerator: MusicalSoundGenerator? = null
+    var note: MusicalPitch?=null
     private var rotateRect:Rect=Rect()
     private var setSoundgenRect:Rect=Rect()
     private var deleteRect:Rect=Rect()
@@ -207,6 +210,14 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
                     else if (setSoundgenRect.contains(px.toInt(),py.toInt()))
                     {
                         //TODO show dialog to select Soundgenerator and note as DialogFragment
+                        val editSoundgenerator  = EditTouchElementFragmentDialog()
+                        editSoundgenerator.setData(this,(context as TouchSampleSynthMain).soundGenerators)
+
+                        (context as TouchSampleSynthMain).supportFragmentManager
+                            .beginTransaction()
+                            .add(editSoundgenerator,null)
+                            .commit()
+                        editSoundgenerator.dialog?.window?.setLayout(300, 600)
                     }
                     else if (deleteRect.contains(px.toInt(),py.toInt()))
                     {
@@ -278,6 +289,7 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
     override fun performClick(): Boolean {
         fillColor.color =
             context.resources.getColor(R.color.touchelement_touched, context.theme)
+        note?.value?.let { soundGenerator?.setNote(it) }
         soundGenerator?.switchOn(1.0f)
         return super.performClick()
     }
@@ -316,15 +328,6 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
         }
     }
 
-    fun setSoundGenerator(sg: MusicalSoundGenerator)
-    {
-        soundGenerator = sg
-    }
-
-   fun getSoundGenerator(): MusicalSoundGenerator?
-    {
-        return soundGenerator
-    }
 
     fun setEditmode(mode: Boolean)
     {

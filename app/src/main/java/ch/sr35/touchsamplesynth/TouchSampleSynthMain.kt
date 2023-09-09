@@ -40,7 +40,9 @@ class TouchSampleSynthMain : AppCompatActivity() {
         exampleSynth.setSustain(1.0f)
         exampleSynth.setRelease(0.1f)
         exampleSynth.setNote(12.0f)
-        touchElement.setSoundGenerator(exampleSynth)
+        touchElement.soundGenerator =exampleSynth
+        touchElement.note = MusicalPitch.generateAllNotes()[44]
+        soundGenerators.add(exampleSynth)
         touchElements.add(touchElement)
 
         val toggleButton = findViewById<ToggleButton>(R.id.toggleEdit)
