@@ -2,4 +2,15 @@
     <string name="app_name">TouchSampleSynth</string>
     <string name="button_start_content_descr">Button to start the audio engine</string>
     <string name="button_stop_content_descr">Button to stop the audio engine</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="alert_dialog_really_delete">really delete?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="editToggleEdit">Edit</string>
+    <string name="editTogglePlay">Play</string>
+    <string name="sine_mono_synth_name">SineMonoSynth</string>
+    <string name="sine_mono_synth_attack">Attack</string>
+    <string name="sine_mono_synth_decay">Decay</string>
+    <string name="sine_mono_synth_sustain">Sustain</string>
+    <string name="sine_mono_synth_release">Release</string>
 </resources>

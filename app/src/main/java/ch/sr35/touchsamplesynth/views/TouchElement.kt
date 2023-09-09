@@ -1,14 +1,18 @@
 package ch.sr35.touchsamplesynth.views
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
 const val PADDING: Float = 32.0f
@@ -35,11 +39,13 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
         BOTTOM_RIGHT
     }
 
-    private var actionDir: ActionDir = ActionDir.HORIZONTAL
+    var actionDir: ActionDir = ActionDir.HORIZONTAL
     private val blackLine: Paint = Paint()
     private val fillColor: Paint = Paint()
     private val blackLineFat: Paint = Paint()
     private val blackFill: Paint = Paint()
+    private val grayFill: Paint = Paint()
+    private val blackText: Paint = Paint()
     private var cornerRadius = 0.0f
     private lateinit var dragStart: TouchElementDragAnchor
     private var px: Float = 0.0f
@@ -48,6 +54,9 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
     private var oldHeight: Int = 0
     private var elementState: TouchElementState = TouchElementState.PLAYING
     private var soundGenerator: MusicalSoundGenerator? = null
+    private var rotateRect:Rect=Rect()
+    private var setSoundgenRect:Rect=Rect()
+    private var deleteRect:Rect=Rect()
 
     init {
         blackLine.color = Color.BLACK
@@ -55,9 +64,18 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
         blackLine.style = Paint.Style.STROKE
         blackLine.isAntiAlias = true
 
+        grayFill.color = Color.LTGRAY
+        grayFill.style = Paint.Style.FILL
+        grayFill.isAntiAlias = true
+
         blackFill.color = Color.BLACK
         blackFill.style = Paint.Style.FILL
         blackFill.isAntiAlias = true
+
+        blackText.color = Color.BLACK
+        blackText.style = Paint.Style.FILL
+        blackText.textSize = 28.0f
+        blackText.isAntiAlias = true
 
         blackLineFat.color = Color.BLACK
         blackLineFat.strokeWidth = 12.0f
@@ -94,7 +112,11 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
         }
         else
         {
-            arrowSize = 0.11f*w
+            arrowSize = if (0.6f*h < 0.11f*w) {
+                0.6f*h
+            } else {
+                0.11f * w
+            }
             canvas?.drawLine(0.8f*w-PADDING,0.8f*h-PADDING,0.8f*w-PADDING,0.2f*h+PADDING,blackLineFat)
             canvas?.drawLine(0.8f*w-PADDING-arrowSize,0.2f*h+PADDING+arrowSize,0.8f*w-PADDING,0.2f*h+PADDING,blackLineFat)
             canvas?.drawLine(0.8f*w-PADDING+arrowSize,0.2f*h+PADDING+arrowSize,0.8f*w-PADDING,0.2f*h+PADDING,blackLineFat)
@@ -106,6 +128,31 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
             canvas?.drawCircle(w-EDIT_CIRCLE_OFFSET,0.0f+EDIT_CIRCLE_OFFSET,EDIT_CIRCLE_OFFSET,blackFill)
             canvas?.drawCircle(w-EDIT_CIRCLE_OFFSET,h-EDIT_CIRCLE_OFFSET,EDIT_CIRCLE_OFFSET,blackFill)
             canvas?.drawCircle(0.0f+EDIT_CIRCLE_OFFSET,h-EDIT_CIRCLE_OFFSET,EDIT_CIRCLE_OFFSET,blackFill)
+
+
+            rotateRect.left =20
+            rotateRect.right=rotateRect.left+200
+            rotateRect.top=EDIT_CIRCLE_OFFSET.toInt() + 50
+            rotateRect.bottom=(blackText.textSize.toInt()+8+rotateRect.top)
+
+            canvas?.drawRect(rotateRect,grayFill)
+            canvas?.drawText("Rotate",(rotateRect.left + 3).toFloat(),rotateRect.top.toFloat()+ blackText.textSize,blackText)
+
+            setSoundgenRect.left = 20
+            setSoundgenRect.right = setSoundgenRect.left + 200
+            setSoundgenRect.top = rotateRect.bottom + 10
+            setSoundgenRect.bottom = setSoundgenRect.top + blackText.textSize.toInt() + 8
+
+            canvas?.drawRect(setSoundgenRect,grayFill)
+            canvas?.drawText("Set SoundGen",(setSoundgenRect.left + 3).toFloat(),setSoundgenRect.top.toFloat()+ blackText.textSize,blackText)
+
+            deleteRect.left = 20
+            deleteRect.right = deleteRect.left + 200
+            deleteRect.top = setSoundgenRect.bottom + 10
+            deleteRect.bottom = deleteRect.top + blackText.textSize.toInt() + 8
+
+            canvas?.drawRect(deleteRect,grayFill)
+            canvas?.drawText("Delete",(deleteRect.left + 3).toFloat(),deleteRect.top.toFloat()+ blackText.textSize,blackText)
         }
 
     }
@@ -142,12 +189,44 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
                     // start a corner drag if a corner has been hit, else move the whole element
                     px = event.x
                     py = event.y
-                    val layoutParams: ConstraintLayout.LayoutParams? =  this.layoutParams as ConstraintLayout.LayoutParams?
-                    if (layoutParams != null) {
-                        oldHeight = layoutParams.height
-                        oldWidth = layoutParams.width
+                    if (rotateRect.contains(px.toInt(),py.toInt()))
+                    {
+                        if (this.actionDir == ActionDir.HORIZONTAL)
+                        {
+                            this.actionDir = ActionDir.VERTICAL
+                        }
+                        else
+                        {
+                            actionDir = ActionDir.HORIZONTAL
+                        }
+                        invalidate()
                     }
-                    dragStart = isInCorner(event.x ,event.y )
+                    else if (setSoundgenRect.contains(px.toInt(),py.toInt()))
+                    {
+                        //TODO show dialog to select Soundgenerator and note as DialogFragment
+                    }
+                    else if (deleteRect.contains(px.toInt(),py.toInt()))
+                    {
+
+                        val alertDlgBuilder =  AlertDialog.Builder(context as TouchSampleSynthMain)
+                            .setMessage(context.getString(R.string.alert_dialog_really_delete))
+                            .setPositiveButton(context.getString(R.string.yes)) { _, _ ->
+                                (context as TouchSampleSynthMain).touchElements.remove(this)
+                                (parent as ViewGroup).removeView(this)
+                            }
+                            .setNegativeButton(context.getString(R.string.no)) {_, _ -> }
+                        val alertDlg = alertDlgBuilder.create()
+                        alertDlg.show()
+                    }
+                    else {
+                        val layoutParams: ConstraintLayout.LayoutParams? =
+                            this.layoutParams as ConstraintLayout.LayoutParams?
+                        if (layoutParams != null) {
+                            oldHeight = layoutParams.height
+                            oldWidth = layoutParams.width
+                        }
+                        dragStart = isInCorner(event.x, event.y)
+                    }
                 }
                 MotionEvent.ACTION_UP -> {
 
@@ -242,6 +321,21 @@ class TouchElement(context: Context, attributes: AttributeSet): View(context,att
    fun getSoundGenerator(): MusicalSoundGenerator?
     {
         return soundGenerator
+    }
+
+    fun setEditmode(mode: Boolean)
+    {
+        if (mode && this.elementState==TouchElementState.PLAYING)
+        {
+            this.elementState=TouchElementState.EDITING
+            invalidate()
+        }
+        else if (!mode && elementState == TouchElementState.EDITING)
+        {
+            this.elementState=TouchElementState.PLAYING
+            invalidate()
+        }
+
     }
 
 }

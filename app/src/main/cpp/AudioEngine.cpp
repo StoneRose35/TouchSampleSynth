@@ -42,13 +42,18 @@ void errorCallback(AAudioStream *stream,
                    void *userData,
                    aaudio_result_t error){
     if (error == AAUDIO_ERROR_DISCONNECTED){
-        std::function<void(void)> restartFunction = std::bind(&AudioEngine::restart,
-                                                              static_cast<AudioEngine *>(userData));
+        std::function<void(void)> restartFunction = [ObjectPtr = static_cast<AudioEngine *>(userData)] { ObjectPtr->restart(); };
         new std::thread(restartFunction);
     }
 }
 
 bool AudioEngine::start() {
+    if (stream_ != nullptr) {
+        aaudio_stream_state_t streamState = AAudioStream_getState(stream_);
+        if (streamState!=AAUDIO_STREAM_STATE_CLOSED && streamState >= 0) {
+            return false;
+        }
+    }
     AAudioStreamBuilder *streamBuilder;
     AAudio_createStreamBuilder(&streamBuilder);
     AAudioStreamBuilder_setFormat(streamBuilder, AAUDIO_FORMAT_PCM_FLOAT);
@@ -68,7 +73,6 @@ bool AudioEngine::start() {
     // Retrieves the sample rate of the stream for our oscillator.
     samplingRate = AAudioStream_getSampleRate(stream_);
 
-
     // Sets the buffer size.
     AAudioStream_setBufferSizeInFrames(
             stream_, AAudioStream_getFramesPerBurst(stream_) * kBufferSizeInBursts);
@@ -83,6 +87,7 @@ bool AudioEngine::start() {
 
     AAudioStreamBuilder_delete(streamBuilder);
     return true;
+
 }
 
 void AudioEngine::stop() {
@@ -119,6 +124,8 @@ int8_t AudioEngine::getNSoundGenerators() {
 
 AudioEngine::AudioEngine() {
     soundGenerators=(MusicalSoundGenerator**)malloc(N_SOUND_GENERATORS*sizeof(MusicalSoundGenerator*));
+    stream_ = nullptr;
+    samplingRate = 48000.0f;
     for (uint16_t c=0;c<N_SOUND_GENERATORS;c++)
     {
         *(soundGenerators + c) = nullptr;
