@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
+import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
 import ch.sr35.touchsamplesynth.views.TouchElement
 
@@ -60,11 +61,13 @@ class TouchSampleSynthMain : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menuitem_play -> {
-
+                val playPage = PlayPageFragment()
+                putFragment(playPage,"PlayPage0")
             }
             R.id.menuitem_instruments ->
             {
-
+                val instrumentPage = InstrumentsPageFragment()
+                putFragment(instrumentPage,"instrumentPage0")
             }
         }
         return true

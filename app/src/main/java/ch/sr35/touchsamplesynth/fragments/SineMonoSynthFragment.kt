@@ -35,13 +35,21 @@ class SineMonoSynthFragment(s: SineMonoSynthK) : Fragment(), SeekBar.OnSeekBarCh
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<SeekBar>(R.id.seekBarAttack).setOnSeekBarChangeListener(this)
-        view.findViewById<SeekBar>(R.id.seekBarDecay)
-            .setOnSeekBarChangeListener(this)
-        view.findViewById<SeekBar>(R.id.seekBarSustain)
-            .setOnSeekBarChangeListener(this)
-        view.findViewById<SeekBar>(R.id.seekBarRelease)
-            .setOnSeekBarChangeListener(this)
+        val attack = view.findViewById<SeekBar>(R.id.seekBarAttack)
+        attack.progress =  (synth.getAttack()/8.0f*1000.0f).toInt()
+        attack.setOnSeekBarChangeListener(this)
+
+        val decay = view.findViewById<SeekBar>(R.id.seekBarDecay)
+        decay.progress = (synth.getDecay()/8.0f*1000.0f).toInt()
+        decay.setOnSeekBarChangeListener(this)
+
+        val sustain = view.findViewById<SeekBar>(R.id.seekBarSustain)
+        sustain.progress = (synth.getSustain()*1000.0f).toInt()
+        sustain.setOnSeekBarChangeListener(this)
+
+        val release = view.findViewById<SeekBar>(R.id.seekBarRelease)
+        release.progress = (synth.getRelease()/8.0f*1000.0f).toInt()
+        release.setOnSeekBarChangeListener(this)
 
     }
 
