@@ -13,4 +13,6 @@
     <string name="sine_mono_synth_decay">Decay</string>
     <string name="sine_mono_synth_sustain">Sustain</string>
     <string name="sine_mono_synth_release">Release</string>
+    <string name="menuitem_playpage">Play</string>
+    <string name="menuitem_soundgenerator">Instruments</string>
 </resources>
