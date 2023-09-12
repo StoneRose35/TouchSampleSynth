@@ -1,12 +1,15 @@
 package ch.sr35.touchsamplesynth
 
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+import ch.sr35.touchsamplesynth.audio.SineMonoSynthK
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
@@ -18,15 +21,79 @@ class TouchSampleSynthMain : AppCompatActivity() {
     val audioEngine: AudioEngineK=AudioEngineK()
     val soundGenerators=ArrayList<MusicalSoundGenerator>()
     val touchElements=ArrayList<TouchElement>()
+    val Int.px: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
+    init {
+
+
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val allNotes = MusicalPitch.generateAllNotes()
+        val synth = SineMonoSynthK()
+        synth.bindToAudioEngine()
+        soundGenerators.add(synth)
+        var lp = ConstraintLayout.LayoutParams(134.px,166.px)
+        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+        lp.marginStart = 92.px
+        lp.topMargin = 596.px
+
+        var te = TouchElement(this,null)
+        te.soundGenerator = synth
+        te.note = allNotes[44]
+        te.layoutParams = lp
+        te.setEditmode(false)
+        touchElements.add(te)
+
+        lp = ConstraintLayout.LayoutParams(134.px,166.px)
+        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+        lp.marginStart = 288.px
+        lp.topMargin = 596.px
+
+        te = TouchElement(this,null)
+        te.soundGenerator = synth
+        te.note = allNotes[44+5]
+        te.layoutParams = lp
+        te.setEditmode(false)
+        touchElements.add(te)
+
+        lp = ConstraintLayout.LayoutParams(134.px,166.px)
+        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+        lp.marginStart = 484.px
+        lp.topMargin = 596.px
+
+        te = TouchElement(this,null)
+        te.soundGenerator = synth
+        te.note = allNotes[44+7]
+        te.layoutParams = lp
+        te.setEditmode(false)
+        touchElements.add(te)
+
+        lp = ConstraintLayout.LayoutParams(134.px,166.px)
+        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+        lp.marginStart = 680.px
+        lp.topMargin = 596.px
+
+        te = TouchElement(this,null)
+        te.soundGenerator = synth
+        te.note = allNotes[44+9]
+        te.layoutParams = lp
+        te.setEditmode(false)
+        touchElements.add(te)
+
         val playPage = PlayPageFragment()
         putFragment(playPage,"PlayPage0")
-
+        audioEngine.startEngine()
     }
 
     private fun putFragment(frag: Fragment,tag: String?)
@@ -72,6 +139,8 @@ class TouchSampleSynthMain : AppCompatActivity() {
         }
         return true
     }
+
+
 
     companion object {
         // Used to load the 'touchsamplesynth' library on application startup.

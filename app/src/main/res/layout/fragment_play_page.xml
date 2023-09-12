@@ -7,15 +7,15 @@
     android:id="@+id/playpage_layout"
     tools:context=".fragments.PlayPageFragment">
 
+<!--
     <ch.sr35.touchsamplesynth.views.TouchElement
         android:id="@+id/touchElement"
         android:layout_width="166dp"
         android:layout_height="134dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="500dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="576dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <ImageButton
         android:id="@+id/buttonStart"

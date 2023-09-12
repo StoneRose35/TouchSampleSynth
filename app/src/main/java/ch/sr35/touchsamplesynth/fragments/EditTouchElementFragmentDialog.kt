@@ -110,7 +110,7 @@ class SoundGeneratorSpinnerAdapter(sg: ArrayList<MusicalSoundGenerator>,ctx: Con
             p1.text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
             p1
         } else {
-            val tv = TextView(context)
+            val tv = View.inflate(context,R.layout.instrument_entry,null) as TextView  //tv = TextView(context)
             tv.text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
             tv
         }
@@ -133,7 +133,7 @@ class SoundGeneratorSpinnerAdapter(sg: ArrayList<MusicalSoundGenerator>,ctx: Con
             p1.text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
             p1
         } else {
-            val tv = TextView(context)
+            val tv = View.inflate(context,R.layout.instrument_entry,null) as TextView
             tv.text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
             tv
         }

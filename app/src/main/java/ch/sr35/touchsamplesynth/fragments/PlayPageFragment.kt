@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.fragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,10 +10,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
-import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.SineMonoSynthK
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.VuMeter
 
@@ -22,7 +21,10 @@ import ch.sr35.touchsamplesynth.views.VuMeter
  */
 class PlayPageFragment : Fragment() {
 
-    private val exampleSynth: SineMonoSynthK = SineMonoSynthK()
+    val Int.px: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+    val Int.dp: Int
+        get() = (this / Resources.getSystem().displayMetrics.density).toInt()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,19 +45,8 @@ class PlayPageFragment : Fragment() {
         val startButton = view.findViewById<ImageButton>(R.id.buttonStart)
         val stopButton = view.findViewById<ImageButton>(R.id.buttonStop)
         val newButton = view.findViewById<Button>(R.id.buttonNew)
-        val touchElement = view.findViewById<TouchElement>(R.id.touchElement)
+        val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
 
-
-        exampleSynth.bindToAudioEngine()
-        exampleSynth.setAttack(0.1f)
-        exampleSynth.setDecay(0.1f)
-        exampleSynth.setSustain(1.0f)
-        exampleSynth.setRelease(0.1f)
-        exampleSynth.setNote(12.0f)
-        touchElement.soundGenerator =exampleSynth
-        touchElement.note = MusicalPitch.generateAllNotes()[44]
-        (context as TouchSampleSynthMain).soundGenerators.add(exampleSynth)
-        (context as TouchSampleSynthMain).touchElements.add(touchElement)
 
         val toggleButton = view.findViewById<ToggleButton>(R.id.toggleEdit)
         toggleButton.setOnCheckedChangeListener { _, toggleval ->
@@ -95,19 +86,36 @@ class PlayPageFragment : Fragment() {
         }
 
         newButton.setOnClickListener {
-            val layout=view.findViewById<ConstraintLayout>(R.id.playpage_layout)
-            val lp = ConstraintLayout.LayoutParams(320,320)
+
+            val lp = ConstraintLayout.LayoutParams(134.px,166.px)
             lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
             lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-            lp.marginStart = 32
-            lp.topMargin = 32
+            lp.marginStart = 10.px
+            lp.topMargin = 10.px
             val te = TouchElement(context as TouchSampleSynthMain,null)
             te.setEditmode(true)
             te.layoutParams = lp
-            layout.addView(te)
+            playPageLayout.addView(te)
             (context as TouchSampleSynthMain).touchElements.add(te)
         }
+
+        view.post {
+            for (te in (context as TouchSampleSynthMain).touchElements) {
+                (te.layoutParams as ConstraintLayout.LayoutParams).topMargin = (playPageLayout.height.dp - te.layoutParams.height.dp - 10).px
+                (view as ConstraintLayout).addView(te)
+            }
+            view.invalidate()
+        }
     }
+
+    override fun onDestroyView() {
+        for (te in (context as TouchSampleSynthMain).touchElements) {
+            (view as ConstraintLayout).removeView(te)
+        }
+        super.onDestroyView()
+    }
+
+
 
     companion object {
 
