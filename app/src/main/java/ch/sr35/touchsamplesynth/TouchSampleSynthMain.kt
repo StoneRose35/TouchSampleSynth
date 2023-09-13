@@ -26,8 +26,6 @@ class TouchSampleSynthMain : AppCompatActivity() {
 
     init {
 
-
-
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

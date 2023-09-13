@@ -33,25 +33,29 @@
                 android:id="@+id/seekBarAttack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:max="1000" />
 
             <SeekBar
                 android:id="@+id/seekBarDecay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:max="1000" />
 
             <SeekBar
                 android:id="@+id/seekBarSustain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:max="1000" />
 
             <SeekBar
                 android:id="@+id/seekBarRelease"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:max="1000" />
 
 
         </LinearLayout>
