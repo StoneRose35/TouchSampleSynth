@@ -12,6 +12,7 @@
 #include "SineMonoSynth.h"
 
 #define N_SOUND_GENERATORS 64
+#define AVERAGE_LOWPASS_ALPHA 0.99f
 constexpr int32_t kBufferSizeInBursts = 2;
 static AudioEngine *audioEngine = new AudioEngine();
 
@@ -33,6 +34,7 @@ aaudio_data_callback_result_t dataCallback(
             }
         }
         audioSum /= (float)audioEngine->getNSoundGenerators();
+        audioEngine->averageVolume = audioEngine->averageVolume*AVERAGE_LOWPASS_ALPHA  + fabsf(audioSum)*(1.0f - AVERAGE_LOWPASS_ALPHA);
         *(audioDataFloat + i) = audioSum;
     }
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
@@ -132,6 +134,7 @@ AudioEngine::AudioEngine() {
     {
         *(soundGenerators + c) = nullptr;
     }
+    averageVolume = 0.0f;
 
 }
 

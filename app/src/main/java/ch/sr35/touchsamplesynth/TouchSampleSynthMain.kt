@@ -1,10 +1,13 @@
 package ch.sr35.touchsamplesynth
 
+import android.content.Context
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -14,6 +17,9 @@ import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
 import ch.sr35.touchsamplesynth.views.TouchElement
+import ch.sr35.touchsamplesynth.views.VuMeter
+import java.util.Timer
+import java.util.TimerTask
 
 class TouchSampleSynthMain : AppCompatActivity() {
 
@@ -92,6 +98,20 @@ class TouchSampleSynthMain : AppCompatActivity() {
         val playPage = PlayPageFragment()
         putFragment(playPage,"PlayPage0")
         audioEngine.startEngine()
+
+        val timer=Timer()
+        val timerTask= object: TimerTask()
+        {
+            override fun run() {
+                val avgVol = audioEngine.getAverageVolume()
+                findViewById<VuMeter>(R.id.vuMeter)?.updateVuLevel(avgVol*2.0f)
+            }
+        }
+        timer.schedule(timerTask,0,100)
+    }
+
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        return super.onCreateView(name, context, attrs)
     }
 
     private fun putFragment(frag: Fragment,tag: String?)

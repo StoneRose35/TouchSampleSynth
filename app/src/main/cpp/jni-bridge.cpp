@@ -61,6 +61,12 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getSamplingRate(JNIEnv *env, jo
     return audioEngine->getSamplingRate();
 }
 
+JNIEXPORT float JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getAverageVolume(JNIEnv *env, jobject)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    return audioEngine->averageVolume;
+}
 
 
 }

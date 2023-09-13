@@ -25,11 +25,12 @@ public:
     void removeSoundGenerator(int idx);
     AudioEngine();
     ~AudioEngine();
-
+    float averageVolume;
 private:
     AAudioStream *stream_;
     int32_t samplingRate;
     MusicalSoundGenerator ** soundGenerators;
+
 };
 
 AudioEngine * getAudioEngine();

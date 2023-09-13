@@ -9,4 +9,6 @@ class AudioEngineK {
     external fun addSoundGenerator(type: Int): Int
 
     external fun removeSoundGenerator(idx: Int): Int
+
+    external fun getAverageVolume(): Float
 }
