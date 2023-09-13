@@ -50,7 +50,7 @@ void errorCallback(AAudioStream *stream,
 bool AudioEngine::start() {
     if (stream_ != nullptr) {
         aaudio_stream_state_t streamState = AAudioStream_getState(stream_);
-        if (streamState!=AAUDIO_STREAM_STATE_CLOSED && streamState >= 0) {
+        if (streamState!=AAUDIO_STREAM_STATE_CLOSED && streamState > 0) {
             return false;
         }
     }
@@ -59,6 +59,7 @@ bool AudioEngine::start() {
     AAudioStreamBuilder_setFormat(streamBuilder, AAUDIO_FORMAT_PCM_FLOAT);
     AAudioStreamBuilder_setChannelCount(streamBuilder, 1);
     AAudioStreamBuilder_setPerformanceMode(streamBuilder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
+    AAudioStreamBuilder_setFramesPerDataCallback(streamBuilder,256);
     AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallback, nullptr);
     AAudioStreamBuilder_setErrorCallback(streamBuilder, ::errorCallback, this);
 
@@ -76,6 +77,7 @@ bool AudioEngine::start() {
     // Sets the buffer size.
     AAudioStream_setBufferSizeInFrames(
             stream_, AAudioStream_getFramesPerBurst(stream_) * kBufferSizeInBursts);
+
 
     // Starts the stream.
     result = AAudioStream_requestStart(stream_);
