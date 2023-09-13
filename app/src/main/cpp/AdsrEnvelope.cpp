@@ -48,59 +48,43 @@ float AdsrEnvelope::getRelease() const {
 }
 
 float AdsrEnvelope::getValue(float deltaT) {
-    float currentVal;
     switch(phase)
     {
         case 0:
             currentVal = 0.0f;
             break;
         case 1:
-            currentVal = time/attack;
+            currentVal += deltaT/attack;
+            if (currentVal > 1.0f)
+            {
+                currentVal = 1.0f;
+                phase++;
+            }
             break;
         case 2:
-            currentVal = 1.0f - time/decay*(1.0f-sustain);
+            currentVal -= deltaT/decay;
+            if (currentVal < sustain)
+            {
+                currentVal = sustain;
+                phase++;
+            }
             break;
         case 3:
             currentVal = sustain;
             break;
         case 4:
-            currentVal = sustain - time/decay*sustain;
+            currentVal -= deltaT/release;
+            if (currentVal < 0.0f)
+            {
+                currentVal = 0.0f;
+                phase = 0;
+            }
             break;
         default:
             currentVal = 0.0f;
             break;
     }
-    time += deltaT;
-    switch(phase)
-    {
-        case 1:
-            if (time > attack)
-            {
-                time -= attack;
-                phase++;
-            }
-            break;
-        case 2:
-            if (time > decay)
-            {
-                time -= decay;
-                phase++;
-            }
-            break;
-        case 3:
-            time = 0;
-            break;
-        case 4:
-            if(time > release)
-            {
-                time = 0;
-            }
-            phase = 0;
-            break;
-        default:
-            time = 0;
-            break;
-    }
+
     return currentVal;
 }
 
@@ -114,17 +98,17 @@ float AdsrEnvelope::switchOff() {
     return getValue(0.0f);
 }
 
-bool AdsrEnvelope::isSounding() const {
+bool AdsrEnvelope::isSounding() {
     return phase != 0;
 }
 
 AdsrEnvelope::AdsrEnvelope() {
-    attack=0.0f;
-    decay=0.0f;
+    attack=0.01f;
+    decay=0.01f;
     sustain=1.0f;
-    release=0.0f;
+    release=0.01f;
     phase=0;
-    time=0.0f;
+    currentVal = 0.0f;
 }
 
 

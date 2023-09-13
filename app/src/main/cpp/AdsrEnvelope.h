@@ -13,7 +13,7 @@ private:
     float sustain;
     float release;
     int phase;
-    float time;
+    float currentVal;
 public:
     void setAttack(float);
     float getAttack() const;
@@ -28,7 +28,7 @@ public:
     float getValue(float);
     float switchOn();
     float switchOff();
-    bool isSounding() const;
+    bool isSounding();
 };
 
 
