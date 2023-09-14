@@ -50,7 +50,7 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
     private val grayFill: Paint = Paint()
     private val blackText: Paint = Paint()
     private var cornerRadius = 0.0f
-    private lateinit var dragStart: TouchElementDragAnchor
+    private var dragStart: TouchElementDragAnchor?=null
     private var px: Float = 0.0f
     private var py: Float = 0.0f
     private var oldWidth: Int = 0
@@ -247,38 +247,40 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
                 }
                 MotionEvent.ACTION_MOVE -> {
                     val layoutParams: ConstraintLayout.LayoutParams? =  this.layoutParams as ConstraintLayout.LayoutParams?
-                    when(dragStart) {
-                        TouchElementDragAnchor.TOP_LEFT -> {
-                            layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                            layoutParams!!.width += px.minus(event.x).toInt()
-                            layoutParams!!.topMargin += event.y.minus(py).toInt()
-                            layoutParams!!.height += py.minus(event.y).toInt()
+                    if (dragStart != null) {
+                        when (dragStart) {
+                            TouchElementDragAnchor.TOP_LEFT -> {
+                                layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                                layoutParams!!.width += px.minus(event.x).toInt()
+                                layoutParams!!.topMargin += event.y.minus(py).toInt()
+                                layoutParams!!.height += py.minus(event.y).toInt()
 
-                        }
+                            }
 
-                        TouchElementDragAnchor.TOP_RIGHT -> {
-                            layoutParams!!.width =oldWidth + event.x.minus(px).toInt()
-                            layoutParams.topMargin += event.y.minus(py).toInt()
-                            layoutParams.height += py.minus(event.y).toInt()
-                        }
+                            TouchElementDragAnchor.TOP_RIGHT -> {
+                                layoutParams!!.width = oldWidth + event.x.minus(px).toInt()
+                                layoutParams.topMargin += event.y.minus(py).toInt()
+                                layoutParams.height += py.minus(event.y).toInt()
+                            }
 
-                        TouchElementDragAnchor.BOTTOM_RIGHT -> {
-                            layoutParams!!.width =oldWidth + event.x.minus(px).toInt()
-                            layoutParams.height = oldHeight + event.y.minus(py).toInt()
-                        }
+                            TouchElementDragAnchor.BOTTOM_RIGHT -> {
+                                layoutParams!!.width = oldWidth + event.x.minus(px).toInt()
+                                layoutParams.height = oldHeight + event.y.minus(py).toInt()
+                            }
 
-                        TouchElementDragAnchor.BOTTOM_LEFT -> {
-                            layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                            layoutParams!!.width += px.minus(event.x).toInt()
-                            layoutParams!!.height = oldHeight + event.y.minus(py).toInt()
-                        }
+                            TouchElementDragAnchor.BOTTOM_LEFT -> {
+                                layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                                layoutParams!!.width += px.minus(event.x).toInt()
+                                layoutParams!!.height = oldHeight + event.y.minus(py).toInt()
+                            }
 
-                        else -> {
-                            layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                            layoutParams!!.topMargin += event.y.minus(py).toInt()
+                            else -> {
+                                layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                                layoutParams!!.topMargin += event.y.minus(py).toInt()
+                            }
                         }
+                        this.layoutParams = layoutParams
                     }
-                    this.layoutParams = layoutParams
                 }
             }
             return true

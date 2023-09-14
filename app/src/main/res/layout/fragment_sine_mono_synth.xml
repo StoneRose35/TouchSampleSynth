@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="340dp"
     android:layout_height="match_parent"
-
+    android:background="@color/darkgray"
     android:orientation="vertical"
     tools:context=".fragments.SineMonoSynthFragment">
 
@@ -11,9 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:backgroundTintMode="src_in"
         android:fontFamily="monospace"
         android:text="@string/sine_mono_synth_name"
-        android:background="#FF9898"
+        android:textColor="@color/red_light"
         android:textSize="20sp">
 
     </TextView>
@@ -27,13 +28,18 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.0"
+            android:padding="10dp"
+            android:background="@color/darkgray"
             android:orientation="vertical">
 
             <SeekBar
                 android:id="@+id/seekBarAttack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:thumb="@drawable/slider"
+                android:progressTint="#454545"
                 android:max="1000" />
 
             <SeekBar
@@ -41,6 +47,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:thumb="@drawable/slider"
+                android:progressTint="#454545"
                 android:max="1000" />
 
             <SeekBar
@@ -48,14 +58,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:max="1000" />
+                android:max="1000"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:progressTint="#454545"
+                android:thumb="@drawable/slider" />
 
             <SeekBar
                 android:id="@+id/seekBarRelease"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:max="1000" />
+                android:max="1000"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:progress="300"
+                android:progressTint="#454545"
+                android:thumb="@drawable/slider" />
 
 
         </LinearLayout>
@@ -64,30 +83,43 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="30dp"
+            android:background="@color/darkgray"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/sine_mono_synth_attack" />
+                android:text="@string/sine_mono_synth_attack"
+                android:shadowColor="@color/vu_meter_background"
+                android:shadowRadius="10"
+                android:textColor="@color/vu_meter_background" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginTop="10dp"
+                android:shadowColor="@color/vu_meter_background"
+                android:shadowRadius="10"
+                android:textColor="@color/vu_meter_background"
                 android:text="@string/sine_mono_synth_decay" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginTop="10dp"
+                android:shadowColor="@color/vu_meter_background"
+                android:shadowRadius="10"
+                android:textColor="@color/vu_meter_background"
                 android:text="@string/sine_mono_synth_sustain" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginTop="10dp"
+                android:shadowColor="@color/vu_meter_background"
+                android:shadowRadius="10"
+                android:textColor="@color/vu_meter_background"
                 android:text="@string/sine_mono_synth_release" />
         </LinearLayout>
     </LinearLayout>

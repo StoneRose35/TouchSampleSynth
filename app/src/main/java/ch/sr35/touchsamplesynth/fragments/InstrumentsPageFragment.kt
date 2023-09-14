@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
@@ -75,12 +76,12 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
     }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        return if (p1 is TextView) {
-            p1.text = String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),(context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
+        return if (p1 is LinearLayout) {
+            p1.findViewById<TextView>(R.id.instrument_entry_text).text = String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),(context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
             p1
         } else {
-            val tv = View.inflate(context,R.layout.instrument_entry,null) as TextView
-            tv.text = String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),(context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
+            val tv = View.inflate(context,R.layout.instrument_entry,null) as LinearLayout
+            tv.findViewById<TextView>(R.id.instrument_entry_text).text = String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),(context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
             tv
         }
     }
@@ -128,7 +129,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             {
                 val frag = SineMonoSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SineMonoSynthK)
                 if (p1 != null) {
-                    putFragment(frag, (p1 as TextView).text.toString())
+                    putFragment(frag, (p1 as LinearLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString())
                 }
                 else
                 {

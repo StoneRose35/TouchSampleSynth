@@ -15,4 +15,5 @@
 
     <color name="vu_meter_background">#FFEDCB</color>
     <color name="vu_meter_green">#006E00</color>
+    <color name="darkgray">#505050</color>
 </resources>

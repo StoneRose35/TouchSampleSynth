@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.AdapterView
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.SpinnerAdapter
 import android.widget.TextView
@@ -106,12 +107,12 @@ class SoundGeneratorSpinnerAdapter(sg: ArrayList<MusicalSoundGenerator>,ctx: Con
     }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        return if (p1 is TextView) {
-            p1.text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
+        return if (p1 is LinearLayout) {
+            p1.findViewById<TextView>(R.id.instrument_entry_text).text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
             p1
         } else {
-            val tv = View.inflate(context,R.layout.instrument_entry,null) as TextView  //tv = TextView(context)
-            tv.text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
+            val tv = View.inflate(context,R.layout.instrument_entry,null) as LinearLayout //tv = TextView(context)
+            tv.findViewById<TextView>(R.id.instrument_entry_text).text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
             tv
         }
     }
@@ -129,12 +130,12 @@ class SoundGeneratorSpinnerAdapter(sg: ArrayList<MusicalSoundGenerator>,ctx: Con
     }
 
     override fun getDropDownView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        return if (p1 is TextView) {
-            p1.text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
+        return if (p1 is LinearLayout) {
+            p1.findViewById<TextView>(R.id.instrument_entry_text).text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
             p1
         } else {
-            val tv = View.inflate(context,R.layout.instrument_entry,null) as TextView
-            tv.text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
+            val tv = View.inflate(context,R.layout.instrument_entry,null) as LinearLayout
+            tv.findViewById<TextView>(R.id.instrument_entry_text).text = String.format("%s, %d",soundGenerators[p0].getType(),soundGenerators[p0].getInstance())
             tv
         }
     }
