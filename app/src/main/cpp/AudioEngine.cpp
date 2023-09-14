@@ -10,6 +10,7 @@
 #include "SoundGenerator.h"
 #include "MusicalSoundGenerator.h"
 #include "SineMonoSynth.h"
+#include "time.h"
 
 #define N_SOUND_GENERATORS 64
 #define AVERAGE_LOWPASS_ALPHA 0.99f
@@ -21,10 +22,14 @@ aaudio_data_callback_result_t dataCallback(
         void *userData,
         void *audioData,
         int32_t numFrames) {
-
+    clock_t start, end;
     auto * audioDataFloat = static_cast<float *>(audioData);
     float audioSum = 0.0f;
-    //auto * audioEngineInstance = static_cast<class AudioEngine *>(userData);
+    float availableTime;
+    availableTime = (float)numFrames/((float) (AAudioStream_getSamplesPerFrame(stream)*
+                                               AAudioStream_getSampleRate(stream)));
+    float usedTime;
+    start = clock();
     for(uint32_t i=0;i<numFrames;i++)
     {
         for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
@@ -37,6 +42,9 @@ aaudio_data_callback_result_t dataCallback(
         audioEngine->averageVolume = audioEngine->averageVolume*AVERAGE_LOWPASS_ALPHA  + fabsf(audioSum)*(1.0f - AVERAGE_LOWPASS_ALPHA);
         *(audioDataFloat + i) = audioSum;
     }
+    end = clock();
+    usedTime = (float)(end-start)/CLOCKS_PER_SEC;
+    audioEngine->cpuLoad = usedTime /availableTime;
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
 }
 

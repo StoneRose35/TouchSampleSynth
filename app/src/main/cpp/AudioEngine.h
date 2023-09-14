@@ -26,6 +26,7 @@ public:
     AudioEngine();
     ~AudioEngine();
     float averageVolume;
+    float cpuLoad;
 private:
     AAudioStream *stream_;
     int32_t samplingRate;
