@@ -1,20 +1,24 @@
 package ch.sr35.touchsamplesynth.fragments
 
+import android.app.AlertDialog
 import android.database.DataSetObserver
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
 
 
 /**
@@ -24,6 +28,7 @@ import ch.sr35.touchsamplesynth.audio.SineMonoSynthK
 class InstrumentsPageFragment : Fragment(), ListAdapter,
     AdapterView.OnItemClickListener {
 
+    var selectedInstrument: Int=-1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +41,38 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         val instrumentsList = view.findViewById<ListView>(R.id.instruments_page_instruments_list)
         instrumentsList.adapter = this
         instrumentsList.onItemClickListener = this
-        onItemClick(null,null,0,0)
+        onItemClick(instrumentsList,null,0,0)
+
+        val addButtton = view.findViewById<Button>(R.id.instruments_page_add)
+        addButtton.setOnClickListener {
+            val addInstrumentDlg = AddInstrumentFragmentDialog(instrumentsList)
+
+            (context as TouchSampleSynthMain).supportFragmentManager
+                .beginTransaction()
+                .add(addInstrumentDlg,null)
+                .commit()
+            addInstrumentDlg.dialog?.window?.setLayout(300, 600)
+        }
+
+        val deleteButton = view.findViewById<Button>(R.id.instruments_page_delete)
+        deleteButton.setOnClickListener {
+
+            if (selectedInstrument >=0 && !(context as TouchSampleSynthMain).touchElements.stream().anyMatch {
+                    it.soundGenerator == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]
+                })
+            {
+                val alertDlgBuilder = AlertDialog.Builder(context as TouchSampleSynthMain)
+                    .setMessage((context as TouchSampleSynthMain).getString(R.string.alert_dialog_really_delete))
+                    .setPositiveButton((context as TouchSampleSynthMain).getString(R.string.yes)) { _, _ ->
+                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].detachFromAudioEngine()
+                        (context as TouchSampleSynthMain).soundGenerators.removeAt(selectedInstrument)
+                        instrumentsList.invalidateViews()
+                    }
+                    .setNegativeButton((context as TouchSampleSynthMain).getString(R.string.no)) { _, _ -> }
+                val alertDlg = alertDlgBuilder.create()
+                alertDlg.show()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -77,11 +113,35 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         return if (p1 is LinearLayout) {
-            p1.findViewById<TextView>(R.id.instrument_entry_text).text = String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),(context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
+            p1.findViewById<TextView>(R.id.instrument_entry_text).text =
+                String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),
+                                        (context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
+            p1.findViewById<ImageView>(R.id.instrument_entry_icon)
+                .setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
+            if (selectedInstrument >= 0 && p0==selectedInstrument)
+            {
+                p1.background.setTint(Color.GREEN)
+            }
+            else
+            {
+                p1.background.setTint(Color.WHITE)
+            }
             p1
         } else {
             val tv = View.inflate(context,R.layout.instrument_entry,null) as LinearLayout
-            tv.findViewById<TextView>(R.id.instrument_entry_text).text = String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),(context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
+            tv.findViewById<TextView>(R.id.instrument_entry_text).text =
+                String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),
+                                        (context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
+            tv.findViewById<ImageView>(R.id.instrument_entry_icon)
+                .setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
+            if (selectedInstrument >= 0 && p0==selectedInstrument)
+            {
+                tv.background.setTint(Color.GREEN)
+            }
+            else
+            {
+                tv.background.setTint(Color.WHITE)
+            }
             tv
         }
     }
@@ -122,20 +182,24 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
 
 
     override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        val contentView = view?.findViewById<FrameLayout>(R.id.instruments_page_content)
-        if (contentView != null)
-        {
-            if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthK)
-            {
-                val frag = SineMonoSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SineMonoSynthK)
-                if (p1 != null) {
-                    putFragment(frag, (p1 as LinearLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString())
-                }
-                else
-                {
-                    putFragment(frag, "thefirstitem")
+        if (p2 != selectedInstrument) {
+            val contentView = view?.findViewById<FrameLayout>(R.id.instruments_page_content)
+            selectedInstrument = p2
+            if (contentView != null) {
+                if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthK) {
+                    val frag =
+                        SineMonoSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SineMonoSynthK)
+                    if (p1 != null) {
+                        putFragment(
+                            frag,
+                            (p1 as LinearLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
+                        )
+                    } else {
+                        putFragment(frag, "thefirstitem")
+                    }
                 }
             }
+            (p0 as ListView).invalidateViews()
         }
     }
 }
