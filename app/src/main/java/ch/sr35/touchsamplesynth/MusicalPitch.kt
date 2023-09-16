@@ -3,7 +3,7 @@ package ch.sr35.touchsamplesynth
 class MusicalPitch {
     var value: Float = 0.0f
     var name: String = ""
-
+    var index: Int = -1
 
     override fun equals(other: Any?): Boolean {
         if (other is MusicalPitch)
@@ -26,6 +26,7 @@ class MusicalPitch {
                 p = MusicalPitch()
                 p.value = c.toFloat() - 39.0f
                 p.name = String.format("%s %d",noteNames[noteNameIdx], (c - 39) / 12)
+                p.index = c
                 noteNameIdx += 1
                 noteNameIdx %= 12
                 res.add(p)
