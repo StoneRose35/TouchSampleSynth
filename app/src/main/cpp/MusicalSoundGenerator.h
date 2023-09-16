@@ -10,8 +10,10 @@
 class MusicalSoundGenerator: public SoundGenerator {
 public:
     virtual void setNote(float note);
-    virtual void switchOn(float velocity);
+
     virtual void switchOff(float velocity);
+
+    virtual void switchOn(float velocity);
 };
 
 

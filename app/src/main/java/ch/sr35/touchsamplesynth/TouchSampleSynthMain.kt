@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.audio.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
@@ -40,14 +40,14 @@ class TouchSampleSynthMain : AppCompatActivity() {
         setContentView(binding.root)
 
         val allNotes = MusicalPitch.generateAllNotes()
-        val synth = SineMonoSynthK()
+        val synth = SineMonoSynthK(this)
         synth.bindToAudioEngine()
         soundGenerators.add(synth)
         var lp = ConstraintLayout.LayoutParams(134.px,166.px)
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.marginStart = 92.px
-        lp.topMargin = 596.px
+        lp.topMargin = 496.px
 
         var te = TouchElement(this,null)
         te.soundGenerator = synth
@@ -60,7 +60,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.marginStart = 288.px
-        lp.topMargin = 596.px
+        lp.topMargin = 496.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
@@ -73,7 +73,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.marginStart = 484.px
-        lp.topMargin = 596.px
+        lp.topMargin = 496.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
@@ -86,7 +86,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.marginStart = 680.px
-        lp.topMargin = 596.px
+        lp.topMargin = 496.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
@@ -105,6 +105,8 @@ class TouchSampleSynthMain : AppCompatActivity() {
             override fun run() {
                 val avgVol = audioEngine.getAverageVolume()
                 findViewById<VuMeter>(R.id.vuMeter)?.updateVuLevel(avgVol*2.0f)
+                val cpuLoad = audioEngine.getCpuLoad()
+                findViewById<VuMeter>(R.id.cpuMeter)?.updateVuLevel(cpuLoad)
             }
         }
         timer.schedule(timerTask,0,100)

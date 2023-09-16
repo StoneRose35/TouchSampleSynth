@@ -10,7 +10,8 @@
 #include "SoundGenerator.h"
 #include "MusicalSoundGenerator.h"
 #include "SineMonoSynth.h"
-#include "time.h"
+#include "SimpleSubtractiveSynth.h"
+#include <ctime>
 
 #define N_SOUND_GENERATORS 64
 #define AVERAGE_LOWPASS_ALPHA 0.99f
@@ -32,10 +33,11 @@ aaudio_data_callback_result_t dataCallback(
     start = clock();
     for(uint32_t i=0;i<numFrames;i++)
     {
+        audioSum=0.0f;
         for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
         {
             if (audioEngine->getSoundGenerator(c) != nullptr) {
-                audioSum = audioEngine->getSoundGenerator(c)->getNextSample();
+                audioSum += audioEngine->getSoundGenerator(c)->getNextSample();
             }
         }
         audioSum /= (float)audioEngine->getNSoundGenerators();
@@ -138,6 +140,7 @@ AudioEngine::AudioEngine() {
     soundGenerators=(MusicalSoundGenerator**)malloc(N_SOUND_GENERATORS*sizeof(MusicalSoundGenerator*));
     stream_ = nullptr;
     samplingRate = 48000.0f;
+    cpuLoad=0.0f;
     for (uint16_t c=0;c<N_SOUND_GENERATORS;c++)
     {
         *(soundGenerators + c) = nullptr;
@@ -160,7 +163,7 @@ MusicalSoundGenerator *AudioEngine::getSoundGenerator(int8_t idx) {
 }
 
 int32_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
-    SineMonoSynth *  sg;
+    MusicalSoundGenerator *  sg;
     uint16_t idx=N_SOUND_GENERATORS;
     // get next free slot
     for (uint16_t c=0;c<N_SOUND_GENERATORS;c++)
@@ -179,7 +182,11 @@ int32_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
                 soundGenerators[idx] = sg;
             }
             break;
-        case ANALOGUE_SYNTH:
+        case SIMPLE_SUBTRACTIVE_SYNTH:
+            sg=new SimpleSubtractiveSynth();
+            if (idx < N_SOUND_GENERATORS) {
+                soundGenerators[idx] = sg;
+            }
             break;
         case FM_SYNTH:
             break;

@@ -28,12 +28,17 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         AudioEngine.cpp
         SineOscillator.cpp
+        SawOscillator.cpp
         AdsrEnvelope.cpp
+        StilsonMoogFilter.cpp
         SoundGenerator.cpp
+        SoundProcessor.cpp
         MusicalSoundGenerator.cpp
         SineMonoSynth.cpp
+        SimpleSubtractiveSynth.cpp
         jni-bridge.cpp
         sine-mono-synth-jni.cpp
+        simple-subtractive-synth-jni.cpp
         )
 
 # Specifies libraries CMake should link to your target library. You
