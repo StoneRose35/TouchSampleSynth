@@ -101,7 +101,7 @@ class PlayPageFragment : Fragment() {
 
         view.post {
             for (te in (context as TouchSampleSynthMain).touchElements) {
-                (te.layoutParams as ConstraintLayout.LayoutParams).topMargin = (playPageLayout.height.dp - te.layoutParams.height.dp - 10).px
+                //(te.layoutParams as ConstraintLayout.LayoutParams).topMargin = (playPageLayout.height.dp - te.layoutParams.height.dp - 10).px
                 (view as ConstraintLayout).addView(te)
             }
             view.invalidate()

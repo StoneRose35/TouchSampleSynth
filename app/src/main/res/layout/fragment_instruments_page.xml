@@ -9,9 +9,31 @@
     <ListView
         android:id="@+id/instruments_page_instruments_list"
         android:layout_width="320dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:choiceMode="singleChoice"
+        app:layout_constraintBottom_toTopOf="@id/instruments_page_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/instruments_page_add"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/instruments_page_delete"
+        android:text="@string/add"
+        app:layout_constraintStart_toStartOf="@id/instruments_page_instruments_list"
+        />
+    <Button
+        android:id="@+id/instruments_page_delete"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="@string/delete"
+        app:layout_constraintStart_toEndOf="@id/instruments_page_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/instruments_page_add"
+        app:layout_constraintBottom_toBottomOf="@id/instruments_page_add"
+        />
 <FrameLayout
     android:layout_height="match_parent"
     android:layout_width="wrap_content"

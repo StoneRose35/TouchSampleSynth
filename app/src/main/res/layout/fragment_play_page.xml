@@ -36,6 +36,7 @@
         android:layout_marginTop="27dp"
         android:layout_marginEnd="11dp"
         android:src="@drawable/buttonstop"
+
         app:layout_constraintEnd_toStartOf="@+id/buttonStart"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -70,8 +71,40 @@
         android:layout_marginTop="27dp"
         android:layout_marginEnd="11dp"
         app:layout_constraintEnd_toStartOf="@+id/toggleEdit"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </ch.sr35.touchsamplesynth.views.VuMeter>
+    <ImageView
+        android:id="@+id/imageSpeaker"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/speaker"
+        android:background="@color/darkyellow"
+        android:padding="6dp"
+        android:layout_marginEnd="3dp"
+        app:layout_constraintEnd_toStartOf="@id/vuMeter"
+        app:layout_constraintTop_toTopOf="@id/vuMeter"
+        app:layout_constraintBottom_toBottomOf="@id/vuMeter"
+        />
+
+    <ch.sr35.touchsamplesynth.views.VuMeter
+        android:id="@+id/cpuMeter"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/imageSpeaker"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/imageCpu"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/processor"
+        android:background="@color/darkyellow"
+        android:padding="6dp"
+        android:layout_marginEnd="3dp"
+        app:layout_constraintEnd_toStartOf="@id/cpuMeter"
+        app:layout_constraintTop_toTopOf="@id/cpuMeter"
+        app:layout_constraintBottom_toBottomOf="@id/vuMeter"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

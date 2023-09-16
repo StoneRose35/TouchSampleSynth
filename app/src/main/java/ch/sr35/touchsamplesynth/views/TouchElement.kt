@@ -209,7 +209,6 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
                     }
                     else if (setSoundgenRect.contains(px.toInt(),py.toInt()))
                     {
-                        //TODO show dialog to select Soundgenerator and note as DialogFragment
                         val editSoundgenerator  = EditTouchElementFragmentDialog()
                         editSoundgenerator.setData(this,(context as TouchSampleSynthMain).soundGenerators)
 

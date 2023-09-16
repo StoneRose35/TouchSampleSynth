@@ -15,4 +15,6 @@
     <string name="sine_mono_synth_release">Release</string>
     <string name="menuitem_playpage">Play</string>
     <string name="menuitem_soundgenerator">Instruments</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
 </resources>

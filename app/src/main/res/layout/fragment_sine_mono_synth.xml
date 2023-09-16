@@ -13,6 +13,8 @@
         android:layout_gravity="center_horizontal"
         android:backgroundTintMode="src_in"
         android:fontFamily="monospace"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp"
         android:text="@string/sine_mono_synth_name"
         android:textColor="@color/red_light"
         android:textSize="20sp">
