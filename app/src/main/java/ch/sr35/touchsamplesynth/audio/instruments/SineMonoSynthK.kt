@@ -1,9 +1,16 @@
-package ch.sr35.touchsamplesynth.audio
+package ch.sr35.touchsamplesynth.audio.instruments
 
-class SineMonoSynthK: MusicalSoundGenerator {
+import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.appcompat.content.res.AppCompatResources
+import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.audio.AudioEngineK
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+
+class SineMonoSynthK(context: Context): MusicalSoundGenerator {
 
     private var instance: Int=-1
-
+    val icon=AppCompatResources.getDrawable(context,R.drawable.sinemonosynth)
 
     external fun setAttack(a: Float): Boolean
     external fun getAttack(): Float
@@ -23,7 +30,7 @@ class SineMonoSynthK: MusicalSoundGenerator {
         }
     }
 
-    fun bindToAudioEngine()
+    override fun bindToAudioEngine()
     {
         val audioEngine= AudioEngineK()
         if (instance == -1) {
@@ -31,7 +38,7 @@ class SineMonoSynthK: MusicalSoundGenerator {
         }
     }
 
-    fun detachFromAudioEngine()
+    override fun detachFromAudioEngine()
     {
         val audioEngine = AudioEngineK()
         if (instance > -1)
@@ -45,8 +52,18 @@ class SineMonoSynthK: MusicalSoundGenerator {
         return instance
     }
 
+    override fun generateAttachedInstance(context: Context): MusicalSoundGenerator {
+        val instance = SineMonoSynthK(context)
+        instance.bindToAudioEngine()
+        return instance
+    }
+
     override fun getType(): String {
         return "SineMonoSynth"
+    }
+
+    override fun getInstrumentIcon(): Drawable? {
+        return icon
     }
 
     override fun equals(other: Any?): Boolean {
