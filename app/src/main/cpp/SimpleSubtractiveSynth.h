@@ -30,6 +30,7 @@ public:
     void setNote(float note) override;
     void switchOn(float) override;
     void switchOff(float) override;
+    int getType() override;
 
     void setAttack(float);
     float getAttack();

@@ -11,8 +11,7 @@ interface MusicalSoundGenerator {
     fun getInstrumentIcon(): Drawable?
     fun getInstance(): Int
     fun generateAttachedInstance(context: Context): MusicalSoundGenerator
-
     fun bindToAudioEngine()
-
     fun detachFromAudioEngine()
+    fun applyTouchAction(a: Float)
 }

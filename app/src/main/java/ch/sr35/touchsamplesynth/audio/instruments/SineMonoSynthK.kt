@@ -47,6 +47,10 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
         }
     }
 
+    override fun applyTouchAction(a: Float) {
+
+    }
+
     override fun getInstance(): Int
     {
         return instance

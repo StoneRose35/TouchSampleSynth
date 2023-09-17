@@ -9,12 +9,19 @@
     <string name="editToggleEdit">Edit</string>
     <string name="editTogglePlay">Play</string>
     <string name="sine_mono_synth_name">SineMonoSynth</string>
-    <string name="sine_mono_synth_attack">Attack</string>
-    <string name="sine_mono_synth_decay">Decay</string>
-    <string name="sine_mono_synth_sustain">Sustain</string>
-    <string name="sine_mono_synth_release">Release</string>
+    <string name="volume_envelope">Volume Envelope</string>
+    <string name="synth_attack">Attack</string>
+    <string name="synth_decay">Decay</string>
+    <string name="synth_sustain">Sustain</string>
+    <string name="synth_release">Release</string>
+    <string name="moog_filter">24db/Oct Filter</string>
+    <string name="filter_cutoff">Cutoff</string>
+    <string name="filter_resonance">Resonance</string>
+    <string name="cutoff_modulation">Cutoff Modulation</string>
     <string name="menuitem_playpage">Play</string>
     <string name="menuitem_soundgenerator">Instruments</string>
     <string name="add">Add</string>
     <string name="delete">Delete</string>
+    <string name="simple_subtractive_synth_name">Simple Sub Synth</string>
+
 </resources>

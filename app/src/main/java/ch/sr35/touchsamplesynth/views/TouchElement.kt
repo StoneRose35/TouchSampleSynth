@@ -180,10 +180,26 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
         if (elementState == TouchElementState.PLAYING) {
             if (event?.action == MotionEvent.ACTION_DOWN) {
                 performClick()
+                px = event.x
+                py = event.y
+                return true
             } else if (event?.action == MotionEvent.ACTION_UP) {
                 fillColor.color =
                     context.resources.getColor(R.color.touchelement_not_touched, context.theme)
                 soundGenerator?.switchOff(1.0f)
+                return false
+            }
+            else if (event?.action == MotionEvent.ACTION_MOVE)
+            {
+                if (actionDir ==ActionDir.VERTICAL)
+                {
+                    soundGenerator?.applyTouchAction ((event.y )/height.toFloat())
+                }
+                else
+                {
+                    soundGenerator?.applyTouchAction ((event.x )/width.toFloat())
+                }
+                return true
             }
             invalidate()
             return true //super.onTouchEvent(event)

@@ -133,7 +133,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SimpleSubtractiveSynthK_getSusta
     {
         return -1.0f;
     }
-    return ((SimpleSubtractiveSynth*)msg)->getAttack();
+    return ((SimpleSubtractiveSynth*)msg)->getSustain();
 }
 
 JNIEXPORT jboolean JNICALL
@@ -263,7 +263,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SimpleSubtractiveSynthK_getReson
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SimpleSubtractiveSynthK_switchOn(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_instruments_SimpleSubtractiveSynthK_switchOnExt(JNIEnv* env,
                                                             jobject /* this */me,
                                                             jfloat vel)
 {
@@ -281,7 +281,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SimpleSubtractiveSynthK_switchOn
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SimpleSubtractiveSynthK_switchOff(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_instruments_SimpleSubtractiveSynthK_switchOffExt(JNIEnv* env,
                                                              jobject /* this */me,
                                                              jfloat vel)
 {

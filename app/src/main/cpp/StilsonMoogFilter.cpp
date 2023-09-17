@@ -48,14 +48,14 @@ void StilsonMoogFilter::SetCutoff(float frequency) {
 
 StilsonMoogFilter::StilsonMoogFilter(float sr) {
     samplingRate = sr;
-    SetResonance(0.0);
     SetCutoff(20000);
+    SetResonance(0.0);
 }
 
 StilsonMoogFilter::StilsonMoogFilter() {
     samplingRate = 48000;
-    SetResonance(0.0);
     SetCutoff(20000);
+    SetResonance(0.0);
 }
 
 // resonance is from 0.0 to 4.0

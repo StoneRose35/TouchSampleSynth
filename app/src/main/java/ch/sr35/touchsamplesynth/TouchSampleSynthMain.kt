@@ -27,6 +27,8 @@ class TouchSampleSynthMain : AppCompatActivity() {
     val audioEngine: AudioEngineK=AudioEngineK()
     val soundGenerators=ArrayList<MusicalSoundGenerator>()
     val touchElements=ArrayList<TouchElement>()
+    val playPageFragment=PlayPageFragment()
+    val instrumentsPageFragment=InstrumentsPageFragment()
     val Int.px: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
@@ -47,7 +49,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.marginStart = 92.px
-        lp.topMargin = 496.px
+        lp.topMargin = 396.px
 
         var te = TouchElement(this,null)
         te.soundGenerator = synth
@@ -60,7 +62,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.marginStart = 288.px
-        lp.topMargin = 496.px
+        lp.topMargin = 396.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
@@ -73,7 +75,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.marginStart = 484.px
-        lp.topMargin = 496.px
+        lp.topMargin = 396.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
@@ -86,7 +88,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         lp.marginStart = 680.px
-        lp.topMargin = 496.px
+        lp.topMargin = 396.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
@@ -148,13 +150,12 @@ class TouchSampleSynthMain : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.menuitem_play -> {
-                val playPage = PlayPageFragment()
-                putFragment(playPage,"PlayPage0")
+
+                putFragment(playPageFragment,"PlayPage0")
             }
             R.id.menuitem_instruments ->
             {
-                val instrumentPage = InstrumentsPageFragment()
-                putFragment(instrumentPage,"instrumentPage0")
+                putFragment(instrumentsPageFragment,"instrumentPage0")
             }
         }
         return true

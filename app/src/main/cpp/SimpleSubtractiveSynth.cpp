@@ -95,5 +95,9 @@ SimpleSubtractiveSynth::SimpleSubtractiveSynth() {
 
 }
 
+int SimpleSubtractiveSynth::getType() {
+    return SIMPLE_SUBTRACTIVE_SYNTH;
+}
+
 
 

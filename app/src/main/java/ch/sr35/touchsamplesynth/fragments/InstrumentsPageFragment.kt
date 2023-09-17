@@ -18,6 +18,7 @@ import android.widget.ListView
 import android.widget.TextView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthK
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
 
 
@@ -41,7 +42,16 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         val instrumentsList = view.findViewById<ListView>(R.id.instruments_page_instruments_list)
         instrumentsList.adapter = this
         instrumentsList.onItemClickListener = this
-        onItemClick(instrumentsList,null,0,0)
+
+        if (selectedInstrument == -1) {
+            onItemClick(instrumentsList, null, 0, 0)
+        }
+        else
+        {
+            val oldSelection=selectedInstrument
+            selectedInstrument=-1
+            onItemClick(instrumentsList,null,oldSelection,0)
+        }
 
         val addButtton = view.findViewById<Button>(R.id.instruments_page_add)
         addButtton.setOnClickListener {
@@ -189,6 +199,19 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthK) {
                     val frag =
                         SineMonoSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SineMonoSynthK)
+                    if (p1 != null) {
+                        putFragment(
+                            frag,
+                            (p1 as LinearLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
+                        )
+                    } else {
+                        putFragment(frag, "thefirstitem")
+                    }
+                }
+                else if ((context as TouchSampleSynthMain).soundGenerators[p2] is SimpleSubtractiveSynthK)
+                {
+                    val frag =
+                        SimpleSubtractiveSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SimpleSubtractiveSynthK)
                     if (p1 != null) {
                         putFragment(
                             frag,
