@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.DialogFragment.STYLE_NORMAL
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
@@ -96,8 +97,8 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        val w = width.toFloat()
-        val h = height.toFloat()
+        val w = measuredWidth.toFloat()
+        val h = measuredHeight.toFloat()
         val arrowSize: Float
         // draw oval
         canvas?.drawRoundRect(0.0f+PADDING,0.0f+PADDING,w-PADDING,h-PADDING ,cornerRadius,cornerRadius,fillColor)
@@ -191,13 +192,18 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
             }
             else if (event?.action == MotionEvent.ACTION_MOVE)
             {
-                if (actionDir ==ActionDir.VERTICAL)
+                if (event.y <= PADDING || event.y >= measuredHeight- PADDING || event.x < PADDING || event.x >= measuredWidth- PADDING)
                 {
-                    soundGenerator?.applyTouchAction ((event.y )/height.toFloat())
+                    soundGenerator?.switchOff(1.0f)
+                    return false
                 }
-                else
+                else if (actionDir ==ActionDir.VERTICAL && event.y >= PADDING && event.y <= measuredHeight- PADDING)
                 {
-                    soundGenerator?.applyTouchAction ((event.x )/width.toFloat())
+                    soundGenerator?.applyTouchAction ((event.y )/measuredHeight.toFloat())
+                }
+                else if (actionDir == ActionDir.HORIZONTAL && event.x >= PADDING && event.x <= measuredWidth- PADDING)
+                {
+                    soundGenerator?.applyTouchAction ((event.x )/measuredWidth.toFloat())
                 }
                 return true
             }
@@ -232,6 +238,7 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
                             .beginTransaction()
                             .add(editSoundgenerator,null)
                             .commit()
+                        editSoundgenerator.setStyle(STYLE_NORMAL,0)
                         editSoundgenerator.dialog?.window?.setLayout(300, 600)
                     }
                     else if (deleteRect.contains(px.toInt(),py.toInt()))
