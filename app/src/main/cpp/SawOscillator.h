@@ -7,6 +7,7 @@
 
 
 #include "SoundGenerator.h"
+#include "SecondOrderIirFilter.h"
 
 class SawOscillator: SoundGenerator {
 public:
@@ -19,6 +20,7 @@ private:
     float phaseIncrement;
     float samplingRate;
     float currentPhase;
+    SecondOrderIirFilter * decimatingFilter;
 };
 
 
