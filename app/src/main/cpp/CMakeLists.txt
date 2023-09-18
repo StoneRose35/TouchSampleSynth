@@ -31,6 +31,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         SawOscillator.cpp
         AdsrEnvelope.cpp
         StilsonMoogFilter.cpp
+        SecondOrderIirFilter.cpp
         SoundGenerator.cpp
         SoundProcessor.cpp
         MusicalSoundGenerator.cpp
