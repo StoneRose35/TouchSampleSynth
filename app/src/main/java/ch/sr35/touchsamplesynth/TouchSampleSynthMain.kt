@@ -45,55 +45,29 @@ class TouchSampleSynthMain : AppCompatActivity() {
         val synth = SineMonoSynthK(this)
         synth.bindToAudioEngine()
         soundGenerators.add(synth)
-        var lp = ConstraintLayout.LayoutParams(134.px,166.px)
-        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        lp.marginStart = 92.px
-        lp.topMargin = 396.px
 
         var te = TouchElement(this,null)
         te.soundGenerator = synth
         te.note = allNotes[44]
-        te.layoutParams = lp
         te.setEditmode(false)
         touchElements.add(te)
-
-        lp = ConstraintLayout.LayoutParams(134.px,166.px)
-        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        lp.marginStart = 288.px
-        lp.topMargin = 396.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
         te.note = allNotes[44+5]
-        te.layoutParams = lp
         te.setEditmode(false)
         touchElements.add(te)
-
-        lp = ConstraintLayout.LayoutParams(134.px,166.px)
-        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        lp.marginStart = 484.px
-        lp.topMargin = 396.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
         te.note = allNotes[44+7]
-        te.layoutParams = lp
         te.setEditmode(false)
         touchElements.add(te)
 
-        lp = ConstraintLayout.LayoutParams(134.px,166.px)
-        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        lp.marginStart = 680.px
-        lp.topMargin = 396.px
 
         te = TouchElement(this,null)
         te.soundGenerator = synth
         te.note = allNotes[44+9]
-        te.layoutParams = lp
         te.setEditmode(false)
         touchElements.add(te)
 
@@ -112,11 +86,17 @@ class TouchSampleSynthMain : AppCompatActivity() {
             }
         }
         timer.schedule(timerTask,0,100)
+
+        val rootView = window.decorView.rootView
+        rootView.viewTreeObserver.addOnGlobalLayoutListener {
+
+        }
+
+
     }
 
-    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        return super.onCreateView(name, context, attrs)
-    }
+
+
 
     private fun putFragment(frag: Fragment,tag: String?)
     {
