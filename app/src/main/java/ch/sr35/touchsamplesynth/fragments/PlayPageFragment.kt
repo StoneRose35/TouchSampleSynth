@@ -7,13 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.views.TouchElement
-import ch.sr35.touchsamplesynth.views.VuMeter
 
 
 /**
@@ -23,8 +21,6 @@ class PlayPageFragment : Fragment() {
 
     val Int.px: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-    val Int.dp: Int
-        get() = (this / Resources.getSystem().displayMetrics.density).toInt()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +38,6 @@ class PlayPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val startButton = view.findViewById<ImageButton>(R.id.buttonStart)
-        val stopButton = view.findViewById<ImageButton>(R.id.buttonStop)
         val newButton = view.findViewById<Button>(R.id.buttonNew)
         val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
 
@@ -57,8 +51,6 @@ class PlayPageFragment : Fragment() {
                 {
                     touchel.setEditmode(true)
                 }
-                startButton.visibility = View.INVISIBLE
-                stopButton.visibility = View.INVISIBLE
                 newButton.visibility = View.VISIBLE
             }
             else
@@ -67,23 +59,10 @@ class PlayPageFragment : Fragment() {
                 {
                     touchel.setEditmode(false)
                 }
-                startButton.visibility = View.VISIBLE
-                stopButton.visibility = View.VISIBLE
                 newButton.visibility = View.INVISIBLE
             }
         }
 
-        val vuMeter = view.findViewById<VuMeter>(R.id.vuMeter)
-
-        startButton.setOnClickListener {
-            (context as TouchSampleSynthMain).audioEngine.startEngine()
-            vuMeter.setActive(true)
-        }
-
-        stopButton.setOnClickListener{
-            (context as TouchSampleSynthMain).audioEngine.stopEngine()
-            vuMeter.setActive(false)
-        }
 
         newButton.setOnClickListener {
 

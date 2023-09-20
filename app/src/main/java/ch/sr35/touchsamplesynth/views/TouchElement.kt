@@ -183,6 +183,8 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
                 performClick()
                 px = event.x
                 py = event.y
+                fillColor.color =
+                    context.resources.getColor(R.color.touchelement_touched, context.theme)
                 return true
             } else if (event?.action == MotionEvent.ACTION_UP) {
                 fillColor.color =
@@ -231,8 +233,7 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
                     }
                     else if (setSoundgenRect.contains(px.toInt(),py.toInt()))
                     {
-                        val editSoundgenerator  = EditTouchElementFragmentDialog()
-                        editSoundgenerator.setData(this,(context as TouchSampleSynthMain).soundGenerators)
+                        val editSoundgenerator  = EditTouchElementFragmentDialog(this,(context as TouchSampleSynthMain).soundGenerators)
 
                         (context as TouchSampleSynthMain).supportFragmentManager
                             .beginTransaction()

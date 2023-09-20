@@ -17,28 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />-->
 
-    <ImageButton
-        android:id="@+id/buttonStart"
-        android:contentDescription="@string/button_start_content_descr"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="21dp"
-        android:src="@drawable/buttonplay"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/buttonStop"
-        android:contentDescription="@string/button_stop_content_descr"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="11dp"
-        android:src="@drawable/buttonstop"
-
-        app:layout_constraintEnd_toStartOf="@+id/buttonStart"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonNew"
@@ -48,7 +27,7 @@
         android:layout_marginTop="27dp"
         android:layout_marginStart="11dp"
         android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@id/toggleEdit"
+        app:layout_constraintStart_toStartOf="@id/toggleEdit"
         app:layout_constraintTop_toTopOf="parent"
         />
 
@@ -61,7 +40,7 @@
         android:layout_marginEnd="11dp"
         android:textOff="@string/editTogglePlay"
         android:textOn="@string/editToggleEdit"
-        app:layout_constraintEnd_toStartOf="@id/buttonStop"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ch.sr35.touchsamplesynth.views.VuMeter
@@ -79,6 +58,7 @@
         android:layout_height="0dp"
         android:src="@drawable/speaker"
         android:background="@color/darkyellow"
+        android:contentDescription="@string/content_description_instrument_speaker"
         android:padding="6dp"
         android:layout_marginEnd="3dp"
         app:layout_constraintEnd_toStartOf="@id/vuMeter"
@@ -100,6 +80,7 @@
         android:layout_height="0dp"
         android:src="@drawable/processor"
         android:background="@color/darkyellow"
+        android:contentDescription="@string/content_description_instrument_processor"
         android:padding="6dp"
         android:layout_marginEnd="3dp"
         app:layout_constraintEnd_toStartOf="@id/cpuMeter"

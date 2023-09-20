@@ -2,7 +2,6 @@ package ch.sr35.touchsamplesynth.fragments
 
 import android.app.AlertDialog
 import android.database.DataSetObserver
-import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -128,14 +128,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                                         (context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
             p1.findViewById<ImageView>(R.id.instrument_entry_icon)
                 .setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
-            if (selectedInstrument >= 0 && p0==selectedInstrument)
-            {
-                p1.background.setTint(Color.GREEN)
-            }
-            else
-            {
-                p1.background.setTint(Color.WHITE)
-            }
+            p1.findViewById<CheckBox>(R.id.instrument_entry_checkbox).isChecked = (selectedInstrument >= 0 && p0==selectedInstrument)
             p1
         } else {
             val tv = View.inflate(context,R.layout.instrument_entry,null) as LinearLayout
@@ -144,14 +137,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                                         (context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
             tv.findViewById<ImageView>(R.id.instrument_entry_icon)
                 .setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
-            if (selectedInstrument >= 0 && p0==selectedInstrument)
-            {
-                tv.background.setTint(Color.GREEN)
-            }
-            else
-            {
-                tv.background.setTint(Color.WHITE)
-            }
+            tv.findViewById<CheckBox>(R.id.instrument_entry_checkbox).isChecked = (selectedInstrument >= 0 && p0==selectedInstrument)
             tv
         }
     }

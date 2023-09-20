@@ -1,23 +1,20 @@
 package ch.sr35.touchsamplesynth.fragments
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ListView
-import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthK
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
-import ch.sr35.touchsamplesynth.views.TouchElement
-import dalvik.system.PathClassLoader
+
 
 /**
  * A simple [Fragment] subclass.
@@ -49,19 +46,23 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
                 soundGenerators.add(SimpleSubtractiveSynthK(it))
             }
         }
-
+/*
         val spinnerSoundGenerator=view.findViewById<Spinner>(R.id.spinnerSoundgenerator)
         val spinnerSoundGeneratorAdapter =
             this.context?.let { SoundGeneratorSpinnerAdapter(soundGenerators, it) }
         spinnerSoundGenerator.adapter = spinnerSoundGeneratorAdapter
         spinnerSoundGenerator.setSelection(0)
-        spinnerSoundGenerator.onItemSelectedListener = spinnerSoundGeneratorAdapter
+        spinnerSoundGenerator.onItemSelectedListener = spinnerSoundGeneratorAdapter*/
+
+        val instrumentsList = view.findViewById<RecyclerView>(R.id.add_instr_instr_list)
+        val instrumentListAdapter = SoundGeneratorListAdapter(soundGenerators,null)
+        instrumentsList.adapter = instrumentListAdapter
         val buttonOk=view.findViewById<Button>(R.id.add_instr_button_ok)
         buttonOk.setOnClickListener {
-            if (spinnerSoundGeneratorAdapter?.soundGenerator != null) {
+            if ((instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition > -1) {
                 context?.let { it1 ->
                     (context as TouchSampleSynthMain).soundGenerators.add(
-                    spinnerSoundGeneratorAdapter.soundGenerator!!.generateAttachedInstance(
+                    soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition].generateAttachedInstance(
                         it1
                     ))
                     generatorsList.invalidateViews()

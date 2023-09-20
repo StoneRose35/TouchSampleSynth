@@ -5,10 +5,10 @@
     <item
         android:id="@+id/menuitem_play"
         android:title="@string/menuitem_playpage"
-        app:showAsAction="never"
+        app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/menuitem_instruments"
-        app:showAsAction="never"
+        app:showAsAction="ifRoom"
         android:title="@string/menuitem_soundgenerator" />
 </menu>
