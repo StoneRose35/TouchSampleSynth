@@ -14,6 +14,7 @@ import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthK
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
+import ch.sr35.touchsamplesynth.dialogs.SoundGeneratorListAdapter
 
 
 /**
@@ -46,13 +47,6 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
                 soundGenerators.add(SimpleSubtractiveSynthK(it))
             }
         }
-/*
-        val spinnerSoundGenerator=view.findViewById<Spinner>(R.id.spinnerSoundgenerator)
-        val spinnerSoundGeneratorAdapter =
-            this.context?.let { SoundGeneratorSpinnerAdapter(soundGenerators, it) }
-        spinnerSoundGenerator.adapter = spinnerSoundGeneratorAdapter
-        spinnerSoundGenerator.setSelection(0)
-        spinnerSoundGenerator.onItemSelectedListener = spinnerSoundGeneratorAdapter*/
 
         val instrumentsList = view.findViewById<RecyclerView>(R.id.add_instr_instr_list)
         val instrumentListAdapter = SoundGeneratorListAdapter(soundGenerators,null)

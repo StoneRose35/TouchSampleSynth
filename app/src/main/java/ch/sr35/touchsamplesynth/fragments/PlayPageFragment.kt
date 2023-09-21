@@ -109,8 +109,7 @@ class PlayPageFragment : Fragment() {
                     teCntr += 1
                 }
 
-                //(te.layoutParams as ConstraintLayout.LayoutParams).topMargin = (playPageLayout.height.dp - te.layoutParams.height.dp - 10).px
-                (view as ConstraintLayout).addView(te)
+                view.findViewById<ConstraintLayout>(R.id.playpage_layout).addView(te)
             }
             view.invalidate()
         }
@@ -118,7 +117,7 @@ class PlayPageFragment : Fragment() {
 
     override fun onDestroyView() {
         for (te in (context as TouchSampleSynthMain).touchElements) {
-            (view as ConstraintLayout).removeView(te)
+            view?.findViewById<ConstraintLayout>(R.id.playpage_layout)?.removeView(te)
         }
         super.onDestroyView()
     }

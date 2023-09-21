@@ -11,31 +11,29 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.DialogFragment.STYLE_NORMAL
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.fragments.EditTouchElementFragmentDialog
+import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 
 const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
 
-open class TouchElement(context: Context,attributeSet: AttributeSet?): View(context,attributeSet) {
+open class TouchElement(context: Context, attributeSet: AttributeSet?) :
+    View(context, attributeSet) {
 
-    enum class ActionDir
-    {
+    enum class ActionDir {
         HORIZONTAL,
         VERTICAL
     }
-    enum class TouchElementState
-    {
+
+    enum class TouchElementState {
         PLAYING,
         EDITING
     }
 
-    enum class TouchElementDragAnchor
-    {
+    enum class TouchElementDragAnchor {
         BODY,
         TOP_LEFT,
         TOP_RIGHT,
@@ -51,18 +49,18 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
     private val grayFill: Paint = Paint()
     private val blackText: Paint = Paint()
     private var cornerRadius = 0.0f
-    private var dragStart: TouchElementDragAnchor?=null
+    private var dragStart: TouchElementDragAnchor? = null
     private var px: Float = 0.0f
     private var py: Float = 0.0f
     private var oldWidth: Int = 0
     private var oldHeight: Int = 0
     private var elementState: TouchElementState = TouchElementState.PLAYING
     var soundGenerator: MusicalSoundGenerator? = null
-    var note: MusicalPitch?=null
-    private var rotateRect:Rect=Rect()
-    private var setSoundgenRect:Rect=Rect()
-    private var deleteRect:Rect=Rect()
-
+    var note: MusicalPitch? = null
+    private var rotateRect: Rect = Rect()
+    private var setSoundgenRect: Rect = Rect()
+    private var deleteRect: Rect = Rect()
+    var layoutFrozen: Boolean = false
 
 
     init {
@@ -90,91 +88,181 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
         blackLineFat.strokeCap = Paint.Cap.ROUND
         blackLineFat.isAntiAlias = true
 
-        fillColor.color = getContext().resources.getColor(R.color.touchelement_not_touched,getContext().theme)
+        fillColor.color =
+            getContext().resources.getColor(R.color.touchelement_not_touched, getContext().theme)
         fillColor.style = Paint.Style.FILL
 
     }
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        val w = measuredWidth.toFloat()
-        val h = measuredHeight.toFloat()
+        val w = layoutParams.width.toFloat()
+        val h = layoutParams.height.toFloat()
         val arrowSize: Float
+
         // draw oval
-        canvas?.drawRoundRect(0.0f+PADDING,0.0f+PADDING,w-PADDING,h-PADDING ,cornerRadius,cornerRadius,fillColor)
-        canvas?.drawRoundRect(0.0f+PADDING,0.0f+PADDING,w-PADDING,h-PADDING ,cornerRadius,cornerRadius,blackLine)
+        canvas?.drawRoundRect(
+            0.0f + PADDING,
+            0.0f + PADDING,
+            w - PADDING,
+            h - PADDING,
+            cornerRadius,
+            cornerRadius,
+            fillColor
+        )
+        canvas?.drawRoundRect(
+            0.0f + PADDING,
+            0.0f + PADDING,
+            w - PADDING,
+            h - PADDING,
+            cornerRadius,
+            cornerRadius,
+            blackLine
+        )
 
         // draw action arrow
-        if (actionDir == ActionDir.HORIZONTAL)
-        {
-            arrowSize = if (0.6f*w < 0.11f*h) {
-                0.6f*w
+        if (actionDir == ActionDir.HORIZONTAL) {
+            arrowSize = if (0.6f * w < 0.11f * h) {
+                0.6f * w
             } else {
                 0.11f * h
             }
-            canvas?.drawLine(0.2f*w+PADDING,0.8f*h-PADDING,0.8f*w-PADDING,0.8f*h-PADDING,blackLineFat)
-            canvas?.drawLine(0.8f*w-PADDING-arrowSize,0.8f*h-PADDING-arrowSize,0.8f*w-PADDING,0.8f*h-PADDING,blackLineFat)
-            canvas?.drawLine(0.8f*w-PADDING-arrowSize,0.8f*h-PADDING+arrowSize,0.8f*w-PADDING,0.8f*h-PADDING,blackLineFat)
+            canvas?.drawLine(
+                0.2f * w + PADDING,
+                0.8f * h - PADDING,
+                0.8f * w - PADDING,
+                0.8f * h - PADDING,
+                blackLineFat
+            )
+            canvas?.drawLine(
+                0.8f * w - PADDING - arrowSize,
+                0.8f * h - PADDING - arrowSize,
+                0.8f * w - PADDING,
+                0.8f * h - PADDING,
+                blackLineFat
+            )
+            canvas?.drawLine(
+                0.8f * w - PADDING - arrowSize,
+                0.8f * h - PADDING + arrowSize,
+                0.8f * w - PADDING,
+                0.8f * h - PADDING,
+                blackLineFat
+            )
 
-        }
-        else
-        {
-            arrowSize = if (0.6f*h < 0.11f*w) {
-                0.6f*h
+        } else {
+            arrowSize = if (0.6f * h < 0.11f * w) {
+                0.6f * h
             } else {
                 0.11f * w
             }
-            canvas?.drawLine(0.8f*w-PADDING,0.8f*h-PADDING,0.8f*w-PADDING,0.2f*h+PADDING,blackLineFat)
-            canvas?.drawLine(0.8f*w-PADDING-arrowSize,0.2f*h+PADDING+arrowSize,0.8f*w-PADDING,0.2f*h+PADDING,blackLineFat)
-            canvas?.drawLine(0.8f*w-PADDING+arrowSize,0.2f*h+PADDING+arrowSize,0.8f*w-PADDING,0.2f*h+PADDING,blackLineFat)
+            canvas?.drawLine(
+                0.8f * w - PADDING,
+                0.8f * h - PADDING,
+                0.8f * w - PADDING,
+                0.2f * h + PADDING,
+                blackLineFat
+            )
+            canvas?.drawLine(
+                0.8f * w - PADDING - arrowSize,
+                0.2f * h + PADDING + arrowSize,
+                0.8f * w - PADDING,
+                0.2f * h + PADDING,
+                blackLineFat
+            )
+            canvas?.drawLine(
+                0.8f * w - PADDING + arrowSize,
+                0.2f * h + PADDING + arrowSize,
+                0.8f * w - PADDING,
+                0.2f * h + PADDING,
+                blackLineFat
+            )
         }
 
-        if (elementState == TouchElementState.EDITING)
-        {
-            canvas?.drawCircle(0.0f+EDIT_CIRCLE_OFFSET,0.0f+EDIT_CIRCLE_OFFSET,EDIT_CIRCLE_OFFSET,blackFill)
-            canvas?.drawCircle(w-EDIT_CIRCLE_OFFSET,0.0f+EDIT_CIRCLE_OFFSET,EDIT_CIRCLE_OFFSET,blackFill)
-            canvas?.drawCircle(w-EDIT_CIRCLE_OFFSET,h-EDIT_CIRCLE_OFFSET,EDIT_CIRCLE_OFFSET,blackFill)
-            canvas?.drawCircle(0.0f+EDIT_CIRCLE_OFFSET,h-EDIT_CIRCLE_OFFSET,EDIT_CIRCLE_OFFSET,blackFill)
+        if (elementState == TouchElementState.EDITING) {
+            canvas?.drawCircle(
+                0.0f + EDIT_CIRCLE_OFFSET,
+                0.0f + EDIT_CIRCLE_OFFSET,
+                EDIT_CIRCLE_OFFSET,
+                blackFill
+            )
+            canvas?.drawCircle(
+                w - EDIT_CIRCLE_OFFSET,
+                0.0f + EDIT_CIRCLE_OFFSET,
+                EDIT_CIRCLE_OFFSET,
+                blackFill
+            )
+            canvas?.drawCircle(
+                w - EDIT_CIRCLE_OFFSET,
+                h - EDIT_CIRCLE_OFFSET,
+                EDIT_CIRCLE_OFFSET,
+                blackFill
+            )
+            canvas?.drawCircle(
+                0.0f + EDIT_CIRCLE_OFFSET,
+                h - EDIT_CIRCLE_OFFSET,
+                EDIT_CIRCLE_OFFSET,
+                blackFill
+            )
 
 
-            rotateRect.left =20
-            rotateRect.right=rotateRect.left+200
-            rotateRect.top=EDIT_CIRCLE_OFFSET.toInt() + 50
-            rotateRect.bottom=(blackText.textSize.toInt()+8+rotateRect.top)
+            rotateRect.left = 20
+            rotateRect.right = rotateRect.left + 200
+            rotateRect.top = EDIT_CIRCLE_OFFSET.toInt() + 50
+            rotateRect.bottom = (blackText.textSize.toInt() + 8 + rotateRect.top)
 
-            canvas?.drawRect(rotateRect,grayFill)
-            canvas?.drawText("Rotate",(rotateRect.left + 3).toFloat(),rotateRect.top.toFloat()+ blackText.textSize,blackText)
+            canvas?.drawRect(rotateRect, grayFill)
+            canvas?.drawText(
+                "Rotate",
+                (rotateRect.left + 3).toFloat(),
+                rotateRect.top.toFloat() + blackText.textSize,
+                blackText
+            )
 
             setSoundgenRect.left = 20
             setSoundgenRect.right = setSoundgenRect.left + 200
             setSoundgenRect.top = rotateRect.bottom + 10
             setSoundgenRect.bottom = setSoundgenRect.top + blackText.textSize.toInt() + 8
 
-            canvas?.drawRect(setSoundgenRect,grayFill)
-            canvas?.drawText("Set SoundGen",(setSoundgenRect.left + 3).toFloat(),setSoundgenRect.top.toFloat()+ blackText.textSize,blackText)
+            canvas?.drawRect(setSoundgenRect, grayFill)
+            canvas?.drawText(
+                "Set SoundGen",
+                (setSoundgenRect.left + 3).toFloat(),
+                setSoundgenRect.top.toFloat() + blackText.textSize,
+                blackText
+            )
 
             deleteRect.left = 20
             deleteRect.right = deleteRect.left + 200
             deleteRect.top = setSoundgenRect.bottom + 10
             deleteRect.bottom = deleteRect.top + blackText.textSize.toInt() + 8
 
-            canvas?.drawRect(deleteRect,grayFill)
-            canvas?.drawText("Delete",(deleteRect.left + 3).toFloat(),deleteRect.top.toFloat()+ blackText.textSize,blackText)
+            canvas?.drawRect(deleteRect, grayFill)
+            canvas?.drawText(
+                "Delete",
+                (deleteRect.left + 3).toFloat(),
+                deleteRect.top.toFloat() + blackText.textSize,
+                blackText
+            )
         }
+
 
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-
-        cornerRadius = if (w > h)
-        {
-            (h/8.0).toFloat()
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        if (!layoutFrozen) {
+            super.onLayout(changed, left, top, right, bottom)
         }
-        else
-        {
-            (w/8.0).toFloat()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        cornerRadius = if (w > h) {
+            (h / 8.0).toFloat()
+        } else {
+            (w / 8.0).toFloat()
         }
         super.onSizeChanged(w, h, oldw, oldh)
+
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -183,79 +271,59 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
                 performClick()
                 px = event.x
                 py = event.y
-                fillColor.color =
-                    context.resources.getColor(R.color.touchelement_touched, context.theme)
                 return true
             } else if (event?.action == MotionEvent.ACTION_UP) {
                 fillColor.color =
                     context.resources.getColor(R.color.touchelement_not_touched, context.theme)
                 soundGenerator?.switchOff(1.0f)
+                invalidate()
                 return false
-            }
-            else if (event?.action == MotionEvent.ACTION_MOVE)
-            {
-                if (event.y <= PADDING || event.y >= measuredHeight- PADDING || event.x < PADDING || event.x >= measuredWidth- PADDING)
-                {
+            } else if (event?.action == MotionEvent.ACTION_MOVE) {
+                if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
                     soundGenerator?.switchOff(1.0f)
                     return false
-                }
-                else if (actionDir ==ActionDir.VERTICAL && event.y >= PADDING && event.y <= measuredHeight- PADDING)
-                {
-                    soundGenerator?.applyTouchAction ((event.y )/measuredHeight.toFloat())
-                }
-                else if (actionDir == ActionDir.HORIZONTAL && event.x >= PADDING && event.x <= measuredWidth- PADDING)
-                {
-                    soundGenerator?.applyTouchAction ((event.x )/measuredWidth.toFloat())
+                } else if (actionDir == ActionDir.VERTICAL && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+                    soundGenerator?.applyTouchAction((event.y) / measuredHeight.toFloat())
+                } else if (actionDir == ActionDir.HORIZONTAL && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+                    soundGenerator?.applyTouchAction((event.x) / measuredWidth.toFloat())
                 }
                 return true
             }
-            invalidate()
-            return true //super.onTouchEvent(event)
-        }
-        else
-        {
+        } else {
             when (event?.action) {
                 MotionEvent.ACTION_DOWN -> {
                     // start a corner drag if a corner has been hit, else move the whole element
                     px = event.x
                     py = event.y
-                    if (rotateRect.contains(px.toInt(),py.toInt()))
-                    {
-                        if (this.actionDir == ActionDir.HORIZONTAL)
-                        {
+                    if (rotateRect.contains(px.toInt(), py.toInt())) {
+                        if (this.actionDir == ActionDir.HORIZONTAL) {
                             this.actionDir = ActionDir.VERTICAL
-                        }
-                        else
-                        {
+                        } else {
                             actionDir = ActionDir.HORIZONTAL
                         }
+                        dragStart = null
                         invalidate()
-                    }
-                    else if (setSoundgenRect.contains(px.toInt(),py.toInt()))
-                    {
-                        val editSoundgenerator  = EditTouchElementFragmentDialog(this,(context as TouchSampleSynthMain).soundGenerators)
+                    } else if (setSoundgenRect.contains(px.toInt(), py.toInt())) {
+                        val editSoundgenerator = EditTouchElementFragmentDialog(
+                            this,
+                            (context as TouchSampleSynthMain).soundGenerators,
+                            context
+                        )
+                        dragStart = null
+                        editSoundgenerator.show()
+                    } else if (deleteRect.contains(px.toInt(), py.toInt())) {
 
-                        (context as TouchSampleSynthMain).supportFragmentManager
-                            .beginTransaction()
-                            .add(editSoundgenerator,null)
-                            .commit()
-                        editSoundgenerator.setStyle(STYLE_NORMAL,0)
-                        editSoundgenerator.dialog?.window?.setLayout(300, 600)
-                    }
-                    else if (deleteRect.contains(px.toInt(),py.toInt()))
-                    {
-
-                        val alertDlgBuilder =  AlertDialog.Builder(context as TouchSampleSynthMain)
+                        val alertDlgBuilder = AlertDialog.Builder(context as TouchSampleSynthMain)
                             .setMessage(context.getString(R.string.alert_dialog_really_delete))
                             .setPositiveButton(context.getString(R.string.yes)) { _, _ ->
                                 (context as TouchSampleSynthMain).touchElements.remove(this)
                                 (parent as ViewGroup).removeView(this)
                             }
-                            .setNegativeButton(context.getString(R.string.no)) {_, _ -> }
+                            .setNegativeButton(context.getString(R.string.no)) { _, _ -> }
                         val alertDlg = alertDlgBuilder.create()
+                        dragStart = null
                         alertDlg.show()
-                    }
-                    else {
+                    } else {
                         val layoutParams: ConstraintLayout.LayoutParams? =
                             this.layoutParams as ConstraintLayout.LayoutParams?
                         if (layoutParams != null) {
@@ -265,11 +333,14 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
                         dragStart = isInCorner(event.x, event.y)
                     }
                 }
+
                 MotionEvent.ACTION_UP -> {
 
                 }
+
                 MotionEvent.ACTION_MOVE -> {
-                    val layoutParams: ConstraintLayout.LayoutParams? =  this.layoutParams as ConstraintLayout.LayoutParams?
+                    val layoutParams: ConstraintLayout.LayoutParams? =
+                        this.layoutParams as ConstraintLayout.LayoutParams?
                     if (dragStart != null) {
                         when (dragStart) {
                             TouchElementDragAnchor.TOP_LEFT -> {
@@ -308,6 +379,7 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
             }
             return true
         }
+        return true
         //return super.onTouchEvent(event);
     }
 
@@ -316,54 +388,45 @@ open class TouchElement(context: Context,attributeSet: AttributeSet?): View(cont
             context.resources.getColor(R.color.touchelement_touched, context.theme)
         note?.value?.let { soundGenerator?.setNote(it) }
         soundGenerator?.switchOn(1.0f)
+        invalidate()
         return super.performClick()
     }
 
-    private fun isInCorner(x: Float, y: Float): TouchElementDragAnchor
-    {
+    private fun isInCorner(x: Float, y: Float): TouchElementDragAnchor {
         val w = width.toFloat()
         val h = height.toFloat()
-        if (((x-(0.0f+EDIT_CIRCLE_OFFSET))*(x-(0.0f+EDIT_CIRCLE_OFFSET))
-                    + (y-(0.0f+EDIT_CIRCLE_OFFSET))*(y-(0.0f+EDIT_CIRCLE_OFFSET)))
-            <EDIT_CIRCLE_OFFSET*EDIT_CIRCLE_OFFSET)
-        {
+        if (((x - (0.0f + EDIT_CIRCLE_OFFSET)) * (x - (0.0f + EDIT_CIRCLE_OFFSET))
+                    + (y - (0.0f + EDIT_CIRCLE_OFFSET)) * (y - (0.0f + EDIT_CIRCLE_OFFSET)))
+            < EDIT_CIRCLE_OFFSET * EDIT_CIRCLE_OFFSET
+        ) {
             return TouchElementDragAnchor.TOP_LEFT
-        }
-        else if (((x-(w-EDIT_CIRCLE_OFFSET))*(x-(w-EDIT_CIRCLE_OFFSET))
-                    + (y-(0.0f+EDIT_CIRCLE_OFFSET))*(y-(0.0f+EDIT_CIRCLE_OFFSET)))
-            <EDIT_CIRCLE_OFFSET*EDIT_CIRCLE_OFFSET)
-        {
+        } else if (((x - (w - EDIT_CIRCLE_OFFSET)) * (x - (w - EDIT_CIRCLE_OFFSET))
+                    + (y - (0.0f + EDIT_CIRCLE_OFFSET)) * (y - (0.0f + EDIT_CIRCLE_OFFSET)))
+            < EDIT_CIRCLE_OFFSET * EDIT_CIRCLE_OFFSET
+        ) {
             return TouchElementDragAnchor.TOP_RIGHT
-        }
-        else if (((x-(w-EDIT_CIRCLE_OFFSET))*(x-(w-EDIT_CIRCLE_OFFSET))
-                    + (y-(h-EDIT_CIRCLE_OFFSET))*(y-(h-EDIT_CIRCLE_OFFSET)))
-            <EDIT_CIRCLE_OFFSET*EDIT_CIRCLE_OFFSET)
-        {
+        } else if (((x - (w - EDIT_CIRCLE_OFFSET)) * (x - (w - EDIT_CIRCLE_OFFSET))
+                    + (y - (h - EDIT_CIRCLE_OFFSET)) * (y - (h - EDIT_CIRCLE_OFFSET)))
+            < EDIT_CIRCLE_OFFSET * EDIT_CIRCLE_OFFSET
+        ) {
             return TouchElementDragAnchor.BOTTOM_RIGHT
-        }
-        else if (((x-(0.0f+EDIT_CIRCLE_OFFSET))*(x-(0.0f+EDIT_CIRCLE_OFFSET))
-                    + (y-(h-EDIT_CIRCLE_OFFSET))*(y-(h-EDIT_CIRCLE_OFFSET)))
-            <EDIT_CIRCLE_OFFSET*EDIT_CIRCLE_OFFSET)
-        {
+        } else if (((x - (0.0f + EDIT_CIRCLE_OFFSET)) * (x - (0.0f + EDIT_CIRCLE_OFFSET))
+                    + (y - (h - EDIT_CIRCLE_OFFSET)) * (y - (h - EDIT_CIRCLE_OFFSET)))
+            < EDIT_CIRCLE_OFFSET * EDIT_CIRCLE_OFFSET
+        ) {
             return TouchElementDragAnchor.BOTTOM_LEFT
-        }
-        else
-        {
+        } else {
             return TouchElementDragAnchor.BODY
         }
     }
 
 
-    fun setEditmode(mode: Boolean)
-    {
-        if (mode && this.elementState==TouchElementState.PLAYING)
-        {
-            this.elementState=TouchElementState.EDITING
+    fun setEditmode(mode: Boolean) {
+        if (mode && this.elementState == TouchElementState.PLAYING) {
+            this.elementState = TouchElementState.EDITING
             invalidate()
-        }
-        else if (!mode && elementState == TouchElementState.EDITING)
-        {
-            this.elementState=TouchElementState.PLAYING
+        } else if (!mode && elementState == TouchElementState.EDITING) {
+            this.elementState = TouchElementState.PLAYING
             invalidate()
         }
 

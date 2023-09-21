@@ -1,16 +1,18 @@
-package ch.sr35.touchsamplesynth.fragments
+package ch.sr35.touchsamplesynth.dialogs
 
 
+import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import ch.sr35.touchsamplesynth.MusicalPitch
@@ -20,36 +22,24 @@ import ch.sr35.touchsamplesynth.views.TouchElement
 import java.util.stream.IntStream
 
 
-class EditTouchElementFragmentDialog(private var touchElement: TouchElement,private var soundGenerators: ArrayList<MusicalSoundGenerator>): DialogFragment() {
-    //private var touchElement: TouchElement?=null
-    //private var soundGenerators = ArrayList<MusicalSoundGenerator>()
+class EditTouchElementFragmentDialog(private var touchElement: TouchElement,private var soundGenerators: ArrayList<MusicalSoundGenerator>,context: Context): Dialog(context) {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        setContentView(R.layout.edit_touchelement)
 
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        /*
-        val spinnerSoundGenerator=view.findViewById<Spinner>(R.id.spinnerSoundgenerator)
-        val spinnerSoundGeneratorAdapter =
-            this.context?.let { SoundGeneratorListAdapter(soundGenerators, it) }
-        spinnerSoundGenerator.adapter = spinnerSoundGeneratorAdapter
-        spinnerSoundGenerator.setSelection(soundGenerators.indexOf(touchElement!!.soundGenerator))
-        spinnerSoundGenerator.onItemSelectedListener = spinnerSoundGeneratorAdapter
-*/
-        val instrumentList = view.findViewById<RecyclerView>(R.id.edit_te_soundgenerator_list)
+        val instrumentList = findViewById<RecyclerView>(R.id.edit_te_soundgenerator_list)
         val instrumentListAdapter = SoundGeneratorListAdapter(soundGenerators,touchElement)
         instrumentList.adapter = instrumentListAdapter
 
-        val numberPickerNotes = view.findViewById<NumberPicker>(R.id.numberPickerNote)
+        val numberPickerNotes = findViewById<NumberPicker>(R.id.numberPickerNote)
         numberPickerNotes?.minValue = 0
         numberPickerNotes?.maxValue = 88
         numberPickerNotes?.displayedValues = MusicalPitch.generateAllNotes().map { p -> p.name }.toTypedArray()
         numberPickerNotes?.value = touchElement.note?.index ?: -1
-        val buttonOk=view.findViewById<Button>(R.id.edit_te_button_ok)
+        val buttonOk=findViewById<Button>(R.id.edit_te_button_ok)
         buttonOk?.setOnClickListener {
             if (instrumentListAdapter.checkedPosition > -1) {
                 touchElement.soundGenerator = soundGenerators[instrumentListAdapter.checkedPosition]
@@ -59,25 +49,19 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,priv
 
             this.dismiss()
         }
-        val buttonCancel = view.findViewById<Button>(R.id.edit_te_button_cancel)
+        val buttonCancel = findViewById<Button>(R.id.edit_te_button_cancel)
         buttonCancel?.setOnClickListener {
             this.dismiss()
         }
-
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.edit_touchelement,container,false)
-    }
+
 }
 
 class SoundGeneratorListAdapter(private val soundGenerators: ArrayList<MusicalSoundGenerator>,private val touchElement: TouchElement?): RecyclerView.Adapter<SoundGeneratorListAdapter.SoundGeneratorListViewHolder>(){
 
     var checkedPosition: Int=-1
+
 
     init {
         if (touchElement!=null)
@@ -119,10 +103,6 @@ class SoundGeneratorListAdapter(private val soundGenerators: ArrayList<MusicalSo
         holder.iconView.setImageDrawable(soundGenerators[position].getInstrumentIcon())
         holder.instrumentNameView.text = "%s, %d".format(soundGenerators[position].getType(), soundGenerators[position].getInstance())
         holder.checkedView.isChecked= checkedPosition==position
-        //if (holder.checkedView.isChecked)
-        //{
-        //    checkedPosition=position
-        //}
         holder.itemView.setOnClickListener {
             if (holder.adapterPosition!=checkedPosition)
             {
