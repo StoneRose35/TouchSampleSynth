@@ -16,6 +16,7 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
+import java.io.Serializable
 
 const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
@@ -23,7 +24,7 @@ const val EDIT_CIRCLE_OFFSET = 24.0f
 open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
 
-    enum class ActionDir {
+    enum class ActionDir: Serializable {
         HORIZONTAL,
         VERTICAL
     }
@@ -41,7 +42,7 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
         BOTTOM_RIGHT
     }
 
-    private var actionDir: ActionDir = ActionDir.HORIZONTAL
+    var actionDir: ActionDir = ActionDir.HORIZONTAL
     private val blackLine: Paint = Paint()
     private val fillColor: Paint = Paint()
     private val blackLineFat: Paint = Paint()
@@ -60,7 +61,6 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private var rotateRect: Rect = Rect()
     private var setSoundgenRect: Rect = Rect()
     private var deleteRect: Rect = Rect()
-    var layoutFrozen: Boolean = false
 
 
     init {
@@ -249,11 +249,6 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (!layoutFrozen) {
-            super.onLayout(changed, left, top, right, bottom)
-        }
-    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         cornerRadius = if (w > h) {

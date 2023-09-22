@@ -14,4 +14,6 @@ interface MusicalSoundGenerator {
     fun bindToAudioEngine()
     fun detachFromAudioEngine()
     fun applyTouchAction(a: Float)
+
+
 }

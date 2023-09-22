@@ -1,14 +1,9 @@
 package ch.sr35.touchsamplesynth
 
-import android.content.Context
-import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
@@ -16,8 +11,10 @@ import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
+import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.VuMeter
+import java.io.File
 import java.util.Timer
 import java.util.TimerTask
 
@@ -27,49 +24,59 @@ class TouchSampleSynthMain : AppCompatActivity() {
     val audioEngine: AudioEngineK=AudioEngineK()
     val soundGenerators=ArrayList<MusicalSoundGenerator>()
     val touchElements=ArrayList<TouchElement>()
+    var defaultScene: SceneP?=null
     val playPageFragment=PlayPageFragment()
     val instrumentsPageFragment=InstrumentsPageFragment()
-    val Int.px: Int
-        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
 
     init {
 
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun onStart() {
+        super.onStart()
         val allNotes = MusicalPitch.generateAllNotes()
-        val synth = SineMonoSynthK(this)
-        synth.bindToAudioEngine()
-        soundGenerators.add(synth)
 
-        var te = TouchElement(this,null)
-        te.soundGenerator = synth
-        te.note = allNotes[44]
-        te.setEditmode(false)
-        touchElements.add(te)
+        val fDir = this.filesDir
+        fDir.listFiles()?.iterator()?.forEach {
+            if (it.isFile && it.name.endsWith("scn")) {
+                defaultScene = SceneP.fromFile(it)
+            }
+        }
 
-        te = TouchElement(this,null)
-        te.soundGenerator = synth
-        te.note = allNotes[44+5]
-        te.setEditmode(false)
-        touchElements.add(te)
+        defaultScene?.populate(soundGenerators,touchElements, this)
 
-        te = TouchElement(this,null)
-        te.soundGenerator = synth
-        te.note = allNotes[44+7]
-        te.setEditmode(false)
-        touchElements.add(te)
+        if (defaultScene == null) {
+            val synth = SineMonoSynthK(this)
+            synth.bindToAudioEngine()
+            soundGenerators.add(synth)
+
+            var te = TouchElement(this, null)
+            te.soundGenerator = synth
+            te.note = allNotes[44]
+            te.setEditmode(false)
+            touchElements.add(te)
+
+            te = TouchElement(this, null)
+            te.soundGenerator = synth
+            te.note = allNotes[44 + 5]
+            te.setEditmode(false)
+            touchElements.add(te)
+
+            te = TouchElement(this, null)
+            te.soundGenerator = synth
+            te.note = allNotes[44 + 7]
+            te.setEditmode(false)
+            touchElements.add(te)
 
 
-        te = TouchElement(this,null)
-        te.soundGenerator = synth
-        te.note = allNotes[44+9]
-        te.setEditmode(false)
-        touchElements.add(te)
+            te = TouchElement(this, null)
+            te.soundGenerator = synth
+            te.note = allNotes[44 + 9]
+            te.setEditmode(false)
+            touchElements.add(te)
+        }
+
 
         val playPage = PlayPageFragment()
         putFragment(playPage,"PlayPage0")
@@ -86,16 +93,13 @@ class TouchSampleSynthMain : AppCompatActivity() {
             }
         }
         timer.schedule(timerTask,0,100)
-
-        val rootView = window.decorView.rootView
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
-
-        }
-
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
     }
-
-
 
 
     private fun putFragment(frag: Fragment,tag: String?)
@@ -112,10 +116,45 @@ class TouchSampleSynthMain : AppCompatActivity() {
             it.commit()
         }
     }
-
+/*
     override fun onDestroy() {
-        super.onDestroy()
+        if (defaultScene==null)
+        {
+            defaultScene= SceneP()
+        }
+        val f = File("default.scn")
+        if (f.exists())
+        {
+            f.delete()
+        }
+        defaultScene!!.toFile(f)
+        for (soundGenerator in soundGenerators)
+        {
+            soundGenerator.detachFromAudioEngine()
+        }
         audioEngine.stopEngine()
+        super.onDestroy()
+    }
+*/
+    override fun onStop() {
+        if (defaultScene==null)
+        {
+            defaultScene= SceneP()
+
+        }
+        defaultScene!!.persist(soundGenerators,touchElements)
+        val f = File(filesDir.absolutePath + File.separator + "default.scn")
+        if (f.exists())
+        {
+            f.delete()
+        }
+        defaultScene!!.toFile(f)
+        for (soundGenerator in soundGenerators)
+        {
+            soundGenerator.detachFromAudioEngine()
+        }
+        audioEngine.stopEngine()
+        super.onStop()
     }
     /**
      * A native method that is implemented by the 'touchsamplesynth' native library,
