@@ -36,7 +36,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,priv
 
         val numberPickerNotes = findViewById<NumberPicker>(R.id.numberPickerNote)
         numberPickerNotes?.minValue = 0
-        numberPickerNotes?.maxValue = 88
+        numberPickerNotes?.maxValue = 87
         numberPickerNotes?.displayedValues = MusicalPitch.generateAllNotes().map { p -> p.name }.toTypedArray()
         numberPickerNotes?.value = touchElement.note?.index ?: -1
         val buttonOk=findViewById<Button>(R.id.edit_te_button_ok)
