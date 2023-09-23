@@ -49,7 +49,7 @@ class SimpleSubtractiveSynthFragment(private val synth: SimpleSubtractiveSynthK)
         release.setOnSeekBarChangeListener(this)
 
         val cutoff = view.findViewById<SeekBar>(R.id.seekBarCutoff)
-        cutoff.progress = ((AudioUtils.FreqToNote(synth.initialCutoff)+40.0f)*1000.0/200.0f).toInt()
+        cutoff.progress = ((AudioUtils.FreqToNote(synth.initialCutoff)+39.0f)*1000.0/105.0f).toInt()
         cutoff.setOnSeekBarChangeListener(this)
 
         val resonance = view.findViewById<SeekBar>(R.id.seekBarResonance)
@@ -81,7 +81,7 @@ class SimpleSubtractiveSynthFragment(private val synth: SimpleSubtractiveSynthK)
                 synth.setRelease(p0.progress.toFloat() / 1000.0f * 2.0f)
             }
             R.id.seekBarCutoff -> {
-                synth.initialCutoff = AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*200.0f-40.0f)
+                synth.initialCutoff = AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f)
             }
             R.id.seekBarResonance -> {
                 synth.setResonance(p0.progress.toFloat()/1000.0f)

@@ -3,13 +3,14 @@ package ch.sr35.touchsamplesynth.model
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthK
 
-class SimpleSubtractiveSynthP(var attack: Float,
-                              var decay: Float,
-                              var sustain: Float,
-                              var release: Float,
-                              var initialCutoff: Float,
-                              var actionAmount: Float,
-                              var resonance: Float
+class SimpleSubtractiveSynthP(
+    private var attack: Float,
+    private var decay: Float,
+    private var sustain: Float,
+    private var release: Float,
+    private var initialCutoff: Float,
+    private var actionAmount: Float,
+    private var resonance: Float
     ): PersistableInstrument {
     override fun fromInstrument(msg: MusicalSoundGenerator) {
         if (msg is SimpleSubtractiveSynthK)
@@ -36,6 +37,7 @@ class SimpleSubtractiveSynthP(var attack: Float,
             msg.setSustain(sustain)
             msg.setRelease(release)
             msg.initialCutoff = initialCutoff
+            msg.actionAmount = actionAmount
             msg.setResonance(resonance)
         }
     }
