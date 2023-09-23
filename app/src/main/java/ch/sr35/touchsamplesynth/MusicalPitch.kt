@@ -22,13 +22,18 @@ class MusicalPitch {
             val noteNames = arrayOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
             var p: MusicalPitch
             var noteNameIdx = 9
-            for (c in 0..88) {
+            var octaveNr=0
+            for (c in 0..87) {
                 p = MusicalPitch()
-                p.value = c.toFloat() - 39.0f
-                p.name = String.format("%s %d",noteNames[noteNameIdx], (c - 39) / 12)
+                p.value = c.toFloat() - 48.0f
+                p.name = String.format("%s %d",noteNames[noteNameIdx], octaveNr)
                 p.index = c
                 noteNameIdx += 1
                 noteNameIdx %= 12
+                if (noteNameIdx==0)
+                {
+                    octaveNr += 1
+                }
                 res.add(p)
             }
             return res.toTypedArray()
