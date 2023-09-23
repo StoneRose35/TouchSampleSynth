@@ -183,7 +183,7 @@ int32_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
             }
             break;
         case SIMPLE_SUBTRACTIVE_SYNTH:
-            sg=new SimpleSubtractiveSynth();
+            sg=new SimpleSubtractiveSynth((float)samplingRate);
             if (idx < N_SOUND_GENERATORS) {
                 soundGenerators[idx] = sg;
             }

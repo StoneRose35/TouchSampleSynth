@@ -5,13 +5,24 @@
 #include "SimpleSubtractiveSynth.h"
 
 float SimpleSubtractiveSynth::getNextSample() {
-
+    float im;
     if (env->isSounding()) {
         float nsample = osc->getNextSample();
         nsample = filter->processSample(nsample);
         nsample = nsample * (envelopeVals[0] +
                              (envelopeVals[1] - envelopeVals[0]) / (float) envelopeUpdateInterval *
                              (float) currentSample);
+        if (currentFilterUpdateSample < filterUpdateInSamples)
+        {
+            im = (newFilterCutoff - currentFilterCutoff)*((float)currentFilterUpdateSample/(float)(filterUpdateInSamples)) + currentFilterCutoff;
+            filter->SetCutoff(im);
+            filter->SetResonance(currentResonance);
+            currentFilterUpdateSample++;
+            if (currentFilterUpdateSample == filterUpdateInSamples)
+            {
+                currentFilterCutoff = newFilterCutoff;
+            }
+        }
         currentSample++;
         if (currentSample == envelopeUpdateInterval) {
             envelopeVals[0] = envelopeVals[1];
@@ -60,7 +71,15 @@ float SimpleSubtractiveSynth::getRelease() {
 }
 
 void SimpleSubtractiveSynth::setCutoff(float co) {
-    filter->SetCutoff(co);
+    if (env->isSounding()) {
+        newFilterCutoff = co;
+        currentFilterUpdateSample = 0;
+    }
+    else
+    {
+        filter->SetCutoff(co);
+        filter->SetResonance(currentResonance);
+    }
 }
 
 float SimpleSubtractiveSynth::getCutoff() {
@@ -68,11 +87,12 @@ float SimpleSubtractiveSynth::getCutoff() {
 }
 
 void SimpleSubtractiveSynth::setResonance(float rs) {
-    filter->SetResonance(rs*4.0f);
+    currentResonance = rs;
+    filter->SetResonance(rs);
 }
 
 float SimpleSubtractiveSynth::getResonance() {
-    return filter->reso/4.0f;
+    return filter->reso;
 }
 
 void SimpleSubtractiveSynth::switchOn(float vel) {
@@ -83,15 +103,21 @@ void SimpleSubtractiveSynth::switchOff(float vel) {
     env->switchOff();
 }
 
-SimpleSubtractiveSynth::SimpleSubtractiveSynth() {
-    sampleRate=48000;
+SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) {
+    sampleRate=sr;
     currentSample=0;
     envelopeUpdateInterval=32;
     envelopeVals[0]=0.0f;
     envelopeVals[1]=0.0f;
+
+    currentFilterCutoff=0.0f;
+    currentResonance=0.0f;
+    newFilterCutoff=0.0f;
+    currentFilterUpdateSample=0;
+    filterUpdateInSamples = floor(sr/100);
     env=new AdsrEnvelope();
     filter=new StilsonMoogFilter();
-    osc=new SawOscillator(48000.0);
+    osc=new SawOscillator(sr);
 
 }
 

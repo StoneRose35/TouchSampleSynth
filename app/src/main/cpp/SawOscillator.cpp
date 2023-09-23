@@ -34,6 +34,7 @@ float SawOscillator::getNextSample() {
         }
         val1 = (currentPhase - M_PI) / M_PI;
         val1 = decimatingFilter->processSample(val1);
+        val1 = decimatingFilter2->processSample(val1);
     }
     return val1;
 }
@@ -46,15 +47,21 @@ void SawOscillator::setNote(float n) {
 SawOscillator::SawOscillator(float sr) {
     samplingRate = sr;
 #ifdef FOURTIMES_OVERSAMPLING
+    /*
+     * coefficient calculation is based on https://stackoverflow.com/questions/20924868/calculate-coefficients-of-2nd-order-butterworth-low-pass-filter#:~:text=Let%20C%20%3D%20tan(wd*,%3D%202%2FT*C%20.&text=The%20best%20way%20would%20be,the%20code%20to%20your%20microcon.
+     * */
     decimatingFilter=new SecondOrderIirFilter();
-
+    calculateFilterCoefficients(decimatingFilter);
+    decimatingFilter2=new SecondOrderIirFilter();
+    calculateFilterCoefficients(decimatingFilter2);
+/*
     decimatingFilter->coeffA[0] = -1.10922879f;
     decimatingFilter->coeffA[1] = 0.39815229f;
 
     decimatingFilter->coeffB[0] = 0.07223088f;
     decimatingFilter->coeffB[1] = 0.14446175f;
     decimatingFilter->coeffB[2] =  0.07223088f;
-
+*/
 #endif
 }
 
@@ -62,15 +69,28 @@ SawOscillator::SawOscillator() {
     samplingRate=48000.0f;
 #ifdef FOURTIMES_OVERSAMPLING
     decimatingFilter=new SecondOrderIirFilter();
-
+    calculateFilterCoefficients(decimatingFilter);
+    decimatingFilter2=new SecondOrderIirFilter();
+    calculateFilterCoefficients(decimatingFilter2);
+/*
     decimatingFilter->coeffA[0] = -1.10922879f;
     decimatingFilter->coeffA[1] = 0.39815229f;
 
     decimatingFilter->coeffB[0] = 0.07223088f;
     decimatingFilter->coeffB[1] = 0.14446175f;
     decimatingFilter->coeffB[2] =  0.07223088f;
-
+*/
 #endif
+}
+
+void SawOscillator::calculateFilterCoefficients(SecondOrderIirFilter* filter) {
+    const float ita =1.0f/ tanf(M_PI*5000.0/(samplingRate*4.0));
+    const float q=sqrtf(2.0);
+    filter->coeffB[0] = 1.0 / (1.0 + q*ita + ita*ita);
+    filter->coeffB[1] = 2*filter->coeffB[0];
+    filter->coeffB[2] = filter->coeffB[0];
+    filter->coeffA[0] = -2.0 * (ita*ita - 1.0) * filter->coeffB[0];
+    filter->coeffA[1] = (1.0 - q*ita + ita*ita) * filter->coeffB[0];
 }
 
 

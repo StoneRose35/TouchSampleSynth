@@ -21,6 +21,8 @@ private:
     float samplingRate;
     float currentPhase;
     SecondOrderIirFilter * decimatingFilter;
+    SecondOrderIirFilter * decimatingFilter2;
+    void calculateFilterCoefficients(SecondOrderIirFilter*);
 };
 
 

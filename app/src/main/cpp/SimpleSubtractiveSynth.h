@@ -19,13 +19,15 @@ private:
     SawOscillator * osc;
     float envelopeVals[2]{};
     float sampleRate;
-    int8_t envelopeUpdateInterval{};
-    int8_t currentSample{};
+    int8_t envelopeUpdateInterval;
+    int8_t currentSample;
+    float currentFilterCutoff{}, currentResonance{}, newFilterCutoff{};
+    int filterUpdateInSamples{}, currentFilterUpdateSample;
 
 
 public:
 
-    SimpleSubtractiveSynth();
+    SimpleSubtractiveSynth(float);
     float getNextSample() override;
     void setNote(float note) override;
     void switchOn(float) override;
