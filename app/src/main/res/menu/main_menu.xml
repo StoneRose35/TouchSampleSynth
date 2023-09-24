@@ -5,10 +5,12 @@
     <item
         android:id="@+id/menuitem_play"
         android:title="@string/menuitem_playpage"
+        android:icon="@drawable/playpageicon"
         app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/menuitem_instruments"
+        android:icon="@drawable/instrumenteditpage"
         app:showAsAction="ifRoom"
         android:title="@string/menuitem_soundgenerator" />
 </menu>

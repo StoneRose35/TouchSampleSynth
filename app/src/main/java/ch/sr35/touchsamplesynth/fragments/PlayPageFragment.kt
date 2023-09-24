@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ToggleButton
+import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
@@ -19,13 +19,8 @@ import ch.sr35.touchsamplesynth.views.TouchElement
  */
 class PlayPageFragment : Fragment() {
 
-    val Int.px: Int
+    private val Int.px: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +37,8 @@ class PlayPageFragment : Fragment() {
         val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
 
 
-        val toggleButton = view.findViewById<ToggleButton>(R.id.toggleEdit)
-        toggleButton.setOnCheckedChangeListener { _, toggleval ->
+        val toggleSwitch = view.findViewById<SwitchCompat>(R.id.toggleEdit)
+        toggleSwitch.setOnCheckedChangeListener { _, toggleval ->
 
             if (toggleval)
             {
@@ -123,8 +118,4 @@ class PlayPageFragment : Fragment() {
     }
 
 
-
-    companion object {
-
-    }
 }
