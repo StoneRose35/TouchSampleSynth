@@ -9,7 +9,7 @@
 extern "C"
 {
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setAttack(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setAttack(JNIEnv* env,
                          jobject /* this */me,
                          jfloat attack)
 {
@@ -31,7 +31,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setAttack(JNIEnv*
 }
 
 JNIEXPORT jfloat JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_getAttack(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getAttack(JNIEnv* env,
                                                              jobject /* this */me)
 {
     AudioEngine * audioEngine = getAudioEngine();
@@ -51,7 +51,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_getAttack(JNIEnv*
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setDecay(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setDecay(JNIEnv* env,
                                                              jobject /* this */me,
                                                              jfloat attack)
 {
@@ -73,7 +73,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setDecay(JNIEnv* 
 }
 
 JNIEXPORT jfloat JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_getDecay(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getDecay(JNIEnv* env,
                                                              jobject /* this */me)
 {
     AudioEngine * audioEngine = getAudioEngine();
@@ -93,7 +93,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_getDecay(JNIEnv* 
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setSustain(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setSustain(JNIEnv* env,
                                                             jobject /* this */me,
                                                             jfloat attack)
 {
@@ -115,7 +115,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setSustain(JNIEnv
 }
 
 JNIEXPORT jfloat JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_getSustain(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getSustain(JNIEnv* env,
                                                             jobject /* this */me)
 {
     AudioEngine * audioEngine = getAudioEngine();
@@ -135,7 +135,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_getSustain(JNIEnv
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setRelease(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setRelease(JNIEnv* env,
                                                             jobject /* this */me,
                                                             jfloat attack)
 {
@@ -157,7 +157,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setRelease(JNIEnv
 }
 
 JNIEXPORT jfloat JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_getRelease(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getRelease(JNIEnv* env,
                                                             jobject /* this */me)
 {
     AudioEngine * audioEngine = getAudioEngine();
@@ -177,7 +177,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_getRelease(JNIEnv
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_switchOn(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOn(JNIEnv* env,
                                                               jobject /* this */me,
                                                               jfloat vel)
 {
@@ -195,7 +195,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_switchOn(JNIEnv* 
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_switchOff(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOff(JNIEnv* env,
                                                             jobject /* this */me,
                                                             jfloat vel)
 {
@@ -213,7 +213,7 @@ Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_switchOff(JNIEnv*
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_instruments_SineMonoSynthK_setNote(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setNote(JNIEnv* env,
                      jobject /* this */me,
                      jfloat note)
 {

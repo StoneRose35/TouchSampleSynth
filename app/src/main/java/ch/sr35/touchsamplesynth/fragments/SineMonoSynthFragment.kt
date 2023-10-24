@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import ch.sr35.touchsamplesynth.R
-import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 
 
 /**

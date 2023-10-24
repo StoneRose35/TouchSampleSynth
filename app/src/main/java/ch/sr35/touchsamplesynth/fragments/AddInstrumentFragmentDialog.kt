@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthK
-import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
+import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import ch.sr35.touchsamplesynth.dialogs.SoundGeneratorListAdapter
 
 

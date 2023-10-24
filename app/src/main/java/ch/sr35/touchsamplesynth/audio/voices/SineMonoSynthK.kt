@@ -1,4 +1,4 @@
-package ch.sr35.touchsamplesynth.audio.instruments
+package ch.sr35.touchsamplesynth.audio.voices
 
 import android.content.Context
 import android.graphics.drawable.Drawable

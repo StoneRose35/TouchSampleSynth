@@ -1,7 +1,7 @@
 package ch.sr35.touchsamplesynth.model
 
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import java.io.Serializable
 
 class SineMonoSynthP(private var attack: Float,

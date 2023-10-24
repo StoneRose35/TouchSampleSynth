@@ -2,8 +2,8 @@ package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthK
-import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
+import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import java.io.Serializable
 
 interface PersistableInstrument: Serializable {

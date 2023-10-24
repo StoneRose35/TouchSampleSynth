@@ -7,7 +7,7 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
@@ -116,18 +116,14 @@ class TouchSampleSynthMain : AppCompatActivity() {
             it.commit()
         }
     }
-/*
+
     override fun onDestroy() {
-        if (defaultScene==null)
-        {
-            defaultScene= SceneP()
-        }
+
         val f = File("default.scn")
         if (f.exists())
         {
             f.delete()
         }
-        defaultScene!!.toFile(f)
         for (soundGenerator in soundGenerators)
         {
             soundGenerator.detachFromAudioEngine()
@@ -135,7 +131,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         audioEngine.stopEngine()
         super.onDestroy()
     }
-*/
+
     override fun onStop() {
         if (defaultScene==null)
         {
@@ -179,7 +175,6 @@ class TouchSampleSynthMain : AppCompatActivity() {
         }
         return true
     }
-
 
 
     companion object {
