@@ -1,6 +1,8 @@
 package ch.sr35.touchsamplesynth.model
 
+import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 
 class SimpleSubtractiveSynthP(
@@ -10,34 +12,33 @@ class SimpleSubtractiveSynthP(
     private var release: Float,
     private var initialCutoff: Float,
     private var actionAmount: Float,
-    private var resonance: Float
-    ): PersistableInstrument {
-    override fun fromInstrument(msg: MusicalSoundGenerator) {
-        if (msg is SimpleSubtractiveSynthK)
+    private var resonance: Float,
+    override var nVoices: Int,
+    override var name: String
+): PersistableInstrument {
+    override fun fromInstrument(i: Instrument) {
+        if (i is SimpleSubtractiveSynthI)
         {
-            attack = msg.getAttack()
-            decay = msg.getDecay()
-            sustain = msg.getSustain()
-            release = msg.getRelease()
-            initialCutoff = msg.initialCutoff
-            actionAmount = msg.actionAmount
-            resonance = msg.getResonance()
+            attack = i.getAttack()
+            decay = i.getDecay()
+            sustain = i.getSustain()
+            release = i.getRelease()
+            initialCutoff = i.getCutoff()
+            actionAmount = i.getActionAmount()
+            resonance = i.getResonance()
         }
     }
 
-    override fun toInstrument(msg: MusicalSoundGenerator) {
-        if (msg is SimpleSubtractiveSynthK)
+    override fun toInstrument(msg: Instrument) {
+        if (msg is SimpleSubtractiveSynthI)
         {
-            if (msg.getInstance() < 0)
-            {
-                msg.bindToAudioEngine()
-            }
+            msg.generateVoices(nVoices)
             msg.setAttack(attack)
             msg.setDecay(decay)
             msg.setSustain(sustain)
             msg.setRelease(release)
-            msg.initialCutoff = initialCutoff
-            msg.actionAmount = actionAmount
+            msg.setCutoff(initialCutoff)
+            msg.setActionAmount(actionAmount)
             msg.setResonance(resonance)
         }
     }

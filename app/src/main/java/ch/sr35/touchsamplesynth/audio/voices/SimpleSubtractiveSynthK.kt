@@ -28,16 +28,10 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     external fun getResonance():Float
     external fun switchOnExt(vel: Float): Boolean
     external fun switchOffExt(vel: Float):Boolean
+    external override fun isSounding(): Boolean
     external override fun setNote(note: Float): Boolean
 
 
-    override fun getType(): String {
-        return "SimpleSubtractiveSynth"
-    }
-
-    override fun getInstrumentIcon(): Drawable? {
-        return icon
-    }
 
     override fun getInstance(): Int {
         return instance
@@ -74,6 +68,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     override fun switchOff(vel: Float): Boolean{
         return switchOffExt(vel)
     }
+
 
     override fun applyTouchAction(a: Float) {
         if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(initialCutoff) + a*actionAmount) > 20.0f &&

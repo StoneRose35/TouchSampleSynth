@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         >
     </ImageView>
-<TextView
+<com.google.android.material.textfield.TextInputEditText
     android:id="@+id/instrument_entry_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -32,6 +32,13 @@
     app:layout_constraintStart_toEndOf="@id/instrument_entry_icon"
     app:layout_constraintTop_toTopOf="parent"
     />
+    <NumberPicker
+        android:id="@+id/numberVoices"
+        android:layout_width="wrap_content"
+        android:descendantFocusability="blocksDescendants"
+        android:layout_height="match_parent">
+
+    </NumberPicker>
 
     <CheckBox
         android:id="@+id/instrument_entry_checkbox"

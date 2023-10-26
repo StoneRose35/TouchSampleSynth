@@ -7,13 +7,11 @@ interface MusicalSoundGenerator {
     fun setNote(note: Float): Boolean
     fun switchOn(vel: Float): Boolean
     fun switchOff(vel: Float): Boolean
-    fun getType(): String
-    fun getInstrumentIcon(): Drawable?
     fun getInstance(): Int
     fun generateAttachedInstance(context: Context): MusicalSoundGenerator
     fun bindToAudioEngine()
     fun detachFromAudioEngine()
     fun applyTouchAction(a: Float)
-
+    fun isSounding(): Boolean
 
 }

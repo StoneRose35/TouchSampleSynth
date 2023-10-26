@@ -47,6 +47,7 @@ public:
     float getCutoff();
     void setResonance(float);
     float getResonance();
+    bool isSounding();
 };
 
 

@@ -1,6 +1,7 @@
 package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
+import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.views.TouchElement
 import java.io.File
@@ -17,23 +18,28 @@ class SceneP : Serializable {
 
 
     fun populate(
-        sg: ArrayList<MusicalSoundGenerator>,
+        sg: ArrayList<Instrument>,
         tels: ArrayList<TouchElement>,
         context: Context
     ) {
         sg.clear()
         tels.clear()
+
         for (pi in instruments) {
             val instr = PersistableInstrumentFactory.toInstrument(pi, context)
             if (instr != null) {
                 sg.add(instr)
-
+                var voiceIdx = 0
                 // generate all touchElements which use the current instrument
                 touchElements.stream().filter { te -> te.soundGenerator == pi }.forEach {
                     val touchElement = TouchElement(context, null)
                     it.toTouchElement(touchElement)
                     touchElement.soundGenerator = instr
                     tels.add(touchElement)
+                    if (voiceIdx < pi.nVoices-1)
+                    {
+                        voiceIdx++
+                    }
                 }
                 touchElements.removeIf { te -> te.soundGenerator == pi }
             }
@@ -47,7 +53,7 @@ class SceneP : Serializable {
         }
     }
 
-    fun persist(        soundGenerators: ArrayList<MusicalSoundGenerator>,
+    fun persist(        soundGenerators: ArrayList<Instrument>,
                         touchEls: ArrayList<TouchElement>)
     {
         instruments.clear()

@@ -27,6 +27,7 @@ public:
     void switchOn(float velocity);
     void switchOff(float velocity);
     int getType();
+    bool isSounding();
 
     // specific interface
     void setAttack(float);

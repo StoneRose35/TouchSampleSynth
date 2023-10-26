@@ -6,7 +6,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
+import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
@@ -22,7 +24,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     val audioEngine: AudioEngineK=AudioEngineK()
-    val soundGenerators=ArrayList<MusicalSoundGenerator>()
+    val soundGenerators=ArrayList<Instrument>()
     val touchElements=ArrayList<TouchElement>()
     var defaultScene: SceneP?=null
     val playPageFragment=PlayPageFragment()
@@ -47,8 +49,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         defaultScene?.populate(soundGenerators,touchElements, this)
 
         if (defaultScene == null) {
-            val synth = SineMonoSynthK(this)
-            synth.bindToAudioEngine()
+            val synth = SineMonoSynthI.generateInstance(this,4,"Basic")
             soundGenerators.add(synth)
 
             var te = TouchElement(this, null)
@@ -124,10 +125,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         {
             f.delete()
         }
-        for (soundGenerator in soundGenerators)
-        {
-            soundGenerator.detachFromAudioEngine()
-        }
+        soundGenerators.flatMap { sg -> sg.voices!! }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
         super.onDestroy()
     }
@@ -145,10 +143,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
             f.delete()
         }
         defaultScene!!.toFile(f)
-        for (soundGenerator in soundGenerators)
-        {
-            soundGenerator.detachFromAudioEngine()
-        }
+        soundGenerators.flatMap { sg -> sg.voices!! }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
         super.onStop()
     }

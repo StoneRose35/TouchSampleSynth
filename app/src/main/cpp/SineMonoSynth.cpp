@@ -79,3 +79,7 @@ void SineMonoSynth::setRelease(float r) {
 float SineMonoSynth::getRelease() {
     return env->getRelease();
 }
+
+bool SineMonoSynth::isSounding() {
+    return env->isSounding();
+}

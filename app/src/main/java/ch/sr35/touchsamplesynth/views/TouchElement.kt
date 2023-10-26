@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import java.io.Serializable
@@ -56,7 +57,8 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private var oldWidth: Int = 0
     private var oldHeight: Int = 0
     private var elementState: TouchElementState = TouchElementState.PLAYING
-    var soundGenerator: MusicalSoundGenerator? = null
+    var soundGenerator: Instrument? = null
+    var voiceNr: Int = -1
     var note: MusicalPitch? = null
     private var rotateRect: Rect = Rect()
     private var setSoundgenRect: Rect = Rect()
@@ -270,17 +272,17 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
             } else if (event?.action == MotionEvent.ACTION_UP) {
                 fillColor.color =
                     context.resources.getColor(R.color.touchelement_not_touched, context.theme)
-                soundGenerator?.switchOff(1.0f)
+                soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
                 invalidate()
                 return false
             } else if (event?.action == MotionEvent.ACTION_MOVE) {
                 if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
-                    soundGenerator?.switchOff(1.0f)
+                    soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
                     return false
                 } else if (actionDir == ActionDir.VERTICAL && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-                    soundGenerator?.applyTouchAction((event.y) / measuredHeight.toFloat())
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.y) / measuredHeight.toFloat())
                 } else if (actionDir == ActionDir.HORIZONTAL && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-                    soundGenerator?.applyTouchAction((event.x) / measuredWidth.toFloat())
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.x) / measuredWidth.toFloat())
                 }
                 return true
             }
@@ -381,8 +383,8 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     override fun performClick(): Boolean {
         fillColor.color =
             context.resources.getColor(R.color.touchelement_touched, context.theme)
-        note?.value?.let { soundGenerator?.setNote(it) }
-        soundGenerator?.switchOn(1.0f)
+        note?.value?.let { soundGenerator?.voices?.get(voiceNr)?.setNote(it) }
+        soundGenerator?.voices?.get(voiceNr)?.switchOn(1.0f)
         invalidate()
         return super.performClick()
     }

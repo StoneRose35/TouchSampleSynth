@@ -103,6 +103,10 @@ void SimpleSubtractiveSynth::switchOff(float vel) {
     env->switchOff();
 }
 
+bool SimpleSubtractiveSynth::isSounding() {
+    return env->isSounding();
+}
+
 SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) {
     sampleRate=sr;
     currentSample=0;

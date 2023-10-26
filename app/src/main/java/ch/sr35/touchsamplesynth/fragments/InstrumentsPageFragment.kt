@@ -18,8 +18,10 @@ import android.widget.ListView
 import android.widget.TextView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 
 
 /**
@@ -74,7 +76,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 val alertDlgBuilder = AlertDialog.Builder(context as TouchSampleSynthMain)
                     .setMessage((context as TouchSampleSynthMain).getString(R.string.alert_dialog_really_delete))
                     .setPositiveButton((context as TouchSampleSynthMain).getString(R.string.yes)) { _, _ ->
-                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].detachFromAudioEngine()
+                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices!!.forEach { v -> v.detachFromAudioEngine() }
                         (context as TouchSampleSynthMain).soundGenerators.removeAt(selectedInstrument)
                         instrumentsList.invalidateViews()
                     }
@@ -124,8 +126,8 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         return if (p1 is LinearLayout) {
             p1.findViewById<TextView>(R.id.instrument_entry_text).text =
-                String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),
-                                        (context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
+                String.format("%s, %s",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),
+                                        (context as TouchSampleSynthMain).soundGenerators[p0].name)
             p1.findViewById<ImageView>(R.id.instrument_entry_icon)
                 .setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
             p1.findViewById<CheckBox>(R.id.instrument_entry_checkbox).isChecked = (selectedInstrument >= 0 && p0==selectedInstrument)
@@ -133,8 +135,8 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         } else {
             val tv = View.inflate(context,R.layout.instrument_entry,null) as LinearLayout
             tv.findViewById<TextView>(R.id.instrument_entry_text).text =
-                String.format("%s, %d",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),
-                                        (context as TouchSampleSynthMain).soundGenerators[p0].getInstance())
+                String.format("%s, %s",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),
+                                        (context as TouchSampleSynthMain).soundGenerators[p0].name)
             tv.findViewById<ImageView>(R.id.instrument_entry_icon)
                 .setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
             tv.findViewById<CheckBox>(R.id.instrument_entry_checkbox).isChecked = (selectedInstrument >= 0 && p0==selectedInstrument)
@@ -182,7 +184,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             val contentView = view?.findViewById<FrameLayout>(R.id.instruments_page_content)
             selectedInstrument = p2
             if (contentView != null) {
-                if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthK) {
+                if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthI) {
                     val frag =
                         SineMonoSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SineMonoSynthK)
                     if (p1 != null) {
@@ -194,7 +196,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                         putFragment(frag, "thefirstitem")
                     }
                 }
-                else if ((context as TouchSampleSynthMain).soundGenerators[p2] is SimpleSubtractiveSynthK)
+                else if ((context as TouchSampleSynthMain).soundGenerators[p2] is SimpleSubtractiveSynthI)
                 {
                     val frag =
                         SimpleSubtractiveSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SimpleSubtractiveSynthK)

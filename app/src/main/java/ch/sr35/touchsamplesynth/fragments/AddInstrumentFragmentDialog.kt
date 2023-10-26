@@ -11,7 +11,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
+import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import ch.sr35.touchsamplesynth.dialogs.SoundGeneratorListAdapter
@@ -23,7 +26,7 @@ import ch.sr35.touchsamplesynth.dialogs.SoundGeneratorListAdapter
  */
 class AddInstrumentFragmentDialog(private val generatorsList: ListView) : DialogFragment() {
 
-    private var soundGenerators = ArrayList<MusicalSoundGenerator>()
+    private var soundGenerators = ArrayList<Instrument>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +46,8 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
 
         if (soundGenerators.isEmpty()) {
             this.context?.let {
-                soundGenerators.add(SineMonoSynthK(it))
-                soundGenerators.add(SimpleSubtractiveSynthK(it))
+                soundGenerators.add(SimpleSubtractiveSynthI(it, null,""))
+                soundGenerators.add(SineMonoSynthI(it, null, ""))
             }
         }
 
@@ -56,9 +59,8 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
             if ((instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition > -1) {
                 context?.let { it1 ->
                     (context as TouchSampleSynthMain).soundGenerators.add(
-                    soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition].generateAttachedInstance(
-                        it1
-                    ))
+                        soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition].generateInstance(0,"")
+                    )
                     generatorsList.invalidateViews()
                 }
             }

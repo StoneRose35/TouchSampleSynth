@@ -23,6 +23,7 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
     external override fun switchOn(vel: Float): Boolean
     external override fun switchOff(vel:Float): Boolean
     external override fun setNote(note: Float): Boolean
+    external override fun isSounding(): Boolean
     companion object {
         // Used to load the 'touchsamplesynth' library on application startup.
         init {
@@ -51,6 +52,9 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
 
     }
 
+
+
+
     override fun getInstance(): Int
     {
         return instance
@@ -60,14 +64,6 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
         val instance = SineMonoSynthK(context)
         instance.bindToAudioEngine()
         return instance
-    }
-
-    override fun getType(): String {
-        return "SineMonoSynth"
-    }
-
-    override fun getInstrumentIcon(): Drawable? {
-        return icon
     }
 
     override fun equals(other: Any?): Boolean {
