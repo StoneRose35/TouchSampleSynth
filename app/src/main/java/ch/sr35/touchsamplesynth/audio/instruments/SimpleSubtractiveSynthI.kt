@@ -5,9 +5,11 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 
-class SimpleSubtractiveSynthI(private val context: Context, voices: ArrayList<SimpleSubtractiveSynthK>?,
+class SimpleSubtractiveSynthI(private val context: Context,
+                              override val voices: ArrayList<MusicalSoundGenerator>?,
                               name: String
 ) : Instrument(name) {
     val icon= AppCompatResources.getDrawable(context, R.drawable.simplesubtractivesynth)
@@ -17,7 +19,6 @@ class SimpleSubtractiveSynthI(private val context: Context, voices: ArrayList<Si
     }
 
     override fun getInstrumentIcon(): Drawable? {
-
         return icon
     }
 
@@ -147,21 +148,27 @@ class SimpleSubtractiveSynthI(private val context: Context, voices: ArrayList<Si
         return 0.0f
     }
 
-    override fun generateInstance(nVoices: Int, n: String): Instrument {
-        val vcs = ArrayList<SimpleSubtractiveSynthK>()
-        for (c in 0 until nVoices) {
-            vcs.add(SimpleSubtractiveSynthK(context))
+    fun getInitialCutoff(): Float
+    {
+        if (voices?.isNotEmpty() == true) {
+            return (voices[0] as SimpleSubtractiveSynthK).initialCutoff
         }
-        return SimpleSubtractiveSynthI(context, vcs, n)
+        return 0.0f
     }
+
+    fun setInitialCutoff(v: Float)
+    {
+        for (voice in voices!!)
+        {
+            (voice as SimpleSubtractiveSynthK).initialCutoff = v
+        }
+    }
+
 
     companion object
     {
         fun generateInstance(context: Context, nVoices: Int, name: String): Instrument {
-            val vcs = ArrayList<SimpleSubtractiveSynthK>()
-            for (c in 0 until nVoices) {
-                vcs.add(SimpleSubtractiveSynthK(context))
-            }
+            val vcs = ArrayList<MusicalSoundGenerator>()
             return SimpleSubtractiveSynthI(context, vcs, name)
         }
     }

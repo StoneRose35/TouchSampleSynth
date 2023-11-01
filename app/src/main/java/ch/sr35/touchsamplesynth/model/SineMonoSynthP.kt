@@ -14,6 +14,7 @@ class SineMonoSynthP(private var attack: Float,
                      override var name: String
 ): PersistableInstrument,Serializable {
     override fun fromInstrument(msg: Instrument) {
+        super.fromInstrument(msg)
         if (msg is SineMonoSynthI)
         {
             attack = msg.getAttack()

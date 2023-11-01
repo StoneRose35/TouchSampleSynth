@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 
 open class Instrument(val name: String) {
 
-    public val voices: ArrayList<MusicalSoundGenerator>?=null
+    public open val voices: ArrayList<MusicalSoundGenerator>?=null
 
     open fun getType(): String
     {

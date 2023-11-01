@@ -14,6 +14,9 @@ interface PersistableInstrument: Serializable {
     var nVoices: Int
     var name: String
     fun fromInstrument(i: Instrument)
+    {
+        nVoices = i.voicesCount()
+    }
 
     fun toInstrument(i: Instrument)
 

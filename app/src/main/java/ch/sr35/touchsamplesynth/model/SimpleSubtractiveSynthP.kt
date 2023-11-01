@@ -17,6 +17,7 @@ class SimpleSubtractiveSynthP(
     override var name: String
 ): PersistableInstrument {
     override fun fromInstrument(i: Instrument) {
+        super.fromInstrument(i)
         if (i is SimpleSubtractiveSynthI)
         {
             attack = i.getAttack()

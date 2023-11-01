@@ -35,6 +35,7 @@ class SceneP : Serializable {
                     val touchElement = TouchElement(context, null)
                     it.toTouchElement(touchElement)
                     touchElement.soundGenerator = instr
+                    touchElement.voiceNr = voiceIdx
                     tels.add(touchElement)
                     if (voiceIdx < pi.nVoices-1)
                     {
@@ -65,7 +66,7 @@ class SceneP : Serializable {
         }
         for (te in touchEls)
         {
-            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL,0,null)
+            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL,0,0,null)
             pte.fromTouchElement(te)
             touchElements.add(pte)
         }

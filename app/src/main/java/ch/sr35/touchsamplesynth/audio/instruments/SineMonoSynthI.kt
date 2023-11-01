@@ -5,9 +5,10 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 
-class SineMonoSynthI(private val context: Context, voices: ArrayList<SineMonoSynthK>?,
+class SineMonoSynthI(private val context: Context, override val voices: ArrayList<MusicalSoundGenerator>?,
                      name: String
 ) : Instrument(name)  {
     val icon= AppCompatResources.getDrawable(context, R.drawable.sinemonosynth)
@@ -82,7 +83,7 @@ class SineMonoSynthI(private val context: Context, voices: ArrayList<SineMonoSyn
     {
         if (voices?.isNotEmpty() == true)
         {
-            return (voices[0] as SineMonoSynthK).getSustain()
+            return (voices[0] as SineMonoSynthK).getRelease()
         }
         return 0.0f
     }
@@ -98,10 +99,7 @@ class SineMonoSynthI(private val context: Context, voices: ArrayList<SineMonoSyn
     companion object
     {
         fun generateInstance(context: Context, nVoices: Int, name: String): Instrument {
-            val vcs = ArrayList<SineMonoSynthK>()
-            for (c in 0 until nVoices) {
-                vcs.add(SineMonoSynthK(context))
-            }
+            val vcs = ArrayList<MusicalSoundGenerator>()
             return SineMonoSynthI(context, vcs, name)
         }
     }

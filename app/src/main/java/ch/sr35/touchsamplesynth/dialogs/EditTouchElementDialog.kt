@@ -89,7 +89,9 @@ class SoundGeneratorListAdapter(private val instruments: ArrayList<Instrument>,
             iconView=itemView.findViewById(R.id.instrument_entry_icon)
             instrumentNameView=itemView.findViewById(R.id.instrument_entry_text)
             checkedView=itemView.findViewById(R.id.instrument_entry_checkbox)
-            voices=itemView.findViewById(R.id.numberVoices)
+            voices=itemView.findViewById(R.id.instrument_entry_number_voices)
+            voices.minValue = 1
+            voices.maxValue = 16
         }
     }
 

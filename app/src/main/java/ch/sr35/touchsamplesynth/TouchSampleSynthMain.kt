@@ -54,18 +54,21 @@ class TouchSampleSynthMain : AppCompatActivity() {
 
             var te = TouchElement(this, null)
             te.soundGenerator = synth
+            te.voiceNr = 0
             te.note = allNotes[44]
             te.setEditmode(false)
             touchElements.add(te)
 
             te = TouchElement(this, null)
             te.soundGenerator = synth
+            te.voiceNr = 1
             te.note = allNotes[44 + 5]
             te.setEditmode(false)
             touchElements.add(te)
 
             te = TouchElement(this, null)
             te.soundGenerator = synth
+            te.voiceNr = 2
             te.note = allNotes[44 + 7]
             te.setEditmode(false)
             touchElements.add(te)
@@ -73,6 +76,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
 
             te = TouchElement(this, null)
             te.soundGenerator = synth
+            te.voiceNr = 3
             te.note = allNotes[44 + 9]
             te.setEditmode(false)
             touchElements.add(te)

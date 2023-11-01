@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import ch.sr35.touchsamplesynth.R
-import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
+import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class SineMonoSynthFragment(s: SineMonoSynthK) : Fragment(), SeekBar.OnSeekBarChangeListener {
+class SineMonoSynthFragment(s: SineMonoSynthI) : Fragment(), SeekBar.OnSeekBarChangeListener {
 
 
     private val synth = s

@@ -33,10 +33,12 @@
     app:layout_constraintTop_toTopOf="parent"
     />
     <NumberPicker
-        android:id="@+id/numberVoices"
+        android:id="@+id/instrument_entry_number_voices"
         android:layout_width="wrap_content"
         android:descendantFocusability="blocksDescendants"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        >
 
     </NumberPicker>
 
@@ -48,7 +50,7 @@
         android:clickable="false"
         android:focusable="false"
         android:enabled="true"
-        app:layout_constraintStart_toEndOf="@id/instrument_entry_text"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </LinearLayout>

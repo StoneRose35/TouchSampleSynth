@@ -11,6 +11,7 @@ class TouchElementP(var width: Int,
                     var posY: Int,
                     var actionDir: TouchElement.ActionDir,
                     var note: Int,
+                    var voiceNr: Int,
                     var soundGenerator: PersistableInstrument?
 ): Serializable {
 
@@ -22,6 +23,7 @@ class TouchElementP(var width: Int,
         posY = (touchElement.layoutParams as ConstraintLayout.LayoutParams).topMargin
         actionDir = touchElement.actionDir
         note = touchElement.note?.index ?: -1
+        voiceNr = touchElement.voiceNr
         soundGenerator = PersistableInstrumentFactory.fromInstrument(touchElement.soundGenerator)
     }
 
