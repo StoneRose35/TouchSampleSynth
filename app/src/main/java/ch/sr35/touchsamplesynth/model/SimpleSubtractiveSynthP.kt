@@ -24,7 +24,7 @@ class SimpleSubtractiveSynthP(
             decay = i.getDecay()
             sustain = i.getSustain()
             release = i.getRelease()
-            initialCutoff = i.getCutoff()
+            initialCutoff = i.getInitialCutoff()
             actionAmount = i.getActionAmount()
             resonance = i.getResonance()
         }
@@ -33,12 +33,11 @@ class SimpleSubtractiveSynthP(
     override fun toInstrument(msg: Instrument) {
         if (msg is SimpleSubtractiveSynthI)
         {
-            msg.generateVoices(nVoices)
             msg.setAttack(attack)
             msg.setDecay(decay)
             msg.setSustain(sustain)
             msg.setRelease(release)
-            msg.setCutoff(initialCutoff)
+            msg.setInitialCutoff(initialCutoff)
             msg.setActionAmount(actionAmount)
             msg.setResonance(resonance)
         }

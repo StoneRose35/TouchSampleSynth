@@ -46,8 +46,8 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
 
         if (soundGenerators.isEmpty()) {
             this.context?.let {
-                soundGenerators.add(SimpleSubtractiveSynthI(it, null,""))
-                soundGenerators.add(SineMonoSynthI(it, null, ""))
+                soundGenerators.add(SimpleSubtractiveSynthI.generateInstance(it,""))
+                soundGenerators.add(SineMonoSynthI.generateInstance(it, ""))
             }
         }
 
@@ -59,7 +59,7 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
             if ((instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition > -1) {
                 context?.let { it1 ->
                     (context as TouchSampleSynthMain).soundGenerators.add(
-                        soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition].generateInstance(0,"")
+                        soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition].generateInstance(0,"basic")
                     )
                     generatorsList.invalidateViews()
                 }

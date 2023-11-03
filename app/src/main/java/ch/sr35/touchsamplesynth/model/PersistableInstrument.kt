@@ -15,10 +15,14 @@ interface PersistableInstrument: Serializable {
     var name: String
     fun fromInstrument(i: Instrument)
     {
+        name = i.name
         nVoices = i.voicesCount()
     }
 
     fun toInstrument(i: Instrument)
+    {
+        i.name = name
+    }
 
 }
 
@@ -48,13 +52,15 @@ class PersistableInstrumentFactory
         fun toInstrument(pi: PersistableInstrument,context: Context): Instrument?
         {
             if (pi is SimpleSubtractiveSynthP) {
-                val instr = SimpleSubtractiveSynthI.generateInstance(context,pi.nVoices,pi.name)
+                val instr = SimpleSubtractiveSynthI.generateInstance(context,pi.name)
+                instr.generateVoices(pi.nVoices)
                 pi.toInstrument(instr)
                 return instr
             }
             else if (pi is SineMonoSynthP)
             {
-                val instr = SineMonoSynthI.generateInstance(context,pi.nVoices,pi.name)
+                val instr = SineMonoSynthI.generateInstance(context,pi.name)
+                instr.generateVoices(pi.nVoices)
                 pi.toInstrument(instr)
                 return instr
             }

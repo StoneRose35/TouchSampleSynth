@@ -1,15 +1,19 @@
 package ch.sr35.touchsamplesynth.fragments
 
 import android.app.AlertDialog
+import android.content.Context
 import android.database.DataSetObserver
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -17,12 +21,14 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.NumberPicker
 import android.widget.TextView
+import androidx.core.widget.doOnTextChanged
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
+import java.lang.NumberFormatException
 
 
 /**
@@ -86,6 +92,59 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 alertDlg.show()
             }
         }
+
+        view.findViewById<EditText>(R.id.instruments_page_instr_name).doOnTextChanged { text, start, before, count ->
+            (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name = text.toString()
+        }
+
+        view.findViewById<EditText>(R.id.instruments_page_nr_voices).doOnTextChanged { text, start, before, count ->
+            var voicesInt: Int
+            try {
+                voicesInt = Integer.parseInt(text.toString())
+            }
+            catch (e: NumberFormatException)
+            {
+                voicesInt = -1
+            }
+            if (voicesInt in 1..16)
+            {
+                // check that less voices are assigned than requested
+                if ((context as TouchSampleSynthMain).touchElements.stream()
+                    .map { te -> te.soundGenerator }
+                    .filter {
+                        sg -> sg!!.name == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name
+                            && sg.getType() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].getType()
+                    }
+                    .count() < voicesInt )
+                {
+                    if (voicesInt < (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount())
+                    {
+                        // remove voices
+                        val nVoicesToRemove = (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount() - voicesInt
+
+                        for (c in 0 until nVoicesToRemove)
+                        {
+                            (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices?.get(0)
+                                ?.detachFromAudioEngine()
+                            (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices?.removeAt(
+                                0
+                            )
+                        }
+                        var currentVoiceIndex = 0
+                        (context as TouchSampleSynthMain).touchElements
+                            .stream()
+                            .filter { te -> te.soundGenerator?.name == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name && te.soundGenerator?.getType() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].getType() }
+                            .forEach { t -> t.voiceNr = currentVoiceIndex++ }
+                    }
+                    else if (voicesInt > (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount())
+                    {
+                        val voicesToAdd = voicesInt - (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()
+                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(voicesToAdd)
+                        // add voices
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -125,32 +184,19 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
     }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        return if (p1 is LinearLayout) {
-            val numberPickerVoices = p1.findViewById<NumberPicker>(R.id.instrument_entry_number_voices)
-            p1.findViewById<TextView>(R.id.instrument_entry_text).text =
-                String.format("%s, %s",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),
-                                        (context as TouchSampleSynthMain).soundGenerators[p0].name)
-            p1.findViewById<ImageView>(R.id.instrument_entry_icon).setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
-            numberPickerVoices.minValue = 1
-            numberPickerVoices.maxValue = 16
-            numberPickerVoices.value = (context as TouchSampleSynthMain).soundGenerators[p0].voicesCount()
-            p1.findViewById<NumberPicker>(R.id.instrument_entry_number_voices)
-            p1.findViewById<CheckBox>(R.id.instrument_entry_checkbox).isChecked = (selectedInstrument >= 0 && p0==selectedInstrument)
+        var itemView: LinearLayout = if (p1 is LinearLayout) {
             p1
         } else {
-            val tv = View.inflate(context,R.layout.instrument_entry,null) as LinearLayout
-            val numberPickerVoices = tv.findViewById<NumberPicker>(R.id.instrument_entry_number_voices)
-            tv.findViewById<TextView>(R.id.instrument_entry_text).text =
-                String.format("%s, %s",(context as TouchSampleSynthMain).soundGenerators[p0].getType(),
-                                        (context as TouchSampleSynthMain).soundGenerators[p0].name)
-            tv.findViewById<ImageView>(R.id.instrument_entry_icon)
-                .setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
-            numberPickerVoices.minValue = 1
-            numberPickerVoices.maxValue = 16
-            numberPickerVoices.value = (context as TouchSampleSynthMain).soundGenerators[p0].voicesCount()
-            tv.findViewById<CheckBox>(R.id.instrument_entry_checkbox).isChecked = (selectedInstrument >= 0 && p0==selectedInstrument)
-            tv
+            View.inflate(context,R.layout.instrument_entry,null) as LinearLayout
         }
+        itemView.findViewById<TextView>(R.id.instrument_entry_text).text =
+            String.format("%s",
+                (context as TouchSampleSynthMain).soundGenerators[p0].name)
+        itemView.findViewById<ImageView>(R.id.instrument_entry_icon).setImageDrawable((context as TouchSampleSynthMain).soundGenerators[p0].getInstrumentIcon())
+        itemView.findViewById<TextView>(R.id.instrument_entry_n_voices).text = (context as TouchSampleSynthMain).soundGenerators[p0].getPolyphonyDescription()
+        itemView.findViewById<CheckBox>(R.id.instrument_entry_checkbox).isChecked = (selectedInstrument >= 0 && p0==selectedInstrument)
+        return itemView
+
     }
 
     private fun putFragment(frag: Fragment,tag: String?)
@@ -218,6 +264,14 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                         putFragment(frag, "thefirstitem")
                     }
                 }
+            }
+            if (view?.findViewById<TextView>(R.id.instruments_page_instr_name) != null) {
+                view?.findViewById<TextView>(R.id.instruments_page_instr_name)?.text=
+                    (context as TouchSampleSynthMain).soundGenerators[p2].name
+            }
+            if (view?.findViewById<TextView>(R.id.instruments_page_nr_voices)!= null) {
+                view?.findViewById<TextView>(R.id.instruments_page_nr_voices)?.text =
+                    (context as TouchSampleSynthMain).soundGenerators[p2].voicesCount().toString()
             }
             (p0 as ListView).invalidateViews()
         }

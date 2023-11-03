@@ -17,6 +17,7 @@ class SineMonoSynthP(private var attack: Float,
         super.fromInstrument(msg)
         if (msg is SineMonoSynthI)
         {
+
             attack = msg.getAttack()
             decay = msg.getDecay()
             sustain = msg.getSustain()
@@ -27,7 +28,6 @@ class SineMonoSynthP(private var attack: Float,
     override fun toInstrument(msg: Instrument) {
         if (msg is SineMonoSynthI)
         {
-            msg.generateVoices(nVoices)
             msg.setAttack(attack)
             msg.setDecay(decay)
             msg.setSustain(sustain)

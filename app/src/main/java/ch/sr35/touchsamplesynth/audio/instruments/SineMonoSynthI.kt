@@ -96,9 +96,13 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
         }
     }
 
+    override fun generateInstance(nVoices: Int, n: String): Instrument {
+        return SineMonoSynthI(context,ArrayList(),"")
+    }
+
     companion object
     {
-        fun generateInstance(context: Context, nVoices: Int, name: String): Instrument {
+        fun generateInstance(context: Context, name: String): Instrument {
             val vcs = ArrayList<MusicalSoundGenerator>()
             return SineMonoSynthI(context, vcs, name)
         }

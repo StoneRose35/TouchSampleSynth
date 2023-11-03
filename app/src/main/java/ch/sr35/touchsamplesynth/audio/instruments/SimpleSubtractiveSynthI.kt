@@ -164,10 +164,13 @@ class SimpleSubtractiveSynthI(private val context: Context,
         }
     }
 
+    override fun generateInstance(nVoices: Int, n: String): Instrument {
+        return SimpleSubtractiveSynthI(context,ArrayList(),"")
+    }
 
     companion object
     {
-        fun generateInstance(context: Context, nVoices: Int, name: String): Instrument {
+        fun generateInstance(context: Context, name: String): Instrument {
             val vcs = ArrayList<MusicalSoundGenerator>()
             return SimpleSubtractiveSynthI(context, vcs, name)
         }

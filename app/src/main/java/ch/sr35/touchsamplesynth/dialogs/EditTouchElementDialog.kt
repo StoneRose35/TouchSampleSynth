@@ -4,6 +4,7 @@ package ch.sr35.touchsamplesynth.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,24 +18,36 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.views.TouchElement
+import java.util.stream.Collectors
 import java.util.stream.IntStream
+import kotlin.streams.toList
 
 
 class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
-                                     private var soundGenerators: ArrayList<Instrument>,
-                                     context: Context): Dialog(context) {
+                                     private var context: Context): Dialog(context) {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.edit_touchelement)
-
+        val soundGenerators = (context as TouchSampleSynthMain).soundGenerators
+        val touchElements = (context as TouchSampleSynthMain).touchElements
         val instrumentList = findViewById<RecyclerView>(R.id.edit_te_soundgenerator_list)
-        val instrumentListAdapter = SoundGeneratorListAdapter(soundGenerators,touchElement)
+
+        // filter soundgenerators to contain only monophonic instruments and
+        // polyphonic whose voices haven't been taken yet
+        val availableSoundGenerators = soundGenerators.stream().filter { i ->
+            (touchElements.stream().map { te -> te.soundGenerator }
+                .filter { el -> (el?.getType() ?: "") == i.getType() && (el?.name ?: "srz")== i.name}.count() < i.voicesCount())
+                    || i.voicesCount() == 1
+        }.toList()
+
+        val instrumentListAdapter = SoundGeneratorListAdapter(availableSoundGenerators,touchElement)
         instrumentList.adapter = instrumentListAdapter
 
         val numberPickerNotes = findViewById<NumberPicker>(R.id.numberPickerNote)
@@ -45,7 +58,23 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         val buttonOk=findViewById<Button>(R.id.edit_te_button_ok)
         buttonOk?.setOnClickListener {
             if (instrumentListAdapter.checkedPosition > -1) {
-                touchElement.soundGenerator = soundGenerators[instrumentListAdapter.checkedPosition]
+                touchElement.soundGenerator = availableSoundGenerators[instrumentListAdapter.checkedPosition]
+                val voiceNrs = (context as TouchSampleSynthMain).touchElements.stream()
+                    .filter { te -> te.soundGenerator?.name == availableSoundGenerators[instrumentListAdapter.checkedPosition].name && te.soundGenerator!!.getType() == soundGenerators[instrumentListAdapter.checkedPosition].getType()}
+                    .map {te -> te.voiceNr}.toList()
+                var currentVoiceIdx = 0
+                while (currentVoiceIdx < soundGenerators[instrumentListAdapter.checkedPosition].voicesCount())
+                {
+                    if (voiceNrs.stream().noneMatch { vn -> vn == currentVoiceIdx })
+                    {
+                        touchElement.voiceNr = currentVoiceIdx
+                        currentVoiceIdx = soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()
+                    }
+                    else
+                    {
+                        currentVoiceIdx++
+                    }
+                }
             }
 
             touchElement.note = MusicalPitch.generateAllNotes()[numberPickerNotes?.value!!] //spinnerNotesAdapter.note
@@ -61,20 +90,23 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
 
 }
 
-class SoundGeneratorListAdapter(private val instruments: ArrayList<Instrument>,
+class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
                                 private val touchElement: TouchElement?): RecyclerView.Adapter<SoundGeneratorListAdapter.SoundGeneratorListViewHolder>(){
 
     var checkedPosition: Int=-1
 
-
     init {
-        if (touchElement!=null)
-        {
-            checkedPosition = IntStream.range(0,instruments.size)
-                              .filter { i -> instruments[i].name == touchElement.soundGenerator!!.name && instruments[i].getType() == touchElement.soundGenerator!!.getType() }
-                              .findFirst()
-                              .orElse(-1)
+
+            if (touchElement?.soundGenerator != null) {
+                checkedPosition = IntStream.range(0, instruments.size)
+                    .filter { i -> (instruments[i].name == touchElement.soundGenerator!!.name) && (instruments[i].getType() == touchElement.soundGenerator!!.getType()) }
+                    .findFirst()
+                    .orElse(-1)
+            }
+        else{
+            checkedPosition = -1
         }
+
     }
 
 
@@ -82,16 +114,14 @@ class SoundGeneratorListAdapter(private val instruments: ArrayList<Instrument>,
 
         val iconView: ImageView
         val instrumentNameView: TextView
-        val voices: NumberPicker
         val checkedView: CheckBox
+        val polyphonyView: TextView
 
         init {
             iconView=itemView.findViewById(R.id.instrument_entry_icon)
             instrumentNameView=itemView.findViewById(R.id.instrument_entry_text)
             checkedView=itemView.findViewById(R.id.instrument_entry_checkbox)
-            voices=itemView.findViewById(R.id.instrument_entry_number_voices)
-            voices.minValue = 1
-            voices.maxValue = 16
+            polyphonyView=itemView.findViewById(R.id.instrument_entry_n_voices)
         }
     }
 
@@ -110,8 +140,8 @@ class SoundGeneratorListAdapter(private val instruments: ArrayList<Instrument>,
     override fun onBindViewHolder(holder: SoundGeneratorListViewHolder, position: Int) {
         holder.iconView.setImageDrawable(instruments[position].getInstrumentIcon())
         holder.instrumentNameView.text = "%s".format(instruments[position].getType())
+        holder.polyphonyView.text = " "
         holder.checkedView.isChecked= checkedPosition==position
-        holder.voices.value = instruments[position].voicesCount()
         holder.itemView.setOnClickListener {
             if (holder.adapterPosition!=checkedPosition)
             {

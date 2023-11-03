@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         >
     </ImageView>
-<com.google.android.material.textfield.TextInputEditText
+<TextView
     android:id="@+id/instrument_entry_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -31,17 +31,13 @@
     android:textSize="16sp"
     app:layout_constraintStart_toEndOf="@id/instrument_entry_icon"
     app:layout_constraintTop_toTopOf="parent"
-    />
-    <NumberPicker
-        android:id="@+id/instrument_entry_number_voices"
+    android:autofillHints="Pad" />
+    <TextView
+        android:id="@+id/instrument_entry_n_voices"
         android:layout_width="wrap_content"
-        android:descendantFocusability="blocksDescendants"
-        android:layout_height="match_parent"
-
-        >
-
-    </NumberPicker>
-
+        android:textColor="@color/red_dark"
+        android:text="12"
+        android:layout_height="wrap_content" />
     <CheckBox
         android:id="@+id/instrument_entry_checkbox"
         android:layout_width="wrap_content"

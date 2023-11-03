@@ -46,10 +46,17 @@ class TouchSampleSynthMain : AppCompatActivity() {
             }
         }
 
-        defaultScene?.populate(soundGenerators,touchElements, this)
+        try {
+            defaultScene?.populate(soundGenerators, touchElements, this)
+        }
+        catch (e: Exception)
+        {
+            defaultScene = null
+        }
 
         if (defaultScene == null) {
-            val synth = SineMonoSynthI.generateInstance(this,4,"Basic")
+            val synth = SineMonoSynthI.generateInstance(this,"Basic")
+            synth.generateVoices(4)
             soundGenerators.add(synth)
 
             var te = TouchElement(this, null)
