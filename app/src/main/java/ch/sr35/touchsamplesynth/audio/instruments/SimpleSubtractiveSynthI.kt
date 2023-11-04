@@ -23,9 +23,20 @@ class SimpleSubtractiveSynthI(private val context: Context,
     }
 
     override fun generateVoices(cnt: Int) {
-        for (i in 0 until cnt)
-        {
-            voices?.add(SimpleSubtractiveSynthK(context).generateAttachedInstance(context))
+        if (voices != null) {
+            val doCopy = voices.isNotEmpty()
+            for (i in 0 until cnt) {
+                voices.add(SimpleSubtractiveSynthK(context).generateAttachedInstance(context))
+                if (doCopy) {
+                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setAttack((voices[0] as SimpleSubtractiveSynthK).getAttack())
+                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setDecay((voices[0] as SimpleSubtractiveSynthK).getDecay())
+                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setSustain((voices[0] as SimpleSubtractiveSynthK).getSustain())
+                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setRelease((voices[0] as SimpleSubtractiveSynthK).getRelease())
+                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).initialCutoff = (voices[0] as SimpleSubtractiveSynthK).initialCutoff
+                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setResonance((voices[0] as SimpleSubtractiveSynthK).getResonance())
+                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).actionAmount = (voices[0] as SimpleSubtractiveSynthK).actionAmount
+                }
+            }
         }
     }
 
@@ -97,22 +108,6 @@ class SimpleSubtractiveSynthI(private val context: Context,
         }
     }
 
-    fun setCutoff(v: Float)
-    {
-        for (voice in voices!!)
-        {
-            (voice as SimpleSubtractiveSynthK).setCutoff(v)
-        }
-    }
-
-    fun getCutoff(): Float
-    {
-        if (voices?.isNotEmpty() == true)
-        {
-            return (voices[0] as SimpleSubtractiveSynthK).getCutoff()
-        }
-        return 0.0f
-    }
 
     fun setActionAmount(v: Float)
     {

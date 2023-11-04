@@ -38,16 +38,29 @@
         android:id="@+id/instruments_page_instr_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="400dp"
+        android:layout_width="310dp"
+        android:background="@color/darkgray"
+        android:textColor="@color/vu_meter_background"
+        android:text="@android:string/unknownName"
+        android:autofillHints="name"
+        android:inputType="text"
+        android:imeOptions="actionDone"
         android:layout_height="wrap_content"
+        android:hint="@string/pad"
+        android:padding="6dp"
         />
     <EditText
         android:id="@+id/instruments_page_nr_voices"
-        android:layout_width="100dp"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
+        android:autofillHints="creditCardSecurityCode"
         app:layout_constraintTop_toTopOf="parent"
-
+        android:background="@color/darkgray"
+        android:textColor="@color/vu_meter_background"
+        android:text="@android:string/untitled"
+        android:imeOptions="actionDone"
+        android:padding="6dp"
         app:layout_constraintStart_toEndOf="@id/instruments_page_instr_name"
         />
 <FrameLayout

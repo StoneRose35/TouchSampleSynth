@@ -22,7 +22,7 @@ private:
     float currentPhase;
     SecondOrderIirFilter * decimatingFilter;
     SecondOrderIirFilter * decimatingFilter2;
-    void calculateFilterCoefficients(SecondOrderIirFilter*);
+    void calculateFilterCoefficients(SecondOrderIirFilter*) const;
 };
 
 

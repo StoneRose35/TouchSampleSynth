@@ -4,7 +4,6 @@ package ch.sr35.touchsamplesynth.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +19,7 @@ import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.views.TouchElement
-import java.util.stream.Collectors
 import java.util.stream.IntStream
 import kotlin.streams.toList
 
@@ -60,7 +57,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
             if (instrumentListAdapter.checkedPosition > -1) {
                 touchElement.soundGenerator = availableSoundGenerators[instrumentListAdapter.checkedPosition]
                 val voiceNrs = (context as TouchSampleSynthMain).touchElements.stream()
-                    .filter { te -> te.soundGenerator?.name == availableSoundGenerators[instrumentListAdapter.checkedPosition].name && te.soundGenerator!!.getType() == soundGenerators[instrumentListAdapter.checkedPosition].getType()}
+                    .filter { te -> te.soundGenerator?.name == availableSoundGenerators[instrumentListAdapter.checkedPosition].name && te.soundGenerator!!.getType() == availableSoundGenerators[instrumentListAdapter.checkedPosition].getType()}
                     .map {te -> te.voiceNr}.toList()
                 var currentVoiceIdx = 0
                 while (currentVoiceIdx < soundGenerators[instrumentListAdapter.checkedPosition].voicesCount())

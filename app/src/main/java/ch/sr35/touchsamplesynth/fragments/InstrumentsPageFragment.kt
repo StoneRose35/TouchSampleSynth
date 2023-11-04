@@ -4,11 +4,11 @@ import android.app.AlertDialog
 import android.content.Context
 import android.database.DataSetObserver
 import android.os.Bundle
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.Button
@@ -16,17 +16,14 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ListAdapter
 import android.widget.ListView
-import android.widget.NumberPicker
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doOnTextChanged
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
-import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
-import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import java.lang.NumberFormatException
 
@@ -93,57 +90,74 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             }
         }
 
-        view.findViewById<EditText>(R.id.instruments_page_instr_name).doOnTextChanged { text, start, before, count ->
-            (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name = text.toString()
+        view.findViewById<EditText>(R.id.instruments_page_instr_name).setOnEditorActionListener { textView, i, keyEvent ->
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name = textView.text.toString()
+                ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(textView.windowToken,0)
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
+
+        view.findViewById<EditText>(R.id.instruments_page_nr_voices).setOnEditorActionListener { textView, i, _ ->
+            if (i == EditorInfo.IME_ACTION_DONE)
+            {
+                var voicesInt: Int
+                try {
+                    voicesInt = Integer.parseInt(textView.text.toString())
+                }
+                catch (e: NumberFormatException)
+                {
+                    voicesInt = -1
+                }
+                if (voicesInt in 1..16) {
+                    // check that less voices are assigned than requested
+                    val nAssignedSoundGenerators =
+                        (context as TouchSampleSynthMain).touchElements.stream()
+                            .map { te -> te.soundGenerator }
+                            .filter { sg ->
+                                sg!!.name == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name
+                                        && sg.getType() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].getType()
+                            }
+                            .count()
+                    if (nAssignedSoundGenerators <= voicesInt) {
+                        if (voicesInt < (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
+                            // remove voices
+                            val nVoicesToRemove =
+                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount() - voicesInt
+
+                            for (c in 0 until nVoicesToRemove) {
+                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices?.get(
+                                    0
+                                )
+                                    ?.detachFromAudioEngine()
+                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices?.removeAt(
+                                    0
+                                )
+                            }
+                            var currentVoiceIndex = 0
+                            (context as TouchSampleSynthMain).touchElements
+                                .stream()
+                                .filter { te -> te.soundGenerator?.name == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name && te.soundGenerator?.getType() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].getType() }
+                                .forEach { t -> t.voiceNr = currentVoiceIndex++ }
+                        } else if (voicesInt > (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
+                            val voicesToAdd =
+                                voicesInt - (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()
+                            (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(
+                                voicesToAdd
+                            )
+                            // add voices
+                        }
+                    }
+                }
+                ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(textView.windowToken,0)
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
         }
 
         view.findViewById<EditText>(R.id.instruments_page_nr_voices).doOnTextChanged { text, start, before, count ->
-            var voicesInt: Int
-            try {
-                voicesInt = Integer.parseInt(text.toString())
-            }
-            catch (e: NumberFormatException)
-            {
-                voicesInt = -1
-            }
-            if (voicesInt in 1..16)
-            {
-                // check that less voices are assigned than requested
-                if ((context as TouchSampleSynthMain).touchElements.stream()
-                    .map { te -> te.soundGenerator }
-                    .filter {
-                        sg -> sg!!.name == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name
-                            && sg.getType() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].getType()
-                    }
-                    .count() < voicesInt )
-                {
-                    if (voicesInt < (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount())
-                    {
-                        // remove voices
-                        val nVoicesToRemove = (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount() - voicesInt
 
-                        for (c in 0 until nVoicesToRemove)
-                        {
-                            (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices?.get(0)
-                                ?.detachFromAudioEngine()
-                            (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices?.removeAt(
-                                0
-                            )
-                        }
-                        var currentVoiceIndex = 0
-                        (context as TouchSampleSynthMain).touchElements
-                            .stream()
-                            .filter { te -> te.soundGenerator?.name == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name && te.soundGenerator?.getType() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].getType() }
-                            .forEach { t -> t.voiceNr = currentVoiceIndex++ }
-                    }
-                    else if (voicesInt > (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount())
-                    {
-                        val voicesToAdd = voicesInt - (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()
-                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(voicesToAdd)
-                        // add voices
-                    }
-                }
-            }
         }
     }
 
@@ -184,10 +198,10 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
     }
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        var itemView: LinearLayout = if (p1 is LinearLayout) {
+        val itemView: ConstraintLayout = if (p1 is ConstraintLayout) {
             p1
         } else {
-            View.inflate(context,R.layout.instrument_entry,null) as LinearLayout
+            View.inflate(context,R.layout.instrument_entry,null) as ConstraintLayout
         }
         itemView.findViewById<TextView>(R.id.instrument_entry_text).text =
             String.format("%s",
@@ -245,7 +259,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                     if (p1 != null) {
                         putFragment(
                             frag,
-                            (p1 as LinearLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
+                            (p1 as ConstraintLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
                         )
                     } else {
                         putFragment(frag, "thefirstitem")
@@ -258,7 +272,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                     if (p1 != null) {
                         putFragment(
                             frag,
-                            (p1 as LinearLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
+                            (p1 as ConstraintLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
                         )
                     } else {
                         putFragment(frag, "thefirstitem")

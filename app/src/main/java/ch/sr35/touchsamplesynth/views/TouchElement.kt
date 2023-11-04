@@ -15,7 +15,6 @@ import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import java.io.Serializable
 
@@ -383,7 +382,11 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
         fillColor.color =
             context.resources.getColor(R.color.touchelement_touched, context.theme)
         note?.value?.let { soundGenerator?.voices?.get(voiceNr)?.setNote(it) }
-        soundGenerator?.voices?.get(voiceNr)?.switchOn(1.0f)
+        if (soundGenerator?.voices?.get(voiceNr)?.switchOn(1.0f)==true)
+        {
+            fillColor.color =
+                context.resources.getColor(R.color.touchelement_touched, context.theme)
+        }
         invalidate()
         return super.performClick()
     }
