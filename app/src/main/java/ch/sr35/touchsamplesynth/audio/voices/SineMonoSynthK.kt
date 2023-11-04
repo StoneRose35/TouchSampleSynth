@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth.audio.voices
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -24,6 +23,13 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
     external override fun switchOff(vel:Float): Boolean
     external override fun setNote(note: Float): Boolean
     external override fun isSounding(): Boolean
+    override fun copyParamsTo(other: MusicalSoundGenerator) {
+        (other as SimpleSubtractiveSynthK).setAttack(getAttack())
+        other.setDecay(getDecay())
+        other.setSustain(getSustain())
+        other.setRelease(getRelease())
+    }
+
     companion object {
         // Used to load the 'touchsamplesynth' library on application startup.
         init {

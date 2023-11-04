@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth.audio.voices
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -11,7 +10,7 @@ import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
 
     private var instance: Int=-1
-    var initialCutoff=20000.0f;
+    var initialCutoff=20000.0f
     var actionAmount: Float=0.0f
     val icon=AppCompatResources.getDrawable(context,R.drawable.simplesubtractivesynth)
     external fun setAttack(a: Float): Boolean
@@ -29,6 +28,16 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     external fun switchOnExt(vel: Float): Boolean
     external fun switchOffExt(vel: Float):Boolean
     external override fun isSounding(): Boolean
+    override fun copyParamsTo(other: MusicalSoundGenerator) {
+        (other as SimpleSubtractiveSynthK).setDecay(getDecay())
+        other.setAttack(getAttack())
+        other.setSustain(getSustain())
+        other.setRelease(getRelease())
+        other.initialCutoff = initialCutoff
+        other.setResonance(getResonance())
+        other.actionAmount = actionAmount
+    }
+
     external override fun setNote(note: Float): Boolean
 
 

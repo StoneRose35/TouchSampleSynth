@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth.audio
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 
 interface MusicalSoundGenerator {
     fun setNote(note: Float): Boolean
@@ -13,5 +12,6 @@ interface MusicalSoundGenerator {
     fun detachFromAudioEngine()
     fun applyTouchAction(a: Float)
     fun isSounding(): Boolean
+    fun copyParamsTo(other: MusicalSoundGenerator)
 
 }

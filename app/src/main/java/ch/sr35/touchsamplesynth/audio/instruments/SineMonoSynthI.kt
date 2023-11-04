@@ -6,7 +6,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 
 class SineMonoSynthI(private val context: Context, override val voices: ArrayList<MusicalSoundGenerator>?,
@@ -29,10 +28,7 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
                 voices.add(SineMonoSynthK(context).generateAttachedInstance(context))
                 if (doCopy)
                 {
-                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setAttack((voices[0] as SimpleSubtractiveSynthK).getAttack())
-                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setDecay((voices[0] as SimpleSubtractiveSynthK).getDecay())
-                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setSustain((voices[0] as SimpleSubtractiveSynthK).getSustain())
-                    (voices[voices.size - 1] as SimpleSubtractiveSynthK).setRelease((voices[0] as SimpleSubtractiveSynthK).getRelease())
+                    voices[0].copyParamsTo(voices[voices.size-1])
                 }
             }
         }
