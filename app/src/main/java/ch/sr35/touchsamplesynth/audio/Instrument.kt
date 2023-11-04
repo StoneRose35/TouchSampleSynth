@@ -50,6 +50,18 @@ open class Instrument(var name: String): IInstrument {
     {
         return Instrument("")
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Instrument)
+        {
+            return this.name == other.name && this.getType() == other.getType()
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return this.name.hashCode() + this.getType().hashCode()
+    }
 }
 
 interface IInstrument

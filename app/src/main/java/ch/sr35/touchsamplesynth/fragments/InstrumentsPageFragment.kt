@@ -116,8 +116,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                         (context as TouchSampleSynthMain).touchElements.stream()
                             .map { te -> te.soundGenerator }
                             .filter { sg ->
-                                sg!!.name == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name
-                                        && sg.getType() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].getType()
+                                sg == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]
                             }
                             .count()
                     if (nAssignedSoundGenerators <= voicesInt) {
@@ -138,7 +137,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                             var currentVoiceIndex = 0
                             (context as TouchSampleSynthMain).touchElements
                                 .stream()
-                                .filter { te -> te.soundGenerator?.name == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name && te.soundGenerator?.getType() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].getType() }
+                                .filter { te -> te.soundGenerator == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]}
                                 .forEach { t -> t.voiceNr = currentVoiceIndex++ }
                         } else if (voicesInt > (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
                             val voicesToAdd =
