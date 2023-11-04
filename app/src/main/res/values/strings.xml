@@ -26,4 +26,5 @@
     <string name="content_description_instrument_icon">Instrument Icon</string>
     <string name="content_description_instrument_speaker">Loudspeaker</string>
     <string name="content_description_instrument_processor">CPU Icon</string>
+    <string name="pad">Pad</string>
 </resources>
