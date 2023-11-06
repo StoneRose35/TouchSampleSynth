@@ -1,9 +1,7 @@
 package ch.sr35.touchsamplesynth.model
 
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
-import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 
 class SimpleSubtractiveSynthP(
     private var attack: Float,
@@ -15,7 +13,7 @@ class SimpleSubtractiveSynthP(
     private var resonance: Float,
     override var nVoices: Int,
     override var name: String
-): PersistableInstrument {
+): PersistableInstrument() {
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)
         if (i is SimpleSubtractiveSynthI)
@@ -30,16 +28,16 @@ class SimpleSubtractiveSynthP(
         }
     }
 
-    override fun toInstrument(msg: Instrument) {
-        if (msg is SimpleSubtractiveSynthI)
+    override fun toInstrument(i: Instrument) {
+        if (i is SimpleSubtractiveSynthI)
         {
-            msg.setAttack(attack)
-            msg.setDecay(decay)
-            msg.setSustain(sustain)
-            msg.setRelease(release)
-            msg.setInitialCutoff(initialCutoff)
-            msg.setActionAmount(actionAmount)
-            msg.setResonance(resonance)
+            i.setAttack(attack)
+            i.setDecay(decay)
+            i.setSustain(sustain)
+            i.setRelease(release)
+            i.setInitialCutoff(initialCutoff)
+            i.setActionAmount(actionAmount)
+            i.setResonance(resonance)
         }
     }
 
@@ -58,6 +56,6 @@ class SimpleSubtractiveSynthP(
                 this.sustain.toRawBits() +
                 this.release.toRawBits() +
                 this.initialCutoff.toRawBits() +
-                this.resonance.toRawBits()
+                this.resonance.toRawBits() + super.hashCode()
     }
 }

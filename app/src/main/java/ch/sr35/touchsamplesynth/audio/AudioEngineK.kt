@@ -9,4 +9,8 @@ class AudioEngineK {
     external fun removeSoundGenerator(idx: Int): Int
     external fun getAverageVolume(): Float
     external fun getCpuLoad(): Float
+
+    // only for testing purposes
+    external fun playFrames(nFrames: Int)
+
 }

@@ -2,27 +2,42 @@ package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
-import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
-import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import java.io.Serializable
 
-interface PersistableInstrument: Serializable {
+open class PersistableInstrument: Serializable {
 
-    var nVoices: Int
-    var name: String
-    fun fromInstrument(i: Instrument)
+    open var nVoices: Int=0
+    open var name: String=""
+    open fun fromInstrument(i: Instrument)
     {
         name = i.name
         nVoices = i.voicesCount()
     }
 
-    fun toInstrument(i: Instrument)
+    open fun toInstrument(i: Instrument)
     {
         i.name = name
     }
+
+    override fun hashCode(): Int
+    {
+        return name.hashCode() + nVoices
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as PersistableInstrument
+
+        if (nVoices != other.nVoices) return false
+        if (name != other.name) return false
+
+        return true
+    }
+
 
 }
 
@@ -52,14 +67,14 @@ class PersistableInstrumentFactory
         fun toInstrument(pi: PersistableInstrument,context: Context): Instrument?
         {
             if (pi is SimpleSubtractiveSynthP) {
-                val instr = SimpleSubtractiveSynthI.generateInstance(context,pi.name)
+                val instr = SimpleSubtractiveSynthI(context,pi.name)
                 instr.generateVoices(pi.nVoices)
                 pi.toInstrument(instr)
                 return instr
             }
             else if (pi is SineMonoSynthP)
             {
-                val instr = SineMonoSynthI.generateInstance(context,pi.name)
+                val instr = SineMonoSynthI(context,pi.name)
                 instr.generateVoices(pi.nVoices)
                 pi.toInstrument(instr)
                 return instr

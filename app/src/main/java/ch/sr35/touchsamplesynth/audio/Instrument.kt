@@ -2,9 +2,9 @@ package ch.sr35.touchsamplesynth.audio
 
 import android.graphics.drawable.Drawable
 
-open class Instrument(var name: String): IInstrument {
+open class Instrument(var name: String) {
 
-    public open val voices: ArrayList<MusicalSoundGenerator>?=null
+    open var voices=ArrayList<MusicalSoundGenerator>()
 
     open fun getType(): String
     {
@@ -16,17 +16,17 @@ open class Instrument(var name: String): IInstrument {
     }
     fun getNextFreeVoice(): MusicalSoundGenerator?
     {
-        return voices?.stream()?.map { a -> a as MusicalSoundGenerator}?.filter { v -> !v.isSounding() }?.findFirst()?.orElse(null)
+        return voices.stream().map { a -> a as MusicalSoundGenerator}?.filter { v -> !v.isSounding() }?.findFirst()?.orElse(null)
     }
 
     fun hasVoice(msg: MusicalSoundGenerator?): Boolean
     {
-        return voices?.contains(msg) ?: false
+        return voices.contains(msg)
     }
 
     fun voicesCount(): Int
     {
-        return voices?.size ?: 0
+        return voices.size
     }
 
     fun getPolyphonyDescription(): String
@@ -46,10 +46,6 @@ open class Instrument(var name: String): IInstrument {
 
     }
 
-    override fun generateInstance(nVoices: Int, n: String): Instrument
-    {
-        return Instrument("")
-    }
 
     override fun equals(other: Any?): Boolean {
         if (other is Instrument)
@@ -62,9 +58,4 @@ open class Instrument(var name: String): IInstrument {
     override fun hashCode(): Int {
         return this.name.hashCode() + this.getType().hashCode()
     }
-}
-
-interface IInstrument
-{
-    fun generateInstance(nVoices: Int, n: String): Instrument
 }

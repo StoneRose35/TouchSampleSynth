@@ -1,9 +1,7 @@
 package ch.sr35.touchsamplesynth.model
 
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
-import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import java.io.Serializable
 
 class SineMonoSynthP(private var attack: Float,
@@ -12,26 +10,26 @@ class SineMonoSynthP(private var attack: Float,
                      private var release: Float,
                      override var nVoices: Int,
                      override var name: String
-): PersistableInstrument,Serializable {
-    override fun fromInstrument(msg: Instrument) {
-        super.fromInstrument(msg)
-        if (msg is SineMonoSynthI)
+): PersistableInstrument(),Serializable {
+    override fun fromInstrument(i: Instrument) {
+        super.fromInstrument(i)
+        if (i is SineMonoSynthI)
         {
 
-            attack = msg.getAttack()
-            decay = msg.getDecay()
-            sustain = msg.getSustain()
-            release = msg.getRelease()
+            attack = i.getAttack()
+            decay = i.getDecay()
+            sustain = i.getSustain()
+            release = i.getRelease()
         }
     }
 
-    override fun toInstrument(msg: Instrument) {
-        if (msg is SineMonoSynthI)
+    override fun toInstrument(i: Instrument) {
+        if (i is SineMonoSynthI)
         {
-            msg.setAttack(attack)
-            msg.setDecay(decay)
-            msg.setSustain(sustain)
-            msg.setRelease(release)
+            i.setAttack(attack)
+            i.setDecay(decay)
+            i.setSustain(sustain)
+            i.setRelease(release)
 
         }
     }
@@ -48,7 +46,7 @@ class SineMonoSynthP(private var attack: Float,
         return this.attack.toRawBits() +
                 this.decay.toRawBits() +
                 this.sustain.toRawBits() +
-                this.release.toRawBits()
+                this.release.toRawBits() + super.hashCode()
 
     }
 

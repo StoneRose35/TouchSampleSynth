@@ -24,7 +24,7 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
     external override fun setNote(note: Float): Boolean
     external override fun isSounding(): Boolean
     override fun copyParamsTo(other: MusicalSoundGenerator) {
-        (other as SimpleSubtractiveSynthK).setAttack(getAttack())
+        (other as SineMonoSynthK).setAttack(getAttack())
         other.setDecay(getDecay())
         other.setSustain(getSustain())
         other.setRelease(getRelease())

@@ -13,8 +13,7 @@
 #include "SimpleSubtractiveSynth.h"
 #include <ctime>
 
-#define N_SOUND_GENERATORS 64
-#define AVERAGE_LOWPASS_ALPHA 0.99f
+
 constexpr int32_t kBufferSizeInBursts = 2;
 static AudioEngine *audioEngine = new AudioEngine();
 

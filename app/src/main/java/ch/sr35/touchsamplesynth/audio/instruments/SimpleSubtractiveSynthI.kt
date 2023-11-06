@@ -5,11 +5,9 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 
 class SimpleSubtractiveSynthI(private val context: Context,
-                              override val voices: ArrayList<MusicalSoundGenerator>?,
                               name: String
 ) : Instrument(name) {
     val icon= AppCompatResources.getDrawable(context, R.drawable.simplesubtractivesynth)
@@ -23,20 +21,20 @@ class SimpleSubtractiveSynthI(private val context: Context,
     }
 
     override fun generateVoices(cnt: Int) {
-        if (voices != null) {
-            val doCopy = voices.isNotEmpty()
-            for (i in 0 until cnt) {
-                voices.add(SimpleSubtractiveSynthK(context).generateAttachedInstance(context))
-                if (doCopy) {
-                    voices[0].copyParamsTo(voices[voices.size-1])
-                }
+
+        val doCopy = voices.isNotEmpty()
+        for (i in 0 until cnt) {
+            voices.add(SimpleSubtractiveSynthK(context).generateAttachedInstance(context))
+            if (doCopy) {
+                voices[0].copyParamsTo(voices[voices.size-1])
             }
         }
+
     }
 
     fun getAttack(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
             return (voices[0] as SimpleSubtractiveSynthK).getAttack()
         }
@@ -45,7 +43,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun setAttack(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SimpleSubtractiveSynthK).setAttack(v)
         }
@@ -53,7 +51,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun getDecay(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
             return (voices[0] as SimpleSubtractiveSynthK).getDecay()
         }
@@ -62,7 +60,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun setDecay(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SimpleSubtractiveSynthK).setDecay(v)
         }
@@ -70,7 +68,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun getSustain(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
             return (voices[0] as SimpleSubtractiveSynthK).getSustain()
         }
@@ -79,7 +77,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun setSustain(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SimpleSubtractiveSynthK).setSustain(v)
         }
@@ -87,16 +85,16 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun getRelease(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
-            return (voices[0] as SimpleSubtractiveSynthK).getSustain()
+            return (voices[0] as SimpleSubtractiveSynthK).getRelease()
         }
         return 0.0f
     }
 
     fun setRelease(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SimpleSubtractiveSynthK).setRelease(v)
         }
@@ -105,7 +103,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun setActionAmount(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SimpleSubtractiveSynthK).actionAmount = v
         }
@@ -113,7 +111,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun getActionAmount(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
             return (voices[0] as SimpleSubtractiveSynthK).actionAmount
         }
@@ -122,7 +120,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun setResonance(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SimpleSubtractiveSynthK).setResonance(v)
         }
@@ -130,7 +128,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun getResonance(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
             return (voices[0] as SimpleSubtractiveSynthK).getResonance()
         }
@@ -139,7 +137,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun getInitialCutoff(): Float
     {
-        if (voices?.isNotEmpty() == true) {
+        if (voices.isNotEmpty()) {
             return (voices[0] as SimpleSubtractiveSynthK).initialCutoff
         }
         return 0.0f
@@ -147,21 +145,9 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
     fun setInitialCutoff(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SimpleSubtractiveSynthK).initialCutoff = v
-        }
-    }
-
-    override fun generateInstance(nVoices: Int, n: String): Instrument {
-        return SimpleSubtractiveSynthI(context,ArrayList(),"")
-    }
-
-    companion object
-    {
-        fun generateInstance(context: Context, name: String): Instrument {
-            val vcs = ArrayList<MusicalSoundGenerator>()
-            return SimpleSubtractiveSynthI(context, vcs, name)
         }
     }
 

@@ -12,11 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
-import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
-import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import ch.sr35.touchsamplesynth.dialogs.SoundGeneratorListAdapter
 
 
@@ -46,8 +43,8 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
 
         if (soundGenerators.isEmpty()) {
             this.context?.let {
-                soundGenerators.add(SimpleSubtractiveSynthI.generateInstance(it,""))
-                soundGenerators.add(SineMonoSynthI.generateInstance(it, ""))
+                soundGenerators.add(SimpleSubtractiveSynthI(it,""))
+                soundGenerators.add(SineMonoSynthI(it, ""))
             }
         }
 
@@ -58,8 +55,17 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
         buttonOk.setOnClickListener {
             if ((instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition > -1) {
                 context?.let { it1 ->
+                    val newInstrument: Instrument
+                    if (soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition] is SineMonoSynthI)
+                    {
+                        newInstrument = SineMonoSynthI(requireContext(),"basic")
+                    }
+                    else
+                    {
+                        newInstrument = SimpleSubtractiveSynthI(requireContext(),"basic")
+                    }
                     (context as TouchSampleSynthMain).soundGenerators.add(
-                        soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition].generateInstance(0,"basic")
+                        newInstrument
                     )
                     generatorsList.invalidateViews()
                 }

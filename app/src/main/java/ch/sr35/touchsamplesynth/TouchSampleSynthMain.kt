@@ -7,9 +7,7 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
-import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
@@ -55,7 +53,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         }
 
         if (defaultScene == null) {
-            val synth = SineMonoSynthI.generateInstance(this,"Basic")
+            val synth = SineMonoSynthI(this,"Basic")
             synth.generateVoices(4)
             soundGenerators.add(synth)
 
@@ -136,7 +134,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         {
             f.delete()
         }
-        soundGenerators.flatMap { sg -> sg.voices!! }.forEach { el -> el.detachFromAudioEngine() }
+        soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
         super.onDestroy()
     }
@@ -154,7 +152,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
             f.delete()
         }
         defaultScene!!.toFile(f)
-        soundGenerators.flatMap { sg -> sg.voices!! }.forEach { el -> el.detachFromAudioEngine() }
+        soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
         super.onStop()
     }

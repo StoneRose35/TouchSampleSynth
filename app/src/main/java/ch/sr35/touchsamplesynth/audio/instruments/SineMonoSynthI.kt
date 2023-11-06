@@ -5,14 +5,16 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 
-class SineMonoSynthI(private val context: Context, override val voices: ArrayList<MusicalSoundGenerator>?,
+class SineMonoSynthI(private val context: Context,
                      name: String
 ) : Instrument(name)  {
     val icon= AppCompatResources.getDrawable(context, R.drawable.sinemonosynth)
 
+    init {
+        voices = ArrayList()
+    }
     override fun getType(): String {
         return "SineMonoSynth"
     }
@@ -22,21 +24,19 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
     }
 
     override fun generateVoices(cnt: Int) {
-        if (voices != null) {
-            val doCopy = voices.isNotEmpty()
-            for (i in 0 until cnt) {
-                voices.add(SineMonoSynthK(context).generateAttachedInstance(context))
-                if (doCopy)
-                {
-                    voices[0].copyParamsTo(voices[voices.size-1])
-                }
+        val doCopy = voices.isNotEmpty()
+        for (i in 0 until cnt) {
+            voices.add(SineMonoSynthK(context).generateAttachedInstance(context))
+            if (doCopy)
+            {
+                voices[0].copyParamsTo(voices[voices.size-1])
             }
         }
     }
 
     fun getAttack(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty() )
         {
             return (voices[0] as SineMonoSynthK).getAttack()
         }
@@ -45,7 +45,7 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
 
     fun setAttack(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SineMonoSynthK).setAttack(v)
         }
@@ -53,7 +53,7 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
 
     fun getDecay(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
             return (voices[0] as SineMonoSynthK).getDecay()
         }
@@ -62,7 +62,7 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
 
     fun setDecay(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SineMonoSynthK).setDecay(v)
         }
@@ -70,7 +70,7 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
 
     fun getSustain(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
             return (voices[0] as SineMonoSynthK).getSustain()
         }
@@ -79,7 +79,7 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
 
     fun setSustain(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SineMonoSynthK).setSustain(v)
         }
@@ -87,7 +87,7 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
 
     fun getRelease(): Float
     {
-        if (voices?.isNotEmpty() == true)
+        if (voices.isNotEmpty())
         {
             return (voices[0] as SineMonoSynthK).getRelease()
         }
@@ -96,21 +96,10 @@ class SineMonoSynthI(private val context: Context, override val voices: ArrayLis
 
     fun setRelease(v: Float)
     {
-        for (voice in voices!!)
+        for (voice in voices)
         {
             (voice as SineMonoSynthK).setRelease(v)
         }
     }
 
-    override fun generateInstance(nVoices: Int, n: String): Instrument {
-        return SineMonoSynthI(context,ArrayList(),"")
-    }
-
-    companion object
-    {
-        fun generateInstance(context: Context, name: String): Instrument {
-            val vcs = ArrayList<MusicalSoundGenerator>()
-            return SineMonoSynthI(context, vcs, name)
-        }
-    }
 }
