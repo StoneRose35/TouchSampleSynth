@@ -11,7 +11,7 @@
 extern "C" {
 
 JNIEXPORT void JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_playFrames(JNIEnv *env, jobject obj, jint nFrames) {
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_playFrames(JNIEnv *, jobject , jint nFrames) {
     AudioEngine * audioEngine = getAudioEngine();
     float audioSum;
     float * audioDataFloat;
@@ -31,17 +31,17 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_playFrames(JNIEnv *env, jobject
     }
 }
 
-JNIEXPORT jint JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_addSoundGenerator(JNIEnv *env, jobject obj,jint generatorType)
+JNIEXPORT jbyte JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_addSoundGenerator(JNIEnv *, jobject,jint generatorType)
 {
     AudioEngine * audioEngine = getAudioEngine();
     auto sgt = static_cast<SoundGeneratorType>(generatorType);
-    int32_t idx = audioEngine->addSoundGenerator(sgt);
+    int8_t idx = audioEngine->addSoundGenerator(sgt);
     return idx;
 }
 
-JNIEXPORT jint JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_removeSoundGenerator(JNIEnv *env, jobject obj,jint idx)
+JNIEXPORT jbyte JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_removeSoundGenerator(JNIEnv *, jobject ,jbyte idx)
 {
     AudioEngine * audioEngine = getAudioEngine();
     audioEngine->removeSoundGenerator(idx);
@@ -49,36 +49,50 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_removeSoundGenerator(JNIEnv *en
 }
 
 JNIEXPORT void JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_startEngine(JNIEnv *env, jobject /* this */) {
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_startEngine(JNIEnv *, jobject /* this */) {
     AudioEngine * audioEngine = getAudioEngine();
     audioEngine->start();
 }
 
 JNIEXPORT void JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_stopEngine(JNIEnv *env, jobject /* this */) {
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_stopEngine(JNIEnv *, jobject /* this */) {
     AudioEngine * audioEngine = getAudioEngine();
     audioEngine->stop();
 }
 
 JNIEXPORT int JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getSamplingRate(JNIEnv *env, jobject)
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getSamplingRate(JNIEnv *, jobject)
 {
     AudioEngine * audioEngine = getAudioEngine();
     return audioEngine->getSamplingRate();
 }
 
 JNIEXPORT float JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getAverageVolume(JNIEnv *env, jobject)
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getAverageVolume(JNIEnv *, jobject)
 {
     AudioEngine * audioEngine = getAudioEngine();
     return audioEngine->averageVolume;
 }
 
 JNIEXPORT float JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getCpuLoad(JNIEnv *env, jobject)
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getCpuLoad(JNIEnv *, jobject)
 {
     AudioEngine * audioEngine = getAudioEngine();
     return audioEngine->cpuLoad;
 }
 
+JNIEXPORT void JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_openMidiDevice(JNIEnv* env, jobject, jobject deviceObj, jint portNumber)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    AMidiDevice_fromJava(env, deviceObj, &audioEngine->midiDevice);
+    AMidiOutputPort_open(audioEngine->midiDevice, portNumber, &audioEngine->midiOutputPort);
+}
+
+JNIEXPORT void JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_closeMidiDevice(JNIEnv* , jobject)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    AMidiOutputPort_close(audioEngine->midiOutputPort);
+}
 }

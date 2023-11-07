@@ -3,6 +3,7 @@
 //
 
 #include "SimpleSubtractiveSynth.h"
+#include "AudioEngine.h"
 
 float SimpleSubtractiveSynth::getNextSample() {
     float im;
@@ -30,6 +31,13 @@ float SimpleSubtractiveSynth::getNextSample() {
             currentSample = 0;
         }
         return  nsample;
+    }
+    else
+    {
+        if ((availableForMidi & MIDI_AVAILABLE_MSK) != 0 )
+        {
+            availableForMidi &= ~(MIDI_TAKEN_MSK);
+        }
     }
     return 0.0f;
 }

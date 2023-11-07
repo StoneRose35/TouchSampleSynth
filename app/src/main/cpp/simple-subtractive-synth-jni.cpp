@@ -17,8 +17,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setAttack(JNI
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -38,8 +38,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getAttack(JNI
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -59,8 +59,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setDecay(JNIE
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -80,8 +80,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getDecay(JNIE
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -101,8 +101,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setSustain(JN
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -122,8 +122,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getSustain(JN
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -143,8 +143,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setRelease(JN
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -164,8 +164,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getRelease(JN
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -185,8 +185,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setCutoff(JNI
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -206,8 +206,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getCutoff(JNI
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -227,8 +227,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setResonance(
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -248,8 +248,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getResonance(
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -269,8 +269,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_switchOnExt(J
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -287,8 +287,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_switchOffExt(
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -305,8 +305,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setNote(JNIEn
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
@@ -322,14 +322,28 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_isSounding(JN
 {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()I");
-    int instance = env->CallIntMethod(me,getInstance);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
     {
         return false;
     }
     return ((SimpleSubtractiveSynth*)msg)->isSounding();
+}
+
+JNIEXPORT void JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setMidiMode(JNIEnv* env,
+                                                                              jobject /* this */me,jint midiMode) {
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(me);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if  (msg != nullptr)
+    {
+        msg->availableForMidi = midiMode << 7;
+    }
 }
 
 }

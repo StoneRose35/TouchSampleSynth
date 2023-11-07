@@ -19,19 +19,26 @@ static AudioEngine *audioEngine = new AudioEngine();
 
 aaudio_data_callback_result_t dataCallback(
         AAudioStream *stream,
-        void *userData,
+        void *,
         void *audioData,
         int32_t numFrames) {
     clock_t start, end;
     auto * audioDataFloat = static_cast<float *>(audioData);
-    float audioSum = 0.0f;
+    float audioSum;
     float availableTime;
+    ssize_t numMessages;
+    size_t midiBytesReceived;
+    int32_t opCode;
+    int64_t timestamp;
+    uint8_t midiDataBuffer[4];
+    uint8_t midiProcessed;
     availableTime = (float)numFrames/((float) (AAudioStream_getSamplesPerFrame(stream)*
                                                AAudioStream_getSampleRate(stream)));
     float usedTime;
     start = clock();
     for(uint32_t i=0;i<numFrames;i++)
     {
+
         audioSum=0.0f;
         for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
         {
@@ -43,13 +50,58 @@ aaudio_data_callback_result_t dataCallback(
         audioEngine->averageVolume = audioEngine->averageVolume*AVERAGE_LOWPASS_ALPHA  + fabsf(audioSum)*(1.0f - AVERAGE_LOWPASS_ALPHA);
         *(audioDataFloat + i) = audioSum;
     }
+    if (audioEngine->midiOutputPort != nullptr) {
+        numMessages =
+                AMidiOutputPort_receive(audioEngine->midiOutputPort, &opCode, midiDataBuffer,
+                                        sizeof(midiDataBuffer), &midiBytesReceived, &timestamp);
+        if (numMessages >= 0) {
+            if (opCode == AMIDI_OPCODE_DATA) {
+                // Dispatch the MIDI data….
+
+                if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_ON )
+                {
+                    midiProcessed = 0;
+                    for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
+                    {
+                        if (audioEngine->getSoundGenerator(c) != nullptr
+                        && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
+                           && (((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) == 0)
+                            || ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_NOTE_CHANGE_MSK) != 0))
+                        && midiProcessed == 0) {
+                            audioEngine->getSoundGenerator(c)->setNote(midiDataBuffer[1]);
+                            audioEngine->getSoundGenerator(c)->switchOn(0);
+                            audioEngine->getSoundGenerator(c)->availableForMidi |= MIDI_TAKEN_MSK | midiDataBuffer[1];
+                            midiProcessed = 1;
+                        }
+                    }
+                }
+                else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_OFF )
+                {
+                    midiProcessed = 0;
+                    for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
+                    {
+                        if (audioEngine->getSoundGenerator(c) != nullptr
+                            && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0 )
+                            && ((audioEngine->getSoundGenerator(c)->availableForMidi & 0x7F) == midiDataBuffer[1] )
+                            && midiProcessed == 0) {
+                            audioEngine->getSoundGenerator(c)->switchOff(0);
+                            midiProcessed = 1;
+                        }
+                    }
+                }
+            }
+        }// else {
+        // some error occurred, the negative numMessages is the error code
+        // int32_t errorCode = numMessages;
+        // }
+    }
     end = clock();
     usedTime = (float)(end-start)/CLOCKS_PER_SEC;
     audioEngine->cpuLoad = usedTime /availableTime;
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
 }
 
-void errorCallback(AAudioStream *stream,
+void errorCallback(AAudioStream *,
                    void *userData,
                    aaudio_result_t error){
     if (error == AAUDIO_ERROR_DISCONNECTED){
@@ -138,6 +190,8 @@ int8_t AudioEngine::getNSoundGenerators() {
 AudioEngine::AudioEngine() {
     soundGenerators=(MusicalSoundGenerator**)malloc(N_SOUND_GENERATORS*sizeof(MusicalSoundGenerator*));
     stream_ = nullptr;
+    midiOutputPort = nullptr;
+    midiDevice = nullptr;
     samplingRate = 48000.0f;
     cpuLoad=0.0f;
     for (uint16_t c=0;c<N_SOUND_GENERATORS;c++)
@@ -161,11 +215,11 @@ MusicalSoundGenerator *AudioEngine::getSoundGenerator(int8_t idx) {
     return nullptr;
 }
 
-int32_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
+int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
     MusicalSoundGenerator *  sg;
-    uint16_t idx=N_SOUND_GENERATORS;
+    int8_t idx=N_SOUND_GENERATORS;
     // get next free slot
-    for (uint16_t c=0;c<N_SOUND_GENERATORS;c++)
+    for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
     {
         if(*(soundGenerators+c)==nullptr)
         {

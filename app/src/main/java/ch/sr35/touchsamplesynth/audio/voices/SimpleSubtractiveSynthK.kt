@@ -9,7 +9,7 @@ import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
 class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
 
-    private var instance: Int=-1
+    private var instance: Byte=-1
     var initialCutoff=20000.0f
     var actionAmount: Float=0.0f
     val icon=AppCompatResources.getDrawable(context,R.drawable.simplesubtractivesynth)
@@ -28,6 +28,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     external fun switchOnExt(vel: Float): Boolean
     external fun switchOffExt(vel: Float):Boolean
     external override fun isSounding(): Boolean
+    external override fun setMidiMode(midiMode: Int)
     override fun copyParamsTo(other: MusicalSoundGenerator) {
         (other as SimpleSubtractiveSynthK).setDecay(getDecay())
         other.setAttack(getAttack())
@@ -38,11 +39,13 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
         other.actionAmount = actionAmount
     }
 
+
+
     external override fun setNote(note: Float): Boolean
 
 
 
-    override fun getInstance(): Int {
+    override fun getInstance(): Byte {
         return instance
     }
 
@@ -55,7 +58,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     override fun bindToAudioEngine()
     {
         val audioEngine= AudioEngineK()
-        if (instance == -1) {
+        if (instance == (-1).toByte()) {
             instance = audioEngine.addSoundGenerator(1)
         }
     }

@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.database.DataSetObserver
+import android.media.midi.MidiManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doOnTextChanged
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import java.lang.NumberFormatException
@@ -37,6 +39,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
 
     var selectedInstrument: Int=-1
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,6 +51,14 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         val instrumentsList = view.findViewById<ListView>(R.id.instruments_page_instruments_list)
         instrumentsList.adapter = this
         instrumentsList.onItemClickListener = this
+
+        val midiManager = context?.getSystemService(Context.MIDI_SERVICE) as MidiManager
+        val midiDevices = midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM)
+        val midiDev = midiDevices.stream().filter { d -> d.outputPortCount > 0 }.findFirst().orElse(null)
+        midiManager.openDevice(midiDev,{
+            val audioEngine=AudioEngineK()
+            audioEngine.openMidiDevice(it,0)
+        },null)
 
         if (selectedInstrument == -1) {
             onItemClick(instrumentsList, null, 0, 0)
@@ -80,7 +91,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 val alertDlgBuilder = AlertDialog.Builder(context as TouchSampleSynthMain)
                     .setMessage((context as TouchSampleSynthMain).getString(R.string.alert_dialog_really_delete))
                     .setPositiveButton((context as TouchSampleSynthMain).getString(R.string.yes)) { _, _ ->
-                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices!!.forEach { v -> v.detachFromAudioEngine() }
+                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.forEach { v -> v.detachFromAudioEngine() }
                         (context as TouchSampleSynthMain).soundGenerators.removeAt(selectedInstrument)
                         instrumentsList.invalidateViews()
                     }
@@ -90,7 +101,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             }
         }
 
-        view.findViewById<EditText>(R.id.instruments_page_instr_name).setOnEditorActionListener { textView, i, keyEvent ->
+        view.findViewById<EditText>(R.id.instruments_page_instr_name).setOnEditorActionListener { textView, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE) {
                 (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name = textView.text.toString()
                 ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(textView.windowToken,0)
@@ -126,11 +137,9 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                                 (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount() - voicesInt
 
                             for (c in 0 until nVoicesToRemove) {
-                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices?.get(
-                                    0
-                                )
-                                    ?.detachFromAudioEngine()
-                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices?.removeAt(
+                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices[0]
+                                    .detachFromAudioEngine()
+                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.removeAt(
                                     0
                                 )
                             }
@@ -155,9 +164,15 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             return@setOnEditorActionListener false
         }
 
-        view.findViewById<EditText>(R.id.instruments_page_nr_voices).doOnTextChanged { text, start, before, count ->
+        view.findViewById<EditText>(R.id.instruments_page_nr_voices).doOnTextChanged { _, _, _, _ ->
 
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val audioEngine = AudioEngineK()
+        audioEngine.closeMidiDevice()
     }
 
     override fun onCreateView(
@@ -250,6 +265,8 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
     override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         if (p2 != selectedInstrument) {
             val contentView = view?.findViewById<FrameLayout>(R.id.instruments_page_content)
+            (context as TouchSampleSynthMain).soundGenerators.flatMap { sg -> sg.voices }.forEach { v -> v.setMidiMode(0) }
+            (context as TouchSampleSynthMain).soundGenerators[p2].voices.forEach { v -> v.setMidiMode(2) }
             selectedInstrument = p2
             if (contentView != null) {
                 if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthI) {
