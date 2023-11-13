@@ -56,21 +56,24 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         buttonOk?.setOnClickListener {
             if (instrumentListAdapter.checkedPosition > -1) {
                 touchElement.soundGenerator = availableSoundGenerators[instrumentListAdapter.checkedPosition]
-                val voiceNrs = (context as TouchSampleSynthMain).touchElements.stream()
-                    .filter { te -> te.soundGenerator?.name == availableSoundGenerators[instrumentListAdapter.checkedPosition].name && te.soundGenerator!!.getType() == availableSoundGenerators[instrumentListAdapter.checkedPosition].getType()}
-                    .map {te -> te.voiceNr}.toList()
-                var currentVoiceIdx = 0
-                while (currentVoiceIdx < soundGenerators[instrumentListAdapter.checkedPosition].voicesCount())
+                if (touchElement.soundGenerator!!.voicesCount() > 1) {
+                    val voiceNrs = (context as TouchSampleSynthMain).touchElements.stream()
+                        .filter { te -> te.soundGenerator?.name == availableSoundGenerators[instrumentListAdapter.checkedPosition].name && te.soundGenerator!!.getType() == availableSoundGenerators[instrumentListAdapter.checkedPosition].getType() }
+                        .map { te -> te.voiceNr }.toList()
+                    var currentVoiceIdx = 0
+                    while (currentVoiceIdx < soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()) {
+                        if (voiceNrs.stream().noneMatch { vn -> vn == currentVoiceIdx }) {
+                            touchElement.voiceNr = currentVoiceIdx
+                            currentVoiceIdx =
+                                soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()
+                        } else {
+                            currentVoiceIdx++
+                        }
+                    }
+                }
+                else // monophonic case
                 {
-                    if (voiceNrs.stream().noneMatch { vn -> vn == currentVoiceIdx })
-                    {
-                        touchElement.voiceNr = currentVoiceIdx
-                        currentVoiceIdx = soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()
-                    }
-                    else
-                    {
-                        currentVoiceIdx++
-                    }
+                    touchElement.voiceNr = 0
                 }
             }
 
