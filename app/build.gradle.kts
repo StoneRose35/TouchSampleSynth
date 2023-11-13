@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "ch.sr35.touchsamplesynth"
         minSdk = 29
-        targetSdk = 33
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
