@@ -104,6 +104,7 @@ float SimpleSubtractiveSynth::getResonance() {
 }
 
 void SimpleSubtractiveSynth::switchOn(float vel) {
+    setCutoff(initialCutoff);
     env->switchOn();
 }
 
@@ -121,6 +122,7 @@ SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) {
     envelopeUpdateInterval=32;
     envelopeVals[0]=0.0f;
     envelopeVals[1]=0.0f;
+    initialCutoff=20000.0f;
 
     currentFilterCutoff=0.0f;
     currentResonance=0.0f;

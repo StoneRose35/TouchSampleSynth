@@ -10,7 +10,6 @@ import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
 
     private var instance: Byte=-1
-    var initialCutoff=20000.0f
     var actionAmount: Float=0.0f
     val icon=AppCompatResources.getDrawable(context,R.drawable.simplesubtractivesynth)
     external fun setAttack(a: Float): Boolean
@@ -25,6 +24,8 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     external fun getCutoff():Float
     external fun setResonance(c: Float): Boolean
     external fun getResonance():Float
+    external fun setInitialCutoff(ic: Float): Boolean
+    external fun getInitialCutoff(): Float
     external fun switchOnExt(vel: Float): Boolean
     external fun switchOffExt(vel: Float):Boolean
     external override fun isSounding(): Boolean
@@ -34,7 +35,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
         other.setAttack(getAttack())
         other.setSustain(getSustain())
         other.setRelease(getRelease())
-        other.initialCutoff = initialCutoff
+        other.setInitialCutoff(getInitialCutoff())
         other.setResonance(getResonance())
         other.actionAmount = actionAmount
     }
@@ -73,7 +74,6 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     }
 
     override fun switchOn(vel: Float): Boolean {
-        setCutoff(initialCutoff)
         return switchOnExt(vel)
     }
 
@@ -83,10 +83,10 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
 
 
     override fun applyTouchAction(a: Float) {
-        if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(initialCutoff) + a*actionAmount) > 20.0f &&
-            AudioUtils.NoteToFreq(AudioUtils.FreqToNote(initialCutoff) + a*actionAmount) < 20000.0f)
+        if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmount) > 20.0f &&
+            AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmount) < 20000.0f)
         {
-            setCutoff(AudioUtils.NoteToFreq(AudioUtils.FreqToNote(initialCutoff)+a*actionAmount))
+            setCutoff(AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff())+a*actionAmount))
         }
     }
 

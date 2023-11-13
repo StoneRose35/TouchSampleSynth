@@ -138,7 +138,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
     fun getInitialCutoff(): Float
     {
         if (voices.isNotEmpty()) {
-            return (voices[0] as SimpleSubtractiveSynthK).initialCutoff
+            return (voices[0] as SimpleSubtractiveSynthK).getInitialCutoff()
         }
         return 0.0f
     }
@@ -147,7 +147,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
     {
         for (voice in voices)
         {
-            (voice as SimpleSubtractiveSynthK).initialCutoff = v
+            (voice as SimpleSubtractiveSynthK).setInitialCutoff(v)
         }
     }
 

@@ -26,7 +26,7 @@ private:
 
 
 public:
-
+    float initialCutoff;
     SimpleSubtractiveSynth(float);
     float getNextSample() override;
     void setNote(float note) override;
