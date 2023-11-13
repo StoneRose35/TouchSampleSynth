@@ -13,6 +13,7 @@
 #include "SimpleSubtractiveSynth.h"
 #include <ctime>
 
+#define APP_NAME "TouchSampleSynth"
 
 constexpr int32_t kBufferSizeInBursts = 2;
 static AudioEngine *audioEngine = new AudioEngine();
@@ -54,9 +55,8 @@ aaudio_data_callback_result_t dataCallback(
         numMessages =
                 AMidiOutputPort_receive(audioEngine->midiOutputPort, &opCode, midiDataBuffer,
                                         sizeof(midiDataBuffer), &midiBytesReceived, &timestamp);
-        if (numMessages >= 0) {
+        while (numMessages > 0) {
             if (opCode == AMIDI_OPCODE_DATA) {
-                // Dispatch the MIDI data….
 
                 if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_ON )
                 {
@@ -68,8 +68,9 @@ aaudio_data_callback_result_t dataCallback(
                            && (((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) == 0)
                             || ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_NOTE_CHANGE_MSK) != 0))
                         && midiProcessed == 0) {
-                            audioEngine->getSoundGenerator(c)->setNote(midiDataBuffer[1]);
-                            audioEngine->getSoundGenerator(c)->switchOn(0);
+                            __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching on voice %d",c);
+                            audioEngine->getSoundGenerator(c)->setNote((float)midiDataBuffer[1]-69.0f);
+                            audioEngine->getSoundGenerator(c)->switchOn(0.f);
                             audioEngine->getSoundGenerator(c)->availableForMidi |= MIDI_TAKEN_MSK | midiDataBuffer[1];
                             midiProcessed = 1;
                         }
@@ -84,12 +85,16 @@ aaudio_data_callback_result_t dataCallback(
                             && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0 )
                             && ((audioEngine->getSoundGenerator(c)->availableForMidi & 0x7F) == midiDataBuffer[1] )
                             && midiProcessed == 0) {
-                            audioEngine->getSoundGenerator(c)->switchOff(0);
+                            __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching off voice %d",c);
+                            audioEngine->getSoundGenerator(c)->switchOff(0.0f);
+                            audioEngine->getSoundGenerator(c)->availableForMidi &= ~(0xFF);
                             midiProcessed = 1;
                         }
                     }
                 }
             }
+            numMessages = AMidiOutputPort_receive(audioEngine->midiOutputPort, &opCode, midiDataBuffer,
+                                    sizeof(midiDataBuffer), &midiBytesReceived, &timestamp);
         }// else {
         // some error occurred, the negative numMessages is the error code
         // int32_t errorCode = numMessages;
@@ -122,7 +127,7 @@ bool AudioEngine::start() {
     AAudioStreamBuilder_setFormat(streamBuilder, AAUDIO_FORMAT_PCM_FLOAT);
     AAudioStreamBuilder_setChannelCount(streamBuilder, 1);
     AAudioStreamBuilder_setPerformanceMode(streamBuilder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
-    AAudioStreamBuilder_setFramesPerDataCallback(streamBuilder,256);
+    AAudioStreamBuilder_setFramesPerDataCallback(streamBuilder,64);
     AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallback, nullptr);
     AAudioStreamBuilder_setErrorCallback(streamBuilder, ::errorCallback, this);
 
