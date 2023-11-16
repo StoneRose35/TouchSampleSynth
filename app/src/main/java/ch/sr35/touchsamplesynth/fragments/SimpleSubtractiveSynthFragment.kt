@@ -82,6 +82,7 @@ class SimpleSubtractiveSynthFragment(private val synth: SimpleSubtractiveSynthI)
             }
             R.id.seekBarCutoff -> {
                 synth.setInitialCutoff( AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f))
+                synth.setCutoff(AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f))
             }
             R.id.seekBarResonance -> {
                 synth.setResonance(p0.progress.toFloat()/1000.0f)

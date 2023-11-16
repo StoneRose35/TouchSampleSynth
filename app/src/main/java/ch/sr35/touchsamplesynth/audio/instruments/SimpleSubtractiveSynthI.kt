@@ -151,4 +151,20 @@ class SimpleSubtractiveSynthI(private val context: Context,
         }
     }
 
+    fun getCutoff(): Float
+    {
+        if (voices.isNotEmpty()) {
+            return (voices[0] as SimpleSubtractiveSynthK).getCutoff()
+        }
+        return 0.0f
+    }
+
+    fun setCutoff(v: Float)
+    {
+        for (voice in voices)
+        {
+            (voice as SimpleSubtractiveSynthK).setCutoff(v)
+        }
+    }
+
 }
