@@ -10,7 +10,11 @@
 #include "SoundGenerator.h"
 #include "MusicalSoundGenerator.h"
 
-#define N_SOUND_GENERATORS 64
+#define N_SOUND_GENERATORS 24
+constexpr int32_t kBufferSizeInBursts = 2;
+constexpr int32_t framesPerDataCallback = 64;
+constexpr int32_t bufferCapacityInFrames = 1024;
+
 #define AVERAGE_LOWPASS_ALPHA 0.99f
 
 #define MIDI_NOTE_OFF 0x80

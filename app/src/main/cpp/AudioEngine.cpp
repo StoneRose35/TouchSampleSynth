@@ -15,7 +15,7 @@
 
 #define APP_NAME "TouchSampleSynth"
 
-constexpr int32_t kBufferSizeInBursts = 2;
+
 static AudioEngine *audioEngine = new AudioEngine();
 
 aaudio_data_callback_result_t dataCallback(
@@ -37,6 +37,12 @@ aaudio_data_callback_result_t dataCallback(
                                                AAudioStream_getSampleRate(stream)));
     float usedTime;
     start = clock();
+    int32_t xrunCnt;
+    xrunCnt = AAudioStream_getXRunCount(stream);
+    if (xrunCnt > 0)
+    {
+        __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"XRuns occurred: #%d",xrunCnt);
+    }
     for(uint32_t i=0;i<numFrames;i++)
     {
 
@@ -68,7 +74,7 @@ aaudio_data_callback_result_t dataCallback(
                            && (((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) == 0)
                             || ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_NOTE_CHANGE_MSK) != 0))
                         && midiProcessed == 0) {
-                            __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching on voice %d",c);
+                            //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching on voice %d",c);
                             audioEngine->getSoundGenerator(c)->setNote((float)midiDataBuffer[1]-69.0f);
                             audioEngine->getSoundGenerator(c)->switchOn(0.f);
                             audioEngine->getSoundGenerator(c)->availableForMidi |= MIDI_TAKEN_MSK | midiDataBuffer[1];
@@ -85,7 +91,7 @@ aaudio_data_callback_result_t dataCallback(
                             && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0 )
                             && ((audioEngine->getSoundGenerator(c)->availableForMidi & 0x7F) == midiDataBuffer[1] )
                             && midiProcessed == 0) {
-                            __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching off voice %d",c);
+                            //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching off voice %d",c);
                             audioEngine->getSoundGenerator(c)->switchOff(0.0f);
                             audioEngine->getSoundGenerator(c)->availableForMidi &= ~(0xFF);
                             midiProcessed = 1;
@@ -127,7 +133,8 @@ bool AudioEngine::start() {
     AAudioStreamBuilder_setFormat(streamBuilder, AAUDIO_FORMAT_PCM_FLOAT);
     AAudioStreamBuilder_setChannelCount(streamBuilder, 1);
     AAudioStreamBuilder_setPerformanceMode(streamBuilder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
-    AAudioStreamBuilder_setFramesPerDataCallback(streamBuilder,64);
+    AAudioStreamBuilder_setFramesPerDataCallback(streamBuilder,framesPerDataCallback);
+    AAudioStreamBuilder_setBufferCapacityInFrames(streamBuilder,bufferCapacityInFrames);
     AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallback, nullptr);
     AAudioStreamBuilder_setErrorCallback(streamBuilder, ::errorCallback, this);
 
