@@ -1,0 +1,2 @@
+No functionality is implemented in the App "Touch Sample Synth" which records, distributes or manages personal data. Furthermore no mechanism is imeplemented which establishes an internet connection neither when actively using the app nor when the app is in background mode. The app persistently stores application specific information from which a personal identity cannot be derived on the device itself.
+
