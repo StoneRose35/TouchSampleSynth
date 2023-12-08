@@ -2,7 +2,6 @@ package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.views.TouchElement
 import java.io.File
 import java.io.FileInputStream
@@ -77,6 +76,8 @@ class SceneP : Serializable {
         val fos = FileOutputStream(file)
         val oos = ObjectOutputStream(fos)
         oos.writeObject(this)
+        oos.close()
+        fos.close()
     }
 
     companion object {

@@ -47,7 +47,7 @@ aaudio_data_callback_result_t dataCallback(
     {
 
         audioSum=0.0f;
-        for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
+        for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
         {
             if (audioEngine->getSoundGenerator(c) != nullptr) {
                 audioSum += audioEngine->getSoundGenerator(c)->getNextSample();
@@ -67,7 +67,7 @@ aaudio_data_callback_result_t dataCallback(
                 if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_ON )
                 {
                     midiProcessed = 0;
-                    for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
+                    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
                     {
                         if (audioEngine->getSoundGenerator(c) != nullptr
                         && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
@@ -85,7 +85,7 @@ aaudio_data_callback_result_t dataCallback(
                 else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_OFF )
                 {
                     midiProcessed = 0;
-                    for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
+                    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
                     {
                         if (audioEngine->getSoundGenerator(c) != nullptr
                             && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0 )
@@ -122,12 +122,14 @@ void errorCallback(AAudioStream *,
 }
 
 bool AudioEngine::start() {
+
     if (stream_ != nullptr) {
-        aaudio_stream_state_t streamState = AAudioStream_getState(stream_);
-        if (streamState!=AAUDIO_STREAM_STATE_CLOSED && streamState > 0) {
+        //aaudio_stream_state_t streamState = AAudioStream_getState(stream_);
+        //if (streamState!=AAUDIO_STREAM_STATE_CLOSED && streamState > 0) {
             return false;
-        }
+        //}
     }
+
     AAudioStreamBuilder *streamBuilder;
     AAudio_createStreamBuilder(&streamBuilder);
     AAudioStreamBuilder_setFormat(streamBuilder, AAUDIO_FORMAT_PCM_FLOAT);
@@ -168,9 +170,22 @@ bool AudioEngine::start() {
 }
 
 void AudioEngine::stop() {
+    aaudio_result_t aaudioResult;
+    aaudio_stream_state_t  aaudioStreamState;
+    aaudio_stream_state_t nextState;
     if (stream_ != nullptr) {
-        AAudioStream_requestStop(stream_);
-        AAudioStream_close(stream_);
+        aaudioResult = AAudioStream_requestStop(stream_);
+        if (aaudioResult == AAUDIO_OK)
+        {
+            // wait until the stream has stopped
+            aaudioStreamState = AAudioStream_getState(stream_);
+            AAudioStream_waitForStateChange(stream_,aaudioStreamState,&nextState,10000000);
+
+            // close the stream, wait until the stream has closed
+            AAudioStream_close(stream_);
+            //AAudioStream_waitForStateChange(stream_,aaudioStreamState,&nextState,10000000);
+        }
+        stream_ = nullptr;
     }
 }
 
@@ -187,9 +202,9 @@ int32_t AudioEngine::getSamplingRate() const {
     return samplingRate;
 }
 
-int8_t AudioEngine::getNSoundGenerators() {
+int8_t AudioEngine::getActiveSoundGenerators() {
     int8_t cntr = 0;
-    for (uint8_t c=0;c<N_SOUND_GENERATORS;c++)
+    for (uint8_t c=0;c<nSoundGenerators;c++)
     {
         if (*(soundGenerators+c) != nullptr)
         {
@@ -199,14 +214,18 @@ int8_t AudioEngine::getNSoundGenerators() {
     return cntr;
 }
 
+int8_t AudioEngine::getNSoundGenerators() const{
+    return nSoundGenerators;
+}
+
 AudioEngine::AudioEngine() {
-    soundGenerators=(MusicalSoundGenerator**)malloc(N_SOUND_GENERATORS*sizeof(MusicalSoundGenerator*));
+    soundGenerators=(MusicalSoundGenerator**)malloc(MAX_SOUND_GENERATORS* sizeof(MusicalSoundGenerator*));
     stream_ = nullptr;
     midiOutputPort = nullptr;
     midiDevice = nullptr;
     samplingRate = 48000.0f;
     cpuLoad=0.0f;
-    for (uint16_t c=0;c<N_SOUND_GENERATORS;c++)
+    for (uint16_t c=0;c<MAX_SOUND_GENERATORS;c++)
     {
         *(soundGenerators + c) = nullptr;
     }
@@ -215,12 +234,42 @@ AudioEngine::AudioEngine() {
 }
 
 AudioEngine::~AudioEngine() {
+    stop();
     free(soundGenerators);
+    stream_=nullptr;
 
 }
 
+int32_t AudioEngine::getBufferCapacityInFrames() const
+{
+    return bufferCapacityInFrames;
+}
+int8_t AudioEngine::setBufferCapacityInFrames(int32_t bcif){
+    if (bcif < 2*framesPerDataCallback)
+    {
+        return 1;
+    }
+    bufferCapacityInFrames = bcif;
+    audioEngine->restart();
+    return 0;
+}
+int32_t AudioEngine::getFramesPerDataCallback() const
+{
+    return framesPerDataCallback;
+}
+int8_t AudioEngine::setFramesPerDataCallback(int32_t fpdc)
+{
+    if (fpdc*2 > bufferCapacityInFrames)
+    {
+        return 1;
+    }
+    framesPerDataCallback = fpdc;
+    audioEngine->restart();
+    return 0;
+}
+
 MusicalSoundGenerator *AudioEngine::getSoundGenerator(int8_t idx) {
-    if (idx < N_SOUND_GENERATORS && idx >= 0)
+    if (idx < nSoundGenerators && idx >= 0)
     {
         return *(soundGenerators + idx);
     }
@@ -229,9 +278,9 @@ MusicalSoundGenerator *AudioEngine::getSoundGenerator(int8_t idx) {
 
 int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
     MusicalSoundGenerator *  sg;
-    int8_t idx=N_SOUND_GENERATORS;
+    int8_t idx=nSoundGenerators;
     // get next free slot
-    for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
+    for (int8_t c=0;c<nSoundGenerators;c++)
     {
         if(*(soundGenerators+c)==nullptr)
         {
@@ -243,13 +292,13 @@ int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
     {
         case SINE_MONO_SYNTH:
             sg=new SineMonoSynth();
-            if (idx < N_SOUND_GENERATORS) {
+            if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;
             }
             break;
         case SIMPLE_SUBTRACTIVE_SYNTH:
             sg=new SimpleSubtractiveSynth((float)samplingRate);
-            if (idx < N_SOUND_GENERATORS) {
+            if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;
             }
             break;
@@ -267,6 +316,10 @@ void AudioEngine::removeSoundGenerator(int idx) {
         delete (*(soundGenerators + idx));
         *(soundGenerators + idx) = nullptr;
     }
+}
+
+void AudioEngine::setNSoundGenerators(int8_t nsg) {
+    nSoundGenerators = nsg;
 }
 
 AudioEngine * getAudioEngine()

@@ -27,4 +27,22 @@
     <string name="content_description_instrument_speaker">Loudspeaker</string>
     <string name="content_description_instrument_processor">CPU Icon</string>
     <string name="pad">Pad</string>
+    <string name="settings">Settings</string>
+
+    <string-array name="framesPerDataCallbackValues">
+        <item>32</item>
+        <item>64</item>
+        <item>128</item>
+        <item>256</item>
+        <item>512</item>
+        <item>1024</item>
+    </string-array>
+    <string-array name="bufferCapacityInFramesValues">
+        <item>64</item>
+        <item>128</item>
+        <item>256</item>
+        <item>512</item>
+        <item>1024</item>
+        <item>2048</item>
+    </string-array>
 </resources>

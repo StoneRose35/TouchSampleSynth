@@ -19,13 +19,13 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_playFrames(JNIEnv *, jobject , 
     for(uint32_t i=0;i<nFrames;i++)
     {
         audioSum=0.0f;
-        for (int8_t c=0;c<N_SOUND_GENERATORS;c++)
+        for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
         {
             if (audioEngine->getSoundGenerator(c) != nullptr) {
                 audioSum += audioEngine->getSoundGenerator(c)->getNextSample();
             }
         }
-        audioSum /= (float)audioEngine->getNSoundGenerators();
+        audioSum /= (float)audioEngine->getActiveSoundGenerators();
         audioEngine->averageVolume = audioEngine->averageVolume*AVERAGE_LOWPASS_ALPHA  + fabsf(audioSum)*(1.0f - AVERAGE_LOWPASS_ALPHA);
         *(audioDataFloat + i) = audioSum;
     }
@@ -48,10 +48,10 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_removeSoundGenerator(JNIEnv *, 
     return 0;
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_startEngine(JNIEnv *, jobject /* this */) {
     AudioEngine * audioEngine = getAudioEngine();
-    audioEngine->start();
+    return audioEngine->start();
 }
 
 JNIEXPORT void JNICALL
@@ -79,6 +79,34 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getCpuLoad(JNIEnv *, jobject)
 {
     AudioEngine * audioEngine = getAudioEngine();
     return audioEngine->cpuLoad;
+}
+
+JNIEXPORT int JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getFramesPerDataCallback(JNIEnv *, jobject)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    return audioEngine->getFramesPerDataCallback();
+}
+
+JNIEXPORT int JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_setFramesPerDataCallback(JNIEnv *, jobject,jint fpdc)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    return audioEngine->setFramesPerDataCallback(fpdc);
+}
+
+JNIEXPORT int JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getBufferCapacityInFrames(JNIEnv *, jobject)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    return audioEngine->getBufferCapacityInFrames();
+}
+
+JNIEXPORT int JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_setBufferCapacityInFrames(JNIEnv *, jobject,jint bcif)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    return audioEngine->setBufferCapacityInFrames(bcif);
 }
 
 JNIEXPORT void JNICALL

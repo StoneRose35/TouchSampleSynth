@@ -1,9 +1,9 @@
 package ch.sr35.touchsamplesynth
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
@@ -11,12 +11,15 @@ import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
+import ch.sr35.touchsamplesynth.fragments.SettingsFragment
 import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.VuMeter
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.util.Timer
 import java.util.TimerTask
+
 
 class TouchSampleSynthMain : AppCompatActivity() {
 
@@ -27,14 +30,15 @@ class TouchSampleSynthMain : AppCompatActivity() {
     var defaultScene: SceneP?=null
     val playPageFragment=PlayPageFragment()
     val instrumentsPageFragment=InstrumentsPageFragment()
+    val settingsFrament= SettingsFragment()
 
 
     init {
 
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         val allNotes = MusicalPitch.generateAllNotes()
 
         val fDir = this.filesDir
@@ -90,7 +94,10 @@ class TouchSampleSynthMain : AppCompatActivity() {
 
         val playPage = PlayPageFragment()
         putFragment(playPage,"PlayPage0")
-        audioEngine.startEngine()
+        if (!audioEngine.startEngine())
+        {
+            playPage.view?.let { Snackbar.make(it,"Audio Engine failed to start",10) }
+        }
 
         val timer=Timer()
         val timerTask= object: TimerTask()
@@ -104,10 +111,22 @@ class TouchSampleSynthMain : AppCompatActivity() {
         }
         timer.schedule(timerTask,0,100)
     }
+    override fun onStart() {
+        super.onStart()
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /*
+        StrictMode.setVmPolicy(
+            VmPolicy.Builder(StrictMode.getVmPolicy())
+                .detectLeakedClosableObjects()
+                .build()
+        )*/
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
     }
 
@@ -140,6 +159,11 @@ class TouchSampleSynthMain : AppCompatActivity() {
     }
 
     override fun onStop() {
+
+        super.onStop()
+    }
+
+    override fun onPause() {
         if (defaultScene==null)
         {
             defaultScene= SceneP()
@@ -154,13 +178,8 @@ class TouchSampleSynthMain : AppCompatActivity() {
         defaultScene!!.toFile(f)
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
-        super.onStop()
+        super.onPause()
     }
-    /**
-     * A native method that is implemented by the 'touchsamplesynth' native library,
-     * which is packaged with this application.
-     */
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
         return true
@@ -175,6 +194,10 @@ class TouchSampleSynthMain : AppCompatActivity() {
             R.id.menuitem_instruments ->
             {
                 putFragment(instrumentsPageFragment,"instrumentPage0")
+            }
+            R.id.menuitem_settings ->
+            {
+                putFragment(settingsFrament, "settingsPage0")
             }
         }
         return true
