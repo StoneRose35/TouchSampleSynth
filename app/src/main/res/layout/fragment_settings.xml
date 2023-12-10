@@ -6,28 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-    <Spinner
-        android:id="@+id/spinnerFramesPerDataCallback"
-        android:layout_width="match_parent"
+    <TableLayout
+        android:id="@+id/settingParametersTable"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        android:paddingTop="50dp"
+        >
+        <TableRow>
 
-    <Spinner
-        android:id="@+id/spinnerBufferCapacityInFrames"
-        android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/settingTextViewFramesPerDataCallback"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:labelFor="@id/spinnerFramesPerDataCallback"
+                android:text="@string/framesPerDataCallbackDescription" />
+            <Spinner
+                android:id="@+id/spinnerFramesPerDataCallback"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                />
+        </TableRow>
+        <TableRow>
+
+            <TextView
+                android:id="@+id/settingTextViewBufferCapacityInFrames"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:labelFor="@id/spinnerBufferCapacityInFrames"
+                android:text="@string/bufferCapacityInFramesDescription" />
+            <Spinner
+                android:id="@+id/spinnerBufferCapacityInFrames"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                />
+        </TableRow>
+    </TableLayout>
+
+
+    <TextView
+        android:id="@+id/settingTextViewAbout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@android:string/unknownName"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/spinnerFramesPerDataCallback"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingParametersTable"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

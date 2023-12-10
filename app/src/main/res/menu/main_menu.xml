@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <item
         android:id="@+id/menuitem_play"
@@ -15,7 +16,7 @@
         android:title="@string/menuitem_soundgenerator" />
     <item
         android:id="@+id/menuitem_settings"
-        android:icon="@android:drawable/ic_menu_compass"
+        android:icon="@drawable/settingspage"
         app:showAsAction="ifRoom"
         android:title="@string/settings"
         >

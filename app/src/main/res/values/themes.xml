@@ -1,10 +1,13 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
-    <style name="Theme.TouchSampleSynth" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.TouchSampleSynth" parent="Theme.AppCompat.DayNight.DarkActionBar">
+
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/darkeryellow</item>
         <item name="colorPrimaryVariant">@color/darkyellow</item>
         <item name="colorOnPrimary">@color/black</item>
+
+        <item name="titleTextColor">@android:color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/red_light</item>
         <item name="colorSecondaryVariant">@color/red_dark</item>
@@ -12,6 +15,14 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
+
         <!-- Customize your theme here. -->
+        <item name="touchElementTouchedColor">@color/light_red</item>
+        <item name="touchElementColor">@color/light_green</item>
+        <item name="touchElementLine">@color/black</item>
+        <item name="touchElementEditDot">@color/black</item>
+        <item name="touchElementEditBoxBgColor">@color/light_gray</item>
+        <item name="touchElementEditTextColor">@color/black</item>
     </style>
+
 </resources>

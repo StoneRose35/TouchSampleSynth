@@ -8,14 +8,17 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
-
+import ch.sr35.touchsamplesynth.BuildConfig
+import com.google.android.material.snackbar.Snackbar
 
 
 class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
-
+    private var framesPerDataCallbackIdx = -1
+    private var bufferSizeInFramesIdx = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -33,6 +36,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val audioEngine = AudioEngineK()
         super.onViewCreated(view, savedInstanceState)
         val framesPerDataCallback = view.findViewById<Spinner>(R.id.spinnerFramesPerDataCallback)
         ArrayAdapter.createFromResource(
@@ -44,6 +48,22 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             // Apply the adapter to the spinner.
             framesPerDataCallback.adapter = adapter
+        }
+        val fpdcVals = resources.getStringArray(R.array.framesPerDataCallbackValues)
+        val currentFpdc = audioEngine.getFramesPerDataCallback()
+        var idx = 0
+        for (fpdc in fpdcVals)
+        {
+            if (fpdcVals[idx].toInt() == currentFpdc)
+            {
+                break
+            }
+            idx++
+        }
+        if (idx < fpdcVals.size)
+        {
+            framesPerDataCallback.setSelection(idx)
+            framesPerDataCallbackIdx = idx
         }
         framesPerDataCallback.onItemSelectedListener = this
 
@@ -58,36 +78,62 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
             // Apply the adapter to the spinner.
             bufferCapacityInFrames.adapter = adapter
         }
+        val bcifVals = resources.getStringArray(R.array.bufferCapacityInFramesValues)
+        val currentBcif = audioEngine.getBufferCapacityInFrames()
+        idx = 0
+        for (bcif in bcifVals)
+        {
+            if (bcifVals[idx].toInt() == currentBcif)
+            {
+                break
+            }
+            idx++
+        }
+        if (idx < bcifVals.size)
+        {
+            bufferCapacityInFrames.setSelection(idx)
+            bufferSizeInFramesIdx = idx
+        }
+        bufferCapacityInFrames.onItemSelectedListener = this
 
+        val textViewAbout = view.findViewById<TextView>(R.id.settingTextViewAbout)
+        val aboutString="Touch Sample Synth Version %s".format(BuildConfig.VERSION_NAME)
+        textViewAbout.text = aboutString
 
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         val audioEngine = AudioEngineK()
 
-        if (p1 != null && p1.id == R.id.spinnerFramesPerDataCallback)
+        if (p0 != null && p0.id == R.id.spinnerFramesPerDataCallback)
         {
             val framesPerDataCallback = resources.getStringArray(R.array.framesPerDataCallbackValues)
-            if (audioEngine.setFramesPerDataCallback(framesPerDataCallback[p2].toInt())==0)
+            if (audioEngine.setFramesPerDataCallback(framesPerDataCallback[p2].toInt())!=0)
             {
-                // show a "is valid" sign somewhere
+                this.view?.let { val sb = Snackbar.make(it,resources.getText(R.string.audioBuffersErrorMessage),5000)
+                sb.show()}
+                p0.setSelection(framesPerDataCallbackIdx)
             }
             else
             {
-
+                framesPerDataCallbackIdx = p2
             }
+
         }
-        else if (p1 != null && p1.id == R.id.spinnerFramesPerDataCallback)
+        else if (p0 != null && p0.id == R.id.spinnerBufferCapacityInFrames)
         {
             val bufferCapacityInFrames = resources.getStringArray(R.array.bufferCapacityInFramesValues)
-            if (audioEngine.setBufferCapacityInFrames(bufferCapacityInFrames[p2].toInt())==0)
+            if (audioEngine.setBufferCapacityInFrames(bufferCapacityInFrames[p2].toInt())!=0)
             {
-
+                this.view?.let { val sb = Snackbar.make(it,resources.getText(R.string.audioBuffersErrorMessage),5000)
+                sb.show()}
+                p0.setSelection(bufferSizeInFramesIdx)
             }
             else
             {
-
+                bufferSizeInFramesIdx = p2
             }
+
         }
     }
 

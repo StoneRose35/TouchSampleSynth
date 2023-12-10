@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="touchElementTouchedColor" format="color" />
+    <attr name="touchElementColor" format="color"/>
+    <attr name="touchElementLine" format="color" />
+    <attr name="touchElementEditDot" format="color" />
+    <attr name="touchElementEditBoxBgColor" format="color" />
+    <attr name="touchElementEditTextColor" format="color"/>
+    <attr name="sliderDrawable" format="reference"/>
+</resources>

@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
+import ch.sr35.touchsamplesynth.R
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,6 +17,7 @@ class TouchElementTest {
     fun generateTouchElementTest()
     {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
+        context.setTheme(R.style.Theme_TouchSampleSynth)
         val te = TouchElement(context,null)
         Assert.assertNotNull(te)
     }
@@ -24,6 +26,7 @@ class TouchElementTest {
     fun virtuallyPlayTouchElement()
     {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
+        context.setTheme(R.style.Theme_TouchSampleSynth)
         val te = TouchElement(context,null)
         val i1 = SineMonoSynthI(context,"Basic")
         i1.generateVoices(3)

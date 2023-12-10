@@ -4,16 +4,23 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="black">#FF000000</color>
+    <color name="dark_grey">#FF212121</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_grey">#C3C3C3</color>
+
 
     <color name="darkeryellow">#CFA936</color>
     <color name="darkyellow">#A18328</color>
     <color name="red_light">#FB6565</color>
     <color name="red_dark">#833E3E</color>
-    <color name="touchelement_not_touched" >#B4EA76</color>
-    <color name="touchelement_touched" >#EA8476</color>
+
+    <color name="light_green" >#B4EA76</color>
+    <color name="light_red" >#EA8476</color>
+    <color name="dark_green">#082500</color>
+    <color name="dark_red">#1C0000</color>
 
     <color name="vu_meter_background">#FFEDCB</color>
     <color name="vu_meter_green">#006E00</color>
-    <color name="darkgray">#505050</color>
+    <color name="dark_gray">#303030</color>
+    <color name="light_gray">#a0a0a0</color>
 </resources>

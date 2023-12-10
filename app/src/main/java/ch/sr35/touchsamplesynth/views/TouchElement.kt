@@ -3,7 +3,6 @@ package ch.sr35.touchsamplesynth.views
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
@@ -16,12 +15,13 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
+import com.google.android.material.color.MaterialColors
 import java.io.Serializable
 
 const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
 
-open class TouchElement(context: Context, attributeSet: AttributeSet?) :
+class TouchElement(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
 
     enum class ActionDir: Serializable {
@@ -43,12 +43,12 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     }
 
     var actionDir: ActionDir = ActionDir.HORIZONTAL
-    private val blackLine: Paint = Paint()
+    private val outLine: Paint = Paint()
     private val fillColor: Paint = Paint()
-    private val blackLineFat: Paint = Paint()
-    private val blackFill: Paint = Paint()
-    private val grayFill: Paint = Paint()
-    private val blackText: Paint = Paint()
+    private val arrowLine: Paint = Paint()
+    private val editDotFill: Paint = Paint()
+    private val editBoxBackground: Paint = Paint()
+    private val editText: Paint = Paint()
     private var cornerRadius = 0.0f
     private var dragStart: TouchElementDragAnchor? = null
     private var px: Float = 0.0f
@@ -65,37 +65,36 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
 
     init {
-        blackLine.color = Color.BLACK
-        blackLine.strokeWidth = 7.8f
-        blackLine.style = Paint.Style.STROKE
-        blackLine.isAntiAlias = true
+        outLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
+        outLine.strokeWidth = 7.8f
+        outLine.style = Paint.Style.STROKE
+        outLine.isAntiAlias = true
 
-        grayFill.color = Color.LTGRAY
-        grayFill.style = Paint.Style.FILL
-        grayFill.isAntiAlias = true
+        editBoxBackground.color = MaterialColors.getColor(this,R.attr.touchElementEditBoxBgColor)
+        editBoxBackground.style = Paint.Style.FILL
+        editBoxBackground.isAntiAlias = true
 
-        blackFill.color = Color.BLACK
-        blackFill.style = Paint.Style.FILL
-        blackFill.isAntiAlias = true
+        editDotFill.color = MaterialColors.getColor(this,R.attr.touchElementEditDot)
+        editDotFill.style = Paint.Style.FILL
+        editDotFill.isAntiAlias = true
 
-        blackText.color = Color.BLACK
-        blackText.style = Paint.Style.FILL
-        blackText.textSize = 28.0f
-        blackText.isAntiAlias = true
+        editText.color = MaterialColors.getColor(this,R.attr.touchElementEditTextColor)
+        editText.style = Paint.Style.FILL
+        editText.textSize = 28.0f
+        editText.isAntiAlias = true
 
-        blackLineFat.color = Color.BLACK
-        blackLineFat.strokeWidth = 12.0f
-        blackLineFat.style = Paint.Style.STROKE
-        blackLineFat.strokeCap = Paint.Cap.ROUND
-        blackLineFat.isAntiAlias = true
+        arrowLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
+        arrowLine.strokeWidth = 12.0f
+        arrowLine.style = Paint.Style.STROKE
+        arrowLine.strokeCap = Paint.Cap.ROUND
+        arrowLine.isAntiAlias = true
 
-        fillColor.color =
-            getContext().resources.getColor(R.color.touchelement_not_touched, getContext().theme)
+        fillColor.color = MaterialColors.getColor(this,R.attr.touchElementColor)
         fillColor.style = Paint.Style.FILL
 
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         val w = layoutParams.width.toFloat()
@@ -103,7 +102,7 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
         val arrowSize: Float
 
         // draw oval
-        canvas?.drawRoundRect(
+        canvas.drawRoundRect(
             0.0f + PADDING,
             0.0f + PADDING,
             w - PADDING,
@@ -112,14 +111,14 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
             cornerRadius,
             fillColor
         )
-        canvas?.drawRoundRect(
+        canvas.drawRoundRect(
             0.0f + PADDING,
             0.0f + PADDING,
             w - PADDING,
             h - PADDING,
             cornerRadius,
             cornerRadius,
-            blackLine
+            outLine
         )
 
         // draw action arrow
@@ -129,26 +128,26 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
             } else {
                 0.11f * h
             }
-            canvas?.drawLine(
+            canvas.drawLine(
                 0.2f * w + PADDING,
                 0.8f * h - PADDING,
                 0.8f * w - PADDING,
                 0.8f * h - PADDING,
-                blackLineFat
+                arrowLine
             )
-            canvas?.drawLine(
+            canvas.drawLine(
                 0.8f * w - PADDING - arrowSize,
                 0.8f * h - PADDING - arrowSize,
                 0.8f * w - PADDING,
                 0.8f * h - PADDING,
-                blackLineFat
+                arrowLine
             )
-            canvas?.drawLine(
+            canvas.drawLine(
                 0.8f * w - PADDING - arrowSize,
                 0.8f * h - PADDING + arrowSize,
                 0.8f * w - PADDING,
                 0.8f * h - PADDING,
-                blackLineFat
+                arrowLine
             )
 
         } else {
@@ -157,93 +156,93 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
             } else {
                 0.11f * w
             }
-            canvas?.drawLine(
+            canvas.drawLine(
                 0.8f * w - PADDING,
                 0.8f * h - PADDING,
                 0.8f * w - PADDING,
                 0.2f * h + PADDING,
-                blackLineFat
+                arrowLine
             )
-            canvas?.drawLine(
+            canvas.drawLine(
                 0.8f * w - PADDING - arrowSize,
                 0.2f * h + PADDING + arrowSize,
                 0.8f * w - PADDING,
                 0.2f * h + PADDING,
-                blackLineFat
+                arrowLine
             )
-            canvas?.drawLine(
+            canvas.drawLine(
                 0.8f * w - PADDING + arrowSize,
                 0.2f * h + PADDING + arrowSize,
                 0.8f * w - PADDING,
                 0.2f * h + PADDING,
-                blackLineFat
+                arrowLine
             )
         }
 
         if (elementState == TouchElementState.EDITING) {
-            canvas?.drawCircle(
+            canvas.drawCircle(
                 0.0f + EDIT_CIRCLE_OFFSET,
                 0.0f + EDIT_CIRCLE_OFFSET,
                 EDIT_CIRCLE_OFFSET,
-                blackFill
+                editDotFill
             )
-            canvas?.drawCircle(
+            canvas.drawCircle(
                 w - EDIT_CIRCLE_OFFSET,
                 0.0f + EDIT_CIRCLE_OFFSET,
                 EDIT_CIRCLE_OFFSET,
-                blackFill
+                editDotFill
             )
-            canvas?.drawCircle(
+            canvas.drawCircle(
                 w - EDIT_CIRCLE_OFFSET,
                 h - EDIT_CIRCLE_OFFSET,
                 EDIT_CIRCLE_OFFSET,
-                blackFill
+                editDotFill
             )
-            canvas?.drawCircle(
+            canvas.drawCircle(
                 0.0f + EDIT_CIRCLE_OFFSET,
                 h - EDIT_CIRCLE_OFFSET,
                 EDIT_CIRCLE_OFFSET,
-                blackFill
+                editDotFill
             )
 
 
             rotateRect.left = 20
             rotateRect.right = rotateRect.left + 200
             rotateRect.top = EDIT_CIRCLE_OFFSET.toInt() + 50
-            rotateRect.bottom = (blackText.textSize.toInt() + 8 + rotateRect.top)
+            rotateRect.bottom = (editText.textSize.toInt() + 8 + rotateRect.top)
 
-            canvas?.drawRect(rotateRect, grayFill)
-            canvas?.drawText(
+            canvas.drawRect(rotateRect, editBoxBackground)
+            canvas.drawText(
                 "Rotate",
                 (rotateRect.left + 3).toFloat(),
-                rotateRect.top.toFloat() + blackText.textSize,
-                blackText
+                rotateRect.top.toFloat() + editText.textSize,
+                editText
             )
 
             setSoundgenRect.left = 20
             setSoundgenRect.right = setSoundgenRect.left + 200
             setSoundgenRect.top = rotateRect.bottom + 10
-            setSoundgenRect.bottom = setSoundgenRect.top + blackText.textSize.toInt() + 8
+            setSoundgenRect.bottom = setSoundgenRect.top + editText.textSize.toInt() + 8
 
-            canvas?.drawRect(setSoundgenRect, grayFill)
-            canvas?.drawText(
+            canvas.drawRect(setSoundgenRect, editBoxBackground)
+            canvas.drawText(
                 "Set SoundGen",
                 (setSoundgenRect.left + 3).toFloat(),
-                setSoundgenRect.top.toFloat() + blackText.textSize,
-                blackText
+                setSoundgenRect.top.toFloat() + editText.textSize,
+                editText
             )
 
             deleteRect.left = 20
             deleteRect.right = deleteRect.left + 200
             deleteRect.top = setSoundgenRect.bottom + 10
-            deleteRect.bottom = deleteRect.top + blackText.textSize.toInt() + 8
+            deleteRect.bottom = deleteRect.top + editText.textSize.toInt() + 8
 
-            canvas?.drawRect(deleteRect, grayFill)
-            canvas?.drawText(
+            canvas.drawRect(deleteRect, editBoxBackground)
+            canvas.drawText(
                 "Delete",
                 (deleteRect.left + 3).toFloat(),
-                deleteRect.top.toFloat() + blackText.textSize,
-                blackText
+                deleteRect.top.toFloat() + editText.textSize,
+                editText
             )
         }
 
@@ -269,8 +268,7 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 py = event.y
                 return true
             } else if (event?.action == MotionEvent.ACTION_UP) {
-                fillColor.color =
-                    context.resources.getColor(R.color.touchelement_not_touched, context.theme)
+                fillColor.color = MaterialColors.getColor(this, R.attr.touchElementColor)
                 soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
                 invalidate()
                 return false
@@ -378,14 +376,13 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
         //return super.onTouchEvent(event);
     }
 
+
     override fun performClick(): Boolean {
-        fillColor.color =
-            context.resources.getColor(R.color.touchelement_touched, context.theme)
+        fillColor.color = MaterialColors.getColor(this, R.attr.touchElementTouchedColor)
         note?.value?.let { soundGenerator?.voices?.get(voiceNr)?.setNote(it) }
         if (soundGenerator?.voices?.get(voiceNr)?.switchOn(1.0f)==true)
         {
-            fillColor.color =
-                context.resources.getColor(R.color.touchelement_touched, context.theme)
+            fillColor.color = MaterialColors.getColor(this, R.attr.touchElementTouchedColor)
         }
         invalidate()
         return super.performClick()

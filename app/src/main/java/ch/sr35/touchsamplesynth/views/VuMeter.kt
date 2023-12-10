@@ -36,16 +36,16 @@ class VuMeter(context: Context, attributes: AttributeSet): View(context,attribut
         redLedColor.style = Paint.Style.FILL
 
     }
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         val w = width.toFloat()
         val h = height.toFloat()
-        canvas?.drawRect(0.0f,0.0f,w,h,fillColor)
-        canvas?.drawRect(4.0f,4.0f,(w-64.0f)*level,h-4.0f,meterColor)
+        canvas.drawRect(0.0f,0.0f,w,h,fillColor)
+        canvas.drawRect(4.0f,4.0f,(w-64.0f)*level,h-4.0f,meterColor)
         if (isActive)
         {
-            canvas?.drawCircle(w-32.0f,h/2.0f,24.0f,redLedColor)
+            canvas.drawCircle(w-32.0f,h/2.0f,24.0f,redLedColor)
         }
     }
 
@@ -55,9 +55,4 @@ class VuMeter(context: Context, attributes: AttributeSet): View(context,attribut
         invalidate()
     }
 
-    fun setActive(a: Boolean)
-    {
-        isActive = a
-        invalidate()
-    }
 }
