@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -110,6 +111,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
             }
         }
         timer.schedule(timerTask,0,100)
+
     }
     override fun onStart() {
         super.onStart()
@@ -125,7 +127,13 @@ class TouchSampleSynthMain : AppCompatActivity() {
         )*/
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        window.decorView.apply {
+            systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
 
 
     }
