@@ -20,8 +20,8 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.views.TouchElement
+import java.util.stream.Collectors
 import java.util.stream.IntStream
-import kotlin.streams.toList
 
 
 class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
@@ -42,7 +42,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
             (touchElements.stream().map { te -> te.soundGenerator }
                 .filter { el -> (el?.getType() ?: "") == i.getType() && (el?.name ?: "srz")== i.name}.count() < i.voicesCount())
                     || i.voicesCount() == 1
-        }.toList()
+        }.collect(Collectors.toList())
 
         val instrumentListAdapter = SoundGeneratorListAdapter(availableSoundGenerators,touchElement)
         instrumentList.adapter = instrumentListAdapter
@@ -59,7 +59,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                 if (touchElement.soundGenerator!!.voicesCount() > 1) {
                     val voiceNrs = (context as TouchSampleSynthMain).touchElements.stream()
                         .filter { te -> te.soundGenerator?.name == availableSoundGenerators[instrumentListAdapter.checkedPosition].name && te.soundGenerator!!.getType() == availableSoundGenerators[instrumentListAdapter.checkedPosition].getType() }
-                        .map { te -> te.voiceNr }.toList()
+                        .map { te -> te.voiceNr }.collect(Collectors.toList())
                     var currentVoiceIdx = 0
                     while (currentVoiceIdx < soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()) {
                         if (voiceNrs.stream().noneMatch { vn -> vn == currentVoiceIdx }) {

@@ -127,6 +127,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
         )*/
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(findViewById(R.id.mainToolBar))
         window.decorView.apply {
             systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

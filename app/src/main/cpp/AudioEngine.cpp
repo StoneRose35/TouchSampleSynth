@@ -53,8 +53,16 @@ aaudio_data_callback_result_t dataCallback(
                 audioSum += audioEngine->getSoundGenerator(c)->getNextSample();
             }
         }
-        audioSum /= (float)audioEngine->getNSoundGenerators();
+        //audioSum /= (float)audioEngine->getNSoundGenerators();
         audioEngine->averageVolume = audioEngine->averageVolume*AVERAGE_LOWPASS_ALPHA  + fabsf(audioSum)*(1.0f - AVERAGE_LOWPASS_ALPHA);
+        if (audioSum > 1.0f)
+        {
+            audioSum = 1.0f;
+        }
+        else if (audioSum < -1.0f)
+        {
+            audioSum = -1.0f;
+        }
         *(audioDataFloat + i) = audioSum;
     }
     if (audioEngine->midiOutputPort != nullptr) {

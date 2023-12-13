@@ -2,10 +2,12 @@ package ch.sr35.touchsamplesynth.views
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +19,7 @@ import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
+import java.util.stream.IntStream
 
 const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
@@ -62,7 +65,9 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private var rotateRect: Rect = Rect()
     private var setSoundgenRect: Rect = Rect()
     private var deleteRect: Rect = Rect()
-
+    private val boundsRotate = Rect()
+    private val boundsSetSoundgen = Rect()
+    private val boundsDelete = Rect()
 
     init {
         outLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
@@ -80,7 +85,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
         editText.color = MaterialColors.getColor(this,R.attr.touchElementEditTextColor)
         editText.style = Paint.Style.FILL
-        editText.textSize = 28.0f
+        editText.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 24.0f,Resources.getSystem().displayMetrics)
         editText.isAntiAlias = true
 
         arrowLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
@@ -205,11 +210,17 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 editDotFill
             )
 
+            editText.getTextBounds("Rotate",0,"Rotate".length,boundsRotate)
+            editText.getTextBounds("Set SoundGen",0,"Set SoundGen".length,boundsSetSoundgen)
+            editText.getTextBounds("Delete",0,"Delete".length,boundsDelete)
+            val editRectangleWidth = IntStream.of(boundsRotate.width(),boundsSetSoundgen.width(),boundsDelete.width()).max().orElse(1)
+
 
             rotateRect.left = 20
-            rotateRect.right = rotateRect.left + 200
+            rotateRect.right = rotateRect.left + editRectangleWidth + toPx(3)
             rotateRect.top = EDIT_CIRCLE_OFFSET.toInt() + 50
             rotateRect.bottom = (editText.textSize.toInt() + 8 + rotateRect.top)
+
 
             canvas.drawRect(rotateRect, editBoxBackground)
             canvas.drawText(
@@ -220,7 +231,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             )
 
             setSoundgenRect.left = 20
-            setSoundgenRect.right = setSoundgenRect.left + 200
+            setSoundgenRect.right = setSoundgenRect.left + editRectangleWidth + toPx(3)
             setSoundgenRect.top = rotateRect.bottom + 10
             setSoundgenRect.bottom = setSoundgenRect.top + editText.textSize.toInt() + 8
 
@@ -233,7 +244,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             )
 
             deleteRect.left = 20
-            deleteRect.right = deleteRect.left + 200
+            deleteRect.right = deleteRect.left + editRectangleWidth + toPx(3)
             deleteRect.top = setSoundgenRect.bottom + 10
             deleteRect.bottom = deleteRect.top + editText.textSize.toInt() + 8
 
@@ -426,6 +437,26 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             invalidate()
         }
 
+    }
+    companion object {
+        val dpi = Resources.getSystem().displayMetrics.density
+        val dpFloat = Resources.getSystem().displayMetrics.density
+        fun toPx(dp: Int): Int
+        {
+            return (dp.toFloat()* dpi).toInt()
+        }
+        fun toPx(dpF: Float): Float
+        {
+            return dpF*dpFloat
+        }
+        fun toDp(px: Int): Int
+        {
+            return (px.toFloat()/dpi).toInt()
+        }
+        fun toDp(pxF: Float): Float
+        {
+            return pxF/dpFloat
+        }
     }
 
 }

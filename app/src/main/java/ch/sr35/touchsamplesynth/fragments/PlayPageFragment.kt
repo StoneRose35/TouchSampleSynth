@@ -32,7 +32,10 @@ class PlayPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (context==null)
+        {
+            return
+        }
         val newButton = view.findViewById<Button>(R.id.buttonNew)
         val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
 
