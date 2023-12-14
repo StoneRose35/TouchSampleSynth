@@ -80,6 +80,10 @@ class SceneP : Serializable {
         fos.close()
     }
 
+    override fun toString(): String {
+        return name
+    }
+
     companion object {
         fun fromFile(file: File): SceneP? {
             val fis = FileInputStream(file)

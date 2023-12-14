@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -29,6 +31,7 @@ class TouchSampleSynthMain : AppCompatActivity() {
     val soundGenerators=ArrayList<Instrument>()
     val touchElements=ArrayList<TouchElement>()
     var defaultScene: SceneP?=null
+    val allScenes = ArrayList<SceneP>()
     val playPageFragment=PlayPageFragment()
     val instrumentsPageFragment=InstrumentsPageFragment()
     val settingsFrament= SettingsFragment()
@@ -46,10 +49,12 @@ class TouchSampleSynthMain : AppCompatActivity() {
         fDir.listFiles()?.iterator()?.forEach {
             if (it.isFile && it.name.endsWith("scn")) {
                 defaultScene = SceneP.fromFile(it)
+                defaultScene?.let { it1 -> allScenes.add(it1) }
             }
         }
 
         try {
+
             defaultScene?.populate(soundGenerators, touchElements, this)
         }
         catch (e: Exception)
@@ -58,6 +63,8 @@ class TouchSampleSynthMain : AppCompatActivity() {
         }
 
         if (defaultScene == null) {
+            defaultScene=SceneP()
+            defaultScene!!.name = "Default"
             val synth = SineMonoSynthI(this,"Basic")
             synth.generateVoices(4)
             soundGenerators.add(synth)
@@ -191,6 +198,10 @@ class TouchSampleSynthMain : AppCompatActivity() {
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
+        val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
+        val sceneArrayAdapter = ArrayAdapter<SceneP>(this, android.R.layout.simple_spinner_item,allScenes)
+        sceneArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerScenes.adapter = sceneArrayAdapter
         return true
     }
 

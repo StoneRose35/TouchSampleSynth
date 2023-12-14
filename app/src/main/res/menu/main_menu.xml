@@ -2,7 +2,12 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
-
+    <item
+        android:id="@+id/menuitem_scenes"
+        android:title="@string/scenes"
+        app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/menuitem_play"
         android:title="@string/menuitem_playpage"
