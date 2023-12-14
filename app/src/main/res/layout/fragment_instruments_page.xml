@@ -35,12 +35,12 @@
         app:layout_constraintBottom_toBottomOf="@id/instruments_page_add"
         />
     <EditText
+        android:background="?attr/instrumentBackgroundColor"
+        android:theme="@style/Theme.TouchSampleSynth.Instrument"
         android:id="@+id/instruments_page_instr_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="310dp"
-        android:background="@color/dark_gray"
-        android:textColor="@color/vu_meter_background"
         android:text="@android:string/unknownName"
         android:autofillHints="name"
         android:inputType="text"
@@ -50,6 +50,8 @@
         android:padding="6dp"
         />
     <EditText
+        android:background="?attr/instrumentBackgroundColor"
+        android:theme="@style/Theme.TouchSampleSynth.Instrument"
         android:id="@+id/instruments_page_nr_voices"
         android:layout_width="48dp"
         android:minWidth="48dp"
@@ -58,8 +60,6 @@
         android:autofillHints="postalCode"
         android:hint="@string/nr_voices_description"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/dark_gray"
-        android:textColor="@color/vu_meter_background"
         android:text="@android:string/untitled"
         android:imeOptions="actionDone"
         android:padding="6dp"

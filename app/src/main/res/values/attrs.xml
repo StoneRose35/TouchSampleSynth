@@ -7,5 +7,11 @@
     <attr name="touchElementEditDot" format="color" />
     <attr name="touchElementEditBoxBgColor" format="color" />
     <attr name="touchElementEditTextColor" format="color"/>
+
     <attr name="sliderDrawable" format="reference"/>
+    <attr name="instrumentBackgroundColor" format="color"/>
+    <attr name="instrumentParameterTextColor" format="color" />
+    <attr name="instrumentParameterShadowColor" format="color" />
+    <attr name="instrumentPageTitleTextColor" format="color" />
+    <attr name="instrumentParameterProgressTint" format="color" />
 </resources>

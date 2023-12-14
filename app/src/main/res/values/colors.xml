@@ -12,7 +12,7 @@
     <color name="darkeryellow">#CFA936</color>
     <color name="darkyellow">#A18328</color>
     <color name="red_light">#FB6565</color>
-    <color name="red_dark">#833E3E</color>
+    <color name="red_dark">#550000</color>
 
     <color name="light_green" >#B4EA76</color>
     <color name="light_red" >#EA8476</color>
@@ -23,4 +23,5 @@
     <color name="vu_meter_green">#006E00</color>
     <color name="dark_gray">#303030</color>
     <color name="light_gray">#a0a0a0</color>
+    <color name="very_light_gray">#DCDCDC</color>
 </resources>

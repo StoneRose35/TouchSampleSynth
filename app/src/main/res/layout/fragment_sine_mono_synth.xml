@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="358dp"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray"
+    android:background="?attr/instrumentBackgroundColor"
     android:orientation="vertical"
     tools:context=".fragments.SineMonoSynthFragment">
 
@@ -16,7 +16,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="6dp"
         android:text="@string/sine_mono_synth_name"
-        android:textColor="@color/red_light"
+        android:textColor="?attr/instrumentPageTitleTextColor"
         android:textSize="20sp">
 
     </TextView>
@@ -24,6 +24,7 @@
     <LinearLayout
         android:baselineAligned="false"
         android:layout_width="match_parent"
+        android:theme="@style/Theme.TouchSampleSynth.Instrument"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -31,7 +32,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1.0"
             android:padding="10dp"
-            android:background="@color/dark_gray"
             android:orientation="vertical">
 
             <SeekBar
@@ -40,8 +40,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
-                android:thumb="@drawable/slider"
-                android:progressTint="#454545"
+                android:thumb="?attr/sliderDrawable"
                 android:max="1000" />
 
             <SeekBar
@@ -51,8 +50,7 @@
                 android:layout_marginTop="10dp"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
-                android:thumb="@drawable/slider"
-                android:progressTint="#454545"
+                android:thumb="?attr/sliderDrawable"
                 android:max="1000" />
 
             <SeekBar
@@ -63,8 +61,7 @@
                 android:max="1000"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
-                android:progressTint="#454545"
-                android:thumb="@drawable/slider" />
+                android:thumb="?attr/sliderDrawable" />
 
             <SeekBar
                 android:id="@+id/seekBarRelease"
@@ -75,8 +72,8 @@
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
                 android:progress="0"
-                android:progressTint="#454545"
-                android:thumb="@drawable/slider" />
+                android:thumb="?attr/sliderDrawable"
+/>
 
 
         </LinearLayout>
@@ -85,7 +82,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="30dp"
-            android:background="@color/dark_gray"
             android:orientation="vertical">
 
             <TextView
@@ -93,39 +89,28 @@
                 android:layout_height="18dp"
                 android:layout_marginTop="10dp"
                 android:text="@string/synth_attack"
-                android:shadowColor="@color/vu_meter_background"
-                android:shadowRadius="10"
                 android:labelFor="@id/seekBarAttack"
-                android:textColor="@color/vu_meter_background" />
+                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginTop="10dp"
-                android:shadowColor="@color/vu_meter_background"
-                android:shadowRadius="10"
                 android:labelFor="@id/seekBarDecay"
-                android:textColor="@color/vu_meter_background"
                 android:text="@string/synth_decay" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginTop="10dp"
-                android:shadowColor="@color/vu_meter_background"
-                android:shadowRadius="10"
                 android:labelFor="@id/seekBarSustain"
-                android:textColor="@color/vu_meter_background"
                 android:text="@string/synth_sustain" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_marginTop="10dp"
-                android:shadowColor="@color/vu_meter_background"
-                android:shadowRadius="10"
                 android:labelFor="@id/seekBarRelease"
-                android:textColor="@color/vu_meter_background"
                 android:text="@string/synth_release" />
         </LinearLayout>
     </LinearLayout>

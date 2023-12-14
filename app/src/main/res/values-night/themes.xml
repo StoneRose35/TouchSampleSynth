@@ -20,7 +20,23 @@
         <item name="touchElementEditDot">@color/light_grey</item>
         <item name="touchElementEditBoxBgColor">@color/dark_grey</item>
         <item name="touchElementEditTextColor">@color/light_grey</item>
-    </style>
+        <item name="sliderDrawable">@drawable/slider</item>
 
+        <item name="instrumentPageTitleTextColor">@color/red_light</item>
+        <item name="instrumentBackgroundColor">@color/dark_gray</item>
+
+    </style>
+    <style name="Theme.TouchSampleSynth.Instrument">
+        <item name="android:textColor">@color/vu_meter_background</item>
+        <item name="android:shadowColor">@color/vu_meter_background</item>
+        <item name="android:shadowRadius">10</item>
+        <item name="android:progressTint">@color/very_light_gray</item>
+        <item name="android:progressBackgroundTint">@color/very_light_gray</item>
+        <item name="android:progressTintMode">src_over</item>
+        <item name="android:progressBackgroundTintMode">src_over</item>
+        <item name="android:thumb">@drawable/slider</item>
+        <item name="android:background">@color/dark_gray</item>
+
+    </style>
 
 </resources>
