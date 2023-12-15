@@ -10,6 +10,7 @@
 
     <attr name="sliderDrawable" format="reference"/>
     <attr name="instrumentBackgroundColor" format="color"/>
+    <attr name="sceneEditBackgroundColor" format="color"/>
     <attr name="instrumentParameterTextColor" format="color" />
     <attr name="instrumentParameterShadowColor" format="color" />
     <attr name="instrumentPageTitleTextColor" format="color" />

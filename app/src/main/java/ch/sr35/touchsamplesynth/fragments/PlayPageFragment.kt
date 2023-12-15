@@ -1,16 +1,23 @@
 package ch.sr35.touchsamplesynth.fragments
 
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.views.TouchElement
 
 
@@ -38,11 +45,10 @@ class PlayPageFragment : Fragment() {
         }
         val newButton = view.findViewById<Button>(R.id.buttonNew)
         val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
-
+        val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
 
         val toggleSwitch = view.findViewById<SwitchCompat>(R.id.toggleEdit)
         toggleSwitch.setOnCheckedChangeListener { _, toggleval ->
-
             if (toggleval)
             {
                 for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
@@ -50,6 +56,10 @@ class PlayPageFragment : Fragment() {
                     touchel.setEditmode(true)
                 }
                 newButton.visibility = View.VISIBLE
+                sceneNameEditText.setText((context as TouchSampleSynthMain).getCurrentSceneName())
+                sceneNameEditText.visibility = View.VISIBLE
+
+                (context as TouchSampleSynthMain).lockSceneSelection()
             }
             else
             {
@@ -58,6 +68,8 @@ class PlayPageFragment : Fragment() {
                     touchel.setEditmode(false)
                 }
                 newButton.visibility = View.INVISIBLE
+                sceneNameEditText.visibility = View.INVISIBLE
+                (context as TouchSampleSynthMain).unlockSceneSelection()
             }
         }
 
@@ -74,6 +86,20 @@ class PlayPageFragment : Fragment() {
             te.layoutParams = lp
             playPageLayout.addView(te)
             (context as TouchSampleSynthMain).touchElements.add(te)
+        }
+
+        sceneNameEditText.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId==EditorInfo.IME_ACTION_DONE)
+            {
+                (context as TouchSampleSynthMain).setCurrentSceneName(sceneNameEditText.text.toString())
+                ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(sceneNameEditText.windowToken,0)
+
+                val sceneArrayAdapter = ArrayAdapter<SceneP>(context as TouchSampleSynthMain, android.R.layout.simple_spinner_item,(context as TouchSampleSynthMain).allScenes)
+                sceneArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                ((context as TouchSampleSynthMain).mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner) .adapter = sceneArrayAdapter
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
         }
 
         view.post {

@@ -70,7 +70,9 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         //val midiDev = midiDevices.stream().filter { d -> d.outputPortCount > 0 }.findFirst().orElse(null)
 
         if (selectedInstrument == -1) {
-            onItemClick(instrumentsList, null, 0, 0)
+            if (instrumentsList.adapter.count > 0) {
+                onItemClick(instrumentsList, null, 0, 0)
+            }
         }
         else
         {

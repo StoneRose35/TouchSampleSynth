@@ -7,17 +7,6 @@
     android:id="@+id/playpage_layout"
     tools:context=".fragments.PlayPageFragment">
 
-<!--
-    <ch.sr35.touchsamplesynth.views.TouchElement
-        android:id="@+id/touchElement"
-        android:layout_width="166dp"
-        android:layout_height="134dp"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="576dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
-
 
     <Button
         android:id="@+id/buttonNew"
@@ -37,21 +26,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="27dp"
         android:layout_marginEnd="11dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="0dp"
         android:text="@string/editToggleEdit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/buttonNew"
+        >
 
     </androidx.appcompat.widget.SwitchCompat>
-    <!--<ToggleButton
-        android:id="@+id/toggleEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="11dp"
-        android:textOff="@string/editTogglePlay"
-        android:textOn="@string/editToggleEdit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
 
     <ch.sr35.touchsamplesynth.views.VuMeter
         android:id="@+id/vuMeter"
@@ -96,6 +79,21 @@
         app:layout_constraintEnd_toStartOf="@id/cpuMeter"
         app:layout_constraintTop_toTopOf="@id/cpuMeter"
         app:layout_constraintBottom_toBottomOf="@id/vuMeter"
+        />
+    <EditText
+        android:id="@+id/editTextSceneName"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:background="?attr/instrumentBackgroundColor"
+        app:layout_constraintTop_toTopOf="@id/cpuMeter"
+        app:layout_constraintBottom_toBottomOf="@id/cpuMeter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageCpu"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:visibility="invisible"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

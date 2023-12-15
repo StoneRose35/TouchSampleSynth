@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -24,18 +26,17 @@ import java.util.Timer
 import java.util.TimerTask
 
 
-class TouchSampleSynthMain : AppCompatActivity() {
+class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
     val audioEngine: AudioEngineK=AudioEngineK()
     val soundGenerators=ArrayList<Instrument>()
     val touchElements=ArrayList<TouchElement>()
-    var defaultScene: SceneP?=null
     val allScenes = ArrayList<SceneP>()
     val playPageFragment=PlayPageFragment()
     val instrumentsPageFragment=InstrumentsPageFragment()
     val settingsFrament= SettingsFragment()
-
+    var mainMenu: Menu?=null
 
     init {
 
@@ -46,25 +47,25 @@ class TouchSampleSynthMain : AppCompatActivity() {
         val allNotes = MusicalPitch.generateAllNotes()
 
         val fDir = this.filesDir
-        fDir.listFiles()?.iterator()?.forEach {
-            if (it.isFile && it.name.endsWith("scn")) {
-                defaultScene = SceneP.fromFile(it)
-                defaultScene?.let { it1 -> allScenes.add(it1) }
+        val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
+        if (sceneFiles != null){
+            sceneFiles.sort()
+            sceneFiles.forEach {
+                SceneP.fromFile(it)?.let { it1 -> allScenes.add(it1) }
             }
         }
 
         try {
-
-            defaultScene?.populate(soundGenerators, touchElements, this)
+            allScenes[0].populate(soundGenerators, touchElements, this)
         }
         catch (e: Exception)
         {
-            defaultScene = null
+            allScenes.clear()
         }
 
-        if (defaultScene == null) {
-            defaultScene=SceneP()
-            defaultScene!!.name = "Default"
+        if (allScenes.isEmpty()) {
+            allScenes.add(SceneP())
+            allScenes[0].name = "Default"
             val synth = SineMonoSynthI(this,"Basic")
             synth.generateVoices(4)
             soundGenerators.add(synth)
@@ -180,28 +181,30 @@ class TouchSampleSynthMain : AppCompatActivity() {
     }
 
     override fun onPause() {
-        if (defaultScene==null)
-        {
-            defaultScene= SceneP()
 
+        val spinnerScenes = mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
+        spinnerScenes.let {
+            val f = File(filesDir.absolutePath + File.separator + "%03dscene.scn".format(it.selectedItemPosition))
+            if (f.exists())
+            {
+                f.delete()
+            }
+            allScenes[it.selectedItemPosition].persist(soundGenerators,touchElements)
+            allScenes[it.selectedItemPosition].toFile(f)
         }
-        defaultScene!!.persist(soundGenerators,touchElements)
-        val f = File(filesDir.absolutePath + File.separator + "default.scn")
-        if (f.exists())
-        {
-            f.delete()
-        }
-        defaultScene!!.toFile(f)
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
         super.onPause()
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
+        mainMenu=menu
         val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
         val sceneArrayAdapter = ArrayAdapter<SceneP>(this, android.R.layout.simple_spinner_item,allScenes)
         sceneArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerScenes.adapter = sceneArrayAdapter
+        spinnerScenes.setSelection(0,false)
+        spinnerScenes.onItemSelectedListener=this
         return true
     }
 
@@ -229,5 +232,51 @@ class TouchSampleSynthMain : AppCompatActivity() {
         init {
             System.loadLibrary("touchsamplesynth")
         }
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        //unload the current scene
+        soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
+        // load the new scene
+        allScenes[0].populate(soundGenerators, touchElements, this)
+        if (supportFragmentManager.fragments[0].tag!=null
+            && (supportFragmentManager.fragments[0].tag.equals("PlayPage0") ||
+                    supportFragmentManager.fragments[0].tag.equals("instrumentPage0")
+                    )) {
+            supportFragmentManager.fragments[0].view?.invalidate()
+        }
+    }
+
+    fun getCurrentSceneName(): String?
+    {
+        if (mainMenu != null) {
+            val scenePos = (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
+            if (scenePos >= 0 && scenePos < allScenes.size) {
+                return allScenes[scenePos].name
+            }
+        }
+        return null
+    }
+
+    fun setCurrentSceneName(sceneName: String)
+    {
+        if (mainMenu != null) {
+            val scenePos = (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
+            if (scenePos >= 0 && scenePos < allScenes.size) {
+                allScenes[scenePos].name = sceneName
+            }
+        }
+    }
+    fun lockSceneSelection()
+    {
+        (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).isEnabled = false
+    }
+
+    fun unlockSceneSelection()
+    {
+        (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).isEnabled = true
+    }
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
     }
 }

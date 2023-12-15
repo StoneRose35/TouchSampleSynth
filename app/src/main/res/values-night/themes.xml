@@ -25,6 +25,7 @@
         <item name="instrumentPageTitleTextColor">@color/red_light</item>
         <item name="instrumentBackgroundColor">@color/dark_gray</item>
 
+        <item name="sceneEditBackgroundColor">@color/dark_gray</item>
     </style>
     <style name="Theme.TouchSampleSynth.Instrument">
         <item name="android:textColor">@color/vu_meter_background</item>
