@@ -16,6 +16,7 @@ import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
+import ch.sr35.touchsamplesynth.fragments.SceneFragment
 import ch.sr35.touchsamplesynth.fragments.SettingsFragment
 import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.views.TouchElement
@@ -36,6 +37,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     val playPageFragment=PlayPageFragment()
     val instrumentsPageFragment=InstrumentsPageFragment()
     val settingsFrament= SettingsFragment()
+    val scenesEditFragment = SceneFragment(allScenes)
     var mainMenu: Menu?=null
 
     init {
@@ -216,6 +218,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             R.id.menuitem_instruments ->
             {
                 putFragment(instrumentsPageFragment,"instrumentPage0")
+            }
+            R.id.menuitem_sceneedit ->
+            {
+                putFragment(scenesEditFragment, "scenesEditPage0")
             }
             R.id.menuitem_settings ->
             {

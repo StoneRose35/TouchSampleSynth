@@ -29,6 +29,8 @@
     <string name="pad">Pad</string>
     <string name="settings">Settings</string>
     <string name="scenes">Scenes</string>
+    <string name="add_new_touchelement">Add New Touchelement</string>
+    <string name="scene_name">Name of the Scene</string>
     <string name="nr_voices_description">The number of voices the instrument should be able to play simultaneously</string>
     <string name="framesPerDataCallbackDescription">Audio Chunksize\r\nSmaller means lee latency</string>
     <string name="bufferCapacityInFramesDescription">Audio Buffer Capacity</string>

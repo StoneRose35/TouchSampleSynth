@@ -10,7 +10,7 @@ class SineMonoSynthP(private var attack: Float,
                      private var release: Float,
                      override var nVoices: Int,
                      override var name: String
-): PersistableInstrument(),Serializable {
+): PersistableInstrument(),Serializable, Cloneable {
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)
         if (i is SineMonoSynthI)
@@ -48,6 +48,10 @@ class SineMonoSynthP(private var attack: Float,
                 this.sustain.toRawBits() +
                 this.release.toRawBits() + super.hashCode()
 
+    }
+
+    override fun clone(): Any {
+        return SineMonoSynthP(this.attack,this.decay,this.sustain,this.release,this.nVoices,this.name)
     }
 
 }

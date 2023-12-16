@@ -13,7 +13,7 @@ class TouchElementP(var width: Int,
                     var note: Int,
                     var voiceNr: Int,
                     var soundGenerator: PersistableInstrument?
-): Serializable {
+): Serializable, Cloneable {
 
     fun fromTouchElement(touchElement: TouchElement)
     {
@@ -40,4 +40,7 @@ class TouchElementP(var width: Int,
         te.actionDir = actionDir
     }
 
+    public override fun clone(): Any {
+        return TouchElementP(this.width,this.height,this.posX,this.posY,this.actionDir,this.note,this.voiceNr,null)
+    }
 }

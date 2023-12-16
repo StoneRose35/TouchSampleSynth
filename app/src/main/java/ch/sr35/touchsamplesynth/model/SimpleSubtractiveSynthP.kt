@@ -58,4 +58,9 @@ class SimpleSubtractiveSynthP(
                 this.initialCutoff.toRawBits() +
                 this.resonance.toRawBits() + super.hashCode()
     }
+
+    override fun clone(): Any {
+        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmount,this.resonance,this.nVoices,this.name)
+        return klon
+    }
 }

@@ -10,7 +10,7 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
 
-class SceneP : Serializable {
+class SceneP : Serializable, Cloneable {
     var instruments = ArrayList<PersistableInstrument>()
     var touchElements = ArrayList<TouchElementP>()
     var name = ""
@@ -84,6 +84,21 @@ class SceneP : Serializable {
 
     override fun toString(): String {
         return name
+    }
+
+    public override fun clone(): Any {
+        val klon=SceneP()
+        for(instr in this.instruments)
+        {
+            klon.instruments.add(instr.clone() as PersistableInstrument)
+        }
+        for (te in this.touchElements)
+        {
+            klon.touchElements.add(te.clone() as TouchElementP)
+            klon.touchElements[klon.touchElements.size-1].soundGenerator=klon.instruments[this.instruments.indexOf(te.soundGenerator)]
+
+        }
+        return klon
     }
 
     companion object {

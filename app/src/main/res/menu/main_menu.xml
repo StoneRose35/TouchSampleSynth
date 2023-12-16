@@ -21,6 +21,12 @@
         app:showAsAction="ifRoom"
         android:title="@string/menuitem_soundgenerator" />
     <item
+        android:id="@+id/menuitem_sceneedit"
+        android:icon="@drawable/scene"
+        android:title="@string/scenes"
+        app:showAsAction="ifRoom"
+        />
+    <item
         android:id="@+id/menuitem_settings"
         android:icon="@drawable/settingspage"
         app:showAsAction="ifRoom"
