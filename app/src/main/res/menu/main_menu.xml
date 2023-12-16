@@ -6,6 +6,7 @@
         android:id="@+id/menuitem_scenes"
         android:title="@string/scenes"
         app:actionViewClass="android.widget.Spinner"
+        android:actionLayout="@android:layout/simple_spinner_dropdown_item"
         app:showAsAction="always"
         />
     <item

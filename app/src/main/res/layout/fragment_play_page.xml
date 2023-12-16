@@ -8,14 +8,16 @@
     tools:context=".fragments.PlayPageFragment">
 
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonNew"
-        android:text="+"
+        android:src="@drawable/addtouchelement"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="27dp"
         android:layout_marginStart="11dp"
         android:visibility="invisible"
+        android:contentDescription="@string/add_new_touchelement"
+        android:background="?attr/colorOnSecondary"
         app:layout_constraintEnd_toStartOf="@id/toggleEdit"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -80,20 +82,22 @@
         app:layout_constraintTop_toTopOf="@id/cpuMeter"
         app:layout_constraintBottom_toBottomOf="@id/vuMeter"
         />
+
     <EditText
         android:id="@+id/editTextSceneName"
-        android:layout_height="0dp"
         android:layout_width="0dp"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:background="?attr/instrumentBackgroundColor"
-        app:layout_constraintTop_toTopOf="@id/cpuMeter"
-        app:layout_constraintBottom_toBottomOf="@id/cpuMeter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imageCpu"
+        android:layout_height="0dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
+        android:background="?attr/instrumentBackgroundColor"
+        android:imeOptions="actionDone"
+        android:inputType="text"
         android:visibility="invisible"
-        />
+        android:autofillHints="name"
+        android:hint="@string/scene_name"
+        app:layout_constraintBottom_toBottomOf="@id/cpuMeter"
+        app:layout_constraintEnd_toStartOf="@id/imageCpu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cpuMeter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

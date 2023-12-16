@@ -21,9 +21,11 @@ class SceneP : Serializable {
         tels: ArrayList<TouchElement>,
         context: Context
     ) {
+
         sg.clear()
         tels.clear()
-
+        val remainingTouchElements=ArrayList<TouchElementP>()
+        remainingTouchElements.addAll(touchElements)
         for (pi in instruments) {
             val instr = PersistableInstrumentFactory.toInstrument(pi, context)
             if (instr != null) {
@@ -41,12 +43,12 @@ class SceneP : Serializable {
                         voiceIdx++
                     }
                 }
-                touchElements.removeIf { te -> te.soundGenerator == pi }
+                remainingTouchElements.removeIf { te -> te.soundGenerator == pi }
             }
         }
 
         // only touchElements with no soundGenerator should be created at this point
-        for (te in touchElements) {
+        for (te in remainingTouchElements) {
             val touchElement = TouchElement(context, null)
             te.toTouchElement(touchElement)
             tels.add(touchElement)

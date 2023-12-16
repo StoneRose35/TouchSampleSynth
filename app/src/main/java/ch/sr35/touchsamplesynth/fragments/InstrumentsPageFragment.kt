@@ -104,6 +104,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                     .setPositiveButton((context as TouchSampleSynthMain).getString(R.string.yes)) { _, _ ->
                         (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.forEach { v -> v.detachFromAudioEngine() }
                         (context as TouchSampleSynthMain).soundGenerators.removeAt(selectedInstrument)
+                        selectedInstrument = -1
                         instrumentsList.invalidateViews()
                     }
                     .setNegativeButton((context as TouchSampleSynthMain).getString(R.string.no)) { _, _ -> }

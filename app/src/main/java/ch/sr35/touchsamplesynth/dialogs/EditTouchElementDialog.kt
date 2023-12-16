@@ -139,7 +139,14 @@ class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
 
     override fun onBindViewHolder(holder: SoundGeneratorListViewHolder, position: Int) {
         holder.iconView.setImageDrawable(instruments[position].getInstrumentIcon())
-        holder.instrumentNameView.text = "%s".format(instruments[position].getType())
+        if (instruments[position].name.isNotEmpty()) {
+            holder.instrumentNameView.text =
+                "%s".format(instruments[position].name)
+        }
+        else
+        {
+            holder.instrumentNameView.text = instruments[position].getType()
+        }
         holder.polyphonyView.text = " "
         holder.checkedView.isChecked= checkedPosition==position
         holder.itemView.setOnClickListener {

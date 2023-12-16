@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -45,7 +45,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     override fun onResume() {
         super.onResume()
         val allNotes = MusicalPitch.generateAllNotes()
-
+        allScenes.clear()
         val fDir = this.filesDir
         val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
         if (sceneFiles != null){
@@ -54,7 +54,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 SceneP.fromFile(it)?.let { it1 -> allScenes.add(it1) }
             }
         }
-
         try {
             allScenes[0].populate(soundGenerators, touchElements, this)
         }
@@ -235,16 +234,34 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
         //unload the current scene
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
-        // load the new scene
-        allScenes[0].populate(soundGenerators, touchElements, this)
         if (supportFragmentManager.fragments[0].tag!=null
-            && (supportFragmentManager.fragments[0].tag.equals("PlayPage0") ||
-                    supportFragmentManager.fragments[0].tag.equals("instrumentPage0")
-                    )) {
+            && supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
+        {
+            for (te in touchElements) {
+                (supportFragmentManager.fragments[0].view as ViewGroup).removeView(te)
+            }
+        }
+
+        // load the new scene
+        allScenes[position].populate(soundGenerators, touchElements, this)
+        if (supportFragmentManager.fragments[0].tag!=null) {
+            if (supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
+            {
+                for (te in touchElements) {
+                    te.setEditmode(true)
+                    (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
+                }
+            }
+            //else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0"))
+            //{
+            //
+            //}
             supportFragmentManager.fragments[0].view?.invalidate()
         }
+
     }
 
     fun getCurrentSceneName(): String?
@@ -266,6 +283,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 allScenes[scenePos].name = sceneName
             }
         }
+    }
+
+    fun persistCurrentScene()
+    {
+        val scenePos = (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
+        allScenes[scenePos].persist(soundGenerators,touchElements)
     }
     fun lockSceneSelection()
     {

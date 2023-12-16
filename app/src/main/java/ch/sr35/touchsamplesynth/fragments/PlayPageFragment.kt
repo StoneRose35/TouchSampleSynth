@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Spinner
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +43,7 @@ class PlayPageFragment : Fragment() {
         {
             return
         }
-        val newButton = view.findViewById<Button>(R.id.buttonNew)
+        val newButton = view.findViewById<ImageButton>(R.id.buttonNew)
         val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
         val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
 
@@ -86,12 +86,14 @@ class PlayPageFragment : Fragment() {
             te.layoutParams = lp
             playPageLayout.addView(te)
             (context as TouchSampleSynthMain).touchElements.add(te)
+
         }
 
         sceneNameEditText.setOnEditorActionListener { _, actionId, _ ->
             if(actionId==EditorInfo.IME_ACTION_DONE)
             {
                 (context as TouchSampleSynthMain).setCurrentSceneName(sceneNameEditText.text.toString())
+                (context as TouchSampleSynthMain).persistCurrentScene()
                 ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(sceneNameEditText.windowToken,0)
 
                 val sceneArrayAdapter = ArrayAdapter<SceneP>(context as TouchSampleSynthMain, android.R.layout.simple_spinner_item,(context as TouchSampleSynthMain).allScenes)
@@ -109,6 +111,7 @@ class PlayPageFragment : Fragment() {
             var touchElementSpacingX=10.px
             var touchElementHeight = 166.px
             var teCntr = 0
+            var hasDoneInitialLayout= false
             for (te in (context as TouchSampleSynthMain).touchElements) {
 
 
@@ -131,9 +134,14 @@ class PlayPageFragment : Fragment() {
                     lp.topMargin = height - touchElementHeight - 10.px
                     te.layoutParams = lp
                     teCntr += 1
+                    hasDoneInitialLayout = true
                 }
 
                 view.findViewById<ConstraintLayout>(R.id.playpage_layout).addView(te)
+            }
+            if (hasDoneInitialLayout)
+            {
+                (context as TouchSampleSynthMain).persistCurrentScene()
             }
             view.invalidate()
         }
