@@ -78,7 +78,9 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         {
             val oldSelection=selectedInstrument
             selectedInstrument=-1
-            onItemClick(instrumentsList,null,oldSelection,0)
+            if (instrumentsList.adapter.count > 0 && oldSelection < instrumentsList.adapter.count)  {
+                onItemClick(instrumentsList, null, oldSelection, 0)
+            }
         }
 
         val addButtton = view.findViewById<Button>(R.id.instruments_page_add)
@@ -181,8 +183,9 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+
+    override fun onPause() {
+        super.onPause()
         val audioEngine = AudioEngineK()
         audioEngine.closeMidiDevice()
     }

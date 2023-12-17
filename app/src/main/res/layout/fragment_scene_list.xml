@@ -11,7 +11,7 @@
         android:name="ch.sr35.touchsamplesynth.SceneFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="48dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/sceneList"
         android:layout_marginLeft="16dp"
@@ -37,21 +37,7 @@
         android:layout_marginEnd="6dp"
         style="?android:attr/buttonBarButtonStyle" />
 
-    <Button
-        android:id="@+id/sceneCopy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@android:string/copy"
-        style="?android:attr/buttonBarButtonStyle"
-        />
-    <Button
-        android:id="@+id/sceneDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/delete"
-        android:layout_marginStart="6dp"
-        style="?android:attr/buttonBarButtonStyle"
-        />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

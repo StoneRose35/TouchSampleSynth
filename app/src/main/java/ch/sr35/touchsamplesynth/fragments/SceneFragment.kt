@@ -33,8 +33,6 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
         val view = inflater.inflate(R.layout.fragment_scene_list, container, false)
         scenesList = view.findViewById(R.id.sceneList)
         val buttonAdd = view.findViewById<Button>(R.id.sceneAdd)
-        val buttonCopy = view.findViewById<Button>(R.id.sceneCopy)
-        val buttonDelete = view.findViewById<Button>(R.id.sceneDelete)
         scenesList?.layoutManager = LinearLayoutManager(context)
         scenes = (context as TouchSampleSynthMain).allScenes
         scenesList?.adapter = SceneRecyclerViewAdapter(scenes)
@@ -71,11 +69,21 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                         .setNegativeButton((context as TouchSampleSynthMain).getString(R.string.no)) { _, _ -> }
                     val alertDlg = alertDlgBuilder.create()
                     alertDlg.show()
-                    // TODO update Spinner in menu
                 }
                 ItemTouchHelper.LEFT -> { // copy item
-                    scenes.add(viewHolder.absoluteAdapterPosition, scenes[viewHolder.absoluteAdapterPosition].clone() as SceneP)
-                    scenesList?.adapter?.notifyItemInserted(viewHolder.absoluteAdapterPosition)
+                    val newScene = scenes[viewHolder.absoluteAdapterPosition].clone() as SceneP
+                    try {
+                        val splitName = newScene.name.split(" ")
+                        val sceneIdx = splitName.last().toInt() + 1
+                        val newName = splitName.dropLast(1).joinToString(" ") + " " + sceneIdx.toString()
+                        newScene.name=newName
+                    } catch (_: Exception)
+                    {
+                        newScene.name = newScene.name + " 1"
+                    }
+                    scenes.add(viewHolder.layoutPosition, newScene)
+                    scenesList?.adapter?.notifyItemInserted(viewHolder.layoutPosition)
+                    scenesList?.adapter?.notifyItemChanged(viewHolder.layoutPosition+1)
                 }
             }
             }
@@ -110,7 +118,6 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
             scene.name = input.text.toString()
             scenes.add(scene)
             scenesList?.adapter?.notifyItemInserted(scenes.size-1)
-            // TODO update Spinner in menu
         }
         builder.setNegativeButton(
             (context as TouchSampleSynthMain).getString(android.R.string.cancel)

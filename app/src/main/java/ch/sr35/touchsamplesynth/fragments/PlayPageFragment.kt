@@ -17,7 +17,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.views.TouchElement
 
 
@@ -69,6 +68,7 @@ class PlayPageFragment : Fragment() {
                 }
                 newButton.visibility = View.INVISIBLE
                 sceneNameEditText.visibility = View.INVISIBLE
+                (context as TouchSampleSynthMain).persistCurrentScene()
                 (context as TouchSampleSynthMain).unlockSceneSelection()
             }
         }
@@ -96,9 +96,7 @@ class PlayPageFragment : Fragment() {
                 (context as TouchSampleSynthMain).persistCurrentScene()
                 ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(sceneNameEditText.windowToken,0)
 
-                val sceneArrayAdapter = ArrayAdapter<SceneP>(context as TouchSampleSynthMain, android.R.layout.simple_spinner_item,(context as TouchSampleSynthMain).allScenes)
-                sceneArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                ((context as TouchSampleSynthMain).mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner) .adapter = sceneArrayAdapter
+                (((context as TouchSampleSynthMain).mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).adapter as ArrayAdapter<*>).notifyDataSetChanged()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -148,6 +146,7 @@ class PlayPageFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        (context as TouchSampleSynthMain).persistCurrentScene()
         for (te in (context as TouchSampleSynthMain).touchElements) {
             view?.findViewById<ConstraintLayout>(R.id.playpage_layout)?.removeView(te)
         }

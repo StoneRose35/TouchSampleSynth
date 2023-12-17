@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
@@ -34,11 +36,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     val soundGenerators=ArrayList<Instrument>()
     val touchElements=ArrayList<TouchElement>()
     val allScenes = ArrayList<SceneP>()
-    val playPageFragment=PlayPageFragment()
-    val instrumentsPageFragment=InstrumentsPageFragment()
-    val settingsFrament= SettingsFragment()
-    val scenesEditFragment = SceneFragment(allScenes)
+    private val playPageFragment=PlayPageFragment()
+    private val instrumentsPageFragment=InstrumentsPageFragment()
+    private val settingsFrament= SettingsFragment()
+    private val scenesEditFragment = SceneFragment(allScenes)
     var mainMenu: Menu?=null
+    private var oldScenePosition=-1
 
     init {
 
@@ -53,11 +56,19 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         if (sceneFiles != null){
             sceneFiles.sort()
             sceneFiles.forEach {
-                SceneP.fromFile(it)?.let { it1 -> allScenes.add(it1) }
+                try {
+                    SceneP.fromFile(it)?.let { it1 -> allScenes.add(it1) }
+                }
+                catch (e: Exception)
+                {
+                    it.delete()
+                }
+
             }
         }
         try {
             allScenes[0].populate(soundGenerators, touchElements, this)
+            ((mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).adapter as ArrayAdapter<*>).notifyDataSetChanged()
         }
         catch (e: Exception)
         {
@@ -102,6 +113,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
 
 
+
+
+    }
+    override fun onStart() {
+        super.onStart()
+
         val playPage = PlayPageFragment()
         putFragment(playPage,"PlayPage0")
         if (!audioEngine.startEngine())
@@ -120,11 +137,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             }
         }
         timer.schedule(timerTask,0,100)
-
-    }
-    override fun onStart() {
-        super.onStart()
-
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,15 +195,15 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onPause() {
 
-        val spinnerScenes = mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
-        spinnerScenes.let {
-            val f = File(filesDir.absolutePath + File.separator + "%03dscene.scn".format(it.selectedItemPosition))
-            if (f.exists())
-            {
-                f.delete()
-            }
-            allScenes[it.selectedItemPosition].persist(soundGenerators,touchElements)
-            allScenes[it.selectedItemPosition].toFile(f)
+        val mainDir = File(filesDir.absolutePath)
+        persistCurrentScene()
+        mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
+            it.delete()
+        }
+        for ((cnt, scn) in allScenes.withIndex())
+        {
+            val f = File(filesDir.absolutePath + File.separator + "%03dscene.scn".format(cnt))
+            scn.toFile(f)
         }
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
@@ -240,7 +252,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
+        if (oldScenePosition >= 0) {
+            allScenes[oldScenePosition].persist(soundGenerators, touchElements)
+        }
+        oldScenePosition = position
         //unload the current scene
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         if (supportFragmentManager.fragments[0].tag!=null
@@ -257,15 +272,19 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             if (supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
             {
                 for (te in touchElements) {
-                    te.setEditmode(true)
+                    supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
+                        if (it!=null) {
+                            te.setEditmode(it)
+                        }
+                    }
                     (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
                 }
             }
-            //else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0"))
-            //{
-            //
-            //}
-            supportFragmentManager.fragments[0].view?.invalidate()
+            else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0"))
+            {
+                supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)?.invalidateViews()
+            }
+            //supportFragmentManager.fragments[0].view?.invalidate()
         }
 
     }
@@ -294,7 +313,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     fun persistCurrentScene()
     {
         val scenePos = (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
-        allScenes[scenePos].persist(soundGenerators,touchElements)
+        if (scenePos < allScenes.size) {
+            allScenes[scenePos].persist(soundGenerators, touchElements)
+        }
     }
     fun lockSceneSelection()
     {

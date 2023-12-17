@@ -98,6 +98,7 @@ class SceneP : Serializable, Cloneable {
             klon.touchElements[klon.touchElements.size-1].soundGenerator=klon.instruments[this.instruments.indexOf(te.soundGenerator)]
 
         }
+        klon.name = this.name
         return klon
     }
 
