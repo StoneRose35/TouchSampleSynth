@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.fragments
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -112,7 +113,7 @@ class PlayPageFragment : Fragment() {
             var hasDoneInitialLayout= false
             for (te in (context as TouchSampleSynthMain).touchElements) {
 
-
+                Log.i("TouchSampleSynth","drawing %d TouchElements".format((context as TouchSampleSynthMain).touchElements.size))
                 if (te.layoutParams == null)
                 {
                     if (((134+10)*4).px > width)
@@ -146,7 +147,6 @@ class PlayPageFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        (context as TouchSampleSynthMain).persistCurrentScene()
         for (te in (context as TouchSampleSynthMain).touchElements) {
             view?.findViewById<ConstraintLayout>(R.id.playpage_layout)?.removeView(te)
         }

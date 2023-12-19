@@ -41,12 +41,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="310dp"
-        android:text="@android:string/unknownName"
         android:autofillHints="name"
         android:inputType="text"
         android:imeOptions="actionDone"
         android:layout_height="48dp"
-        android:hint="@string/pad"
+        android:hint="@string/instrument_name"
         android:padding="6dp"
         />
     <EditText
@@ -60,7 +59,6 @@
         android:autofillHints="postalCode"
         android:hint="@string/nr_voices_description"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="@android:string/untitled"
         android:imeOptions="actionDone"
         android:padding="6dp"
         app:layout_constraintStart_toEndOf="@id/instruments_page_instr_name"

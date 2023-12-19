@@ -71,7 +71,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                     alertDlg.show()
                 }
                 ItemTouchHelper.LEFT -> { // copy item
-                    val newScene = scenes[viewHolder.absoluteAdapterPosition].clone() as SceneP
+                    val newScene = scenes[viewHolder.layoutPosition].clone() as SceneP
                     try {
                         val splitName = newScene.name.split(" ")
                         val sceneIdx = splitName.last().toInt() + 1

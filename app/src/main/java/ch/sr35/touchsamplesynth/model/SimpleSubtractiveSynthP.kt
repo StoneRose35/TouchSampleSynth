@@ -49,6 +49,11 @@ class SimpleSubtractiveSynthP(
         return false
     }
 
+    override fun toString(): String
+    {
+        return "SimpleSubtractiveSynth: %s, voices: %d".format(this.name, this.nVoices)
+    }
+
     override fun hashCode(): Int {
         return this.actionAmount.toRawBits() +
                 this.attack.toRawBits() +

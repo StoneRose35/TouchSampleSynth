@@ -53,7 +53,7 @@ aaudio_data_callback_result_t dataCallback(
                 audioSum += audioEngine->getSoundGenerator(c)->getNextSample();
             }
         }
-        //audioSum /= (float)audioEngine->getNSoundGenerators();
+        audioSum /= 8.0f;//;audioEngine->getNSoundGenerators();
         audioEngine->averageVolume = audioEngine->averageVolume*AVERAGE_LOWPASS_ALPHA  + fabsf(audioSum)*(1.0f - AVERAGE_LOWPASS_ALPHA);
         if (audioSum > 1.0f)
         {

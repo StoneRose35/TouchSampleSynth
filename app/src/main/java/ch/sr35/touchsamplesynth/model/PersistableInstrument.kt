@@ -42,6 +42,11 @@ open class PersistableInstrument: Serializable, Cloneable {
         return super.clone()
     }
 
+    override fun toString(): String
+    {
+        return "PersistableInstrument: %s, voices: %d".format(this.name, this.nVoices)
+    }
+
 
 }
 

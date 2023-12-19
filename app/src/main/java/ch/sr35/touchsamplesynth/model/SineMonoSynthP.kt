@@ -50,6 +50,11 @@ class SineMonoSynthP(private var attack: Float,
 
     }
 
+    override fun toString(): String
+    {
+        return "SineMonoSynth: %s, voices: %d".format(this.name, this.nVoices)
+    }
+
     override fun clone(): Any {
         return SineMonoSynthP(this.attack,this.decay,this.sustain,this.release,this.nVoices,this.name)
     }

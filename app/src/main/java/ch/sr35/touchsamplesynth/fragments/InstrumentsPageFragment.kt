@@ -22,7 +22,6 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.doOnTextChanged
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -69,6 +68,8 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         }
         //val midiDev = midiDevices.stream().filter { d -> d.outputPortCount > 0 }.findFirst().orElse(null)
 
+        view.findViewById<EditText>(R.id.instruments_page_nr_voices).text.clear()
+        view.findViewById<EditText>(R.id.instruments_page_instr_name).text.clear()
         if (selectedInstrument == -1) {
             if (instrumentsList.adapter.count > 0) {
                 onItemClick(instrumentsList, null, 0, 0)
@@ -117,8 +118,14 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
 
         view.findViewById<EditText>(R.id.instruments_page_instr_name).setOnEditorActionListener { textView, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE) {
-                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name = textView.text.toString()
-                ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(textView.windowToken,0)
+                if (selectedInstrument >= 0 && selectedInstrument < (context as TouchSampleSynthMain).soundGenerators.size) {
+                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].name =
+                        textView.text.toString()
+                    ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                        textView.windowToken,
+                        0
+                    )
+                }
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -127,60 +134,60 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         view.findViewById<EditText>(R.id.instruments_page_nr_voices).setOnEditorActionListener { textView, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE)
             {
-                var voicesInt: Int
-                try {
-                    voicesInt = Integer.parseInt(textView.text.toString())
-                }
-                catch (e: NumberFormatException)
-                {
-                    voicesInt = -1
-                }
-                if (voicesInt in 1..16) {
-                    // check that less voices are assigned than requested
-                    val nAssignedSoundGenerators =
-                        (context as TouchSampleSynthMain).touchElements.stream()
-                            .map { te -> te.soundGenerator }
-                            .filter { sg ->
-                                sg == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]
-                            }
-                            .count()
-                    if (nAssignedSoundGenerators <= voicesInt) {
-                        if (voicesInt < (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
-                            // remove voices
-                            val nVoicesToRemove =
-                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount() - voicesInt
+                if (selectedInstrument >= 0 && selectedInstrument < (context as TouchSampleSynthMain).soundGenerators.size) {
+                    var voicesInt: Int
+                    try {
+                        voicesInt = Integer.parseInt(textView.text.toString())
+                    } catch (e: NumberFormatException) {
+                        voicesInt = -1
+                    }
+                    if (voicesInt in 1..16) {
+                        // check that less voices are assigned than requested
+                        val nAssignedSoundGenerators =
+                            (context as TouchSampleSynthMain).touchElements.stream()
+                                .map { te -> te.soundGenerator }
+                                .filter { sg ->
+                                    sg == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]
+                                }
+                                .count()
+                        if (nAssignedSoundGenerators <= voicesInt) {
+                            if (voicesInt < (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
+                                // remove voices
+                                val nVoicesToRemove =
+                                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount() - voicesInt
 
-                            for (c in 0 until nVoicesToRemove) {
-                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices[0]
-                                    .detachFromAudioEngine()
-                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.removeAt(
-                                    0
+                                for (c in 0 until nVoicesToRemove) {
+                                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices[0]
+                                        .detachFromAudioEngine()
+                                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.removeAt(
+                                        0
+                                    )
+                                }
+                                var currentVoiceIndex = 0
+                                (context as TouchSampleSynthMain).touchElements
+                                    .stream()
+                                    .filter { te -> te.soundGenerator == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument] }
+                                    .forEach { t -> t.voiceNr = currentVoiceIndex++ }
+                            } else if (voicesInt > (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
+                                val voicesToAdd =
+                                    voicesInt - (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()
+                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(
+                                    voicesToAdd
                                 )
+                                // add voices
                             }
-                            var currentVoiceIndex = 0
-                            (context as TouchSampleSynthMain).touchElements
-                                .stream()
-                                .filter { te -> te.soundGenerator == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]}
-                                .forEach { t -> t.voiceNr = currentVoiceIndex++ }
-                        } else if (voicesInt > (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
-                            val voicesToAdd =
-                                voicesInt - (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()
-                            (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(
-                                voicesToAdd
-                            )
-                            // add voices
                         }
                     }
+                    ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                        textView.windowToken,
+                        0
+                    )
                 }
-                ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(textView.windowToken,0)
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
 
-        view.findViewById<EditText>(R.id.instruments_page_nr_voices).doOnTextChanged { _, _, _, _ ->
-
-        }
     }
 
 
@@ -276,6 +283,29 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         return true
     }
 
+    fun selectInstrument(pos:Int,forceSelection: Boolean)
+    {
+        if(forceSelection)
+        {
+            selectedInstrument=-1
+        }
+        val instrumentsList = view?.findViewById<ListView>(R.id.instruments_page_instruments_list)
+        if(instrumentsList != null && pos >= 0 && pos < (context as TouchSampleSynthMain).soundGenerators.size) {
+            onItemClick(instrumentsList, null, pos, 0)
+        }
+        else if (instrumentsList != null && (context as TouchSampleSynthMain).soundGenerators.size==0)
+        {
+            childFragmentManager.beginTransaction().let {
+                if (childFragmentManager.findFragmentById(R.id.instruments_page_content) != null)
+                {
+                    it.remove(childFragmentManager.findFragmentById(R.id.instruments_page_content)!!)
+                }
+                it.commit()
+            }
+            view?.findViewById<EditText>(R.id.instruments_page_nr_voices)?.text?.clear()
+            view?.findViewById<EditText>(R.id.instruments_page_instr_name)?.text?.clear()
+        }
+    }
 
     override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         if (p2 != selectedInstrument) {
