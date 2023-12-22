@@ -16,6 +16,10 @@ class MusicalPitch {
     override fun hashCode(): Int {
         return this.name.hashCode()
     }
+
+    override fun toString(): String {
+        return this.name
+    }
     companion object {
         fun generateAllNotes(): Array<MusicalPitch> {
             val res = ArrayList<MusicalPitch>()

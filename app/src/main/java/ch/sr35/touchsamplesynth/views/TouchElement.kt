@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.views
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
@@ -20,9 +21,12 @@ import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
 import java.util.stream.IntStream
+import kotlin.math.sqrt
 
 const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
+const val OUTLINE_STROKE_WIDTH_DEFAULT = 7.8f
+const val OUTLINE_STROKE_WIDTH_ENGAGED = 20.4f
 
 class TouchElement(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
@@ -34,6 +38,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     enum class TouchElementState {
         PLAYING,
+        PLAYING_VERBOSE,
         EDITING
     }
 
@@ -48,17 +53,21 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     var actionDir: ActionDir = ActionDir.HORIZONTAL
     private val outLine: Paint = Paint()
     private val fillColor: Paint = Paint()
+    private var px: Float = 0.0f
+    private var py: Float = 0.0f
+    private var defaultState = TouchElementState.PLAYING
+
     private val arrowLine: Paint = Paint()
     private val editDotFill: Paint = Paint()
     private val editBoxBackground: Paint = Paint()
     private val editText: Paint = Paint()
+    private val smallText: Paint = Paint()
     private var cornerRadius = 0.0f
     private var dragStart: TouchElementDragAnchor? = null
-    private var px: Float = 0.0f
-    private var py: Float = 0.0f
+
     private var oldWidth: Int = 0
     private var oldHeight: Int = 0
-    private var elementState: TouchElementState = TouchElementState.PLAYING
+    private var elementState: TouchElementState = defaultState
     var soundGenerator: Instrument? = null
     var voiceNr: Int = -1
     var note: MusicalPitch? = null
@@ -71,7 +80,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     init {
         outLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
-        outLine.strokeWidth = 7.8f
+        outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
         outLine.style = Paint.Style.STROKE
         outLine.isAntiAlias = true
 
@@ -87,6 +96,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         editText.style = Paint.Style.FILL
         editText.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 24.0f,Resources.getSystem().displayMetrics)
         editText.isAntiAlias = true
+
+        smallText.color = MaterialColors.getColor(this,R.attr.touchElementEditTextColor)
+        smallText.style = Paint.Style.FILL
+        smallText.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12.0f,Resources.getSystem().displayMetrics)
+        smallText.isAntiAlias = true
 
         arrowLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
         arrowLine.strokeWidth = 12.0f
@@ -184,6 +198,40 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             )
         }
 
+        if (elementState==TouchElementState.PLAYING_VERBOSE)
+        {
+            val iconWidth = soundGenerator?.getInstrumentIcon()?.minimumWidth
+            val iconHeight = soundGenerator?.getInstrumentIcon()?.minimumHeight
+            val descriptionOffset = PADDING.toInt() + 10  + ((cornerRadius)*(1 - 1/ sqrt(2.0f))).toInt()
+            if (iconWidth != null && iconHeight != null) {
+                soundGenerator?.getInstrumentIcon()?.setBounds(
+                    descriptionOffset,
+                    descriptionOffset,
+                    descriptionOffset + (iconWidth * 0.7).toInt(),
+                    descriptionOffset + (iconHeight * 0.7).toInt()
+                )
+                soundGenerator?.getInstrumentIcon()?.draw(canvas)
+                soundGenerator?.name.let { it ->
+                    canvas.drawText(
+                        it.toString(),
+                        descriptionOffset.toFloat(),
+                        descriptionOffset + (iconHeight * 0.7).toInt() + smallText.textSize,
+                        smallText
+                    )
+                }
+                note.let { it ->
+                    canvas.drawText(
+                        it.toString(),
+                        descriptionOffset.toFloat(),
+                        descriptionOffset + (iconHeight * 0.7).toInt()+ smallText.textSize * 2 + 10,
+                        smallText
+                    )
+                }
+            }
+
+
+        }
+
         if (elementState == TouchElementState.EDITING) {
             canvas.drawCircle(
                 0.0f + EDIT_CIRCLE_OFFSET,
@@ -272,14 +320,14 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (elementState == TouchElementState.PLAYING) {
+        if (elementState != TouchElementState.EDITING) {
             if (event?.action == MotionEvent.ACTION_DOWN) {
                 performClick()
                 px = event.x
                 py = event.y
                 return true
             } else if (event?.action == MotionEvent.ACTION_UP) {
-                fillColor.color = MaterialColors.getColor(this, R.attr.touchElementColor)
+                outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                 soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
                 invalidate()
                 return false
@@ -384,16 +432,14 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             return true
         }
         return true
-        //return super.onTouchEvent(event);
     }
 
 
     override fun performClick(): Boolean {
-        fillColor.color = MaterialColors.getColor(this, R.attr.touchElementTouchedColor)
         note?.value?.let { soundGenerator?.voices?.get(voiceNr)?.setNote(it) }
         if (soundGenerator?.voices?.get(voiceNr)?.switchOn(1.0f)==true)
         {
-            fillColor.color = MaterialColors.getColor(this, R.attr.touchElementTouchedColor)
+            outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
         }
         invalidate()
         return super.performClick()
@@ -429,15 +475,24 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
 
     fun setEditmode(mode: Boolean) {
-        if (mode && this.elementState == TouchElementState.PLAYING) {
+        if (mode && elementState!=TouchElementState.EDITING) {
             this.elementState = TouchElementState.EDITING
             invalidate()
         } else if (!mode && elementState == TouchElementState.EDITING) {
-            this.elementState = TouchElementState.PLAYING
+            this.elementState = defaultState
             invalidate()
         }
-
     }
+
+    fun setDefaultMode(mode: TouchElementState)
+    {
+        this.defaultState = mode
+        if (this.elementState != TouchElementState.EDITING)
+        {
+            this.elementState = mode
+        }
+    }
+
     companion object {
         val dpi = Resources.getSystem().displayMetrics.density
         val dpFloat = Resources.getSystem().displayMetrics.density

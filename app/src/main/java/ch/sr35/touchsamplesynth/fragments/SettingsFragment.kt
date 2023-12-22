@@ -12,6 +12,8 @@ import android.widget.TextView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.BuildConfig
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.views.TouchElement
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -96,6 +98,18 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
         bufferCapacityInFrames.onItemSelectedListener = this
 
+        val spinnerTouchElementStyle = view.findViewById<Spinner>(R.id.spinnerTouchElementsDisplay)
+        ArrayAdapter.createFromResource(view.context,
+            R.array.touchElementDisplayStyle,
+            android.R.layout.simple_spinner_item
+            ).also {
+                arrayAdapter -> arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerTouchElementStyle.adapter = arrayAdapter
+            spinnerTouchElementStyle.setSelection(0,false)
+            spinnerTouchElementStyle.onItemSelectedListener = this
+        }
+
+
         val textViewAbout = view.findViewById<TextView>(R.id.settingTextViewAbout)
         val aboutString="Touch Sample Synth Version %s".format(BuildConfig.VERSION_NAME)
         textViewAbout.text = aboutString
@@ -133,7 +147,19 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
             {
                 bufferSizeInFramesIdx = p2
             }
-
+        }
+        else if (p0 != null && p0.id == R.id.spinnerTouchElementsDisplay)
+        {
+            (context as TouchSampleSynthMain).touchElements.forEach {
+                if (p2 == 0)
+                {
+                    it.setDefaultMode(TouchElement.TouchElementState.PLAYING)
+                }
+                else
+                {
+                    it.setDefaultMode(TouchElement.TouchElementState.PLAYING_VERBOSE)
+                }
+            }
         }
     }
 

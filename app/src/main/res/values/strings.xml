@@ -35,6 +35,7 @@
     <string name="framesPerDataCallbackDescription">Audio Chunksize\r\nSmaller means lee latency</string>
     <string name="bufferCapacityInFramesDescription">Audio Buffer Capacity</string>
     <string name="audioBuffersErrorMessage">Chunksize must be half the audio buffer size or less</string>
+    <string name="touchElementDiplay">Touch Elements Display Style</string>
     <string-array name="framesPerDataCallbackValues">
         <item>32</item>
         <item>64</item>
@@ -50,5 +51,9 @@
         <item>512</item>
         <item>1024</item>
         <item>2048</item>
+    </string-array>
+    <string-array name="touchElementDisplayStyle">
+        <item>Minimal</item>
+        <item>Descriptive</item>
     </string-array>
 </resources>
