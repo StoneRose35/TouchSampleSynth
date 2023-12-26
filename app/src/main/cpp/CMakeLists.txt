@@ -40,6 +40,8 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         jni-bridge.cpp
         sine-mono-synth-jni.cpp
         simple-subtractive-synth-jni.cpp
+        Sampler.cpp
+        sampler-jni.cpp
         )
 
 # Specifies libraries CMake should link to your target library. You
