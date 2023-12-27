@@ -93,7 +93,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
         {
             if (channels == WaveFileChannel.BOTH)
             {
-                for (c in 0.. nFrames)
+                for (c in 0 until nFrames)
                 {
                     sampleL = (littleEndianConversion(rawData.copyOfRange(idx,idx+channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
                     sampleR = (littleEndianConversion(rawData.copyOfRange(idx+channelSize,idx+2*channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
@@ -103,7 +103,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
             }
             else if (channels==WaveFileChannel.LEFT)
             {
-                for (c in 0.. nFrames)
+                for (c in 0 until nFrames)
                 {
                     sampleL = (littleEndianConversion(rawData.copyOfRange(idx,idx+channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
                     result.add(sampleL)
@@ -112,7 +112,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
             }
             else if (channels==WaveFileChannel.RIGHT)
             {
-                for (c in 0.. nFrames)
+                for (c in 0 until nFrames)
                 {
                     sampleR = (littleEndianConversion(rawData.copyOfRange(idx+channelSize,idx+2*channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
                     result.add(sampleR)
@@ -122,7 +122,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
         }
         else
         {
-            for (c in 0.. nFrames)
+            for (c in 0 until  nFrames)
             {
                 sampleL = (littleEndianConversion(rawData.copyOfRange(idx,idx+channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
                 result.add(sampleL)

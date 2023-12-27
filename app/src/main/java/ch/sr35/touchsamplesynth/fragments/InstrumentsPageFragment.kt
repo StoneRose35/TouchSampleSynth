@@ -25,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
+import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import java.lang.NumberFormatException
@@ -330,6 +331,20 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 {
                     val frag =
                         SimpleSubtractiveSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SimpleSubtractiveSynthI)
+                    if (p1 != null) {
+                        putFragment(
+                            frag,
+                            (p1 as ConstraintLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
+                        )
+                    } else {
+                        putFragment(frag, "thefirstitem")
+                    }
+                }
+
+                else if  ((context as TouchSampleSynthMain).soundGenerators[p2] is SamplerI)
+                {
+                    val frag =
+                        SamplerFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SamplerI)
                     if (p1 != null) {
                         putFragment(
                             frag,

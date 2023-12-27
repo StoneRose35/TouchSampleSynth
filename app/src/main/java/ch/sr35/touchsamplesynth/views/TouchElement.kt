@@ -3,7 +3,6 @@ package ch.sr35.touchsamplesynth.views
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
@@ -18,6 +17,7 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
+import ch.sr35.touchsamplesynth.graphics.Converter
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
 import java.util.stream.IntStream
@@ -265,7 +265,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
 
             rotateRect.left = 20
-            rotateRect.right = rotateRect.left + editRectangleWidth + toPx(3)
+            rotateRect.right = rotateRect.left + editRectangleWidth + Converter.toPx(3)
             rotateRect.top = EDIT_CIRCLE_OFFSET.toInt() + 50
             rotateRect.bottom = (editText.textSize.toInt() + 8 + rotateRect.top)
 
@@ -279,7 +279,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             )
 
             setSoundgenRect.left = 20
-            setSoundgenRect.right = setSoundgenRect.left + editRectangleWidth + toPx(3)
+            setSoundgenRect.right = setSoundgenRect.left + editRectangleWidth + Converter.toPx(3)
             setSoundgenRect.top = rotateRect.bottom + 10
             setSoundgenRect.bottom = setSoundgenRect.top + editText.textSize.toInt() + 8
 
@@ -292,7 +292,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             )
 
             deleteRect.left = 20
-            deleteRect.right = deleteRect.left + editRectangleWidth + toPx(3)
+            deleteRect.right = deleteRect.left + editRectangleWidth + Converter.toPx(3)
             deleteRect.top = setSoundgenRect.bottom + 10
             deleteRect.bottom = deleteRect.top + editText.textSize.toInt() + 8
 
@@ -493,25 +493,6 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
-    companion object {
-        val dpi = Resources.getSystem().displayMetrics.density
-        val dpFloat = Resources.getSystem().displayMetrics.density
-        fun toPx(dp: Int): Int
-        {
-            return (dp.toFloat()* dpi).toInt()
-        }
-        fun toPx(dpF: Float): Float
-        {
-            return dpF*dpFloat
-        }
-        fun toDp(px: Int): Int
-        {
-            return (px.toFloat()/dpi).toInt()
-        }
-        fun toDp(pxF: Float): Float
-        {
-            return pxF/dpFloat
-        }
-    }
+
 
 }

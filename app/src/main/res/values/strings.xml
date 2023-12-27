@@ -20,6 +20,9 @@
     <string name="cutoff_modulation">Cutoff Modulation</string>
     <string name="menuitem_playpage">Play</string>
     <string name="menuitem_soundgenerator">Instruments</string>
+    <string name="sampler_name">Sampler</string>
+    <string name="sampler_loop_switch">Loop section</string>
+    <string name="sampler_load_sample">Load sample</string>
     <string name="add">Add</string>
     <string name="delete">Delete</string>
     <string name="simple_subtractive_synth_name">Simple Sub Synth</string>

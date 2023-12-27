@@ -107,7 +107,6 @@ Sampler::Sampler() {
     sampleEndIndex=DEFAULT_SAMPLE_SIZE;
     currentIndex=0xFFFFFFFF;
     loopMode=SAMPLER_MODE_ONE_SHOT;
-    isInLoop=0;
     dataSize = DEFAULT_SAMPLE_SIZE;
     sampleData = (float*)malloc(DEFAULT_SAMPLE_SIZE*sizeof(float));
     for(uint32_t c=0;c<DEFAULT_SAMPLE_SIZE;c++)

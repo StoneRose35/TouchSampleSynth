@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="358dp"
+    android:layout_height="match_parent"
+    android:background="?attr/instrumentBackgroundColor"
+    android:orientation="vertical"
+    tools:context=".fragments.SamplerFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTintMode="src_in"
+        android:fontFamily="monospace"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp"
+        android:text="@string/sampler_name"
+        android:textColor="?attr/instrumentPageTitleTextColor"
+        android:textSize="20sp">
+    </TextView>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/sampler_switch_mode"
+
+                >
+
+            </androidx.appcompat.widget.SwitchCompat>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_margin="10dp"
+                android:text="@string/sampler_loop_switch"
+                android:labelFor="@id/sampler_switch_mode"
+                android:layout_column="2" />
+
+        </TableRow>
+
+    </TableLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sampler_button_load_sample"
+        android:text="@string/sampler_load_sample"
+        />
+    <ch.sr35.touchsamplesynth.views.WaveDisplay
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:id="@+id/sampler_wave_viewer"
+        >
+
+    </ch.sr35.touchsamplesynth.views.WaveDisplay>
+</LinearLayout>

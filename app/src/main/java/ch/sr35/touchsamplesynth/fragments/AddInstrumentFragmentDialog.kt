@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.dialogs.SoundGeneratorListAdapter
@@ -45,6 +46,7 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
             this.context?.let {
                 soundGenerators.add(SimpleSubtractiveSynthI(it,""))
                 soundGenerators.add(SineMonoSynthI(it, ""))
+                soundGenerators.add(SamplerI(it, ""))
             }
         }
 
@@ -55,18 +57,22 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
         buttonOk.setOnClickListener {
             if ((instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition > -1) {
                 context?.let { it1 ->
-                    val newInstrument: Instrument
+                    var newInstrument: Instrument?=null
                     if (soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition] is SineMonoSynthI)
                     {
                         newInstrument = SineMonoSynthI(requireContext(),"basic")
                     }
-                    else
+                    else if (soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition] is SimpleSubtractiveSynthI)
                     {
                         newInstrument = SimpleSubtractiveSynthI(requireContext(),"basic")
                     }
-                    (context as TouchSampleSynthMain).soundGenerators.add(
-                        newInstrument
-                    )
+                    else if (soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition] is SamplerI)
+                    {
+                        newInstrument = SamplerI(requireContext(),"basic")
+                    }
+                    newInstrument?.let {
+                        (context as TouchSampleSynthMain).soundGenerators.add(it)
+                    }
                     generatorsList.invalidateViews()
                 }
             }

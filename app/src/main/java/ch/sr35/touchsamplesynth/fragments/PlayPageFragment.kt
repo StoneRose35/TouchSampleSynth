@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth.fragments
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,6 +17,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.views.TouchElement
 
 
@@ -26,8 +26,7 @@ import ch.sr35.touchsamplesynth.views.TouchElement
  */
 class PlayPageFragment : Fragment() {
 
-    private val Int.px: Int
-        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,11 +76,11 @@ class PlayPageFragment : Fragment() {
 
         newButton.setOnClickListener {
 
-            val lp = ConstraintLayout.LayoutParams(134.px,166.px)
+            val lp = ConstraintLayout.LayoutParams(Converter.toPx(134),Converter.toPx(166))
             lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
             lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-            lp.marginStart = 10.px
-            lp.topMargin = 10.px
+            lp.marginStart = Converter.toPx(10)
+            lp.topMargin = Converter.toPx(10)
             val te = TouchElement(context as TouchSampleSynthMain,null)
             te.setEditmode(true)
             te.layoutParams = lp
@@ -106,9 +105,9 @@ class PlayPageFragment : Fragment() {
         view.post {
             val height = view.height
             val width = view.width
-            var touchElementWidth = 134.px
-            var touchElementSpacingX=10.px
-            var touchElementHeight = 166.px
+            var touchElementWidth = Converter.toPx(134)
+            var touchElementSpacingX = Converter.toPx(10)
+            var touchElementHeight = Converter.toPx(166)
             var teCntr = 0
             var hasDoneInitialLayout= false
             for (te in (context as TouchSampleSynthMain).touchElements) {
@@ -116,21 +115,21 @@ class PlayPageFragment : Fragment() {
                 Log.i("TouchSampleSynth","drawing %d TouchElements".format((context as TouchSampleSynthMain).touchElements.size))
                 if (te.layoutParams == null)
                 {
-                    if (((134+10)*4).px > width)
+                    if (Converter.toPx((134+10)*4) > width)
                     {
-                        touchElementWidth = width / 4 *(134/(134+10)).px
-                        touchElementSpacingX = width / 4 * (134/(134+10)).px
+                        touchElementWidth = width / 4 *Converter.toPx(134/(134+10))
+                        touchElementSpacingX = width / 4 * Converter.toPx(134/(134+10))
                     }
-                    if ((166+10).px > height)
+                    if (Converter.toPx(166+10) > height)
                     {
-                        touchElementHeight = height - 10.px
+                        touchElementHeight = height - Converter.toPx(10)
                     }
 
                     val lp = ConstraintLayout.LayoutParams(touchElementWidth,touchElementHeight)
                     lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                     lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
                     lp.marginStart = touchElementSpacingX + (touchElementWidth + touchElementSpacingX)*teCntr
-                    lp.topMargin = height - touchElementHeight - 10.px
+                    lp.topMargin = height - touchElementHeight - Converter.toPx(10)
                     te.layoutParams = lp
                     teCntr += 1
                     hasDoneInitialLayout = true

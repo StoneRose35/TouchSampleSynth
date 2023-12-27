@@ -1,17 +1,20 @@
 package ch.sr35.touchsamplesynth.audio.instruments
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.WavReader
+import ch.sr35.touchsamplesynth.audio.WaveFileChannel
 import ch.sr35.touchsamplesynth.audio.voices.SamplerK
-import com.matthewrussell.trwav.WavFileReader
 import java.io.File
 
 class SamplerI(private val context: Context,
                name: String): Instrument(name) {
     val icon = AppCompatResources.getDrawable(context, R.drawable.sampler)
-
+    val sample=ArrayList<Float>()
     init {
         voices = ArrayList()
     }
@@ -20,11 +23,20 @@ class SamplerI(private val context: Context,
         return "Sampler"
     }
 
+    override fun getInstrumentIcon(): Drawable? {
+        return icon
+    }
+
     fun setSampleFile(fileName: String)
     {
         val f= File(fileName)
-        val wavReader = WavFileReader()
-        val wavFile = wavReader.read(f)
+        val wr = WavReader()
+        val wavFile = wr.readWaveFile(f)
+
+        val ae = AudioEngineK()
+        val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
+        sample.addAll(floatSamples)
+        loadSample(floatSamples.toFloatArray())
     }
 
     override fun generateVoices(cnt: Int) {
@@ -113,7 +125,7 @@ class SamplerI(private val context: Context,
         return -1
     }
 
-    fun loadSample(sample: FloatArray)
+    private fun loadSample(sample: FloatArray)
     {
         for (vc in voices)
         {

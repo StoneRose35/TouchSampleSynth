@@ -71,4 +71,29 @@ class WavReaderTest {
         Assert.assertEquals(wavFile.header.nChannels, 2)
         Assert.assertEquals(wavFile.header.bitDepth,8)
     }
+
+    @Test
+    fun getFloatDataTest()
+    {
+        val wr = WavReader()
+        val  file = File("./src/test/resources/exampleWav.wav")
+        Assert.assertTrue(file.isFile)
+        val wavFile = wr.readWaveFile(file)
+        Assert.assertNotNull(wavFile)
+        val floatData = wavFile.getFloatData(48000,WaveFileChannel.LEFT)
+        Assert.assertEquals(floatData.size,wavFile.rawData.size/wavFile.header.nChannels/(wavFile.header.bitDepth/8))
+        Assert.assertFalse( floatData.stream().anyMatch { el -> el > 1.0f || el < -1.0f})
+    }
+
+    @Test
+    fun resampleTest()
+    {
+        val wr = WavReader()
+        val  file = File("./src/test/resources/exampleWav44100.wav")
+        Assert.assertTrue(file.isFile)
+        val wavFile = wr.readWaveFile(file)
+        Assert.assertNotNull(wavFile)
+        val floatData = wavFile.getFloatData(48000,WaveFileChannel.BOTH)
+        Assert.assertTrue(floatData.size > 220000)
+    }
 }
