@@ -21,10 +21,10 @@ class WaveDisplay(context: Context, attributes: AttributeSet): View(context,attr
     private var sampleData=ArrayList<Float>()
     private var waveViewBuffer: Bitmap?=null
 
-    private var startMarkerPosition: Float=0.0f
-    private var endMarkerPosition: Float=1.0f
-    private var loopStartMarkerPosition: Float=0.23f
-    private var loopEndMarkerPosition: Float=0.74f
+    var startMarkerPosition: Float=0.0f
+    var endMarkerPosition: Float=1.0f
+    var loopStartMarkerPosition: Float=0.23f
+    var loopEndMarkerPosition: Float=0.74f
     private var oldWidth=0
     private var oldHeight=0
     private var startMarkerX=0

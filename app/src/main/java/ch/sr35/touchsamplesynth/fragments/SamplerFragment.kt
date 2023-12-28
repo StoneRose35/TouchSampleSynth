@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.fragments
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +12,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.views.WaveDisplay
 import ch.sr35.touchsamplesynth.views.WaveDisplayChangeListener
+
 
 class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
     private val synth=s
@@ -27,11 +30,22 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
 
         }
         fileChooserResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
-            if (r != null) {
-                run {
-                    r.data?.data?.path?.let { synth.setSampleFile(it) }
+            if (r != null && r.resultCode == Activity.RESULT_OK) {
+                r.data?.data?.let {
+                    synth.setSampleFile(it)
+                    requireActivity().contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
                     waveViewer?.setSampleData(synth.sample)
+                    waveViewer?.startMarkerPosition = (synth.getSampleStartIndex().toFloat()/synth.sample.size.toFloat())
+                    waveViewer?.endMarkerPosition = (synth.getSampleEndIndex().toFloat()/synth.sample.size.toFloat())
+                    waveViewer?.loopStartMarkerPosition = (synth.getLoopStartIndex().toFloat()/synth.sample.size.toFloat())
+                    waveViewer?.loopEndMarkerPosition = (synth.getLoopEndIndex().toFloat()/synth.sample.size.toFloat())
+                    (context as TouchSampleSynthMain).populateOnResume=false
                 }
+
+
             }
         }
     }
@@ -50,6 +64,12 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
         waveViewer=view.findViewById(R.id.sampler_wave_viewer)
         buttonLoadSample=view.findViewById(R.id.sampler_button_load_sample)
         waveViewer?.onChangeListener=this
+        waveViewer?.setSampleData(synth.sample)
+        waveViewer?.startMarkerPosition = (synth.getSampleStartIndex().toFloat()/synth.sample.size.toFloat())
+        waveViewer?.endMarkerPosition = (synth.getSampleEndIndex().toFloat()/synth.sample.size.toFloat())
+        waveViewer?.loopStartMarkerPosition = (synth.getLoopStartIndex().toFloat()/synth.sample.size.toFloat())
+        waveViewer?.loopEndMarkerPosition = (synth.getLoopEndIndex().toFloat()/synth.sample.size.toFloat())
+        waveViewer?.invalidate()
         modeSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
             {
@@ -61,11 +81,15 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
             }
         }
         buttonLoadSample?.setOnClickListener {
+
+
             val intent=Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
-                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-                type = "audio/wav"
+                addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                type = "*/*"
             }
+
          fileChooserResultLauncher.launch(intent)
         }
     }

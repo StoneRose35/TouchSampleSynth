@@ -18,7 +18,7 @@ uint32_t Sampler::getLoopStartIndex() const {
 }
 
 void Sampler::setLoopEndIndex(uint32_t idx) {
-    if (idx > loopStartIndex && idx <= dataSize)
+    if (idx > loopStartIndex && idx <= sampleEndIndex)
     {
         loopEndIndex = idx;
     }

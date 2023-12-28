@@ -2,6 +2,7 @@ package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
 import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import java.io.Serializable
@@ -68,6 +69,12 @@ class PersistableInstrumentFactory
                 pi.fromInstrument(msg)
                 return pi
             }
+            else if (msg is SamplerI)
+            {
+                val pi = SamplerP(0,0,0,0,0,"",0,"")
+                pi.fromInstrument(msg)
+                return pi
+            }
             else
             {
                 return null
@@ -84,6 +91,13 @@ class PersistableInstrumentFactory
             else if (pi is SineMonoSynthP)
             {
                 val instr = SineMonoSynthI(context,pi.name)
+                instr.generateVoices(pi.nVoices)
+                pi.toInstrument(instr)
+                return instr
+            }
+            else if (pi is SamplerP)
+            {
+                val instr = SamplerI(context,pi.name)
                 instr.generateVoices(pi.nVoices)
                 pi.toInstrument(instr)
                 return instr

@@ -11,6 +11,7 @@
 #include "MusicalSoundGenerator.h"
 #include "SineMonoSynth.h"
 #include "SimpleSubtractiveSynth.h"
+#include "Sampler.h"
 #include <ctime>
 
 #define APP_NAME "TouchSampleSynth"
@@ -313,6 +314,10 @@ int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
         case FM_SYNTH:
             break;
         case SAMPLER:
+            sg=new Sampler();
+            if (idx < nSoundGenerators) {
+                soundGenerators[idx] = sg;
+            }
             break;
     }
     return idx;

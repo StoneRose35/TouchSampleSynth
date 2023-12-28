@@ -52,6 +52,7 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
         if (instance > -1)
         {
             audioEngine.removeSoundGenerator(instance)
+            instance=(-1).toByte()
         }
     }
 

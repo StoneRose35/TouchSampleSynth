@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.model
 
+import android.net.Uri
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import java.io.Serializable
@@ -23,17 +24,24 @@ class SamplerP(private var sampleStart: Int,
             loopStart = i.getLoopStartIndex()
             loopEnd = i.getLoopEndIndex()
             mode = i.getMode()
+            if (i.sampleUri!=null) {
+                sampleFile = i.sampleUri!!.toString()
+            }
         }
     }
 
     override fun toInstrument(i: Instrument) {
         if (i is SamplerI)
         {
+            if (sampleFile.isNotEmpty()) {
+                i.setSampleFile(Uri.parse(sampleFile))
+            }
             i.setSampleStartIndex(sampleStart)
             i.setSampleEndIndex(sampleEnd)
             i.setLoopStartIndex(loopStart)
             i.setLoopEndIndex(loopEnd)
             i.setMode(mode)
+
         }
     }
 

@@ -2,6 +2,7 @@ package ch.sr35.touchsamplesynth.audio.instruments
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -9,12 +10,12 @@ import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.WavReader
 import ch.sr35.touchsamplesynth.audio.WaveFileChannel
 import ch.sr35.touchsamplesynth.audio.voices.SamplerK
-import java.io.File
 
 class SamplerI(private val context: Context,
                name: String): Instrument(name) {
     val icon = AppCompatResources.getDrawable(context, R.drawable.sampler)
     val sample=ArrayList<Float>()
+    var sampleUri: Uri?=null
     init {
         voices = ArrayList()
     }
@@ -27,16 +28,32 @@ class SamplerI(private val context: Context,
         return icon
     }
 
-    fun setSampleFile(fileName: String)
+    fun setSampleFile(fileName: Uri)
     {
-        val f= File(fileName)
-        val wr = WavReader()
-        val wavFile = wr.readWaveFile(f)
 
-        val ae = AudioEngineK()
-        val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
-        sample.addAll(floatSamples)
-        loadSample(floatSamples.toFloatArray())
+        val wr = WavReader()
+        context.contentResolver.openInputStream(fileName)?.let {
+            val wavFile = wr.readWaveFile(it)
+            val ae = AudioEngineK()
+            val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
+            sample.clear()
+            sample.addAll(floatSamples)
+            loadSample(floatSamples.toFloatArray())
+            for (vc in voices)
+            {
+                if (vc.getInstance()==(-1).toByte())
+                {
+                    vc.bindToAudioEngine()
+                }
+                (vc as SamplerK).setLoopStartIndex(0)
+                (vc).setSampleStartIndex(0)
+                (vc).setLoopEndIndex(sample.size-1)
+                (vc).setSampleEndIndex(sample.size-1)
+            }
+            sampleUri = fileName
+        }
+
+
     }
 
     override fun generateVoices(cnt: Int) {

@@ -49,7 +49,7 @@ class SamplerK(context: Context): MusicalSoundGenerator {
     override fun bindToAudioEngine() {
         val audioEngine= AudioEngineK()
         if (instance == (-1).toByte()) {
-            instance = audioEngine.addSoundGenerator(1)
+            instance = audioEngine.addSoundGenerator(3)
         }
     }
 
@@ -58,6 +58,7 @@ class SamplerK(context: Context): MusicalSoundGenerator {
         if (instance > -1)
         {
             audioEngine.removeSoundGenerator(instance)
+            instance=(-1).toByte()
         }
     }
 

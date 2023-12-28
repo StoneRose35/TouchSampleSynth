@@ -1,16 +1,14 @@
 package ch.sr35.touchsamplesynth.audio
 
-
-import java.io.File
+import java.io.InputStream
 import kotlin.math.floor
 
 class WavReader {
 
-    fun readWaveFile(f: File): WavFile
+    fun readWaveFile(fis: InputStream): WavFile
     {
         val headerData= ByteArray(32)
         val idData= ByteArray(4)
-        val fis = f.inputStream()
         fis.read(headerData,0,12) // read header
         fis.read(idData,0,4)
         if (String(idData) == "JUNK")

@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -12,6 +13,7 @@ import android.widget.ListView
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
@@ -42,6 +44,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private val settingsFrament= SettingsFragment()
     private val scenesEditFragment = SceneFragment(allScenes)
     var mainMenu: Menu?=null
+    var populateOnResume=true
     private var oldScenePosition=-1
 
     init {
@@ -83,11 +86,18 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
 
         if (mainMenu!=null) {
-            allScenes[(mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition].populate(
-                soundGenerators,
-                touchElements,
-                this
-            )
+            if (populateOnResume) {
+                allScenes[(mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition].populate(
+                    soundGenerators,
+                    touchElements,
+                    this
+                )
+            }
+            //else
+            //{
+            //    populateOnResume=true
+            //    soundGenerators.forEach { sg -> sg.voices.forEach { vc -> vc.bindToAudioEngine() } }
+            //}
 
             if (supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
             {
@@ -146,7 +156,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             touchElements.add(te)
         }
 
-
+        audioEngine.startEngine()
 
 
     }
@@ -192,7 +202,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
-
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+            PackageManager.PERMISSION_GRANTED)
 
     }
 
@@ -280,11 +291,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         spinnerScenes.onItemSelectedListener=this
 
         if (mainMenu!=null) {
+            /*
             allScenes[(mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition].populate(
                 soundGenerators,
                 touchElements,
                 this
-            )
+            )*/
 /*
             if (supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
             {
@@ -397,9 +409,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun persistCurrentScene()
     {
-        val scenePos = (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
-        if (scenePos < allScenes.size) {
-            allScenes[scenePos].persist(soundGenerators, touchElements)
+        if (mainMenu != null) {
+            val scenePos =
+                (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
+            if (scenePos < allScenes.size) {
+                allScenes[scenePos].persist(soundGenerators, touchElements)
+            }
         }
     }
     fun lockSceneSelection()
