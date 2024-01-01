@@ -93,11 +93,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                     this
                 )
             }
-            //else
-            //{
-            //    populateOnResume=true
-            //    soundGenerators.forEach { sg -> sg.voices.forEach { vc -> vc.bindToAudioEngine() } }
-            //}
 
             if (supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
             {
@@ -290,30 +285,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
         spinnerScenes.onItemSelectedListener=this
 
-        if (mainMenu!=null) {
-            /*
-            allScenes[(mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition].populate(
-                soundGenerators,
-                touchElements,
-                this
-            )*/
-/*
-            if (supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
-            {
-                for (te in touchElements) {
-                    supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
-                        if (it!=null) {
-                            te.setEditmode(it)
-                        }
-                    }
-                    (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
-                }
-            }
-            else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0"))
-            {
-                supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)?.invalidateViews()
-            }*/
-        }
         return true
     }
 

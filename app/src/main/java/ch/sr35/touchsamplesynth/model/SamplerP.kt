@@ -36,10 +36,10 @@ class SamplerP(private var sampleStart: Int,
             if (sampleFile.isNotEmpty()) {
                 i.setSampleFile(Uri.parse(sampleFile))
             }
-            i.setSampleStartIndex(sampleStart)
-            i.setSampleEndIndex(sampleEnd)
             i.setLoopStartIndex(loopStart)
             i.setLoopEndIndex(loopEnd)
+            i.setSampleStartIndex(sampleStart)
+            i.setSampleEndIndex(sampleEnd)
             i.setMode(mode)
 
         }

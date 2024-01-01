@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -19,14 +20,12 @@ class WaveDisplay(context: Context, attributes: AttributeSet): View(context,attr
     private val markersColor:Paint = Paint()
     private val backgroundColor:Paint = Paint()
     private var sampleData=ArrayList<Float>()
-    private var waveViewBuffer: Bitmap?=null
-
+    var waveViewBuffer: Bitmap?=null
+    private var waveViewbufferRect=Rect()
     var startMarkerPosition: Float=0.0f
     var endMarkerPosition: Float=1.0f
     var loopStartMarkerPosition: Float=0.23f
     var loopEndMarkerPosition: Float=0.74f
-    private var oldWidth=0
-    private var oldHeight=0
     private var startMarkerX=0
     private var startMarkerY=0
     private var endMarkerX=0
@@ -63,13 +62,11 @@ class WaveDisplay(context: Context, attributes: AttributeSet): View(context,attr
         super.onDraw(canvas)
 
         canvas.drawRect(0.0f,0.0f,width.toFloat(),height.toFloat(),backgroundColor)
-        if (waveViewBuffer == null || oldWidth!= width || oldHeight!= height)
-        {
-            createBufferBitmap(width,height)
-            oldWidth=width
-            oldHeight=height
-        }
-        canvas.drawBitmap(waveViewBuffer!!,0.0f,0.0f,null)
+        waveViewbufferRect.top=0
+        waveViewbufferRect.left=0
+        waveViewbufferRect.right=width
+        waveViewbufferRect.bottom=height
+        canvas.drawBitmap(waveViewBuffer!!,null, waveViewbufferRect,null)
         startMarkerX =((width - 2*MARKER_SIZE)*startMarkerPosition + MARKER_SIZE).toInt()
         startMarkerY = height - MARKER_SIZE
         canvas.drawCircle(startMarkerX.toFloat(),startMarkerY.toFloat(),
@@ -177,69 +174,6 @@ class WaveDisplay(context: Context, attributes: AttributeSet): View(context,attr
     private fun toRelativeWidth(pos: Int): Float
     {
         return (pos.toFloat() - MARKER_SIZE.toFloat())/(width-2* MARKER_SIZE.toFloat())
-    }
-
-    private fun createBufferBitmap(width: Int,height:Int)
-    {
-        waveViewBuffer= Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
-        val waveViewCanvas = Canvas(waveViewBuffer!!)
-        waveViewCanvas.drawRect(0.0f,0.0f,width.toFloat(),height.toFloat(),backgroundColor)
-        if (sampleData.size > 0)
-        {
-            val widthInShrinkedSamples = sampleData.size.toFloat()/width.toFloat()
-            for (c in 0 until width-1) {
-                val p1 = (c * widthInShrinkedSamples).toInt()
-                val p2 = ((c + 1) * widthInShrinkedSamples).toInt()
-                if (p2 != p1) {
-                    val sublist = sampleData.subList(p1, p2)
-                    val minAlongSamples = sublist.min()
-                    val maxAlongSamples = sublist.max()
-                    if (maxAlongSamples >= 0.0f && minAlongSamples <= 0.0f) {
-                        waveViewCanvas.drawLine(
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f - maxAlongSamples),
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1 - minAlongSamples),
-                            waveColor
-                        )
-                    } else if (maxAlongSamples >= 0.0f && minAlongSamples >= 0.0f) {
-                        waveViewCanvas.drawLine(
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f - maxAlongSamples),
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f),
-                            waveColor
-                        )
-                    } else if (maxAlongSamples <= 0.0f && minAlongSamples <= 0.0f) {
-                        waveViewCanvas.drawLine(
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f),
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f - minAlongSamples),
-                            waveColor
-                        )
-                    }
-                } else {
-                    if (sampleData[p1] > 0.0f) {
-                        waveViewCanvas.drawLine(
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f - sampleData[p1]),
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f),
-                            waveColor
-                        )
-                    } else {
-                        waveViewCanvas.drawLine(
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f),
-                            c.toFloat(),
-                            height.toFloat() / 2.0f * (1.0f - sampleData[p1]),
-                            waveColor
-                        )
-                    }
-                }
-            }
-        }
     }
 }
 

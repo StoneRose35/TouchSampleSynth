@@ -1,6 +1,9 @@
 package ch.sr35.touchsamplesynth.audio.instruments
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.content.res.AppCompatResources
@@ -11,13 +14,26 @@ import ch.sr35.touchsamplesynth.audio.WavReader
 import ch.sr35.touchsamplesynth.audio.WaveFileChannel
 import ch.sr35.touchsamplesynth.audio.voices.SamplerK
 
+const val WAVE_BMP_WIDTH=768
+const val WAVE_BMP_HEIGHT=512
 class SamplerI(private val context: Context,
                name: String): Instrument(name) {
     val icon = AppCompatResources.getDrawable(context, R.drawable.sampler)
     val sample=ArrayList<Float>()
     var sampleUri: Uri?=null
+    var waveformImg: Bitmap?=null
+    private val backgroundColor: Paint = Paint()
+    private val waveColor:Paint = Paint()
     init {
         voices = ArrayList()
+        backgroundColor.color = context.getColor(R.color.white)
+        backgroundColor.style = Paint.Style.FILL
+        backgroundColor.isAntiAlias= false
+
+        waveColor.color = context.getColor(R.color.purple_700)
+        waveColor.style = Paint.Style.STROKE
+        waveColor.isAntiAlias = false
+
     }
 
     override fun getType(): String {
@@ -38,6 +54,7 @@ class SamplerI(private val context: Context,
             val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
             sample.clear()
             sample.addAll(floatSamples)
+            createBufferBitmap()
             loadSample(floatSamples.toFloatArray())
             for (vc in voices)
             {
@@ -147,6 +164,70 @@ class SamplerI(private val context: Context,
         for (vc in voices)
         {
             (vc as SamplerK).loadSample(sample)
+        }
+    }
+
+
+    private fun createBufferBitmap()
+    {
+        waveformImg = Bitmap.createBitmap(WAVE_BMP_WIDTH, WAVE_BMP_HEIGHT, Bitmap.Config.ARGB_8888)
+        val waveViewCanvas = Canvas(waveformImg!!)
+        waveViewCanvas.drawRect(0.0f,0.0f,WAVE_BMP_WIDTH.toFloat(),WAVE_BMP_HEIGHT.toFloat(),backgroundColor)
+        if (sample.size > 0)
+        {
+            val widthInShrinkedSamples = sample.size.toFloat()/WAVE_BMP_WIDTH.toFloat()
+            for (c in 0 until WAVE_BMP_WIDTH-1) {
+                val p1 = (c * widthInShrinkedSamples).toInt()
+                val p2 = ((c + 1) * widthInShrinkedSamples).toInt()
+                if (p2 != p1) {
+                    val sublist = sample.subList(p1, p2)
+                    val minAlongSamples = sublist.min()
+                    val maxAlongSamples = sublist.max()
+                    if (maxAlongSamples >= 0.0f && minAlongSamples <= 0.0f) {
+                        waveViewCanvas.drawLine(
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f - maxAlongSamples),
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1 - minAlongSamples),
+                            waveColor
+                        )
+                    } else if (maxAlongSamples >= 0.0f && minAlongSamples >= 0.0f) {
+                        waveViewCanvas.drawLine(
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f - maxAlongSamples),
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f),
+                            waveColor
+                        )
+                    } else if (maxAlongSamples <= 0.0f && minAlongSamples <= 0.0f) {
+                        waveViewCanvas.drawLine(
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f),
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f - minAlongSamples),
+                            waveColor
+                        )
+                    }
+                } else {
+                    if (sample[p1] > 0.0f) {
+                        waveViewCanvas.drawLine(
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f - sample[p1]),
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f),
+                            waveColor
+                        )
+                    } else {
+                        waveViewCanvas.drawLine(
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f),
+                            c.toFloat(),
+                            WAVE_BMP_HEIGHT.toFloat() / 2.0f * (1.0f - sample[p1]),
+                            waveColor
+                        )
+                    }
+                }
+            }
         }
     }
 

@@ -64,12 +64,13 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
         waveViewer=view.findViewById(R.id.sampler_wave_viewer)
         buttonLoadSample=view.findViewById(R.id.sampler_button_load_sample)
         waveViewer?.onChangeListener=this
-        waveViewer?.setSampleData(synth.sample)
+        waveViewer?.waveViewBuffer = synth.waveformImg
         waveViewer?.startMarkerPosition = (synth.getSampleStartIndex().toFloat()/synth.sample.size.toFloat())
         waveViewer?.endMarkerPosition = (synth.getSampleEndIndex().toFloat()/synth.sample.size.toFloat())
         waveViewer?.loopStartMarkerPosition = (synth.getLoopStartIndex().toFloat()/synth.sample.size.toFloat())
         waveViewer?.loopEndMarkerPosition = (synth.getLoopEndIndex().toFloat()/synth.sample.size.toFloat())
         waveViewer?.invalidate()
+        modeSwitch?.isChecked = synth.getMode().toInt() == 1
         modeSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
             {
