@@ -93,8 +93,25 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
             {
                 for (c in 0 until nFrames)
                 {
-                    sampleL = (littleEndianConversion(rawData.copyOfRange(idx,idx+channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
-                    sampleR = (littleEndianConversion(rawData.copyOfRange(idx+channelSize,idx+2*channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
+                    if (header.bitDepth != 8) {
+                        sampleL = (littleEndianConversion(
+                            rawData.copyOfRange(
+                                idx,
+                                idx + channelSize
+                            )
+                        ).toFloat() / (1 shl (header.bitDepth - 1)).toFloat())
+                        sampleR = (littleEndianConversion(
+                            rawData.copyOfRange(
+                                idx + channelSize,
+                                idx + 2 * channelSize
+                            )
+                        ).toFloat() / (1 shl (header.bitDepth - 1)).toFloat())
+                    }
+                    else
+                    {
+                        sampleL = (rawData.copyOfRange(idx,idx+channelSize)[0].toFloat() + 128.0f)/256.0f
+                        sampleR = (rawData.copyOfRange(idx+channelSize,idx+2*channelSize)[0].toFloat() + 128.0f)/256.0f
+                    }
                     result.add((sampleR + sampleL)*0.5f)
                     idx += channelSize*2
                 }
@@ -103,16 +120,39 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
             {
                 for (c in 0 until nFrames)
                 {
-                    sampleL = (littleEndianConversion(rawData.copyOfRange(idx,idx+channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
+                    if (header.bitDepth != 8) {
+                        sampleL = (littleEndianConversion(
+                            rawData.copyOfRange(
+                                idx,
+                                idx + channelSize
+                            )
+                        ).toFloat() / (1 shl (header.bitDepth - 1)).toFloat())
+
+                    }
+                    else
+                    {
+                        sampleL = (rawData.copyOfRange(idx,idx+channelSize)[0].toFloat() + 128.0f)/256.0f
+                    }
                     result.add(sampleL)
-                    idx += 2*channelSize
+                    idx += 2 * channelSize
                 }
             }
             else if (channels==WaveFileChannel.RIGHT)
             {
                 for (c in 0 until nFrames)
                 {
-                    sampleR = (littleEndianConversion(rawData.copyOfRange(idx+channelSize,idx+2*channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
+                    if (header.bitDepth != 8) {
+                        sampleR = (littleEndianConversion(
+                            rawData.copyOfRange(
+                                idx + channelSize,
+                                idx + 2 * channelSize
+                            )
+                        ).toFloat() / (1 shl (header.bitDepth - 1)).toFloat())
+                    }
+                    else
+                    {
+                        sampleR = (rawData.copyOfRange(idx+channelSize,idx+2*channelSize)[0].toFloat() + 128.0f)/256.0f
+                    }
                     result.add(sampleR)
                     idx += 2*channelSize
                 }
@@ -122,7 +162,18 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
         {
             for (c in 0 until  nFrames)
             {
-                sampleL = (littleEndianConversion(rawData.copyOfRange(idx,idx+channelSize)).toFloat()/(1 shl (header.bitDepth-1)).toFloat())
+                if (header.bitDepth != 8) {
+                    sampleL = (littleEndianConversion(
+                        rawData.copyOfRange(
+                            idx,
+                            idx + channelSize
+                        )
+                    ).toFloat() / (1 shl (header.bitDepth - 1)).toFloat())
+                }
+                else
+                {
+                    sampleL = (rawData.copyOfRange(idx,idx+channelSize)[0].toUByte().toFloat() - 128.0f)/256.0f
+                }
                 result.add(sampleL)
                 idx += channelSize
             }
