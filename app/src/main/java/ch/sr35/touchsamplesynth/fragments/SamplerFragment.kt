@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,21 +32,18 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
         }
         fileChooserResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
             if (r != null && r.resultCode == Activity.RESULT_OK) {
-                r.data?.data?.let {
-                    synth.setSampleFile(it)
+
+                    synth.setSampleFile(r.data!!.data!!)
+                    Log.i("TouchSampleSynth","loading sample for %s".format(synth.name))
                     requireActivity().contentResolver.takePersistableUriPermission(
-                        it,
+                        r.data!!.data!!,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
-                    waveViewer?.setSampleData(synth.sample)
+                    waveViewer?.waveViewBuffer=synth.waveformImg
                     waveViewer?.startMarkerPosition = (synth.getSampleStartIndex().toFloat()/synth.sample.size.toFloat())
                     waveViewer?.endMarkerPosition = (synth.getSampleEndIndex().toFloat()/synth.sample.size.toFloat())
                     waveViewer?.loopStartMarkerPosition = (synth.getLoopStartIndex().toFloat()/synth.sample.size.toFloat())
                     waveViewer?.loopEndMarkerPosition = (synth.getLoopEndIndex().toFloat()/synth.sample.size.toFloat())
-                    (context as TouchSampleSynthMain).populateOnResume=false
-                }
-
-
             }
         }
     }
@@ -90,7 +88,7 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 type = "*/*"
             }
-
+            (context as TouchSampleSynthMain).populateOnResume=false
          fileChooserResultLauncher.launch(intent)
         }
     }

@@ -54,33 +54,31 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     override fun onResume() {
         super.onResume()
         val allNotes = MusicalPitch.generateAllNotes()
-        allScenes.clear()
-        val fDir = this.filesDir
-        val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
-        if (sceneFiles != null){
-            sceneFiles.sort()
-            Log.i("TouchSampleSynth", "restoring from Files")
-            sceneFiles.forEach {
-                try {
-                    Log.i("TouchSampleSynth","reading file %s".format(it.name))
-                    SceneP.fromFile(it)?.let {
-                            it1 -> allScenes.add(it1)
-                        Log.i("TouchSampleSynth",it1.toString())
-                        for(instr in it1.instruments)
-                        {
-                            Log.i("TouchSampleSynth",instr.toString())
+        if (populateOnResume) {
+            allScenes.clear()
+            val fDir = this.filesDir
+            val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
+            if (sceneFiles != null) {
+                sceneFiles.sort()
+                Log.i("TouchSampleSynth", "restoring from Files")
+                sceneFiles.forEach {
+                    try {
+                        Log.i("TouchSampleSynth", "reading file %s".format(it.name))
+                        SceneP.fromFile(it)?.let { it1 ->
+                            allScenes.add(it1)
+                            Log.i("TouchSampleSynth", it1.toString())
+                            for (instr in it1.instruments) {
+                                Log.i("TouchSampleSynth", instr.toString())
+                            }
+                            for (te in it1.touchElements) {
+                                Log.i("TouchSampleSynth", te.toString())
+                            }
                         }
-                        for (te in it1.touchElements)
-                        {
-                            Log.i("TouchSampleSynth",te.toString())
-                        }
+                    } catch (e: Exception) {
+                        it.delete()
                     }
-                }
-                catch (e: Exception)
-                {
-                    it.delete()
-                }
 
+                }
             }
         }
 
@@ -93,25 +91,27 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                     this
                 )
             }
+            //else
+            //{
+            //    soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.bindToAudioEngine() }
+            //}
 
-            if (supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
-            {
-                for (te in touchElements) {
-                    supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
-                        if (it!=null) {
-                            te.setEditmode(it)
+            if (populateOnResume) {
+                if (supportFragmentManager.fragments[0].tag.equals("PlayPage0")) {
+                    for (te in touchElements) {
+                        supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
+                            if (it != null) {
+                                te.setEditmode(it)
+                            }
                         }
+                        (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
                     }
-                    (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
+                } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
+                    supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)
+                        ?.invalidateViews()
                 }
             }
-            else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0"))
-            {
-                supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)?.invalidateViews()
-            }
         }
-        //((mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).adapter as ArrayAdapter<*>).notifyDataSetChanged()
-        //(mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).setSelection(0)
 
 
         if (allScenes.isEmpty()) {
@@ -152,7 +152,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
 
         audioEngine.startEngine()
-
+        if (!populateOnResume)
+        {
+            populateOnResume=true
+        }
 
     }
     override fun onStart() {
@@ -237,27 +240,27 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onPause() {
 
-        val mainDir = File(filesDir.absolutePath)
-        persistCurrentScene()
-        mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
-            it.delete()
-        }
-        Log.i("TouchSampleSynth","save to files")
-        for ((cnt, scn) in allScenes.withIndex())
-        {
-            val f = File(filesDir.absolutePath + File.separator + "%03dscene.scn".format(cnt))
-            Log.i("TouchSampleSynth","writing file %s".format(f.name))
-            Log.i("TouchSampleSynth",scn.toString())
-            for(instr in scn.instruments)
-            {
-                Log.i("TouchSampleSynth",instr.toString())
+        if (populateOnResume) {
+            val mainDir = File(filesDir.absolutePath)
+            persistCurrentScene()
+            mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
+                it.delete()
             }
-            for (te in scn.touchElements)
-            {
-                Log.i("TouchSampleSynth",te.toString())
+            Log.i("TouchSampleSynth", "save to files")
+            for ((cnt, scn) in allScenes.withIndex()) {
+                val f = File(filesDir.absolutePath + File.separator + "%03dscene.scn".format(cnt))
+                Log.i("TouchSampleSynth", "writing file %s".format(f.name))
+                Log.i("TouchSampleSynth", scn.toString())
+                for (instr in scn.instruments) {
+                    Log.i("TouchSampleSynth", instr.toString())
+                }
+                for (te in scn.touchElements) {
+                    Log.i("TouchSampleSynth", te.toString())
+                }
+                scn.toFile(f)
             }
-            scn.toFile(f)
         }
+
         if (supportFragmentManager.fragments[0].tag!=null
             && supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
         {
@@ -265,7 +268,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 (supportFragmentManager.fragments[0].view as ViewGroup).removeView(te)
             }
         }
-        soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
+        if (populateOnResume) {
+            soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
+        }
         audioEngine.stopEngine()
         super.onPause()
     }

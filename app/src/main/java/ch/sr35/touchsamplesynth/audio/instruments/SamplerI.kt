@@ -48,27 +48,28 @@ class SamplerI(private val context: Context,
     {
 
         val wr = WavReader()
-        context.contentResolver.openInputStream(fileName)?.let {
-            val wavFile = wr.readWaveFile(it)
-            val ae = AudioEngineK()
-            val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
-            sample.clear()
-            sample.addAll(floatSamples)
-            createBufferBitmap()
-            loadSample(floatSamples.toFloatArray())
-            for (vc in voices)
+        val inputStream = context.contentResolver.openInputStream(fileName)
+        val wavFile = wr.readWaveFile(inputStream!!)
+        val ae = AudioEngineK()
+        val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
+        sample.clear()
+        sample.addAll(floatSamples)
+        createBufferBitmap()
+        for (vc in voices)
+        {
+            if (vc.getInstance()==(-1).toByte())
             {
-                if (vc.getInstance()==(-1).toByte())
-                {
-                    vc.bindToAudioEngine()
-                }
-                (vc as SamplerK).setLoopStartIndex(0)
-                (vc).setSampleStartIndex(0)
-                (vc).setLoopEndIndex(sample.size-1)
-                (vc).setSampleEndIndex(sample.size-1)
+                vc.bindToAudioEngine()
             }
-            sampleUri = fileName
+            (vc as SamplerK).setLoopStartIndex(0)
+            (vc).setSampleStartIndex(0)
+            (vc).setLoopEndIndex(sample.size-1)
+            (vc).setSampleEndIndex(sample.size-1)
         }
+        loadSample(floatSamples.toFloatArray())
+        sampleUri = fileName
+        inputStream.close()
+
 
 
     }

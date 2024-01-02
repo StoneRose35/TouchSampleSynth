@@ -52,12 +52,6 @@ class WaveDisplay(context: Context, attributes: AttributeSet): View(context,attr
         sampleData.addAll(arrayOf(-0.23f,0.545f,0.7875f,-0.32f))
     }
 
-    fun setSampleData(data:ArrayList<Float> )
-    {
-        sampleData=data
-        waveViewBuffer=null
-        invalidate()
-    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -66,7 +60,9 @@ class WaveDisplay(context: Context, attributes: AttributeSet): View(context,attr
         waveViewbufferRect.left=0
         waveViewbufferRect.right=width
         waveViewbufferRect.bottom=height
-        canvas.drawBitmap(waveViewBuffer!!,null, waveViewbufferRect,null)
+        if (waveViewBuffer != null) {
+            canvas.drawBitmap(waveViewBuffer!!, null, waveViewbufferRect, null)
+        }
         startMarkerX =((width - 2*MARKER_SIZE)*startMarkerPosition + MARKER_SIZE).toInt()
         startMarkerY = height - MARKER_SIZE
         canvas.drawCircle(startMarkerX.toFloat(),startMarkerY.toFloat(),
