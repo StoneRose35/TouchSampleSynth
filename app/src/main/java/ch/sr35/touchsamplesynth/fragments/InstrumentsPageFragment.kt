@@ -22,6 +22,7 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet.WRAP_CONTENT
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -93,7 +94,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 .beginTransaction()
                 .add(addInstrumentDlg,null)
                 .commit()
-            addInstrumentDlg.dialog?.window?.setLayout(300, 600)
+            addInstrumentDlg.dialog?.window?.setLayout(WRAP_CONTENT, WRAP_CONTENT)
         }
 
         val deleteButton = view.findViewById<Button>(R.id.instruments_page_delete)

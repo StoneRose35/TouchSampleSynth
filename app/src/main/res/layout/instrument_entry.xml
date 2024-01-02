@@ -37,11 +37,11 @@
         app:layout_constraintEnd_toStartOf="@id/instrument_entry_checkbox"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@android:string/untitled"
+        android:text="@android:string/unknownName"
         android:layout_height="wrap_content" />
     <CheckBox
         android:id="@+id/instrument_entry_checkbox"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:checked="false"
         android:clickable="false"
