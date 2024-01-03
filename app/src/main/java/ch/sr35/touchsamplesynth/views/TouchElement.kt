@@ -330,17 +330,20 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                 soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
                 invalidate()
-                return false
+                return true
             } else if (event?.action == MotionEvent.ACTION_MOVE) {
                 if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
+                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                     soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
-                    return false
+                    invalidate()
+                    return true
                 } else if (actionDir == ActionDir.VERTICAL && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
                     soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.y) / measuredHeight.toFloat())
+                    return true
                 } else if (actionDir == ActionDir.HORIZONTAL && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
                     soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.x) / measuredWidth.toFloat())
+                    return true
                 }
-                return true
             }
         } else {
             when (event?.action) {
@@ -356,6 +359,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         }
                         dragStart = null
                         invalidate()
+                        return true
                     } else if (setSoundgenRect.contains(px.toInt(), py.toInt())) {
                         val editSoundgenerator = EditTouchElementFragmentDialog(
                             this,
@@ -363,6 +367,8 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         )
                         dragStart = null
                         editSoundgenerator.show()
+                        this.invalidate()
+                        return true
                     } else if (deleteRect.contains(px.toInt(), py.toInt())) {
 
                         val alertDlgBuilder = AlertDialog.Builder(context as TouchSampleSynthMain)
@@ -375,6 +381,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         val alertDlg = alertDlgBuilder.create()
                         dragStart = null
                         alertDlg.show()
+                        return true
                     } else {
                         val layoutParams: ConstraintLayout.LayoutParams? =
                             this.layoutParams as ConstraintLayout.LayoutParams?
@@ -383,6 +390,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                             oldWidth = layoutParams.width
                         }
                         dragStart = isInCorner(event.x, event.y)
+                        return true
                     }
                 }
 
@@ -427,11 +435,12 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         }
                         this.layoutParams = layoutParams
                     }
+                    return true
                 }
             }
             return true
         }
-        return true
+        return false
     }
 
 

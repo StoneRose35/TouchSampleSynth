@@ -39,6 +39,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     val soundGenerators=ArrayList<Instrument>()
     val touchElements=ArrayList<TouchElement>()
     val allScenes = ArrayList<SceneP>()
+    var touchElementsDisplayMode: TouchElement.TouchElementState=TouchElement.TouchElementState.PLAYING
     private val playPageFragment=PlayPageFragment()
     private val instrumentsPageFragment=InstrumentsPageFragment()
     private val settingsFrament= SettingsFragment()

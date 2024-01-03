@@ -160,6 +160,14 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     it.setDefaultMode(TouchElement.TouchElementState.PLAYING_VERBOSE)
                 }
             }
+            if (p2 == 0)
+            {
+                (context as TouchSampleSynthMain).touchElementsDisplayMode=TouchElement.TouchElementState.PLAYING
+            }
+            else
+            {
+                (context as TouchSampleSynthMain).touchElementsDisplayMode=TouchElement.TouchElementState.PLAYING_VERBOSE
+            }
         }
     }
 

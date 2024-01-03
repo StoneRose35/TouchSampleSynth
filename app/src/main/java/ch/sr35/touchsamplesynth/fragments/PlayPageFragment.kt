@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -28,13 +29,36 @@ class PlayPageFragment : Fragment() {
 
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_play_page, container, false)
+        val playPageView = inflater.inflate(R.layout.fragment_play_page, container, false)
+        playPageView.setOnTouchListener { v, event ->
+            when (event?.action)
+            {
+                MotionEvent.ACTION_DOWN-> {
+                    v.performClick()
+                }
+                MotionEvent.ACTION_UP-> {
+                    view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked=false
+                    return@setOnTouchListener true
+                }
+                else -> {
+                    return@setOnTouchListener false
+                }
+            }
+        }
+        playPageView.setOnClickListener {
+
+        }
+        return playPageView
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,6 +106,7 @@ class PlayPageFragment : Fragment() {
             lp.marginStart = Converter.toPx(10)
             lp.topMargin = Converter.toPx(10)
             val te = TouchElement(context as TouchSampleSynthMain,null)
+            te.setDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
             te.setEditmode(true)
             te.layoutParams = lp
             playPageLayout.addView(te)

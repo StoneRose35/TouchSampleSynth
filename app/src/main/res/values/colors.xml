@@ -4,9 +4,7 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="black">#FF000000</color>
-    <color name="dark_grey">#FF212121</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="light_grey">#C3C3C3</color>
+
 
 
     <color name="darkeryellow">#CFA936</color>
@@ -22,7 +20,14 @@
 
     <color name="vu_meter_background">#FFEDCB</color>
     <color name="vu_meter_green">#006E00</color>
-    <color name="dark_gray">#303030</color>
-    <color name="light_gray">#a0a0a0</color>
+
+
+    <color name="white">#FFFFFFFF</color>
     <color name="very_light_gray">#DCDCDC</color>
+    <color name="light_grey">#C3C3C3</color>
+    <color name="medium_gray">#838383</color>
+    <color name="dark_gray">#303030</color>
+    <color name="darker_grey">#212121</color>
+
+
 </resources>
