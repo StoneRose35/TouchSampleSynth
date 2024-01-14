@@ -71,6 +71,7 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
                         newInstrument = SamplerI(requireContext(),"basic")
                     }
                     newInstrument?.let {
+                        newInstrument.generateVoices(1)
                         (context as TouchSampleSynthMain).soundGenerators.add(it)
                     }
                     generatorsList.invalidateViews()
