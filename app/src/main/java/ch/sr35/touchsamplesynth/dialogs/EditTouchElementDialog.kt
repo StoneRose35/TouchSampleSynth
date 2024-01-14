@@ -97,13 +97,17 @@ class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
 
     init {
 
-            if (touchElement?.soundGenerator != null) {
-                checkedPosition = IntStream.range(0, instruments.size)
-                    .filter { i -> (instruments[i].name == touchElement.soundGenerator!!.name) && (instruments[i].getType() == touchElement.soundGenerator!!.getType()) }
-                    .findFirst()
-                    .orElse(-1)
-            }
-        else{
+        if (touchElement?.soundGenerator != null) {
+            checkedPosition = IntStream.range(0, instruments.size)
+                .filter { i -> (instruments[i].name == touchElement.soundGenerator!!.name) && (instruments[i].getType() == touchElement.soundGenerator!!.getType()) }
+                .findFirst()
+                .orElse(-1)
+        }
+        else if (instruments.isNotEmpty())
+        {
+            checkedPosition = 0
+        }
+        else {
             checkedPosition = -1
         }
 
@@ -150,10 +154,10 @@ class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
         holder.polyphonyView.text = " "
         holder.checkedView.isChecked= checkedPosition==position
         holder.itemView.setOnClickListener {
-            if (holder.adapterPosition!=checkedPosition)
+            if (holder.bindingAdapterPosition!=checkedPosition)
             {
                 notifyItemChanged(checkedPosition)
-                checkedPosition = holder.adapterPosition
+                checkedPosition = holder.bindingAdapterPosition
                 holder.checkedView.isChecked= position==checkedPosition
 
             }
