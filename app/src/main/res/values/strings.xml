@@ -59,4 +59,8 @@
         <item>Minimal</item>
         <item>Descriptive</item>
     </string-array>
+    <string name="midiMode">Midi Mode</string>
+    <string name="midiHostMode">Host Mode (connected to Keyboard)</string>
+    <string name="midiDeviceMode">Device Mode (connected to Computer)</string>
+    <string name="availableMidiDevices">Available Midi Connections</string>
 </resources>

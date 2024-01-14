@@ -44,6 +44,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private val instrumentsPageFragment=InstrumentsPageFragment()
     private val settingsFrament= SettingsFragment()
     private val scenesEditFragment = SceneFragment(allScenes)
+    var midiHostHandler :MidiHostHandler?= null
     var mainMenu: Menu?=null
     var populateOnResume=true
     private var oldScenePosition=-1
@@ -51,6 +52,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     init {
 
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -82,7 +84,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 }
             }
         }
-
+        midiHostHandler?.startMidiDeviceListener()
 
         if (mainMenu!=null) {
             if (populateOnResume) {
@@ -204,6 +206,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
             PackageManager.PERMISSION_GRANTED)
 
+        midiHostHandler =  MidiHostHandler(this)
+
     }
 
 
@@ -261,6 +265,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 scn.toFile(f)
             }
         }
+
+        midiHostHandler?.stopMidiDeviceListener()
 
         if (supportFragmentManager.fragments[0].tag!=null
             && supportFragmentManager.fragments[0].tag.equals("PlayPage0"))

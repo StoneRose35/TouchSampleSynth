@@ -3,8 +3,6 @@ package ch.sr35.touchsamplesynth.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.database.DataSetObserver
-import android.media.midi.MidiDeviceInfo
-import android.media.midi.MidiManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -54,21 +52,6 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         instrumentsList.adapter = this
         instrumentsList.onItemClickListener = this
 
-        val midiManager = context?.getSystemService(Context.MIDI_SERVICE) as MidiManager
-        val midiDevices = midiManager.devices
-        var midiDev: MidiDeviceInfo?
-        for (md in midiDevices)
-        {
-            if (md.outputPortCount > 0)
-            {
-                midiDev = md
-                midiManager.openDevice(midiDev,{
-                    val audioEngine=AudioEngineK()
-                    audioEngine.openMidiDevice(it,0)
-                },null)
-            }
-        }
-        //val midiDev = midiDevices.stream().filter { d -> d.outputPortCount > 0 }.findFirst().orElse(null)
 
         view.findViewById<EditText>(R.id.instruments_page_nr_voices).text.clear()
         view.findViewById<EditText>(R.id.instruments_page_instr_name).text.clear()

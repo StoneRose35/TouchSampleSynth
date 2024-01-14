@@ -1,5 +1,7 @@
 package ch.sr35.touchsamplesynth.fragments
 
+import android.database.DataSetObserver
+import android.media.midi.MidiDeviceInfo
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,20 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
+import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TextView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.BuildConfig
+import ch.sr35.touchsamplesynth.MidiDevicesChanged
+import ch.sr35.touchsamplesynth.MidiHostHandler
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.views.TouchElement
 import com.google.android.material.snackbar.Snackbar
 
 
-class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDevicesChanged {
 
     private var framesPerDataCallbackIdx = -1
     private var bufferSizeInFramesIdx = -1
+    lateinit var listViewMidiDevices: ListView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -109,6 +116,15 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
             spinnerTouchElementStyle.onItemSelectedListener = this
         }
 
+        listViewMidiDevices=view.findViewById(R.id.settingListViewMidiDevices)
+        listViewMidiDevices.adapter= (context as TouchSampleSynthMain).midiHostHandler?.let {
+            MidiDevicesListAdapter(
+                it
+            )
+        }
+        listViewMidiDevices.onItemSelectedListener=this
+        ((context as TouchSampleSynthMain).midiHostHandler)?.midiDeviceChangedHandler =this
+
 
         val textViewAbout = view.findViewById<TextView>(R.id.settingTextViewAbout)
         val aboutString="Touch Sample Synth Version %s".format(BuildConfig.VERSION_NAME)
@@ -169,9 +185,74 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 (context as TouchSampleSynthMain).touchElementsDisplayMode=TouchElement.TouchElementState.PLAYING_VERBOSE
             }
         }
+        else if (p0 != null && p0.id == R.id.settingListViewMidiDevices)
+        {
+            (context as TouchSampleSynthMain).midiHostHandler?.connectMidiDevice(p0.selectedItem as MidiDeviceInfo)
+        }
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
 
+    }
+
+    class MidiDevicesListAdapter(private val midiHostHandler: MidiHostHandler) : BaseAdapter() {
+        override fun registerDataSetObserver(observer: DataSetObserver?) {
+        }
+
+        override fun unregisterDataSetObserver(observer: DataSetObserver?) {
+
+        }
+
+        override fun getCount(): Int {
+            return midiHostHandler.midiDevices.size
+        }
+
+        override fun getItem(position: Int): Any {
+            return midiHostHandler.midiDevices[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return midiHostHandler.midiDevices[position].id.toLong()
+        }
+
+        override fun hasStableIds(): Boolean {
+            return false
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            if (convertView != null && convertView is TextView)
+            {
+                convertView.text=midiHostHandler.midiDevices[position].properties.getString(MidiDeviceInfo.PROPERTY_NAME)
+                return convertView
+            }
+            return TextView(midiHostHandler.ctx).also {
+                it.text = midiHostHandler.midiDevices[position].properties.getString(MidiDeviceInfo.PROPERTY_NAME)
+            }
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return 0
+        }
+
+        override fun getViewTypeCount(): Int {
+            return  1
+        }
+
+        override fun isEmpty(): Boolean {
+            return midiHostHandler.midiDevices.isEmpty()
+        }
+
+        override fun areAllItemsEnabled(): Boolean {
+            return true
+        }
+
+        override fun isEnabled(position: Int): Boolean {
+            return true
+        }
+
+    }
+
+    override fun onMidiDevicesChanged() {
+        (listViewMidiDevices.adapter as BaseAdapter).notifyDataSetChanged()
     }
 }

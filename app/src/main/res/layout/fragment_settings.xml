@@ -72,6 +72,45 @@
                 android:paddingBottom="10dp"
                 />
         </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/settingTextViewMidiMode"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:text="@string/midiMode"
+                />
+            <RadioGroup>
+
+                <RadioButton
+                    android:id="@+id/settingRadioButtonMidiDeviceMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="@string/midiDeviceMode" />
+
+                <RadioButton
+                    android:id="@+id/settingRadioButtonMidiHostMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="@string/midiHostMode" />
+            </RadioGroup>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/settingTextViewMidiDevices"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:text="@string/availableMidiDevices"
+                />
+            <ListView
+                android:id="@+id/settingListViewMidiDevices"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </TableRow>
     </TableLayout>
 
 
