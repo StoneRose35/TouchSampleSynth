@@ -21,7 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 #-dontskipnonpubliclibraryclasses
-#-dontobfuscate
+-dontobfuscate
 -forceprocessing
 -optimizationpasses 8
 
