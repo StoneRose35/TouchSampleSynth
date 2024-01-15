@@ -30,8 +30,10 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     external fun switchOffExt(vel: Float):Boolean
     external override fun isSounding(): Boolean
     external override fun setMidiMode(midiMode: Int)
+    external override fun getMidiMode(): Int
     override fun copyParamsTo(other: MusicalSoundGenerator) {
         (other as SimpleSubtractiveSynthK).setDecay(getDecay())
+        other.setMidiMode(this.getMidiMode())
         other.setAttack(getAttack())
         other.setSustain(getSustain())
         other.setRelease(getRelease())

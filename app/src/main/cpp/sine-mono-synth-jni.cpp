@@ -260,5 +260,23 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setMidiMode(JNIEnv* en
     }
 }
 
+JNIEXPORT jint JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getMidiMode(JNIEnv *env, jobject thiz) {
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(thiz);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(thiz,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if  (msg == nullptr)
+    {
+        return -1;
+    }
+    if (msg->getType() != SINE_MONO_SYNTH)
+    {
+        return -1;
+    }
+    return msg->availableForMidi >> 7;
+}
+
 
 }

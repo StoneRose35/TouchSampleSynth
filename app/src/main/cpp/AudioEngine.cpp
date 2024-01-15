@@ -33,7 +33,7 @@ aaudio_data_callback_result_t dataCallback(
     int32_t opCode;
     int64_t timestamp;
     uint8_t midiDataBuffer[4];
-    uint8_t midiProcessed;
+    uint8_t lastMidiStatus=0x00;
     availableTime = (float)numFrames/((float) (AAudioStream_getSamplesPerFrame(stream)*
                                                AAudioStream_getSampleRate(stream)));
     float usedTime;
@@ -42,7 +42,7 @@ aaudio_data_callback_result_t dataCallback(
     xrunCnt = AAudioStream_getXRunCount(stream);
     if (xrunCnt > 0)
     {
-        __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"XRuns occurred: #%d",xrunCnt);
+        //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"XRuns occurred: #%d",xrunCnt);
     }
     for(uint32_t i=0;i<numFrames;i++)
     {
@@ -72,39 +72,51 @@ aaudio_data_callback_result_t dataCallback(
                                         sizeof(midiDataBuffer), &midiBytesReceived, &timestamp);
         while (numMessages > 0) {
             if (opCode == AMIDI_OPCODE_DATA) {
-
-                if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_ON )
+                // ordinary note on
+                if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_ON && midiBytesReceived==3 && midiDataBuffer[2] != 0x0)
                 {
-                    midiProcessed = 0;
-                    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
-                    {
-                        if (audioEngine->getSoundGenerator(c) != nullptr
-                        && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
-                           && (((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) == 0)
-                            || ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_NOTE_CHANGE_MSK) != 0))
-                        && midiProcessed == 0) {
-                            //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching on voice %d",c);
-                            audioEngine->getSoundGenerator(c)->setNote((float)midiDataBuffer[1]-69.0f);
-                            audioEngine->getSoundGenerator(c)->switchOn(0.f);
-                            audioEngine->getSoundGenerator(c)->availableForMidi |= MIDI_TAKEN_MSK | midiDataBuffer[1];
-                            midiProcessed = 1;
-                        }
-                    }
+                    lastMidiStatus = MIDI_NOTE_ON;
+                    //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note on: %d",midiDataBuffer[1]);
+                    audioEngine->startNextVoice(midiDataBuffer+1);
                 }
-                else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_OFF )
+                // note on with velocity 0, this is effectively a note off
+                else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_ON && midiBytesReceived==3 && midiDataBuffer[2] == 0x0)
                 {
-                    midiProcessed = 0;
-                    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
+                    lastMidiStatus = MIDI_NOTE_ON;
+                    //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note on with vel 0: %d",midiDataBuffer[1]);
+                    audioEngine->stopVoice(midiDataBuffer+1);
+                }
+                // ordinary note off
+                else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_OFF && midiBytesReceived==3)
+                {
+                    lastMidiStatus = MIDI_NOTE_OFF;
+                    //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note off: %d",midiDataBuffer[1]);
+                    audioEngine->stopVoice(midiDataBuffer+1);
+                }
+                // unhandled midi command
+                else if ((*(midiDataBuffer + 0) & 0x80) != 0) // unhandled midi command
+                {
+                    //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"unknown midi command: %x",midiDataBuffer[0]);
+                    lastMidiStatus = *(midiDataBuffer + 0) & 0xF0;
+                }
+                // running status
+                else if ((*(midiDataBuffer + 0) & 0x80)==0x00 && midiBytesReceived==2)
+                {
+                    // running status note on
+                    if (lastMidiStatus==MIDI_NOTE_ON && midiDataBuffer[1] != 0)
                     {
-                        if (audioEngine->getSoundGenerator(c) != nullptr
-                            && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0 )
-                            && ((audioEngine->getSoundGenerator(c)->availableForMidi & 0x7F) == midiDataBuffer[1] )
-                            && midiProcessed == 0) {
-                            //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching off voice %d",c);
-                            audioEngine->getSoundGenerator(c)->switchOff(0.0f);
-                            audioEngine->getSoundGenerator(c)->availableForMidi &= ~(0xFF);
-                            midiProcessed = 1;
-                        }
+                        //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note on: %d",midiDataBuffer[0]);
+                        audioEngine->startNextVoice(midiDataBuffer);
+                    }
+                    // running status note on with velocity zero -> note off
+                    else if (lastMidiStatus==MIDI_NOTE_ON && midiDataBuffer[1] == 0)
+                    {
+                        //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note on with vel 0: %d",midiDataBuffer[0]);
+                        audioEngine->stopVoice(midiDataBuffer);
+                    }
+                    else if (lastMidiStatus==MIDI_NOTE_OFF) {
+                        //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note off: %d",midiDataBuffer[0]);
+                        audioEngine->stopVoice(midiDataBuffer);
                     }
                 }
             }
@@ -176,6 +188,44 @@ bool AudioEngine::start() {
     AAudioStreamBuilder_delete(streamBuilder);
     return true;
 
+}
+
+bool AudioEngine::startNextVoice(uint8_t *midiData) {
+    uint8_t midiProcessed=0;
+    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
+    {
+        MusicalSoundGenerator * sgen = audioEngine->getSoundGenerator(c);
+        if (audioEngine->getSoundGenerator(c) != nullptr
+            && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
+            && (((audioEngine->getSoundGenerator(c).)
+                || ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_NOTE_CHANGE_MSK) != 0))
+            && midiProcessed == 0) {
+            __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching on voice %d",c);
+            audioEngine->getSoundGenerator(c)->setNote((float)midiData[0]-69.0f);
+            audioEngine->getSoundGenerator(c)->switchOn((float)midiData[1]);
+            audioEngine->getSoundGenerator(c)->availableForMidi |= MIDI_TAKEN_MSK | midiData[0];
+            midiProcessed = 1;
+        }
+    }
+    return (bool)midiProcessed;
+}
+
+bool AudioEngine::stopVoice(uint8_t * midiData) {
+    uint8_t midiProcessed = 0;
+    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
+    {
+        if (audioEngine->getSoundGenerator(c) != nullptr
+            && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0 )
+            && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) != 0)
+            && ((audioEngine->getSoundGenerator(c)->availableForMidi & 0x7F) == midiData[0] )
+            ) {
+            __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching off voice %d",c);
+            audioEngine->getSoundGenerator(c)->switchOff((float)midiData[1]);
+            audioEngine->getSoundGenerator(c)->availableForMidi &= ~(0xFF);
+            midiProcessed = 1;
+        }
+    }
+    return (bool)midiProcessed;
 }
 
 void AudioEngine::stop() {

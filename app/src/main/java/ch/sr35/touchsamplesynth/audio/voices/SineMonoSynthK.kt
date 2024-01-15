@@ -24,8 +24,10 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
     external override fun setNote(note: Float): Boolean
     external override fun isSounding(): Boolean
     external override fun setMidiMode(midiMode: Int)
+    external override fun getMidiMode(): Int
     override fun copyParamsTo(other: MusicalSoundGenerator) {
         (other as SineMonoSynthK).setAttack(getAttack())
+        other.setMidiMode(this.getMidiMode())
         other.setDecay(getDecay())
         other.setSustain(getSustain())
         other.setRelease(getRelease())

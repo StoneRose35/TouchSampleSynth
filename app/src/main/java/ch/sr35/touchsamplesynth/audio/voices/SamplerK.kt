@@ -80,6 +80,7 @@ class SamplerK(context: Context): MusicalSoundGenerator {
     override fun copyParamsTo(other: MusicalSoundGenerator) {
         val samples = this.copySample()
         (other as SamplerK).loadSample(samples)
+        other.setMidiMode(this.getMidiMode())
         other.setMode(this.getMode())
         other.setSampleStartIndex(this.getSampleStartIndex())
         other.setSampleEndIndex(this.getSampleEndIndex())
@@ -92,4 +93,6 @@ class SamplerK(context: Context): MusicalSoundGenerator {
     external fun copySample(): FloatArray
 
     external override fun setMidiMode(midiMode: Int)
+
+    external override fun getMidiMode(): Int
 }

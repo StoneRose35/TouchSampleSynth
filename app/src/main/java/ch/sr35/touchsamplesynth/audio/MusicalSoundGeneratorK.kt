@@ -15,5 +15,6 @@ interface MusicalSoundGenerator {
     fun copyParamsTo(other: MusicalSoundGenerator)
     // 0: no midi, 2: midi available, 3: midi available, note change possible (monophonic)
     fun setMidiMode(midiMode: Int)
+    fun getMidiMode(): Int
 
 }

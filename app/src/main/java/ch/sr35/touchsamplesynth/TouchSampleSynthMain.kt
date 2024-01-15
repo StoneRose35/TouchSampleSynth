@@ -85,6 +85,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             }
         }
         midiHostHandler?.startMidiDeviceListener()
+        midiHostHandler?.let {
+            if(it.midiDevices.size > 0)
+            {
+                it.connectMidiDevice(it.midiDevices[0])
+            }
+        }
 
         if (mainMenu!=null) {
             if (populateOnResume) {
