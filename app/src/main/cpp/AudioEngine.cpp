@@ -197,7 +197,7 @@ bool AudioEngine::startNextVoice(uint8_t *midiData) {
         MusicalSoundGenerator * sgen = audioEngine->getSoundGenerator(c);
         if (audioEngine->getSoundGenerator(c) != nullptr
             && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
-            && (((audioEngine->getSoundGenerator(c).)
+            && (((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) == 0)
                 || ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_NOTE_CHANGE_MSK) != 0))
             && midiProcessed == 0) {
             __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching on voice %d",c);
