@@ -5,21 +5,14 @@
 #include <jni.h>
 #include "AudioEngine.h"
 #include "Sampler.h"
+#include "jni-bridge.h"
 extern "C"
 {
 
 JNIEXPORT jint JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getLoopStartIndex(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return -1;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return -1;
     }
@@ -28,16 +21,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getLoopStartIndex(JNIEnv *en
 
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setLoopStartIndex(JNIEnv *env, jobject thiz,jint val) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -47,16 +32,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setLoopStartIndex(JNIEnv *en
 
 JNIEXPORT jint JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getLoopEndIndex(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return -1;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return -1;
     }
@@ -66,16 +43,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getLoopEndIndex(JNIEnv *env,
 
 JNIEXPORT jint JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getSampleStartIndex(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return -1;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return -1;
     }
@@ -84,16 +53,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getSampleStartIndex(JNIEnv *
 
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setSampleStartIndex(JNIEnv *env, jobject thiz,jint val) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -103,16 +64,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setSampleStartIndex(JNIEnv *
 
 JNIEXPORT jint JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getSampleEndIndex(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return -1;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return -1;
     }
@@ -121,16 +74,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getSampleEndIndex(JNIEnv *en
 
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setSampleEndIndex(JNIEnv *env, jobject thiz,jint val) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -140,16 +85,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setSampleEndIndex(JNIEnv *en
 
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setMode(JNIEnv *env, jobject thiz,jbyte val) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -159,16 +96,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setMode(JNIEnv *env, jobject
 
 JNIEXPORT jbyte JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getMode(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return -1;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return -1;
     }
@@ -178,16 +107,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getMode(JNIEnv *env, jobject
 
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setLoopEndIndex(JNIEnv *env, jobject thiz,jint val) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -196,18 +117,9 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setLoopEndIndex(JNIEnv *env,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_switchOnExt(JNIEnv *env, jobject thiz,
-                                                                jfloat vel) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_switchOnExt(JNIEnv *env, jobject thiz, jfloat vel) {
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -216,18 +128,9 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_switchOnExt(JNIEnv *env, job
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_switchOffExt(JNIEnv *env, jobject thiz,
-                                                                jfloat vel) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_switchOffExt(JNIEnv *env, jobject thiz, jfloat vel) {
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -237,16 +140,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_switchOffExt(JNIEnv *env, jo
 
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_isSounding(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -254,18 +149,9 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_isSounding(JNIEnv *env, jobj
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_loadSample(JNIEnv *env, jobject thiz,
-                                                               jfloatArray sample_data) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_loadSample(JNIEnv *env, jobject thiz, jfloatArray sample_data) {
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -277,17 +163,9 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_loadSample(JNIEnv *env, jobj
 
 JNIEXPORT jfloatArray JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_copySample(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     jfloatArray sampleData;
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
     if  (msg == nullptr)
-    {
-        return nullptr;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return nullptr;
     }
@@ -305,11 +183,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_copySample(JNIEnv *env, jobj
 JNIEXPORT void JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setMidiMode(JNIEnv* env,
                                                                     jobject /* this */me,jint midiMode) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,me);
     if  (msg != nullptr)
     {
         msg->availableForMidi = midiMode << 7;
@@ -318,16 +192,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setMidiMode(JNIEnv* env,
 
 JNIEXPORT jint JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getMidiMode(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg= getMusicalSoundGenerator(SAMPLER,env,thiz);
     if  (msg == nullptr)
-    {
-        return -1;
-    }
-    if (msg->getType() != SAMPLER)
     {
         return -1;
     }

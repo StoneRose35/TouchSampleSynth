@@ -6,6 +6,7 @@
 #include "AudioEngine.h"
 #include "MusicalSoundGenerator.h"
 #include "SineMonoSynth.h"
+#include "jni-bridge.h"
 extern "C"
 {
 JNIEXPORT jboolean JNICALL
@@ -13,16 +14,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setAttack(JNIEnv* env,
                          jobject /* this */me,
                          jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SINE_MONO_SYNTH)
     {
         return false;
     }
@@ -34,16 +27,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getAttack(JNIEnv* env,
                                                              jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SINE_MONO_SYNTH)
     {
         return -1.0f;
     }
@@ -55,16 +40,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setDecay(JNIEnv* env,
                                                              jobject /* this */me,
                                                              jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SINE_MONO_SYNTH)
     {
         return false;
     }
@@ -76,16 +53,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getDecay(JNIEnv* env,
                                                              jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SINE_MONO_SYNTH)
     {
         return -1.0f;
     }
@@ -97,16 +66,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setSustain(JNIEnv* env
                                                             jobject /* this */me,
                                                             jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SINE_MONO_SYNTH)
     {
         return false;
     }
@@ -118,16 +79,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getSustain(JNIEnv* env,
                                                             jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SINE_MONO_SYNTH)
     {
         return -1.0f;
     }
@@ -139,16 +92,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setRelease(JNIEnv* env
                                                             jobject /* this */me,
                                                             jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SINE_MONO_SYNTH)
     {
         return false;
     }
@@ -160,16 +105,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getRelease(JNIEnv* env,
                                                             jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SINE_MONO_SYNTH)
     {
         return -1.0f;
     }
@@ -181,11 +118,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOn(JNIEnv* env,
                                                               jobject /* this */me,
                                                               jfloat vel)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -199,11 +132,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOff(JNIEnv* env,
                                                             jobject /* this */me,
                                                             jfloat vel)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -217,11 +146,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setNote(JNIEnv* env,
                      jobject /* this */me,
                      jfloat note)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -234,11 +159,7 @@ JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_isSounding(JNIEnv* env,
                                                                   jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -249,11 +170,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_isSounding(JNIEnv* env
 JNIEXPORT void JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setMidiMode(JNIEnv* env,
                                                                                jobject /* this */me,jint midiMode) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,me);
     if  (msg != nullptr)
     {
         msg->availableForMidi = midiMode << 7;
@@ -262,11 +179,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setMidiMode(JNIEnv* en
 
 JNIEXPORT jint JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getMidiMode(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SINE_MONO_SYNTH,env,thiz);
     if  (msg == nullptr)
     {
         return -1;

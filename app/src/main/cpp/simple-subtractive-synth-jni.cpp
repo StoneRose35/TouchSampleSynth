@@ -7,6 +7,7 @@
 #include "AudioEngine.h"
 #include "MusicalSoundGenerator.h"
 #include "SimpleSubtractiveSynth.h"
+#include "jni-bridge.h"
 extern "C"
 {
 
@@ -15,16 +16,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setAttack(JNI
                          jobject /* this */me,
                          jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return false;
     }
@@ -36,16 +29,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getAttack(JNIEnv* env,
                          jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return -1.0f;
     }
@@ -57,16 +42,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setDecay(JNIE
                                                                       jobject /* this */me,
                                                                       jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return false;
     }
@@ -78,16 +55,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getDecay(JNIEnv* env,
                                                                       jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return -1.0f;
     }
@@ -99,16 +68,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setSustain(JN
                                                                       jobject /* this */me,
                                                                       jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return false;
     }
@@ -120,16 +81,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getSustain(JNIEnv* env,
                                                                       jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return -1.0f;
     }
@@ -141,16 +94,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setRelease(JN
                                                                       jobject /* this */me,
                                                                       jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return false;
     }
@@ -159,19 +104,10 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setRelease(JN
 }
 
 JNIEXPORT jfloat JNICALL
-Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getRelease(JNIEnv* env,
-                                                                      jobject /* this */me)
+Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getRelease(JNIEnv* env,jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return -1.0f;
     }
@@ -183,16 +119,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setCutoff(JNI
                                                                       jobject /* this */me,
                                                                       jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return false;
     }
@@ -204,16 +132,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getCutoff(JNIEnv* env,
                                                                       jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return -1.0f;
     }
@@ -225,16 +145,8 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setResonance(
                                                                       jobject /* this */me,
                                                                       jfloat attack)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return false;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return false;
     }
@@ -246,16 +158,8 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getResonance(JNIEnv* env,
                                                                       jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
-    {
-        return -1.0f;
-    }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
     {
         return -1.0f;
     }
@@ -267,11 +171,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_switchOnExt(J
                                                             jobject /* this */me,
                                                             jfloat vel)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -285,11 +185,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_switchOffExt(
                                                              jobject /* this */me,
                                                              jfloat vel)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -303,11 +199,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setNote(JNIEn
                                                            jobject /* this */me,
                                                            jfloat note)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -320,11 +212,7 @@ JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_isSounding(JNIEnv* env,
                                                                            jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -336,11 +224,7 @@ JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setInitialCutoff(JNIEnv* env,
                                                                               jobject /* this */me,jfloat ic)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return false;
@@ -353,11 +237,7 @@ JNIEXPORT jfloat JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getInitialCutoff(JNIEnv* env,
                                                                                     jobject /* this */me)
 {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg == nullptr)
     {
         return 1.0f;
@@ -369,11 +249,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getInitialCut
 JNIEXPORT void JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setMidiMode(JNIEnv* env,
                                                                               jobject /* this */me,jint midiMode) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(me);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(me,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,me);
     if  (msg != nullptr)
     {
         msg->availableForMidi = midiMode << 7;
@@ -382,11 +258,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setMidiMode(J
 
 JNIEXPORT jint JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getMidiMode(JNIEnv *env, jobject thiz) {
-    AudioEngine * audioEngine = getAudioEngine();
-    jclass synth=env->GetObjectClass(thiz);
-    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
-    int8_t instance = env->CallByteMethod(thiz,getInstance);
-    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    MusicalSoundGenerator * msg = getMusicalSoundGenerator(SIMPLE_SUBTRACTIVE_SYNTH,env,thiz);
     if  (msg == nullptr)
     {
         return -1;

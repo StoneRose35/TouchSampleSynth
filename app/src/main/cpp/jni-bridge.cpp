@@ -102,6 +102,8 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getBufferCapacityInFrames(JNIEn
     return audioEngine->getBufferCapacityInFrames();
 }
 
+
+
 JNIEXPORT int JNICALL
 Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_setBufferCapacityInFrames(JNIEnv *, jobject,jint bcif)
 {
@@ -123,4 +125,20 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_closeMidiDevice(JNIEnv* , jobje
     AudioEngine * audioEngine = getAudioEngine();
     AMidiOutputPort_close(audioEngine->midiOutputPort);
 }
+
+MusicalSoundGenerator * getMusicalSoundGenerator(SoundGeneratorType soundGeneratorType,JNIEnv * env,jobject thiz)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(thiz);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(thiz,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if (msg->getType()!= soundGeneratorType)
+    {
+        return nullptr;
+    }
+    return msg;
 }
+
+}
+
