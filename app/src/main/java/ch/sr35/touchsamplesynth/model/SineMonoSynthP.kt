@@ -8,9 +8,9 @@ class SineMonoSynthP(private var attack: Float,
                      private var decay: Float,
                      private var sustain: Float,
                      private var release: Float,
-                     override var nVoices: Int,
-                     override var name: String
-): PersistableInstrument(),Serializable, Cloneable {
+                     nVoices: Int,
+                     name: String
+): PersistableInstrument(nVoices,name),Serializable, Cloneable {
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)
         if (i is SineMonoSynthI)

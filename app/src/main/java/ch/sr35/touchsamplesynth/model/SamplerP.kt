@@ -11,9 +11,9 @@ class SamplerP(private var sampleStart: Int,
                private var loopEnd: Int,
                private var mode: Byte,
                private var sampleFile: String,
-               override var nVoices: Int,
-               override var name: String
-):PersistableInstrument(), Serializable, Cloneable  {
+               nVoices: Int,
+               name: String
+):PersistableInstrument(nVoices,name), Serializable, Cloneable  {
 
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)

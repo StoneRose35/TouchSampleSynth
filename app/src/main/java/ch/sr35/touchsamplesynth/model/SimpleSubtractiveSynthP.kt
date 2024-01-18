@@ -11,9 +11,9 @@ class SimpleSubtractiveSynthP(
     private var initialCutoff: Float,
     private var actionAmount: Float,
     private var resonance: Float,
-    override var nVoices: Int,
-    override var name: String
-): PersistableInstrument() {
+    nVoices: Int,
+    name: String
+): PersistableInstrument(nVoices,name) {
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)
         if (i is SimpleSubtractiveSynthI)

@@ -7,10 +7,8 @@ import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import java.io.Serializable
 
-open class PersistableInstrument: Serializable, Cloneable {
+open class PersistableInstrument(var nVoices: Int=0,var name: String=""): Serializable, Cloneable {
 
-    open var nVoices: Int=0
-    open var name: String=""
     open fun fromInstrument(i: Instrument)
     {
         name = i.name

@@ -16,6 +16,11 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.SceneRecyclerViewAdapter
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.model.SceneP
+import com.developer.filepicker.model.DialogConfigs
+import com.developer.filepicker.model.DialogProperties
+import com.developer.filepicker.view.FilePickerDialog
+import com.google.gson.Gson
+import java.io.File
 
 
 /**
@@ -36,6 +41,9 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
         scenesList?.layoutManager = LinearLayoutManager(context)
         scenes = (context as TouchSampleSynthMain).allScenes
         scenesList?.adapter = SceneRecyclerViewAdapter(scenes)
+        val buttonImport = view.findViewById<Button>(R.id.sceneImport)
+        val buttonExport = view.findViewById<Button>(R.id.sceneExport)
+
 
 
         val touchHelperCallback = object: ItemTouchHelper.SimpleCallback(
@@ -102,30 +110,57 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
         touchHelper.attachToRecyclerView(scenesList)
 
         buttonAdd.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Title")
 
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Title")
+            val input = EditText(context)
 
-        val input = EditText(context)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            builder.setView(input)
 
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        builder.setView(input)
+            builder.setPositiveButton(
+                (context as TouchSampleSynthMain).getString(android.R.string.ok)
+            ) { _,_ ->
+                val scene = SceneP()
+                scene.name = input.text.toString()
+                scenes.add(scene)
+                scenesList?.adapter?.notifyItemInserted(scenes.size-1)
+            }
+            builder.setNegativeButton(
+                (context as TouchSampleSynthMain).getString(android.R.string.cancel)
+            ) {
+                    dialog, _ -> dialog.cancel()
+            }
 
-        builder.setPositiveButton(
-            (context as TouchSampleSynthMain).getString(android.R.string.ok)
-        ) { _,_ ->
-            val scene = SceneP()
-            scene.name = input.text.toString()
-            scenes.add(scene)
-            scenesList?.adapter?.notifyItemInserted(scenes.size-1)
+            builder.show()
         }
-        builder.setNegativeButton(
-            (context as TouchSampleSynthMain).getString(android.R.string.cancel)
-        ) {
-                dialog, _ -> dialog.cancel()
-        }
 
-        builder.show()
+        buttonExport.setOnClickListener {
+            val dialogProperties = DialogProperties()
+            dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
+            dialogProperties.selection_type = DialogConfigs.DIR_SELECT
+            dialogProperties.root = File(DialogConfigs.DEFAULT_DIR)
+            dialogProperties.error_dir = File(DialogConfigs.DEFAULT_DIR)
+            dialogProperties.offset = File(DialogConfigs.DEFAULT_DIR)
+            dialogProperties.extensions=null
+            dialogProperties.show_hidden_files=false
+            val dirPickerDialog=FilePickerDialog(context,dialogProperties)
+            dirPickerDialog.setTitle(R.string.selectFolder)
+            dirPickerDialog.setDialogSelectionListener {
+                val gson=Gson()
+                val jsonOut = gson.toJson((context as TouchSampleSynthMain).allScenes)
+                val f = File(it[0],"touchSampleSynthScenes1.json")
+                if(f.exists())
+                {
+                    f.delete()
+                }
+                f.writeText(jsonOut)
+                f.setReadable(true,false)
+                f.setWritable(true,false)
+                f.setExecutable(true,false)
+
+            }
+            dirPickerDialog.show()
 
         }
 

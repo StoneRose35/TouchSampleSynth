@@ -29,15 +29,35 @@
         app:layout_constraintTop_toBottomOf="@id/sceneList"
         >
 
-    <Button
-        android:id="@+id/sceneAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add"
-        android:layout_marginEnd="6dp"
-        style="?android:attr/buttonBarButtonStyle" />
+        <Button
+            android:id="@+id/sceneAdd"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="@string/add" />
+
+        <Button
+            android:id="@+id/sceneExport"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/exportToJson"
+            tools:layout_editor_absoluteX="239dp"
+            tools:layout_editor_absoluteY="687dp" />
+
+        <Button
+            android:id="@+id/sceneImport"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/importFromJson"
+            tools:layout_editor_absoluteX="323dp"
+            tools:layout_editor_absoluteY="692dp" />
 
 
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
