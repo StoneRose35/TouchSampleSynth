@@ -51,11 +51,11 @@ public:
     // and idle
     // midiData[0] is the voice nr and mididata[1] is the velocity
     // returns true, if a voice is assigned, false otherwise
-    bool startNextVoice(uint8_t *midiData);
+    static bool startNextVoice(uint8_t *midiData);
     // switches off the voice which has the given midi note assigned and which is on
     // midiData[0] is the voice nr and mididata[1] is the velocity
     // returns true if a voice could be found and is switched off, false otherwise
-    bool stopVoice(uint8_t * midiData);
+    static bool stopVoice(uint8_t * midiData);
 
 private:
     AAudioStream *stream_= nullptr;

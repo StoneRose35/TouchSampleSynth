@@ -145,10 +145,7 @@ void errorCallback(AAudioStream *,
 bool AudioEngine::start() {
 
     if (stream_ != nullptr) {
-        //aaudio_stream_state_t streamState = AAudioStream_getState(stream_);
-        //if (streamState!=AAUDIO_STREAM_STATE_CLOSED && streamState > 0) {
-            return false;
-        //}
+        return false;
     }
 
     AAudioStreamBuilder *streamBuilder;
@@ -194,7 +191,6 @@ bool AudioEngine::startNextVoice(uint8_t *midiData) {
     uint8_t midiProcessed=0;
     for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
     {
-        MusicalSoundGenerator * sgen = audioEngine->getSoundGenerator(c);
         if (audioEngine->getSoundGenerator(c) != nullptr
             && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
             && (((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) == 0)
