@@ -32,8 +32,10 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
 
     enum class ActionDir: Serializable {
-        HORIZONTAL,
-        VERTICAL
+        HORIZONTAL_LEFT_RIGHT,
+        HORIZONTAL_RIGHT_LEFT,
+        VERTICAL_UP_DOWN,
+        VERTICAL_DOWN_UP
     }
 
     enum class TouchElementState {
@@ -50,7 +52,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         BOTTOM_RIGHT
     }
 
-    var actionDir: ActionDir = ActionDir.HORIZONTAL
+    var actionDir: ActionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
     private val outLine: Paint = Paint()
     private val fillColor: Paint = Paint()
     private var px: Float = 0.0f
@@ -141,62 +143,121 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         )
 
         // draw action arrow
-        if (actionDir == ActionDir.HORIZONTAL) {
-            arrowSize = if (0.6f * w < 0.11f * h) {
-                0.6f * w
-            } else {
-                0.11f * h
+        when(actionDir) {
+            ActionDir.HORIZONTAL_LEFT_RIGHT -> {
+                arrowSize = if (0.6f * w < 0.11f * h) {
+                    0.6f * w
+                } else {
+                    0.11f * h
+                }
+                canvas.drawLine(
+                    0.2f * w + PADDING,
+                    0.8f * h - PADDING,
+                    0.8f * w - PADDING,
+                    0.8f * h - PADDING,
+                    arrowLine
+                )
+                canvas.drawLine(
+                    0.8f * w - PADDING - arrowSize,
+                    0.8f * h - PADDING - arrowSize,
+                    0.8f * w - PADDING,
+                    0.8f * h - PADDING,
+                    arrowLine
+                )
+                canvas.drawLine(
+                    0.8f * w - PADDING - arrowSize,
+                    0.8f * h - PADDING + arrowSize,
+                    0.8f * w - PADDING,
+                    0.8f * h - PADDING,
+                    arrowLine
+                )
             }
-            canvas.drawLine(
-                0.2f * w + PADDING,
-                0.8f * h - PADDING,
-                0.8f * w - PADDING,
-                0.8f * h - PADDING,
-                arrowLine
-            )
-            canvas.drawLine(
-                0.8f * w - PADDING - arrowSize,
-                0.8f * h - PADDING - arrowSize,
-                0.8f * w - PADDING,
-                0.8f * h - PADDING,
-                arrowLine
-            )
-            canvas.drawLine(
-                0.8f * w - PADDING - arrowSize,
-                0.8f * h - PADDING + arrowSize,
-                0.8f * w - PADDING,
-                0.8f * h - PADDING,
-                arrowLine
-            )
-
-        } else {
-            arrowSize = if (0.6f * h < 0.11f * w) {
-                0.6f * h
-            } else {
-                0.11f * w
+            ActionDir.HORIZONTAL_RIGHT_LEFT -> {
+                arrowSize = if (0.6f * w < 0.11f * h) {
+                    0.6f * w
+                } else {
+                    0.11f * h
+                }
+                canvas.drawLine(
+                    0.2f * w + PADDING,
+                    0.8f * h - PADDING,
+                    0.8f * w - PADDING,
+                    0.8f * h - PADDING,
+                    arrowLine
+                )
+                canvas.drawLine(
+                    0.2f * w + PADDING + arrowSize,
+                    0.8f * h - PADDING - arrowSize,
+                    0.2f * w + PADDING,
+                    0.8f * h - PADDING,
+                    arrowLine
+                )
+                canvas.drawLine(
+                    0.2f * w + PADDING + arrowSize,
+                    0.8f * h - PADDING + arrowSize,
+                    0.2f * w + PADDING,
+                    0.8f * h - PADDING,
+                    arrowLine
+                )
             }
-            canvas.drawLine(
-                0.8f * w - PADDING,
-                0.8f * h - PADDING,
-                0.8f * w - PADDING,
-                0.2f * h + PADDING,
-                arrowLine
-            )
-            canvas.drawLine(
-                0.8f * w - PADDING - arrowSize,
-                0.2f * h + PADDING + arrowSize,
-                0.8f * w - PADDING,
-                0.2f * h + PADDING,
-                arrowLine
-            )
-            canvas.drawLine(
-                0.8f * w - PADDING + arrowSize,
-                0.2f * h + PADDING + arrowSize,
-                0.8f * w - PADDING,
-                0.2f * h + PADDING,
-                arrowLine
-            )
+            ActionDir.VERTICAL_DOWN_UP -> {
+                arrowSize = if (0.6f * h < 0.11f * w) {
+                    0.6f * h
+                } else {
+                    0.11f * w
+                }
+                canvas.drawLine(
+                    0.8f * w - PADDING,
+                    0.8f * h - PADDING,
+                    0.8f * w - PADDING,
+                    0.2f * h + PADDING,
+                    arrowLine
+                )
+                canvas.drawLine(
+                    0.8f * w - PADDING - arrowSize,
+                    0.2f * h + PADDING + arrowSize,
+                    0.8f * w - PADDING,
+                    0.2f * h + PADDING,
+                    arrowLine
+                )
+                canvas.drawLine(
+                    0.8f * w - PADDING + arrowSize,
+                    0.2f * h + PADDING + arrowSize,
+                    0.8f * w - PADDING,
+                    0.2f * h + PADDING,
+                    arrowLine
+                )
+            }
+            ActionDir.VERTICAL_UP_DOWN -> {
+                arrowSize = if (0.6f * h < 0.11f * w) {
+                    0.6f * h
+                } else {
+                    0.11f * w
+                }
+                canvas.drawLine(
+                    0.8f * w - PADDING,
+                    0.8f * h - PADDING,
+                    0.8f * w - PADDING,
+                    0.2f * h + PADDING,
+                    arrowLine
+                )
+                canvas.drawLine(
+                    0.8f * w - PADDING - arrowSize,
+                    0.8f * h - PADDING - arrowSize,
+                    0.8f * w - PADDING,
+                    0.8f * h - PADDING,
+                    arrowLine
+                )
+                canvas.drawLine(
+                    0.8f * w - PADDING + arrowSize,
+                    0.8f * h - PADDING - arrowSize,
+                    0.8f * w - PADDING,
+                    0.8f * h - PADDING,
+                    arrowLine
+                )
+            }
         }
+
 
         if (elementState==TouchElementState.PLAYING_VERBOSE)
         {
@@ -337,11 +398,20 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
                     invalidate()
                     return true
-                } else if (actionDir == ActionDir.VERTICAL && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.y) / measuredHeight.toFloat())
+                } else if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.y- PADDING) / (measuredHeight.toFloat()-2* PADDING))
                     return true
-                } else if (actionDir == ActionDir.HORIZONTAL && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.x) / measuredWidth.toFloat())
+                }
+                else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(1.0f - (event.y- PADDING) / (measuredHeight.toFloat()-2* PADDING))
+                    return true
+                }
+                else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.x- PADDING) / (measuredWidth.toFloat()-2* PADDING))
+                    return true
+                }
+                else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()-2* PADDING)))
                     return true
                 }
             }
@@ -352,10 +422,19 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     px = event.x
                     py = event.y
                     if (rotateRect.contains(px.toInt(), py.toInt())) {
-                        if (this.actionDir == ActionDir.HORIZONTAL) {
-                            this.actionDir = ActionDir.VERTICAL
-                        } else {
-                            actionDir = ActionDir.HORIZONTAL
+                        when(this.actionDir) {
+                            ActionDir.HORIZONTAL_LEFT_RIGHT -> {
+                                this.actionDir=ActionDir.HORIZONTAL_RIGHT_LEFT
+                            }
+                            ActionDir.HORIZONTAL_RIGHT_LEFT -> {
+                                this.actionDir=ActionDir.VERTICAL_DOWN_UP
+                            }
+                            ActionDir.VERTICAL_DOWN_UP -> {
+                                this.actionDir=ActionDir.VERTICAL_UP_DOWN
+                            }
+                            ActionDir.VERTICAL_UP_DOWN -> {
+                                this.actionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
+                            }
                         }
                         dragStart = null
                         invalidate()
