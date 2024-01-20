@@ -19,7 +19,10 @@ import ch.sr35.touchsamplesynth.model.SceneP
 import com.developer.filepicker.model.DialogConfigs
 import com.developer.filepicker.model.DialogProperties
 import com.developer.filepicker.view.FilePickerDialog
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
+import com.google.gson.JsonSyntaxException
 import java.io.File
 
 
@@ -161,7 +164,39 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
 
             }
             dirPickerDialog.show()
+        }
 
+        buttonImport.setOnClickListener {
+            val dialogProperties = DialogProperties()
+            dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
+            dialogProperties.selection_type = DialogConfigs.FILE_SELECT
+            dialogProperties.root = File(DialogConfigs.DEFAULT_DIR)
+            dialogProperties.error_dir = File(DialogConfigs.DEFAULT_DIR)
+            dialogProperties.offset = File(DialogConfigs.DEFAULT_DIR)
+            dialogProperties.extensions= arrayOf("json")
+            dialogProperties.show_hidden_files=false
+            val filePickerDialog=FilePickerDialog(context,dialogProperties)
+            filePickerDialog.setTitle(R.string.selectImportFile)
+            filePickerDialog.setDialogSelectionListener { it1 ->
+                val gson=Gson()
+                val f = File(it1[0])
+                val jsondata=f.readText()
+                try {
+                    val jsonobj = gson.fromJson(jsondata, Array<SceneP>::class.java)
+                    (context as TouchSampleSynthMain).allScenes.clear()
+                    (context as TouchSampleSynthMain).allScenes.addAll(jsonobj)
+                } catch (e: Exception)
+                {
+                    when(e) {is JsonParseException -> {
+                            this.view?.let {
+                                val sb = Snackbar.make(it,resources.getText(R.string.importErrorMessage),1000)
+                                sb.show()
+                            }
+                        }
+                    }
+                }
+            }
+            filePickerDialog.show()
         }
 
         return view
