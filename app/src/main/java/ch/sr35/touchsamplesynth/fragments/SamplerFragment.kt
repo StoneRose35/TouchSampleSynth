@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth.fragments
 
-import android.app.Activity
-import android.content.Intent
+
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -9,22 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.R
-import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
-import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.views.WaveDisplay
 import ch.sr35.touchsamplesynth.views.WaveDisplayChangeListener
 import com.developer.filepicker.model.DialogConfigs
 import com.developer.filepicker.model.DialogProperties
 import com.developer.filepicker.view.FilePickerDialog
-import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
-import com.google.gson.JsonParseException
 import java.io.File
 
 

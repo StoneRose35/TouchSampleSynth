@@ -123,11 +123,10 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             if (i == EditorInfo.IME_ACTION_DONE)
             {
                 if (selectedInstrument >= 0 && selectedInstrument < (context as TouchSampleSynthMain).soundGenerators.size) {
-                    var voicesInt: Int
-                    try {
-                        voicesInt = Integer.parseInt(textView.text.toString())
+                    val voicesInt: Int = try {
+                        Integer.parseInt(textView.text.toString())
                     } catch (e: NumberFormatException) {
-                        voicesInt = -1
+                        -1
                     }
                     if (voicesInt in 1..16) {
                         // check that less voices are assigned than requested
