@@ -82,7 +82,6 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
 
         val deleteButton = view.findViewById<Button>(R.id.instruments_page_delete)
         deleteButton.setOnClickListener {
-
             if (selectedInstrument >=0 && !(context as TouchSampleSynthMain).touchElements.stream().anyMatch {
                     it.soundGenerator == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]
                 })
@@ -94,11 +93,15 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                         (context as TouchSampleSynthMain).soundGenerators.removeAt(selectedInstrument)
                         selectedInstrument = -1
                         instrumentsList.invalidateViews()
+                        removeCurrentFragment()
+                        view.findViewById<EditText>(R.id.instruments_page_nr_voices).text.clear()
+                        view.findViewById<EditText>(R.id.instruments_page_instr_name).text.clear()
                     }
                     .setNegativeButton((context as TouchSampleSynthMain).getString(R.string.no)) { _, _ -> }
                 val alertDlg = alertDlgBuilder.create()
                 alertDlg.show()
             }
+
         }
 
         view.findViewById<EditText>(R.id.instruments_page_instr_name).setOnEditorActionListener { textView, i, _ ->
@@ -246,6 +249,17 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 it.add(R.id.instruments_page_content,frag,tag)
             }
             it.commit()
+        }
+    }
+
+    private fun removeCurrentFragment()
+    {
+        if (childFragmentManager.fragments.isNotEmpty()) {
+            childFragmentManager.beginTransaction().let {
+                val fragment = childFragmentManager.fragments[0]
+                it.remove(fragment)
+                it.commit()
+            }
         }
     }
     override fun getItemViewType(p0: Int): Int {
