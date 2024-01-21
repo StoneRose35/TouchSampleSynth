@@ -54,7 +54,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     var actionDir: ActionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
     private val outLine: Paint = Paint()
-    private val fillColor: Paint = Paint()
+    val fillColor: Paint = Paint()
     private var px: Float = 0.0f
     private var py: Float = 0.0f
     private var defaultState = TouchElementState.PLAYING
@@ -346,7 +346,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
             canvas.drawRect(setSoundgenRect, editBoxBackground)
             canvas.drawText(
-                "Set SoundGen",
+                "Edit",
                 (setSoundgenRect.left + 3).toFloat(),
                 setSoundgenRect.top.toFloat() + editText.textSize,
                 editText
@@ -399,19 +399,19 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     invalidate()
                     return true
                 } else if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.y- PADDING) / (measuredHeight.toFloat()-2* PADDING))
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING)))
                     return true
                 }
                 else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(1.0f - (event.y- PADDING) / (measuredHeight.toFloat()-2* PADDING))
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING)))
                     return true
                 }
                 else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.x- PADDING) / (measuredWidth.toFloat()-2* PADDING))
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
                     return true
                 }
                 else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()-2* PADDING)))
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)))
                     return true
                 }
             }

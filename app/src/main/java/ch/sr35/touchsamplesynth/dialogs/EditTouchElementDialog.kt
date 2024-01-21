@@ -3,7 +3,9 @@ package ch.sr35.touchsamplesynth.dialogs
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.drawable.PaintDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +15,31 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
+import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.views.TouchElement
+import codes.side.andcolorpicker.converter.toColorInt
+import codes.side.andcolorpicker.group.PickerGroup
+import codes.side.andcolorpicker.group.registerPickers
+import codes.side.andcolorpicker.hsl.HSLColorPickerSeekBar
+import codes.side.andcolorpicker.model.IntegerHSLColor
+import codes.side.andcolorpicker.view.picker.ColorSeekBar
 import java.util.stream.Collectors
 import java.util.stream.IntStream
 
 
 class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                                      private var context: Context): Dialog(context) {
+     var pickedColor: IntegerHSLColor?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +54,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         // polyphonic whose voices haven't been taken yet
         val availableSoundGenerators = soundGenerators.stream().filter { i ->
             (touchElements.stream().map { te -> te.soundGenerator }
-                .filter { el -> (el?.getType() ?: "") == i.getType() && (el?.name ?: "srz")== i.name}.count() < i.voicesCount())
+                .filter { el -> (el?.getType() ?: "") == i.getType() && (el?.name ?: "")== i.name}.count() < i.voicesCount())
                     || i.voicesCount() == 1
         }.collect(Collectors.toList())
 
@@ -75,6 +89,10 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                 {
                     touchElement.voiceNr = 0
                 }
+                pickedColor?.let {
+                    touchElement.fillColor.color = it.toColorInt()
+                }
+                touchElement.invalidate()
             }
 
             touchElement.note = MusicalPitch.generateAllNotes()[numberPickerNotes?.value!!] //spinnerNotesAdapter.note
@@ -85,9 +103,57 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         buttonCancel?.setOnClickListener {
             this.dismiss()
         }
+
+        val pickerGroup = PickerGroup<IntegerHSLColor>().also {
+            val huePicker = findViewById<HSLColorPickerSeekBar>(R.id.touchElementColorHueSeekBar)
+            val satPicker = findViewById<HSLColorPickerSeekBar>(R.id.touchElementColorSaturationSeekBar)
+            val lvlPicker = findViewById<HSLColorPickerSeekBar>(R.id.touchElementColorLightnessSeekBar)
+            it.registerPickers(huePicker,satPicker,lvlPicker)
+        }
+        pickerGroup.setColor(IntegerHSLColor().also {
+            val hsl= floatArrayOf(0.0f,0.0f,0.0f)
+            ColorUtils.RGBToHSL(touchElement.fillColor.color.red,touchElement.fillColor.color.green,touchElement.fillColor.color.blue,hsl)
+            it.intA=0xff
+            it.floatH=hsl[0]
+            it.floatS=hsl[1]
+            it.floatL=hsl[2]
+
+        })
+        findViewById<ImageView>(R.id.touchElementColor).let {
+            it.background=PaintDrawable(touchElement.fillColor.color)
+            it.invalidate()
+        }
+        pickerGroup.addListener(object : ColorSeekBar.OnColorPickListener<ColorSeekBar<IntegerHSLColor>,IntegerHSLColor> {
+            override fun onColorChanged(
+                picker: ColorSeekBar<IntegerHSLColor>,
+                color: IntegerHSLColor,
+                value: Int
+            ) {
+                val touchElementColorDisplay = findViewById<ImageView>(R.id.touchElementColor)
+                touchElementColorDisplay.background=PaintDrawable(color.toColorInt())
+
+            }
+
+            override fun onColorPicked(
+                picker: ColorSeekBar<IntegerHSLColor>,
+                color: IntegerHSLColor,
+                value: Int,
+                fromUser: Boolean
+            ) {
+                pickedColor=color
+            }
+
+            override fun onColorPicking(
+                picker: ColorSeekBar<IntegerHSLColor>,
+                color: IntegerHSLColor,
+                value: Int,
+                fromUser: Boolean
+            ) {
+            }
+
+        })
+
     }
-
-
 }
 
 class SoundGeneratorListAdapter(private val instruments: List<Instrument>,

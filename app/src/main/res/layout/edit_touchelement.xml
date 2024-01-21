@@ -2,40 +2,59 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/edit_touchelement_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:minWidth="42dp"
+    android:minWidth="300dp"
     android:minHeight="100dp"
     >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/edit_te_soundgenerator_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_margin="10dp"
         android:layout_weight="1">
 
     </androidx.recyclerview.widget.RecyclerView>
-    <!--<Spinner
-        android:id="@+id/spinnerSoundgenerator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="1" />-->
     <NumberPicker
         android:id="@+id/numberPickerNote"
         android:layout_width="match_parent"
         android:descendantFocusability="blocksDescendants"
-        android:layout_height="wrap_content">
-
-    </NumberPicker>
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         />
+
+    <ImageView
+        android:id="@+id/touchElementColor"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/black"
+        />
+    <codes.side.andcolorpicker.hsl.HSLColorPickerSeekBar
+        android:id="@+id/touchElementColorHueSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hslColoringMode="pure"
+        app:hslMode="hue" />
+    <codes.side.andcolorpicker.hsl.HSLColorPickerSeekBar
+        android:id="@+id/touchElementColorSaturationSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hslColoringMode="pure"
+        app:hslMode="saturation" />
+    <codes.side.andcolorpicker.hsl.HSLColorPickerSeekBar
+        android:id="@+id/touchElementColorLightnessSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hslColoringMode="pure"
+        app:hslMode="lightness" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

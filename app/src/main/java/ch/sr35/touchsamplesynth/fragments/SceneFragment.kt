@@ -187,7 +187,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                     (context as TouchSampleSynthMain).allScenes.addAll(jsonobj)
                 } catch (e: Exception)
                 {
-                    when(e) {is JsonParseException -> {
+                    when(e) {is JsonSyntaxException, is JsonParseException -> {
                             this.view?.let {
                                 val sb = Snackbar.make(it,resources.getText(R.string.importErrorMessage),1000)
                                 sb.show()

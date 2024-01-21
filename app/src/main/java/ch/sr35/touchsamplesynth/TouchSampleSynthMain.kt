@@ -36,6 +36,7 @@ import java.util.Timer
 import java.util.TimerTask
 
 
+const val TAG="TouchSampleSynth"
 class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
@@ -61,18 +62,18 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
         if (sceneFiles != null) {
             sceneFiles.sort()
-            Log.i("TouchSampleSynth", "restoring from Files")
+            Log.i(TAG, "restoring from Files")
             sceneFiles.forEach {
                 try {
-                    Log.i("TouchSampleSynth", "reading file %s".format(it.name))
+                    Log.i(TAG, "reading file %s".format(it.name))
                     SceneP.fromFile(it)?.let { it1 ->
                         allScenes.add(it1)
-                        Log.i("TouchSampleSynth", it1.toString())
+                        Log.i(TAG, it1.toString())
                         for (instr in it1.instruments) {
-                            Log.i("TouchSampleSynth", instr.toString())
+                            Log.i(TAG, instr.toString())
                         }
                         for (te in it1.touchElements) {
-                            Log.i("TouchSampleSynth", te.toString())
+                            Log.i(TAG, te.toString())
                         }
                     }
                 } catch (e: Exception) {
@@ -266,16 +267,16 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
             it.delete()
         }
-        Log.i("TouchSampleSynth", "save to files")
+        Log.i(TAG, "save to files")
         for ((cnt, scn) in allScenes.withIndex()) {
             val f = File(filesDir.absolutePath + File.separator + "%03dscene.scn".format(cnt))
-            Log.i("TouchSampleSynth", "writing file %s".format(f.name))
-            Log.i("TouchSampleSynth", scn.toString())
+            Log.i(TAG, "writing file %s".format(f.name))
+            Log.i(TAG, scn.toString())
             for (instr in scn.instruments) {
-                Log.i("TouchSampleSynth", instr.toString())
+                Log.i(TAG, instr.toString())
             }
             for (te in scn.touchElements) {
-                Log.i("TouchSampleSynth", te.toString())
+                Log.i(TAG, te.toString())
             }
             scn.toFile(f)
         }

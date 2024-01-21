@@ -1,7 +1,12 @@
 package ch.sr35.touchsamplesynth.model
 
+import android.graphics.Color
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import ch.sr35.touchsamplesynth.MusicalPitch
+import ch.sr35.touchsamplesynth.graphics.RgbColor
 import ch.sr35.touchsamplesynth.views.TouchElement
 import java.io.Serializable
 
@@ -12,6 +17,7 @@ class TouchElementP(private var width: Int,
                     var actionDir: TouchElement.ActionDir,
                     var note: Int,
                     var voiceNr: Int,
+                    var color: RgbColor?,
                     var soundGenerator: PersistableInstrument?
 ): Serializable, Cloneable {
 
@@ -24,6 +30,7 @@ class TouchElementP(private var width: Int,
         actionDir = touchElement.actionDir
         note = touchElement.note?.index ?: -1
         voiceNr = touchElement.voiceNr
+        color = RgbColor(touchElement.fillColor.color.red,touchElement.fillColor.color.green,touchElement.fillColor.color.blue )
         soundGenerator = PersistableInstrumentFactory.fromInstrument(touchElement.soundGenerator)
     }
 
@@ -39,6 +46,9 @@ class TouchElementP(private var width: Int,
         if (note >= 0 && note < allNotes.size) {
             te.note = allNotes[note]
         }
+        color?.let {
+            te.fillColor.color = it.toColorInt()
+        }
         te.actionDir = actionDir
     }
 
@@ -49,6 +59,6 @@ class TouchElementP(private var width: Int,
     }
 
     public override fun clone(): Any {
-        return TouchElementP(this.width,this.height,this.posX,this.posY,this.actionDir,this.note,this.voiceNr,null)
+        return TouchElementP(this.width,this.height,this.posX,this.posY,this.actionDir,this.note,this.voiceNr,this.color?.clone(), null)
     }
 }
