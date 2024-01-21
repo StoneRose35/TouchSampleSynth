@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.model
 
-import android.graphics.Color
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.blue
 import androidx.core.graphics.green

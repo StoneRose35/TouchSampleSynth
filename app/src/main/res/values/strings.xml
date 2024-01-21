@@ -69,4 +69,5 @@
     <string name="selectFolder">Select Folder to save Scenes</string>
     <string name="selectImportFile">Select File to Import</string>
     <string name="importErrorMessage">Error Importing Scenes</string>
+    <string name="descrColorOfTheTouchElement">Color of the Touch Element</string>
 </resources>
