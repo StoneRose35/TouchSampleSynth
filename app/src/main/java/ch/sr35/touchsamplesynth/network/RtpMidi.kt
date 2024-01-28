@@ -55,7 +55,7 @@ class RtpMidi {
         othertime += messageBuffer[25].toInt() shl 16
         othertime += messageBuffer[26].toInt() shl 8
         othertime += messageBuffer[27].toInt() shl 0
-        val myTime2 = sendTimestamp(messageBuffer,0,2,hostname,dataPort)
+        val myTime2 = sendTimestamp(messageBuffer,2,2,hostname,dataPort)
         timeOffset = (myTime + myTime2)/2 - othertime
     }
 
