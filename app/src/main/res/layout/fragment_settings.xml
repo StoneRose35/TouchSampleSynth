@@ -111,6 +111,21 @@
                 android:layout_height="match_parent"
                 />
         </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/settingsExperimentalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:text="Start NSD"
+                />
+            <Button
+                android:id="@+id/experimentalButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Boom!!"
+                />
+        </TableRow>
     </TableLayout>
 
 

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TextView
@@ -19,6 +20,8 @@ import ch.sr35.touchsamplesynth.BuildConfig
 import ch.sr35.touchsamplesynth.MidiDevicesChanged
 import ch.sr35.touchsamplesynth.MidiHostHandler
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
+import ch.sr35.touchsamplesynth.network.RtpMidiServer
 import ch.sr35.touchsamplesynth.views.TouchElement
 import com.google.android.material.snackbar.Snackbar
 
@@ -28,10 +31,15 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
     private var framesPerDataCallbackIdx = -1
     private var bufferSizeInFramesIdx = -1
     lateinit var listViewMidiDevices: ListView
+    private var nsdHandler: NetworkDiscoveryHandler?=null
+    private var rtpMidiServer: RtpMidiServer?=null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+        nsdHandler= context?.let { NetworkDiscoveryHandler(it) }
     }
 
     override fun onCreateView(
@@ -129,6 +137,21 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         val textViewAbout = view.findViewById<TextView>(R.id.settingTextViewAbout)
         val aboutString="Touch Sample Synth Version %s".format(BuildConfig.VERSION_NAME)
         textViewAbout.text = aboutString
+
+        view.findViewById<Button>(R.id.experimentalButton).also { it ->
+            it.setOnClickListener {
+                context?.let { it1 ->
+                    nsdHandler=NetworkDiscoveryHandler(it1)
+                    rtpMidiServer= RtpMidiServer()
+                    rtpMidiServer?.let { it3 ->
+                        it3.startServer()
+                        nsdHandler?.registerService(it3.port)
+                    }
+
+                }
+
+            }
+        }
 
     }
 
@@ -250,6 +273,12 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
             return true
         }
 
+    }
+
+    override fun onPause() {
+        nsdHandler?.tearDown()
+        rtpMidiServer?.stopServer()
+        super.onPause()
     }
 
     override fun onMidiDevicesChanged() {

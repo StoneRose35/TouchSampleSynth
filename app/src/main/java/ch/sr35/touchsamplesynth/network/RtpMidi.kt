@@ -43,7 +43,7 @@ class RtpMidi {
         var othertime = 0
         val count = messageBuffer[8]
         if (count.toInt() != 1) {
-            Log.i(TAG, "RTP-Midi time synch failed")
+            Log.i(TAG, "RTP-Midi time sync failed")
             return
         }
         othertime += messageBuffer[20].toInt() shl 56

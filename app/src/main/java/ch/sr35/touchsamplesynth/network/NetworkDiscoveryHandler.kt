@@ -6,6 +6,7 @@ import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import ch.sr35.touchsamplesynth.TAG
 import java.io.IOException
+import java.net.DatagramSocket
 
 import java.net.ServerSocket
 
@@ -20,32 +21,40 @@ class NetworkDiscoveryHandler(context: Context): NsdManager.RegistrationListener
         nsdManager = (context.getSystemService(Context.NSD_SERVICE) as NsdManager)
         discoveredServices=ArrayList()
     }
-    fun registerService()
+    fun registerService(portNr: Int=0)
     {
-        val serviceInfo=NsdServiceInfo().apply {
-            serviceName=this.serviceName
-            serviceType = "_apple-midi._udp"
+        val serviceInfo=NsdServiceInfo()
+        serviceInfo.serviceName=serviceName
+        serviceInfo.serviceType = serviceType
 
-            var controlPort= 1024
-            var portsFound=false
-            while (!portsFound && controlPort < 65535)
-            {
+        if (portNr==0) {
+            var controlPort = 1024
+            var portsFound = false
+            while (!portsFound && controlPort < 65535) {
                 try {
-                    ServerSocket(controlPort)
-                    ServerSocket(controlPort+1)
-                    portsFound=true
-                }
-                catch (_: IOException)
-                {
+                    DatagramSocket(controlPort)
+                    ServerSocket(controlPort + 1)
+                    portsFound = true
+                } catch (_: IOException) {
 
                 }
-                controlPort+=1
+                controlPort += 1
             }
 
-            port = controlPort
+            serviceInfo.port = controlPort - 1
+        }
+        else
+        {
+            serviceInfo.port=portNr
         }
 
         nsdManager?.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, this)
+    }
+
+    fun tearDown()
+    {
+        nsdManager?.unregisterService(this)
+        nsdManager?.stopServiceDiscovery(this)
     }
 
 
