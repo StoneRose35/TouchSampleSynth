@@ -21,6 +21,7 @@ import ch.sr35.touchsamplesynth.graphics.Converter
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
 import java.util.stream.IntStream
+import kotlin.concurrent.thread
 import kotlin.math.sqrt
 
 const val PADDING: Float = 32.0f
@@ -384,12 +385,40 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         if (elementState != TouchElementState.EDITING) {
             if (event?.action == MotionEvent.ACTION_DOWN) {
                 performClick()
+                (context as TouchSampleSynthMain).rtpMidiServer?.let {
+                    if (it.isEnabled)
+                    {
+                        val midiData=ByteArray(3)
+                        midiData[0] = 0x80.toByte()
+                        midiData[1] = (this.note!!.value+48).toInt().toByte()
+                        midiData[2] = 0x7F.toByte()
+                        thread(start = true) {
+                            (context as TouchSampleSynthMain).rtpMidiServer?.sendMidiCommand(
+                                midiData
+                            )
+                        }
+                    }
+                }
                 px = event.x
                 py = event.y
                 return true
             } else if (event?.action == MotionEvent.ACTION_UP) {
                 outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                 soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
+                (context as TouchSampleSynthMain).rtpMidiServer?.let {
+                    if (it.isEnabled)
+                    {
+                        val midiData=ByteArray(3)
+                        midiData[0] = 0x90.toByte()
+                        midiData[1] = (this.note!!.value+48).toInt().toByte()
+                        midiData[2] = 0x7F.toByte()
+                        thread(start = true) {
+                            (context as TouchSampleSynthMain).rtpMidiServer?.sendMidiCommand(
+                                midiData
+                            )
+                        }
+                    }
+                }
                 invalidate()
                 return true
             } else if (event?.action == MotionEvent.ACTION_MOVE) {

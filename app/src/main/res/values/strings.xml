@@ -70,4 +70,7 @@
     <string name="selectImportFile">Select File to Import</string>
     <string name="importErrorMessage">Error Importing Scenes</string>
     <string name="descrColorOfTheTouchElement">Color of the Touch Element</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="rtpmidi">RTP/Apple Midi</string>
 </resources>

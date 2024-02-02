@@ -113,17 +113,17 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/settingsExperimentalButton"
+                android:id="@+id/settingsRtpMidi"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:minLines="2"
-                android:text="Start NSD"
+                android:text="@string/rtpmidi"
                 />
-            <Button
-                android:id="@+id/experimentalButton"
+            <ToggleButton
+                android:id="@+id/toggleButtonRtpMidi"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Boom!!"
+                android:text="@string/enable"
                 />
         </TableRow>
     </TableLayout>

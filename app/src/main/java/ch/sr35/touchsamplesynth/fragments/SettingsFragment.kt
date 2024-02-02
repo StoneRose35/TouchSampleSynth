@@ -10,18 +10,16 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
-import android.widget.Button
 import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.ToggleButton
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.BuildConfig
 import ch.sr35.touchsamplesynth.MidiDevicesChanged
 import ch.sr35.touchsamplesynth.MidiHostHandler
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
-import ch.sr35.touchsamplesynth.network.RtpMidiServer
 import ch.sr35.touchsamplesynth.views.TouchElement
 import com.google.android.material.snackbar.Snackbar
 
@@ -31,15 +29,14 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
     private var framesPerDataCallbackIdx = -1
     private var bufferSizeInFramesIdx = -1
     lateinit var listViewMidiDevices: ListView
-    private var nsdHandler: NetworkDiscoveryHandler?=null
-    private var rtpMidiServer: RtpMidiServer?=null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-        nsdHandler= context?.let { NetworkDiscoveryHandler(it) }
+
     }
 
     override fun onCreateView(
@@ -138,18 +135,24 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         val aboutString="Touch Sample Synth Version %s".format(BuildConfig.VERSION_NAME)
         textViewAbout.text = aboutString
 
-        view.findViewById<Button>(R.id.experimentalButton).also { it ->
-            it.setOnClickListener {
-                context?.let { it1 ->
-                    nsdHandler=NetworkDiscoveryHandler(it1)
-                    rtpMidiServer= RtpMidiServer()
-                    rtpMidiServer?.let { it3 ->
-                        it3.startServer()
-                        nsdHandler?.registerService(it3.port)
+        view.findViewById<ToggleButton>(R.id.toggleButtonRtpMidi).also { it ->
+
+            it.setOnCheckedChangeListener { toggleButtonView, isChecked ->
+                if (isChecked) {
+                    context?.let { it1 ->
+                        (context as TouchSampleSynthMain).rtpMidiServer?.let { it3 ->
+                            it3.startServer()
+                            (context as TouchSampleSynthMain).nsdHandler?.registerService(it3.port)
+                        }
                     }
-
+                    toggleButtonView.text= (context as TouchSampleSynthMain).getString(R.string.disable)
                 }
-
+                else
+                {
+                    (context as TouchSampleSynthMain).nsdHandler?.tearDown()
+                    (context as TouchSampleSynthMain).rtpMidiServer?.stopServer()
+                    toggleButtonView.text= (context as TouchSampleSynthMain).getString(R.string.enable)
+                }
             }
         }
 
@@ -275,11 +278,6 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
 
     }
 
-    override fun onPause() {
-        nsdHandler?.tearDown()
-        rtpMidiServer?.stopServer()
-        super.onPause()
-    }
 
     override fun onMidiDevicesChanged() {
         (listViewMidiDevices.adapter as BaseAdapter).notifyDataSetChanged()

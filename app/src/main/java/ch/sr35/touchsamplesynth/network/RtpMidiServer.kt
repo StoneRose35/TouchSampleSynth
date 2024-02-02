@@ -6,6 +6,7 @@ import java.io.IOException
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+import java.net.SocketException
 import kotlin.concurrent.thread
 import kotlin.random.Random
 import kotlin.random.nextUInt
@@ -20,6 +21,8 @@ class RtpMidiServer {
     private var temporalOrigin: Long = System.nanoTime()/100000
     var ssrc: UInt = Random.nextUInt(0xFFFFFFFFu)
     var name: String="TSS Midi Server"
+    var isEnabled:Boolean=false
+    var journal=RtpMidiJournal(64)
     fun startServer(): Boolean
     {
         var controlPort= 1024
@@ -42,147 +45,151 @@ class RtpMidiServer {
             return false
         }
         port = controlPort-1
-        thread(start = true,name="TSS Midi control") {
+        thread(start = true,name="TSS Midi control", priority = 1) {
             var p = DatagramPacket(packetBuffer,packetBuffer.size)
-            while(true)
+            try {
+                while(true) {
+                    controlSocket?.receive(p)
+                    // dispatch as needed
+                    for (conn in connections) {
+                        if (conn.address == p.address) {
+
+                        }
+                    }
+
+                    // no known connection from where this packet is coming from, check if "IN"
+                    // and allow if the max number of connections isnt exceeded
+
+                    val cmd = getCommand(p)
+                    if (cmd == "IN" && connections.size < 8) {
+                        //Log.i(TAG, "got IN on Control from ${p.address} on port ${p.port}")
+                        ClientConnectionData().also {
+                            it.address = p.address
+                            it.port = p.port
+                            it.connectionState = ConnectionState.CONNECTING_OK_ON_CONTROL
+                            it.initiatorToken = 0u
+                            it.initiatorToken = (p.data[8].toUInt() and 0xFFu shl 24) or
+                                    (p.data[9].toUInt() and 0xFFu shl 16) or
+                                    (p.data[10].toUInt() and 0xFFu shl 8) or
+                                    (p.data[11].toUInt() and 0xFFu shl 0)
+                            it.itBytes[0] = p.data[8]
+                            it.itBytes[1] = p.data[9]
+                            it.itBytes[2] = p.data[10]
+                            it.itBytes[3] = p.data[11]
+                            it.sscr[0] = p.data[12]
+                            it.sscr[1] = p.data[13]
+                            it.sscr[2] = p.data[14]
+                            it.sscr[3] = p.data[15]
+                            connections.add(it)
+
+                            sendCommand("OK", it, false, controlSocket!!)
+                        }
+                    } else if (cmd == "IN") {
+                        // send NO
+                        ClientConnectionData().also {
+                            it.address = p.address
+                            it.port = p.port
+                            it.connectionState = ConnectionState.UNCONNECTED
+                            it.initiatorToken = (p.data[8].toUInt() and 0xFFu shl 24) or
+                                    (p.data[9].toUInt() and 0xFFu shl 16) or
+                                    (p.data[10].toUInt() and 0xFFu shl 8) or
+                                    (p.data[11].toUInt() and 0xFFu shl 0)
+                            sendCommand("NO", it, false, controlSocket!!)
+                        }
+                    }
+                }
+            } catch (e: SocketException)
             {
-                controlSocket?.receive(p)
-                // dispatch as needed
-                for(conn in connections)
-                {
-                    if (conn.address == p.address)
-                    {
-
-                    }
-                }
-
-                // no known connection from where this packet is coming from, check if "IN"
-                // and allow if the max number of connections isnt exceeded
-
-                val cmd=getCommand(p)
-                if (cmd=="IN" && connections.size < 8)
-                {
-                    Log.i(TAG,"got IN on Control from ${p.address} on port ${p.port}")
-                    ClientConnectionData().also {
-                        it.address = p.address
-                        it.port= p.port
-                        it.connectionState=ConnectionState.CONNECTING_OK_ON_CONTROL
-                        it.initiatorToken = 0u
-                        it.initiatorToken = (p.data[8].toUInt() and 0xFFu shl 24) or
-                        (p.data[9].toUInt() and 0xFFu shl 16) or
-                        (p.data[10].toUInt() and 0xFFu shl 8) or
-                        (p.data[11].toUInt() and 0xFFu shl 0)
-                        it.itBytes[0]=p.data[8]
-                        it.itBytes[1]=p.data[9]
-                        it.itBytes[2]=p.data[10]
-                        it.itBytes[3]=p.data[11]
-                        it.sscr[0] = p.data[12]
-                        it.sscr[1] = p.data[13]
-                        it.sscr[2] = p.data[14]
-                        it.sscr[3] = p.data[15]
-                        connections.add(it)
-
-                        sendCommand("OK",it,false,controlSocket!!)
-                    }
-                }
-                else if (cmd=="IN")
-                {
-                    // send NO
-                    ClientConnectionData().also {
-                        it.address = p.address
-                        it.port= p.port
-                        it.connectionState=ConnectionState.UNCONNECTED
-                        it.initiatorToken = (p.data[8].toUInt() and 0xFFu shl 24) or
-                        (p.data[9].toUInt() and 0xFFu shl 16) or
-                        (p.data[10].toUInt() and 0xFFu shl 8) or
-                        (p.data[11].toUInt() and 0xFFu shl 0)
-                        sendCommand("NO",it,false,controlSocket!!)
-                    }
-                }
+                Log.i(TAG,"TSS Midi control socket exception occurred, probably on purpose")
             }
         }
-        thread(start = true,name="TSS Midi data") {
+        thread(start = true,name="TSS Midi data", priority = 10) {
             var p = DatagramPacket(packetBufferData,packetBufferData.size)
             val previousTimeStamps = ArrayList<ULong>()
-            while(true) {
-                dataSocket?.receive(p)
-                for(conn in connections)
-                {
-                    if (conn.address == p.address)
-                    {
-                        val cmd=getCommand(p)
-                        if (cmd=="IN")
-                        {
-                            Log.i(TAG,"got IN on Midi Data from known source ${p.address}")
-                            sendCommand("OK",conn,true,dataSocket!!)
-                            conn.connectionState=ConnectionState.CONNECTING_OK_ON_DATA
+            try {
+                while(true) {
+                    dataSocket?.receive(p)
+                    for(conn in connections) {
+                        if (conn.address == p.address) {
+                            val cmd = getCommand(p)
+                            if (cmd == "IN") {
+                                //Log.i(TAG, "got IN on Midi Data from known source ${p.address}")
+                                sendCommand("OK", conn, true, dataSocket!!)
+                                conn.connectionState = ConnectionState.CONNECTING_OK_ON_DATA
 
-                        }
-                        else if (cmd=="CK")
-                        {
-                            Log.i(TAG,"got CK on Midi Data from known source ${p.address}")
-                            val count = p.data[8].toInt()
-                            if (count==0)
-                            {
-                                previousTimeStamps.clear()
-                                var senderSsrc=ByteArray(4)
-                                senderSsrc[0]= p.data[4]
-                                senderSsrc[1] = p.data[5]
-                                senderSsrc[2] = p.data[6]
-                                senderSsrc[3] = p.data[7]
-                                if (!senderSsrc.contentEquals(conn.sscr))
-                                {
-                                    break;
+                            } else if (cmd == "CK") {
+                                //Log.i(TAG, "got CK on Midi Data from known source ${p.address}")
+                                val count = p.data[8].toInt()
+                                if (count == 0) {
+                                    previousTimeStamps.clear()
+                                    var senderSsrc = ByteArray(4)
+                                    senderSsrc[0] = p.data[4]
+                                    senderSsrc[1] = p.data[5]
+                                    senderSsrc[2] = p.data[6]
+                                    senderSsrc[3] = p.data[7]
+                                    if (!senderSsrc.contentEquals(conn.sscr)) {
+                                        break;
+                                    }
+                                    conn.timestamp1 = (p.data[12].toULong() and 0xFFu shl 56) or
+                                            (p.data[13].toULong() and 0xFFu shl 48) or
+                                            (p.data[14].toULong() and 0xFFu shl 40) or
+                                            (p.data[15].toULong() and 0xFFu shl 32) or
+                                            (p.data[16].toULong() and 0xFFu shl 24) or
+                                            (p.data[17].toULong() and 0xFFu shl 16) or
+                                            (p.data[18].toULong() and 0xFFu shl 8) or
+                                            (p.data[19].toULong() and 0xFFu shl 0)
+                                    previousTimeStamps.add(conn.timestamp1)
+                                    //Log.i(TAG, "got 1st timestamp ${conn.timestamp1}")
+                                    conn.timestamp2 = sendTimestamp(
+                                        1,
+                                        1,
+                                        conn,
+                                        dataSocket!!,
+                                        true,
+                                        previousTimeStamps
+                                    )
+                                    //Log.i(TAG, "sending second timestamp ${conn.timestamp2}")
+                                    conn.connectionState = ConnectionState.CONNECTING_TIME1
+                                } else if (count == 2) {
+                                    var senderSsrc = ByteArray(4)
+                                    senderSsrc[0] = p.data[4]
+                                    senderSsrc[1] = p.data[5]
+                                    senderSsrc[2] = p.data[6]
+                                    senderSsrc[3] = p.data[7]
+                                    if (!senderSsrc.contentEquals(conn.sscr)) {
+                                        break;
+                                    }
+                                    conn.timestamp3 = (p.data[28].toULong() and 0xffu shl 56) or
+                                            (p.data[29].toULong() and 0xffu shl 48) or
+                                            (p.data[30].toULong() and 0xffu shl 40) or
+                                            (p.data[31].toULong() and 0xffu shl 32) or
+                                            (p.data[32].toULong() and 0xffu shl 24) or
+                                            (p.data[33].toULong() and 0xffu shl 16) or
+                                            (p.data[34].toULong() and 0xffu shl 8) or
+                                            (p.data[35].toULong() and 0xffu shl 0)
+                                    //Log.i(TAG, "got 3rd timestamp ${conn.timestamp3}")
+                                    conn.computeTimeOffset()
+                                    conn.connectionState = ConnectionState.CONNECTED
                                 }
-                                conn.timestamp1 = (p.data[12].toULong() and 0xFFu shl 56) or
-                                (p.data[13].toULong() and 0xFFu shl 48) or
-                                (p.data[14].toULong() and 0xFFu shl 40) or
-                                (p.data[15].toULong() and 0xFFu shl 32) or
-                                (p.data[16].toULong() and 0xFFu shl 24) or
-                                (p.data[17].toULong() and 0xFFu shl 16) or
-                                (p.data[18].toULong() and 0xFFu shl 8) or
-                                (p.data[19].toULong() and 0xFFu shl 0)
-                                previousTimeStamps.add(conn.timestamp1)
-                                Log.i(TAG,"got 1st timestamp ${conn.timestamp1}")
-                                conn.timestamp2 = sendTimestamp(1,1,conn,dataSocket!!,true,previousTimeStamps)
-                                Log.i(TAG,"sending second timestamp ${conn.timestamp2}")
-                                conn.connectionState=ConnectionState.CONNECTING_TIME1
-                            }
-                            else if (count==2)
-                            {
-                                var senderSsrc=ByteArray(4)
-                                senderSsrc[0]= p.data[4]
-                                senderSsrc[1] = p.data[5]
-                                senderSsrc[2] = p.data[6]
-                                senderSsrc[3] = p.data[7]
-                                if (!senderSsrc.contentEquals(conn.sscr))
-                                {
-                                    break;
-                                }
-                                conn.timestamp3 = (p.data[28].toULong() and 0xffu shl 56) or
-                                (p.data[29].toULong() and 0xffu shl 48) or
-                                (p.data[30].toULong() and 0xffu shl 40) or
-                                (p.data[31].toULong() and 0xffu shl 32) or
-                                (p.data[32].toULong() and 0xffu shl 24) or
-                                (p.data[33].toULong() and 0xffu shl 16) or
-                                (p.data[34].toULong() and 0xffu shl 8) or
-                                (p.data[35].toULong() and 0xffu shl 0)
-                                Log.i(TAG,"got 3rd timestamp ${conn.timestamp3}")
-                                conn.computeTimeOffset()
-                                conn.connectionState=ConnectionState.CONNECTED
                             }
                         }
                     }
                 }
             }
+            catch (e: SocketException)
+            {
+                Log.i(TAG,"TSS Midi data socket exception occurred: probably on purpose")
+            }
         }
-        return true
+        isEnabled=true
+        return isEnabled
     }
 
     fun stopServer()
     {
         dataSocket?.close()
         controlSocket?.close()
+        isEnabled=false
     }
 
     private fun sendCommand(command: String,client: ClientConnectionData,onDataPort: Boolean,s: DatagramSocket)
@@ -196,10 +203,6 @@ class RtpMidiServer {
         message[5]=0
         message[6]=0
         message[7]=2
-        //message[8]= (client.initiatorToken shr 24).toByte()
-        //message[9]= (client.initiatorToken shr 16).toByte()
-        //message[10]=(client.initiatorToken shr 8).toByte()
-        //message[11]=(client.initiatorToken shr 0).toByte()
         message[8]=client.itBytes[0]
         message[9]=client.itBytes[1]
         message[10]=client.itBytes[2]
@@ -277,6 +280,49 @@ class RtpMidiServer {
         s.send(p)
         return currentTime.toULong()
     }
+
+    fun sendMidiCommand(midiData: ByteArray)
+    {
+        for (conn in connections)
+        {
+            dataSocket?.let {sendMidiCommand(midiData,it,conn)}
+        }
+    }
+    fun sendMidiCommand(midiData: ByteArray,s:DatagramSocket, conn: ClientConnectionData)
+    {
+        val message=ByteArray(2048)
+        message[0]=0x80.toByte()
+        message[1]=0x61.toByte()//((0x61 shl 1) + 1).toByte()
+        message[2]=(conn.sequenceNumber shr 8).toByte()
+        message[3]=(conn.sequenceNumber shr 0).toByte()
+        val timeval=System.nanoTime()/100000 - temporalOrigin
+        message[4]=(timeval shr 24).toByte()
+        message[5]=(timeval shr 16).toByte()
+        message[6]=(timeval shr 8).toByte()
+        message[7]=(timeval shr 0).toByte()
+        message[8] = (ssrc shr 24).toByte()
+        message[9] = (ssrc shr 16).toByte()
+        message[10] = (ssrc shr 8).toByte()
+        message[11] = ssrc.toByte()
+
+        // B=0, J=0, Z=0, P=0
+        message[12]= ((0 shl 0).toByte() + (0 shl  1).toByte() + (0 shl 2).toByte() + (0 shl 3).toByte()).toByte()
+        message[12] =(midiData.size).toByte()
+        for (c in midiData.indices)
+        {
+            message[13+c]=midiData[c]
+        }
+        val messageLength = 13 + midiData.size
+        val p = DatagramPacket(message, messageLength, conn.address, conn.port+1)
+        s.send(p)
+
+        val journalEntry=RtpMidiJournalEntry()
+        journalEntry.data = midiData
+        journalEntry.timestamp = conn.sequenceNumber
+        journal.push(journalEntry)
+        conn.sequenceNumber += 1u
+        conn.sequenceNumber = conn.sequenceNumber and 0xFFFFu
+    }
 }
 
 
@@ -294,12 +340,39 @@ class ClientConnectionData
     var timeOffset: ULong=0u
     val itBytes=ByteArray(4)
 
-    var sequenceNumber = Random.nextInt()
+    var sequenceNumber = Random.nextUInt() and 0xFFFFu
 
     fun computeTimeOffset()
     {
         timeOffset = (timestamp1 + timestamp3)/2u - timestamp2
     }
+}
+
+
+class RtpMidiJournal(size: Int)
+{
+    private var internalArrayList=Array<RtpMidiJournalEntry?>(size){null}
+    private var idx=0
+
+
+    //fun clearOlderThan(timestamp: Int)
+    //{
+    //    internalArrayList = internalArrayList.iterator().
+
+    fun push(entry: RtpMidiJournalEntry)
+    {
+        internalArrayList[idx]=entry
+        idx+=1
+        if (idx == 64)
+        {
+            idx=0
+        }
+    }
+}
+class RtpMidiJournalEntry
+{
+    var data= ByteArray(3)
+    var timestamp: UInt =0u
 }
 
 enum class ConnectionState
@@ -308,6 +381,5 @@ enum class ConnectionState
     CONNECTING_OK_ON_CONTROL,
     CONNECTING_OK_ON_DATA,
     CONNECTING_TIME1,
-    CONNECTING_TIME2,
     CONNECTED
 }

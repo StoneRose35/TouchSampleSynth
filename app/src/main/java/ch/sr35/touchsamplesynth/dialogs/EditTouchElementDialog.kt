@@ -87,12 +87,12 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                 {
                     touchElement.voiceNr = 0
                 }
-                pickedColor?.let {
-                    touchElement.fillColor.color = it.toColorInt()
-                }
-                touchElement.invalidate()
-            }
 
+            }
+            pickedColor?.let {
+                touchElement.fillColor.color = it.toColorInt()
+            }
+            touchElement.invalidate()
             touchElement.note = MusicalPitch.generateAllNotes()[numberPickerNotes?.value!!] //spinnerNotesAdapter.note
 
             this.dismiss()

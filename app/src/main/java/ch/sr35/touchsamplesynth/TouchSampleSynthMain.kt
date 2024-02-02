@@ -28,6 +28,8 @@ import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
 import ch.sr35.touchsamplesynth.fragments.SceneFragment
 import ch.sr35.touchsamplesynth.fragments.SettingsFragment
 import ch.sr35.touchsamplesynth.model.SceneP
+import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
+import ch.sr35.touchsamplesynth.network.RtpMidiServer
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.VuMeter
 import com.google.android.material.snackbar.Snackbar
@@ -50,6 +52,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private val settingsFrament= SettingsFragment()
     private val scenesEditFragment = SceneFragment(allScenes)
     var midiHostHandler :MidiHostHandler?= null
+    var nsdHandler: NetworkDiscoveryHandler?=null
+    var rtpMidiServer: RtpMidiServer?=null
     var mainMenu: Menu?=null
     private var oldScenePosition=-1
 
@@ -220,6 +224,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
 
         midiHostHandler =  MidiHostHandler(this)
+        nsdHandler= NetworkDiscoveryHandler(this)
+        rtpMidiServer=RtpMidiServer()
 
     }
 
