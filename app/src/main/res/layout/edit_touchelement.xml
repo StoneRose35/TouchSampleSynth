@@ -33,6 +33,7 @@
             <TextView
                 android:text="@string/midiCC"
                 android:layout_margin="10dp"
+                android:labelFor="@id/midiControlChange"
                 android:layout_gravity="center_vertical"
                 />
             <EditText
@@ -47,6 +48,7 @@
             <TextView
                 android:text="@string/midiChannel"
                 android:layout_margin="10dp"
+                android:labelFor="@id/midiChannel"
                 android:layout_gravity="center_vertical"
                 />
             <EditText

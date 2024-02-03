@@ -46,7 +46,7 @@ class RtpMidiServer {
         }
         port = controlPort-1
         thread(start = true,name="TSS Midi control", priority = 1) {
-            var p = DatagramPacket(packetBuffer,packetBuffer.size)
+            val p = DatagramPacket(packetBuffer,packetBuffer.size)
             try {
                 while(true) {
                     controlSocket?.receive(p)
@@ -160,23 +160,20 @@ class RtpMidiServer {
                                     previousTimeStamps.add(conn.timestamp1)
                                     //Log.i(TAG, "got 1st timestamp ${conn.timestamp1}")
                                     conn.timestamp2 = sendTimestamp(
-                                        1,
-                                        1,
                                         conn,
                                         dataSocket!!,
-                                        true,
                                         previousTimeStamps
                                     )
                                     //Log.i(TAG, "sending second timestamp ${conn.timestamp2}")
                                     conn.connectionState = ConnectionState.CONNECTING_TIME1
                                 } else if (count == 2) {
-                                    var senderSsrc = ByteArray(4)
+                                    val senderSsrc = ByteArray(4)
                                     senderSsrc[0] = p.data[4]
                                     senderSsrc[1] = p.data[5]
                                     senderSsrc[2] = p.data[6]
                                     senderSsrc[3] = p.data[7]
                                     if (!senderSsrc.contentEquals(conn.sscr)) {
-                                        break;
+                                        break
                                     }
                                     conn.timestamp3 = (p.data[28].toULong() and 0xffu shl 56) or
                                             (p.data[29].toULong() and 0xffu shl 48) or
@@ -253,7 +250,7 @@ class RtpMidiServer {
         return result
     }
 
-    private fun sendTimestamp(position: Int,count: Int,client: ClientConnectionData,s: DatagramSocket,onDataPort: Boolean,previousTimeStamps: ArrayList<ULong>): ULong {
+    private fun sendTimestamp(client: ClientConnectionData,s: DatagramSocket,previousTimeStamps: ArrayList<ULong>): ULong {
         val message=ByteArray(128)
         message[0] = 0xFF.toByte()
         message[1] = 0xFF.toByte()
@@ -263,38 +260,32 @@ class RtpMidiServer {
         message[5] = (ssrc shr 16).toByte()
         message[6] = (ssrc shr 8).toByte()
         message[7] = ssrc.toByte()
-        message[8] = count.toByte()
+        message[8] = 1
         message[9] = 0
         message[10] = 0
         message[11] = 0
-        var cnt=0
-        while (cnt < position)
-        {
-            message[12+cnt*8+0] = (previousTimeStamps[cnt] shr 56).toByte()
-            message[12+cnt*8+1] = (previousTimeStamps[cnt] shr 48).toByte()
-            message[12+cnt*8+2] = (previousTimeStamps[cnt] shr 40).toByte()
-            message[12+cnt*8+3] = (previousTimeStamps[cnt] shr 32).toByte()
-            message[12+cnt*8+4] = (previousTimeStamps[cnt] shr 24).toByte()
-            message[12+cnt*8+5] = (previousTimeStamps[cnt] shr 16).toByte()
-            message[12+cnt*8+6] = (previousTimeStamps[cnt] shr 8).toByte()
-            message[12+cnt*8+7] = (previousTimeStamps[cnt] shr 0).toByte()
-            cnt+=1
-        }
+
+            message[12+0] = (previousTimeStamps[0] shr 56).toByte()
+            message[12+1] = (previousTimeStamps[0] shr 48).toByte()
+            message[12+2] = (previousTimeStamps[0] shr 40).toByte()
+            message[12+3] = (previousTimeStamps[0] shr 32).toByte()
+            message[12+4] = (previousTimeStamps[0] shr 24).toByte()
+            message[12+5] = (previousTimeStamps[0] shr 16).toByte()
+            message[12+6] = (previousTimeStamps[0] shr 8).toByte()
+            message[12+7] = (previousTimeStamps[0] shr 0).toByte()
+
+
         val currentTime = System.nanoTime() /100000 - temporalOrigin
-        message[12+cnt*8+0] = (currentTime shr 56).toByte()
-        message[12+cnt*8+1] = (currentTime shr 48).toByte()
-        message[12+cnt*8+2] = (currentTime shr 40).toByte()
-        message[12+cnt*8+3] = (currentTime shr 32).toByte()
-        message[12+cnt*8+4] = (currentTime shr 24).toByte()
-        message[12+cnt*8+5] = (currentTime shr 16).toByte()
-        message[12+cnt*8+6] = (currentTime shr 8).toByte()
-        message[12+cnt*8+7] = (currentTime shr 0).toByte()
+        message[12+8+0] = (currentTime shr 56).toByte()
+        message[12+8+1] = (currentTime shr 48).toByte()
+        message[12+8+2] = (currentTime shr 40).toByte()
+        message[12+8+3] = (currentTime shr 32).toByte()
+        message[12+8+4] = (currentTime shr 24).toByte()
+        message[12+8+5] = (currentTime shr 16).toByte()
+        message[12+8+6] = (currentTime shr 8).toByte()
+        message[12+8+7] = (currentTime shr 0).toByte()
         val messageLength = 36
-        var portNr=client.port
-        if(onDataPort)
-        {
-            portNr+=1
-        }
+        val portNr=client.port+1
         val p = DatagramPacket(message, messageLength, client.address,portNr)
         s.send(p)
         return currentTime.toULong()
