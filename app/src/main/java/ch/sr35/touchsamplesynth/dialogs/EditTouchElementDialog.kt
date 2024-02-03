@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.PaintDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -221,18 +220,15 @@ class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
 
     init {
 
-        if (touchElement?.soundGenerator != null) {
-            checkedPosition = IntStream.range(0, instruments.size)
+        checkedPosition = if (touchElement?.soundGenerator != null) {
+            IntStream.range(0, instruments.size)
                 .filter { i -> (instruments[i].name == touchElement.soundGenerator!!.name) && (instruments[i].getType() == touchElement.soundGenerator!!.getType()) }
                 .findFirst()
                 .orElse(-1)
-        }
-        else if (instruments.isNotEmpty())
-        {
-            checkedPosition = 0
-        }
-        else {
-            checkedPosition = -1
+        } else if (instruments.isNotEmpty()) {
+            0
+        } else {
+            -1
         }
 
     }

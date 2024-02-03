@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth
 
 import ch.sr35.touchsamplesynth.network.RtpMidiJournal
-import ch.sr35.touchsamplesynth.network.RtpMidiJournalEntry
 import org.junit.Assert
 import org.junit.Test
 import kotlin.random.Random

@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.network
 
-import android.provider.Contacts.Intents.UI
 import android.util.Log
 import ch.sr35.touchsamplesynth.TAG
 import java.io.IOException
@@ -51,12 +50,6 @@ class RtpMidiServer {
             try {
                 while(true) {
                     controlSocket?.receive(p)
-                    // dispatch as needed
-                    for (conn in connections) {
-                        if (conn.address == p.address) {
-
-                        }
-                    }
 
                     // no known connection from where this packet is coming from, check if "IN"
                     // and allow if the max number of connections isnt exceeded
@@ -130,7 +123,7 @@ class RtpMidiServer {
             }
         }
         thread(start = true,name="TSS Midi data", priority = 10) {
-            var p = DatagramPacket(packetBufferData,packetBufferData.size)
+            val p = DatagramPacket(packetBufferData,packetBufferData.size)
             val previousTimeStamps = ArrayList<ULong>()
             try {
                 while(true) {
@@ -148,13 +141,13 @@ class RtpMidiServer {
                                 val count = p.data[8].toInt()
                                 if (count == 0) {
                                     previousTimeStamps.clear()
-                                    var senderSsrc = ByteArray(4)
+                                    val senderSsrc = ByteArray(4)
                                     senderSsrc[0] = p.data[4]
                                     senderSsrc[1] = p.data[5]
                                     senderSsrc[2] = p.data[6]
                                     senderSsrc[3] = p.data[7]
                                     if (!senderSsrc.contentEquals(conn.sscr)) {
-                                        break;
+                                        break
                                     }
                                     conn.timestamp1 = (p.data[12].toULong() and 0xFFu shl 56) or
                                             (p.data[13].toULong() and 0xFFu shl 48) or
