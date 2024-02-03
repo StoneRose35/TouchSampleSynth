@@ -75,4 +75,7 @@
     <string name="rtpmidi">RTP/Apple Midi</string>
     <string name="midiChannel">Midi Channel</string>
     <string name="midiCC">Midi CC</string>
+    <string name="ipAdress">IP Address</string>
+    <string name="rtpMidiPorts">RTP Midi Ports</string>
+    <string name="offline">offline</string>
 </resources>

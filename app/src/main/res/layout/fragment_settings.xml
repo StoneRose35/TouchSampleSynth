@@ -128,7 +128,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:text="IP Address"
+                android:text="@string/ipAdress"
                 />
             <TextView
                 android:id="@+id/ipAddress"
@@ -136,7 +136,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:text="RTP Midi Ports"
+                android:text="@string/rtpMidiPorts"
                 />
             <TextView
                 android:id="@+id/rtpMidiPorts"

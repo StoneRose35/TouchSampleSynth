@@ -184,7 +184,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         }
         catch (e: SocketException)
         {
-            ipAdressTextView.text="Offline"
+            ipAdressTextView.text=getText(R.string.offline)
         }
 
     }
