@@ -54,6 +54,7 @@
             <EditText
                 android:id="@+id/midiChannel"
                 android:inputType="numberDecimal"
+                android:autofillHints="postalCode"
                 android:minWidth="32dp"
                 android:text="@android:string/autofill"
                 />
