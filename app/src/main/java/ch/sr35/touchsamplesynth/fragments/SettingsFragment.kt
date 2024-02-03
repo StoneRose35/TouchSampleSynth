@@ -22,6 +22,8 @@ import ch.sr35.touchsamplesynth.MidiHostHandler
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.views.TouchElement
 import com.google.android.material.snackbar.Snackbar
+import java.net.NetworkInterface
+import java.net.SocketException
 
 
 class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDevicesChanged {
@@ -143,6 +145,9 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
                         (context as TouchSampleSynthMain).rtpMidiServer?.let { it3 ->
                             it3.startServer()
                             (context as TouchSampleSynthMain).nsdHandler?.registerService(it3.port)
+                            view.findViewById<TextView>(R.id.rtpMidiPorts).also {
+                                it.text = "%d / %d".format(it3.port, it3.port + 1)
+                            }
                         }
                     }
                     toggleButtonView.text= (context as TouchSampleSynthMain).getString(R.string.disable)
@@ -152,8 +157,34 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
                     (context as TouchSampleSynthMain).nsdHandler?.tearDown()
                     (context as TouchSampleSynthMain).rtpMidiServer?.stopServer()
                     toggleButtonView.text= (context as TouchSampleSynthMain).getString(R.string.enable)
+                    view.findViewById<TextView>(R.id.rtpMidiPorts).also {
+                        it.text = ""
+                    }
                 }
             }
+        }
+
+        val ipAdressTextView = view.findViewById<TextView>(R.id.ipAddress)
+        try {
+            val ifaces = NetworkInterface.getNetworkInterfaces()
+
+            for (iface in ifaces)
+            {
+                if (!iface.isLoopback())
+                {
+                    val addresses = iface.inetAddresses
+                    for (addr in addresses)
+                    {
+                        if(!addr.isLoopbackAddress && addr.hostAddress !=null && addr.hostAddress?.contains(":")==false) {
+                            ipAdressTextView.text = addr.hostAddress
+                        }
+                    }
+                }
+            }
+        }
+        catch (e: SocketException)
+        {
+            ipAdressTextView.text="Offline"
         }
 
     }

@@ -126,6 +126,22 @@
                 android:text="@string/enable"
                 />
         </TableRow>
+        <TableRow>
+            <TextView
+                android:text="IP Address"
+                />
+            <TextView
+                android:id="@+id/ipAddress"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:text="RTP Midi Ports"
+                />
+            <TextView
+                android:id="@+id/rtpMidiPorts"
+                />
+        </TableRow>
     </TableLayout>
 
 

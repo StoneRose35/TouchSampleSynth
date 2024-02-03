@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.network
 
+import android.provider.Contacts.Intents.UI
 import android.util.Log
 import ch.sr35.touchsamplesynth.TAG
 import java.io.IOException
@@ -10,7 +11,7 @@ import java.net.SocketException
 import kotlin.concurrent.thread
 import kotlin.random.Random
 import kotlin.random.nextUInt
-
+// documentation used: https://developer.apple.com/library/archive/documentation/Audio/Conceptual/MIDINetworkDriverProtocol/MIDI/MIDI.html
 class RtpMidiServer {
     var port: Int=0
     var controlSocket: DatagramSocket?=null
@@ -22,7 +23,7 @@ class RtpMidiServer {
     var ssrc: UInt = Random.nextUInt(0xFFFFFFFFu)
     var name: String="TSS Midi Server"
     var isEnabled:Boolean=false
-    var journal=RtpMidiJournal(64)
+    var journal=RtpMidiJournal(128)
     fun startServer(): Boolean
     {
         var controlPort= 1024
@@ -95,6 +96,31 @@ class RtpMidiServer {
                                     (p.data[10].toUInt() and 0xFFu shl 8) or
                                     (p.data[11].toUInt() and 0xFFu shl 0)
                             sendCommand("NO", it, false, controlSocket!!)
+                        }
+                    }
+                    else if (cmd == "RS")// got receiver feedback, resend all commands with a sequence number newer than the one received
+                    {
+                        for (conn in connections)
+                        {
+                            if (conn.sscr[0] == p.data[4] &&
+                                conn.sscr[1] == p.data[5] &&
+                                conn.sscr[2] == p.data[6] &&
+                                conn.sscr[3] == p.data[7])
+                            {
+                                val lastSeqReceived = (p.data[8].toUInt() shr 24) or
+                                                      (p.data[9].toUInt() shr 16) or
+                                                      (p.data[10].toUInt() shr 8) or
+                                                      (p.data[10].toUInt() shr 0)
+                                val indexes = journal.getIndexesOfNewerThan(lastSeqReceived)
+                                var runningIdx=indexes[0]
+                                while(runningIdx!= indexes[1])
+                                {
+                                    journal.get(runningIdx)?.let {
+                                        sendMidiCommand(it.data)
+                                    }
+                                    runningIdx+=1
+                                }
+                            }
                         }
                     }
                 }
@@ -316,10 +342,7 @@ class RtpMidiServer {
         val p = DatagramPacket(message, messageLength, conn.address, conn.port+1)
         s.send(p)
 
-        val journalEntry=RtpMidiJournalEntry()
-        journalEntry.data = midiData
-        journalEntry.timestamp = conn.sequenceNumber
-        journal.push(journalEntry)
+        journal.push(midiData,conn.sequenceNumber)
         conn.sequenceNumber += 1u
         conn.sequenceNumber = conn.sequenceNumber and 0xFFFFu
     }
@@ -349,30 +372,90 @@ class ClientConnectionData
 }
 
 
-class RtpMidiJournal(size: Int)
+class RtpMidiJournal(private val size: Int)
 {
     private var internalArrayList=Array<RtpMidiJournalEntry?>(size){null}
     private var idx=0
+    private var idxBottom=0
 
 
     //fun clearOlderThan(timestamp: Int)
     //{
     //    internalArrayList = internalArrayList.iterator().
 
-    fun push(entry: RtpMidiJournalEntry)
+    fun push(data: ByteArray,sequenceNumber: UInt)
     {
-        internalArrayList[idx]=entry
+        val journalEntry=RtpMidiJournalEntry()
+        journalEntry.data = data
+        journalEntry.timestamp = sequenceNumber
+        current()?.let {
+            journalEntry.timestampHigh = it.timestampHigh
+            if (it.timestamp > sequenceNumber) {
+                journalEntry.timestampHigh += 1u
+            }
+        }
         idx+=1
-        if (idx == 64)
+        if (idx == size)
         {
             idx=0
         }
+        internalArrayList[idx]=journalEntry
+
+    }
+
+    fun getIndexesOfNewerThan(timestamp: UInt): Array<Int>
+    {
+        var hasEnded=false
+        while(!hasEnded) {
+            if (internalArrayList[idxBottom] != null) {
+                if (internalArrayList[idxBottom]?.get32bitTimestamp()!! < timestamp) {
+                    idxBottom += 1
+                    if (idxBottom != idx) {
+                        if (idxBottom == size) {
+                            idxBottom = 0
+                        }
+                    }
+                    else {
+                        hasEnded=true
+                    }
+                }
+                else
+                {
+                    hasEnded=true
+                }
+            }
+            else
+            {
+                idxBottom += 1
+                if (idxBottom != idx) {
+                    if (idxBottom == size) {
+                        idxBottom = 0
+                    }
+                }
+            }
+        }
+        return arrayOf(idxBottom,idx)
+    }
+
+    fun current(): RtpMidiJournalEntry?
+    {
+        return internalArrayList[idx]
+    }
+
+    fun get(idx: Int): RtpMidiJournalEntry?
+    {
+        return internalArrayList[idx]
     }
 }
 class RtpMidiJournalEntry
 {
     var data= ByteArray(3)
     var timestamp: UInt =0u
+    var timestampHigh: UInt=0u
+    fun get32bitTimestamp(): UInt
+    {
+        return timestamp + (timestampHigh and 0xFFFFu shl 16 )
+    }
 }
 
 enum class ConnectionState

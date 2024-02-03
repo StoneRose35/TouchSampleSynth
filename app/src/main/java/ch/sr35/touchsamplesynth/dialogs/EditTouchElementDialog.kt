@@ -3,14 +3,19 @@ package ch.sr35.touchsamplesynth.dialogs
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.PaintDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
@@ -31,6 +36,7 @@ import codes.side.andcolorpicker.group.registerPickers
 import codes.side.andcolorpicker.hsl.HSLColorPickerSeekBar
 import codes.side.andcolorpicker.model.IntegerHSLColor
 import codes.side.andcolorpicker.view.picker.ColorSeekBar
+import java.lang.NumberFormatException
 import java.util.stream.Collectors
 import java.util.stream.IntStream
 
@@ -151,6 +157,60 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
 
         })
 
+        findViewById<EditText>(R.id.midiChannel).also {
+            (it as TextView).text = this.touchElement.midiChannel.toString()
+            it.setOnEditorActionListener { v, actionId, event ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        try {
+                            val midiChannelInt =  v.text.toString().toInt()
+                            v.background=null
+                            if (midiChannelInt < 0 || midiChannelInt > 15)
+                            {
+                                v.background= ColorDrawable(Color.RED)
+                            }
+                            else
+                            {
+                                v.background=null
+                                this.touchElement.midiChannel=midiChannelInt
+                            }
+                        }
+                        catch (e: NumberFormatException)
+                        {
+                            v.background= ColorDrawable(Color.RED)
+                        }
+                        return@setOnEditorActionListener true
+                    }
+                return@setOnEditorActionListener false
+            }
+        }
+
+        findViewById<EditText>(R.id.midiControlChange).also {
+            (it as TextView).text = this.touchElement.midiCC.toString()
+            it.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    try {
+                        val midiCCInt =  v.text.toString().toInt()
+                        v.background=null
+                        if (midiCCInt < 0 || midiCCInt > 127)
+                        {
+                            v.background= ColorDrawable(Color.RED)
+                        }
+                        else
+                        {
+                            v.background=null
+                            this.touchElement.midiCC=midiCCInt
+                        }
+                    }
+                    catch (e: NumberFormatException)
+                    {
+                        v.background= ColorDrawable(Color.RED)
+                    }
+                    return@setOnEditorActionListener true
+                }
+                return@setOnEditorActionListener false
+            }
+        }
+
     }
 }
 
@@ -223,7 +283,6 @@ class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
                 notifyItemChanged(checkedPosition)
                 checkedPosition = holder.bindingAdapterPosition
                 holder.checkedView.isChecked= position==checkedPosition
-
             }
         }
     }
