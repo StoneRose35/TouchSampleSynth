@@ -83,6 +83,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private val boundsRotate = Rect()
     private val boundsSetSoundgen = Rect()
     private val boundsDelete = Rect()
+    private val appContext: TouchSampleSynthMain?
 
     init {
         outLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
@@ -116,7 +117,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
         fillColor.color = MaterialColors.getColor(this,R.attr.touchElementColor)
         fillColor.style = Paint.Style.FILL
-
+        appContext = if (context is TouchSampleSynthMain) {
+            context
+        } else {
+            null
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -388,7 +393,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         if (elementState != TouchElementState.EDITING) {
             if (event?.action == MotionEvent.ACTION_DOWN) {
                 performClick()
-                (context as TouchSampleSynthMain).rtpMidiServer?.let {
+                appContext?.rtpMidiServer?.let {
                     if (it.isEnabled)
                     {
                         val midiData=ByteArray(3)
@@ -396,7 +401,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         midiData[1] = (this.note!!.value+48).toInt().toByte()
                         midiData[2] = 0x7F.toByte()
                         thread(start = true) {
-                            (context as TouchSampleSynthMain).rtpMidiServer?.sendMidiCommand(
+                            appContext.rtpMidiServer?.sendMidiCommand(
                                 midiData
                             )
                         }
@@ -408,7 +413,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             } else if (event?.action == MotionEvent.ACTION_UP) {
                 outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                 soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
-                (context as TouchSampleSynthMain).rtpMidiServer?.let {
+                appContext?.rtpMidiServer?.let {
                     if (it.isEnabled)
                     {
                         val midiData=ByteArray(3)
@@ -416,7 +421,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         midiData[1] = (this.note!!.value+48).toInt().toByte()
                         midiData[2] = 0x7F.toByte()
                         thread(start = true) {
-                            (context as TouchSampleSynthMain).rtpMidiServer?.sendMidiCommand(
+                            appContext.rtpMidiServer?.sendMidiCommand(
                                 midiData
                             )
                         }
@@ -432,7 +437,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         if (it.isEngaged())
                         {
                             it.switchOff(1.0f)
-                            (context as TouchSampleSynthMain).rtpMidiServer?.let {midiserver->
+                            appContext?.rtpMidiServer?.let {midiserver->
                                 if (midiserver.isEnabled)
                                 {
                                     val midiData=ByteArray(3)
@@ -467,7 +472,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 if (touchVal>=-1.0f)
                 {
                     soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(touchVal)
-                    (context as TouchSampleSynthMain).rtpMidiServer?.let {
+                    appContext?.rtpMidiServer?.let {
                         if (it.isEnabled)
                         {
                             val midiData=ByteArray(3)
@@ -476,7 +481,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                             midiData[2] = (touchVal*127.0f).toInt().toByte()
                             if (midiData[2]!=midiCCOld) {
                                 thread(start = true) {
-                                    (context as TouchSampleSynthMain).rtpMidiServer?.sendMidiCommand(
+                                    appContext.rtpMidiServer?.sendMidiCommand(
                                         midiData
                                     )
                                 }
@@ -523,16 +528,18 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         return true
                     } else if (deleteRect.contains(px.toInt(), py.toInt())) {
 
-                        val alertDlgBuilder = AlertDialog.Builder(context as TouchSampleSynthMain)
+                        appContext?.let {
+                        AlertDialog.Builder(appContext)
                             .setMessage(context.getString(R.string.alert_dialog_really_delete))
                             .setPositiveButton(context.getString(R.string.yes)) { _, _ ->
-                                (context as TouchSampleSynthMain).touchElements.remove(this)
+                                appContext.touchElements.remove(this)
                                 (parent as ViewGroup).removeView(this)
                             }
-                            .setNegativeButton(context.getString(R.string.no)) { _, _ -> }
-                        val alertDlg = alertDlgBuilder.create()
-                        dragStart = null
-                        alertDlg.show()
+                            .setNegativeButton(context.getString(R.string.no)) { _, _ -> }.create().also {
+                                dragStart = null
+                                it.show()
+                            }
+                        }
                         return true
                     } else {
                         val layoutParams: ConstraintLayout.LayoutParams? =

@@ -26,6 +26,7 @@ class TouchElementTest {
     fun virtuallyPlayTouchElement()
     {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
+
         context.setTheme(R.style.Theme_TouchSampleSynth)
         val te = TouchElement(context,null)
         val i1 = SineMonoSynthI(context,"Basic")
