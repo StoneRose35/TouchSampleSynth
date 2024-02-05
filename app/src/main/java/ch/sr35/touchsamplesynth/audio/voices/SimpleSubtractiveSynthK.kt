@@ -11,6 +11,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
 
     private var instance: Byte=-1
     var actionAmount: Float=0.0f
+    var engaged: Boolean=false
     val icon=AppCompatResources.getDrawable(context,R.drawable.simplesubtractivesynth)
     external fun setAttack(a: Float): Boolean
     external fun getAttack(): Float
@@ -26,8 +27,8 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     external fun getResonance():Float
     external fun setInitialCutoff(ic: Float): Boolean
     external fun getInitialCutoff(): Float
-    external fun switchOnExt(vel: Float): Boolean
-    external fun switchOffExt(vel: Float):Boolean
+    private external fun switchOnExt(vel: Float): Boolean
+    private external fun switchOffExt(vel: Float):Boolean
     external override fun isSounding(): Boolean
     external override fun setMidiMode(midiMode: Int)
     external override fun getMidiMode(): Int
@@ -77,13 +78,18 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
     }
 
     override fun switchOn(vel: Float): Boolean {
+        engaged=true
         return switchOnExt(vel)
     }
 
     override fun switchOff(vel: Float): Boolean{
+        engaged=false
         return switchOffExt(vel)
     }
 
+    override fun isEngaged(): Boolean {
+        return engaged
+    }
 
     override fun applyTouchAction(a: Float) {
         if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmount) > 20.0f &&

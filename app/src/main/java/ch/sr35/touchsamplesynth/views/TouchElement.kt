@@ -76,6 +76,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     var note: MusicalPitch? = null
     var midiChannel: Int=0
     var midiCC: Int=3
+    var midiCCOld: Byte=0
     private var rotateRect: Rect = Rect()
     private var setSoundgenRect: Rect = Rect()
     private var deleteRect: Rect = Rect()
@@ -275,7 +276,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     descriptionOffset + (iconHeight * 0.7).toInt()
                 )
                 soundGenerator?.getInstrumentIcon()?.draw(canvas)
-                soundGenerator?.name.let { it ->
+                soundGenerator?.name.let {
                     canvas.drawText(
                         it.toString(),
                         descriptionOffset.toFloat(),
@@ -283,7 +284,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         smallText
                     )
                 }
-                note.let { it ->
+                note.let {
                     canvas.drawText(
                         it.toString(),
                         descriptionOffset.toFloat(),
@@ -427,22 +428,28 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 var touchVal:Float=-2.0f
                 if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
                     outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-                    soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
-                    (context as TouchSampleSynthMain).rtpMidiServer?.let {
-                        if (it.isEnabled)
+                    soundGenerator?.voices?.get(voiceNr)?.let {
+                        if (it.isEngaged())
                         {
-                            val midiData=ByteArray(3)
-                            midiData[0] = (0x90 + midiChannel).toByte()
-                            midiData[1] = (this.note!!.value+48).toInt().toByte()
-                            midiData[2] = 0x7F.toByte()
-                            thread(start = true) {
-                                (context as TouchSampleSynthMain).rtpMidiServer?.sendMidiCommand(
-                                    midiData
-                                )
+                            it.switchOff(1.0f)
+                            (context as TouchSampleSynthMain).rtpMidiServer?.let {midiserver->
+                                if (midiserver.isEnabled)
+                                {
+                                    val midiData=ByteArray(3)
+                                    midiData[0] = (0x90 + midiChannel).toByte()
+                                    midiData[1] = (this.note!!.value+48).toInt().toByte()
+                                    midiData[2] = 0x7F.toByte()
+                                    thread(start = true) {
+                                        midiserver.sendMidiCommand(
+                                            midiData
+                                        )
+                                    }
+                                }
                             }
+                            invalidate()
                         }
                     }
-                    invalidate()
+
                     return true
                 } else if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
                     touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
@@ -467,10 +474,13 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                             midiData[0] = (0xB0 + midiChannel).toByte()
                             midiData[1] = midiCC.toByte()
                             midiData[2] = (touchVal*127.0f).toInt().toByte()
-                            thread(start = true) {
-                                (context as TouchSampleSynthMain).rtpMidiServer?.sendMidiCommand(
-                                    midiData
-                                )
+                            if (midiData[2]!=midiCCOld) {
+                                thread(start = true) {
+                                    (context as TouchSampleSynthMain).rtpMidiServer?.sendMidiCommand(
+                                        midiData
+                                    )
+                                }
+                                midiCCOld=midiData[2]
                             }
                         }
                     }

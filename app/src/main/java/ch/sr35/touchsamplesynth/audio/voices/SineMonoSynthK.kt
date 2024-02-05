@@ -9,6 +9,7 @@ import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 class SineMonoSynthK(context: Context): MusicalSoundGenerator {
 
     private var instance: Byte=-1
+    var engaged: Boolean=false
     val icon=AppCompatResources.getDrawable(context,R.drawable.sinemonosynth)
 
     external fun setAttack(a: Float): Boolean
@@ -19,8 +20,8 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
     external fun getSustain(): Float
     external fun setRelease(a: Float): Boolean
     external fun getRelease(): Float
-    external override fun switchOn(vel: Float): Boolean
-    external override fun switchOff(vel:Float): Boolean
+    external fun switchOnExt(vel: Float): Boolean
+    external fun switchOffExt(vel: Float):Boolean
     external override fun setNote(note: Float): Boolean
     external override fun isSounding(): Boolean
     external override fun setMidiMode(midiMode: Int)
@@ -62,8 +63,21 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator {
 
     }
 
+    override fun switchOff(vel:Float): Boolean
+    {
+        engaged=false
+        return switchOffExt(vel)
+    }
 
+    override fun switchOn(vel: Float): Boolean
+    {
+        engaged=true
+        return switchOnExt(vel)
+    }
 
+    override fun isEngaged(): Boolean {
+        return engaged
+    }
 
     override fun getInstance(): Byte
     {

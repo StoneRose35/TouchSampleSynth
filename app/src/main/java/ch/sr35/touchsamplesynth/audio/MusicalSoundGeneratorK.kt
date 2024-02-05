@@ -12,6 +12,7 @@ interface MusicalSoundGenerator {
     fun detachFromAudioEngine()
     fun applyTouchAction(a: Float)
     fun isSounding(): Boolean
+    fun isEngaged(): Boolean
     fun copyParamsTo(other: MusicalSoundGenerator)
     // 0: no midi, 2: midi available, 3: midi available, note change possible (monophonic)
     fun setMidiMode(midiMode: Int)

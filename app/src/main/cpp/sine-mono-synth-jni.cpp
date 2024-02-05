@@ -177,7 +177,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getRelease(JNIEnv* env
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOn(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOnExt(JNIEnv* env,
                                                               jobject /* this */me,
                                                               jfloat vel)
 {
@@ -195,7 +195,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOn(JNIEnv* env,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOff(JNIEnv* env,
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOffExt(JNIEnv* env,
                                                             jobject /* this */me,
                                                             jfloat vel)
 {

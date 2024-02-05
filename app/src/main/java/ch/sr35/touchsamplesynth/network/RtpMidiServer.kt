@@ -100,10 +100,8 @@ class RtpMidiServer {
                                 conn.sscr[2] == p.data[6] &&
                                 conn.sscr[3] == p.data[7])
                             {
-                                val lastSeqReceived = (p.data[8].toUInt() shr 24) or
-                                                      (p.data[9].toUInt() shr 16) or
-                                                      (p.data[10].toUInt() shr 8) or
-                                                      (p.data[10].toUInt() shr 0)
+                                val lastSeqReceived = (p.data[8].toUInt() and 0xFFu shl 8) or
+                                                      (p.data[9].toUInt() and 0xFFu  shl 0)
                                 val indexes = journal.getIndexesOfNewerThan(lastSeqReceived)
                                 var runningIdx=indexes[0]
                                 while(runningIdx!= indexes[1])
@@ -111,7 +109,12 @@ class RtpMidiServer {
                                     journal.get(runningIdx)?.let {
                                         sendMidiCommand(it.data)
                                     }
+
                                     runningIdx+=1
+                                    if (runningIdx==journal.size)
+                                    {
+                                        runningIdx=0
+                                    }
                                 }
                             }
                         }
@@ -327,6 +330,7 @@ class RtpMidiServer {
         s.send(p)
 
         journal.push(midiData,conn.sequenceNumber)
+        Log.i(TAG,"Pushed ${conn.sequenceNumber} to Midi Journal")
         conn.sequenceNumber += 1u
         conn.sequenceNumber = conn.sequenceNumber and 0xFFFFu
     }
@@ -356,7 +360,7 @@ class ClientConnectionData
 }
 
 
-class RtpMidiJournal(private val size: Int)
+class RtpMidiJournal(val size: Int)
 {
     private var internalArrayList=Array<RtpMidiJournalEntry?>(size){null}
     private var idx=0
