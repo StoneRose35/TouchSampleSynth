@@ -21,6 +21,7 @@ import ch.sr35.touchsamplesynth.MidiDevicesChanged
 import ch.sr35.touchsamplesynth.MidiHostHandler
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.views.TouchElement
+import ch.sr35.touchsamplesynth.views.WaitAnimation
 import com.google.android.material.snackbar.Snackbar
 import java.net.NetworkInterface
 import java.net.SocketException
@@ -186,7 +187,9 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         {
             ipAdressTextView.text=getText(R.string.offline)
         }
-
+        view.findViewById<WaitAnimation>(R.id.waitAnimationTest).apply {
+            WaitAnimation.startAnimation(this)
+        }
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

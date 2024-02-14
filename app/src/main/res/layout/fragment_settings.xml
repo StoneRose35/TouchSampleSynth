@@ -144,6 +144,16 @@
         </TableRow>
     </TableLayout>
 
+    <ch.sr35.touchsamplesynth.views.WaitAnimation
+        android:id="@+id/waitAnimationTest"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+    </ch.sr35.touchsamplesynth.views.WaitAnimation>
 
     <TextView
         android:id="@+id/settingTextViewAbout"
