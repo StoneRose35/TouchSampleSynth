@@ -13,6 +13,7 @@ import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.WavReader
 import ch.sr35.touchsamplesynth.audio.WaveFileChannel
 import ch.sr35.touchsamplesynth.audio.voices.SamplerK
+import java.io.InputStream
 
 const val WAVE_BMP_WIDTH=768
 const val WAVE_BMP_HEIGHT=512
@@ -44,12 +45,10 @@ class SamplerI(private val context: Context,
         return icon
     }
 
-    fun setSampleFile(fileName: Uri)
+    fun setSampleFile(inputStream: InputStream)
     {
-
         val wr = WavReader()
-        val inputStream = context.contentResolver.openInputStream(fileName)
-        val wavFile = wr.readWaveFile(inputStream!!)
+        val wavFile = wr.readWaveFile(inputStream)
         val ae = AudioEngineK()
         val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
         sample.clear()
@@ -67,10 +66,16 @@ class SamplerI(private val context: Context,
             (vc).setSampleEndIndex(sample.size-1)
         }
         loadSample(floatSamples.toFloatArray())
+    }
+
+    fun setSampleFile(fileName: Uri)
+    {
+
+        val wr = WavReader()
+        val inputStream = context.contentResolver.openInputStream(fileName)
+        setSampleFile(inputStream!!)
         sampleUri = fileName
         inputStream.close()
-
-
 
     }
 
