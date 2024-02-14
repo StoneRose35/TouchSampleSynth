@@ -89,7 +89,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
         var idx=0
         var sampleL: Float
         var sampleR: Float
-        var bbfr = ByteBuffer.allocate(4)
+        val bbfr = ByteBuffer.allocate(4)
         bbfr.order(ByteOrder.LITTLE_ENDIAN)
         val renorm = (1 shl (header.bitDepth - 1)).toFloat()
         if (this.header.nChannels == 2)
@@ -270,12 +270,10 @@ class WaveFileMetadata(var sampleRate: Int,var bitDepth: Int,var nChannels: Int)
 fun littleEndianConversion(bytes: ByteArray): Int {
     var result = 0
     for (i in bytes.indices) {
-        if (i < bytes.size-1) {
-            result = result or (bytes[i].toUByte().toInt() shl 8 * i)
-        }
-        else
-        {
-            result = result or (bytes[i].toInt() shl 8 * i)
+        result = if (i < bytes.size-1) {
+            result or (bytes[i].toUByte().toInt() shl 8 * i)
+        } else {
+            result or (bytes[i].toInt() shl 8 * i)
         }
     }
     return result

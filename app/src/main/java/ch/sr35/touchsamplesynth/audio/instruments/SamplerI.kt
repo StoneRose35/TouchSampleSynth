@@ -71,7 +71,6 @@ class SamplerI(private val context: Context,
     fun setSampleFile(fileName: Uri)
     {
 
-        val wr = WavReader()
         val inputStream = context.contentResolver.openInputStream(fileName)
         setSampleFile(inputStream!!)
         sampleUri = fileName
