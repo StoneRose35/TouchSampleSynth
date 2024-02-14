@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth.views
 
 import android.animation.AnimatorSet
-import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
