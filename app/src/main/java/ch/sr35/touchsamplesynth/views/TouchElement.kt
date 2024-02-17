@@ -397,7 +397,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     if (it.isEnabled)
                     {
                         val midiData=ByteArray(3)
-                        midiData[0] = (0x80 + midiChannel).toByte()
+                        midiData[0] = (0x90 + midiChannel).toByte()
                         midiData[1] = (this.note!!.value+48).toInt().toByte()
                         midiData[2] = 0x7F.toByte()
                         thread(start = true) {
@@ -417,7 +417,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     if (it.isEnabled)
                     {
                         val midiData=ByteArray(3)
-                        midiData[0] = (0x90 + midiChannel).toByte()
+                        midiData[0] = (0x80 + midiChannel).toByte()
                         midiData[1] = (this.note!!.value+48).toInt().toByte()
                         midiData[2] = 0x7F.toByte()
                         thread(start = true) {

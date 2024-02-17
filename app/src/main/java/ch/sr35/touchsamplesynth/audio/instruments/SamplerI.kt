@@ -52,7 +52,7 @@ class SamplerI(private val context: Context,
         val ae = AudioEngineK()
         val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
         sample.clear()
-        sample.addAll(floatSamples)
+        sample.addAll(floatSamples.toList())
         createBufferBitmap()
         for (vc in voices)
         {
@@ -65,7 +65,7 @@ class SamplerI(private val context: Context,
             (vc).setLoopEndIndex(sample.size-1)
             (vc).setSampleEndIndex(sample.size-1)
         }
-        loadSample(floatSamples.toFloatArray())
+        loadSample(floatSamples)
     }
 
     fun setSampleFile(fileName: Uri)

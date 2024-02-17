@@ -187,9 +187,6 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         {
             ipAdressTextView.text=getText(R.string.offline)
         }
-        view.findViewById<WaitAnimation>(R.id.waitAnimationTest).apply {
-            WaitAnimation.startAnimation(this)
-        }
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

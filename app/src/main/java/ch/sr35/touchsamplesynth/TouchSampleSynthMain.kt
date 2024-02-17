@@ -1,8 +1,11 @@
 package ch.sr35.touchsamplesynth
 
 import android.content.pm.PackageManager
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +17,7 @@ import android.widget.ListView
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,15 +31,19 @@ import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
 import ch.sr35.touchsamplesynth.fragments.SceneFragment
 import ch.sr35.touchsamplesynth.fragments.SettingsFragment
+import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
 import ch.sr35.touchsamplesynth.network.RtpMidiServer
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.VuMeter
+import ch.sr35.touchsamplesynth.views.WaitAnimation
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.util.Timer
 import java.util.TimerTask
+import java.util.concurrent.Executors
+import kotlin.concurrent.thread
 
 
 const val TAG="TouchSampleSynth"
@@ -356,38 +364,72 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         if (oldScenePosition >= 0) {
             allScenes[oldScenePosition].persist(soundGenerators, touchElements)
         }
-        oldScenePosition = position
-        //unload the current scene
-        soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
-        if (supportFragmentManager.fragments[0].tag!=null
-            && supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
-        {
-            for (te in touchElements) {
-                (supportFragmentManager.fragments[0].view as ViewGroup).removeView(te)
-            }
-        }
-
-        // load the new scene
-        allScenes[position].populate(soundGenerators, touchElements, this)
-        if (supportFragmentManager.fragments[0].tag!=null) {
-            if (supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
-            {
+        if (position != oldScenePosition) {
+            val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout)
+            val waitAnimation= WaitAnimation(this,null)
+            val constraintLayout = ConstraintLayout.LayoutParams(Converter.toPx(64),Converter.toPx(64))
+            constraintLayout.topToTop= ConstraintLayout.LayoutParams.PARENT_ID
+            constraintLayout.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+            constraintLayout.startToStart  = ConstraintLayout.LayoutParams.PARENT_ID
+            constraintLayout.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+            waitAnimation.layoutParams = constraintLayout
+            (mainLayout as ViewGroup).addView(waitAnimation)
+            waitAnimation.startAnimation()
+            oldScenePosition = position
+            val executor=Executors.newSingleThreadExecutor()
+            val handler = Handler(Looper.getMainLooper())
+            //unload the current scene
+            soundGenerators.flatMap { sg -> sg.voices }
+                .forEach { el -> el.detachFromAudioEngine() }
+            if (supportFragmentManager.fragments[0].tag != null
+                && supportFragmentManager.fragments[0].tag.equals("PlayPage0")
+            ) {
                 for (te in touchElements) {
-                    supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
-                        if (it!=null) {
-                            te.setEditmode(it)
-                        }
-                    }
-                    (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
+                    (supportFragmentManager.fragments[0].view as ViewGroup).removeView(te)
                 }
             }
-            else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0"))
-            {
-                supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)?.invalidateViews()
-                (supportFragmentManager.fragments[0] as InstrumentsPageFragment).selectInstrument(0,true)
+            executor.execute {
+                allScenes[position].populate(soundGenerators, touchElements, this)
+
+                handler.post {
+
+
+                    // load the new scene
+                    if (supportFragmentManager.fragments[0].tag != null) {
+                        if (supportFragmentManager.fragments[0].tag.equals("PlayPage0")) {
+                            for (te in touchElements) {
+                                supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
+                                    if (it != null) {
+                                        te.setEditmode(it)
+                                    }
+                                }
+                                (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
+                            }
+                        } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
+                            supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)
+                                ?.invalidateViews()
+                            (supportFragmentManager.fragments[0] as InstrumentsPageFragment).selectInstrument(
+                                0,
+                                true
+                            )
+                        }
+                        supportFragmentManager.fragments[0].view?.invalidate()
+                    }
+                    waitAnimation.stopAnimation()
+                    (mainLayout as ViewGroup).removeView(waitAnimation)
+                }
             }
-            supportFragmentManager.fragments[0].view?.invalidate()
+
+
+
+
+
+
+
+
+
         }
+
 
     }
 

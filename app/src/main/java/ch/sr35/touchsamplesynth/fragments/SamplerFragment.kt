@@ -3,21 +3,28 @@ package ch.sr35.touchsamplesynth.fragments
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
+import ch.sr35.touchsamplesynth.graphics.Converter
+import ch.sr35.touchsamplesynth.views.WaitAnimation
 import ch.sr35.touchsamplesynth.views.WaveDisplay
 import ch.sr35.touchsamplesynth.views.WaveDisplayChangeListener
 import com.developer.filepicker.model.DialogConfigs
 import com.developer.filepicker.model.DialogProperties
 import com.developer.filepicker.view.FilePickerDialog
 import java.io.File
+import java.util.concurrent.Executors
 
 
 class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
@@ -31,23 +38,6 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
         arguments?.let {
 
         }
-        /*
-        fileChooserResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
-            if (r != null && r.resultCode == Activity.RESULT_OK) {
-
-                    synth.setSampleFile(r.data!!.data!!)
-                    Log.i("TouchSampleSynth","loading sample for %s".format(synth.name))
-                    requireActivity().contentResolver.takePersistableUriPermission(
-                        r.data!!.data!!,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                    waveViewer?.waveViewBuffer=synth.waveformImg
-                    waveViewer?.startMarkerPosition = (synth.getSampleStartIndex().toFloat()/synth.sample.size.toFloat())
-                    waveViewer?.endMarkerPosition = (synth.getSampleEndIndex().toFloat()/synth.sample.size.toFloat())
-                    waveViewer?.loopStartMarkerPosition = (synth.getLoopStartIndex().toFloat()/synth.sample.size.toFloat())
-                    waveViewer?.loopEndMarkerPosition = (synth.getLoopEndIndex().toFloat()/synth.sample.size.toFloat())
-            }
-        }*/
     }
 
     override fun onCreateView(
@@ -93,19 +83,38 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
             val filePickerDialog= FilePickerDialog(context,dialogProperties)
             filePickerDialog.setTitle(R.string.sampler_select_sample)
             filePickerDialog.setDialogSelectionListener { it1 ->
+                val waitAnimation= context?.let { it2 -> WaitAnimation(it2, null) }
+                val constraintLayout = ConstraintLayout.LayoutParams(Converter.toPx(64), Converter.toPx(64))
+                constraintLayout.topToTop= ConstraintLayout.LayoutParams.PARENT_ID
+                constraintLayout.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                constraintLayout.startToStart  = ConstraintLayout.LayoutParams.PARENT_ID
+                constraintLayout.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                waitAnimation?.layoutParams = constraintLayout
+                val mainLayout = (context as TouchSampleSynthMain).findViewById<ConstraintLayout>(R.id.mainLayout)
+                (mainLayout as ViewGroup).addView(waitAnimation)
+                waitAnimation?.startAnimation()
                 val sampleUri = Uri.fromFile(File(it1[0]))
-                synth.setSampleFile(sampleUri)
-                Log.i("TouchSampleSynth","loading sample for %s".format(synth.name))
-                //requireActivity().contentResolver.takePersistableUriPermission(
-                //    sampleUri,
-                //    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                //)
-                waveViewer?.waveViewBuffer=synth.waveformImg
-                waveViewer?.startMarkerPosition = (synth.getSampleStartIndex().toFloat()/synth.sample.size.toFloat())
-                waveViewer?.endMarkerPosition = (synth.getSampleEndIndex().toFloat()/synth.sample.size.toFloat())
-                waveViewer?.loopStartMarkerPosition = (synth.getLoopStartIndex().toFloat()/synth.sample.size.toFloat())
-                waveViewer?.loopEndMarkerPosition = (synth.getLoopEndIndex().toFloat()/synth.sample.size.toFloat())
-                waveViewer?.invalidate()
+                val executor=Executors.newSingleThreadExecutor()
+                val handler= Handler(Looper.getMainLooper())
+                executor.execute {
+                    synth.setSampleFile(sampleUri)
+                    Log.i("TouchSampleSynth","loading sample for %s".format(synth.name))
+                    handler.post {
+                        waveViewer?.waveViewBuffer = synth.waveformImg
+                        waveViewer?.startMarkerPosition =
+                            (synth.getSampleStartIndex().toFloat() / synth.sample.size.toFloat())
+                        waveViewer?.endMarkerPosition =
+                            (synth.getSampleEndIndex().toFloat() / synth.sample.size.toFloat())
+                        waveViewer?.loopStartMarkerPosition =
+                            (synth.getLoopStartIndex().toFloat() / synth.sample.size.toFloat())
+                        waveViewer?.loopEndMarkerPosition =
+                            (synth.getLoopEndIndex().toFloat() / synth.sample.size.toFloat())
+                        waveViewer?.invalidate()
+                        waitAnimation?.stopAnimation()
+                        (mainLayout as ViewGroup).removeView(waitAnimation)
+                    }
+                }
+
             }
             filePickerDialog.show()
         }

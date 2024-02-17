@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.audio.instruments
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert
 import org.junit.Test
+import org.junit.Ignore
 import kotlin.math.sqrt
 import kotlin.system.measureTimeMillis
 
@@ -20,6 +21,7 @@ class SamplerTest {
 
 
     @Test
+    //@Ignore("demonstrative performance test, not useable for regression")
     fun setSamplePerformanceTest()
     {
         System.loadLibrary("touchsamplesynth")
