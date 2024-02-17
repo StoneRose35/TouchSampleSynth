@@ -21,7 +21,6 @@ import ch.sr35.touchsamplesynth.MidiDevicesChanged
 import ch.sr35.touchsamplesynth.MidiHostHandler
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.views.TouchElement
-import ch.sr35.touchsamplesynth.views.WaitAnimation
 import com.google.android.material.snackbar.Snackbar
 import java.net.NetworkInterface
 import java.net.SocketException

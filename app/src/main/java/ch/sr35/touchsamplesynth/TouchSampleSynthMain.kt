@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth
 
 import android.content.pm.PackageManager
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -43,7 +42,6 @@ import java.io.File
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.Executors
-import kotlin.concurrent.thread
 
 
 const val TAG="TouchSampleSynth"

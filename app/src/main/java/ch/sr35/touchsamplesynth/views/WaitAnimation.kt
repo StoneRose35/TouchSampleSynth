@@ -11,7 +11,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
 import android.view.View
-import android.view.WindowMetrics
 import android.view.animation.LinearInterpolator
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.graphics.Converter
@@ -98,39 +97,6 @@ class WaitAnimation(context: Context,attributeSet: AttributeSet?): View(context,
         }
     }
     companion object {
-        fun startAnimation(waitAnimation: WaitAnimation): AnimatorSet
-        {
-            val spinningCircleAnimation = ValueAnimator.ofFloat(0.0f,360.0f).apply {
-                duration = 1243
-                repeatMode = ValueAnimator.RESTART
-                repeatCount = ValueAnimator.INFINITE
-                interpolator = LinearInterpolator()
-                addUpdateListener {
-                    waitAnimation.angle = this.animatedValue as Float
-                    waitAnimation.invalidate()
-                }
-            }
-            val arcWidthAnimation = ValueAnimator.ofFloat(-1.0f,1.0f).apply {
-                duration = 1764
-                repeatMode = ValueAnimator.REVERSE
-                repeatCount = ValueAnimator.INFINITE
-                interpolator = LinearInterpolator()
-                addUpdateListener {
-                    waitAnimation.sweepAngle = (this.animatedValue as Float)* SWEEP_ANGLE_SIZE
-                    waitAnimation.invalidate()
-                }
-            }
-            return AnimatorSet().apply {
-                play(spinningCircleAnimation).with(arcWidthAnimation)
-                start()
-            }
-
-        }
-
-        fun stopAnimation(animator: ValueAnimator)
-        {
-            animator.cancel()
-        }
 
     }
 }

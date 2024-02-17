@@ -81,248 +81,256 @@ class WavReaderException(message: String?): Exception(message)
 
 class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
 {
-    fun getFloatData(expectedSamplingRate: Int,channels:WaveFileChannel): FloatArray
-    {
+    fun getFloatData(expectedSamplingRate: Int,channels:WaveFileChannel): FloatArray {
 
-        val nFrames = rawData.size/(header.bitDepth/8)/header.nChannels
-        val result =FloatArray(nFrames)
-        val channelSize = header.bitDepth/8
-        var idx=0
+        val nFrames = rawData.size / (header.bitDepth / 8) / header.nChannels
+        val result = FloatArray(nFrames)
+        val channelSize = header.bitDepth / 8
+        var idx = 0
         var sampleL: Float
         var sampleR: Float
         var bbfr = ByteBuffer.allocate(4)
         bbfr.order(ByteOrder.LITTLE_ENDIAN)
         val renorm = (1 shl (header.bitDepth - 1)).toFloat()
-        if (this.header.nChannels == 2)
-        {
-            if (channels == WaveFileChannel.BOTH)
-            {
-                when (header.bitDepth) {
-                    32 -> {
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(rawData, idx, channelSize)
-                            bbfr.rewind()
-                            sampleL = bbfr.getInt().toFloat() / renorm
-                            bbfr.clear()
-                            bbfr.put(rawData, idx + channelSize, channelSize)
-                            bbfr.rewind()
-                            sampleR = bbfr.getInt().toFloat() / renorm
-                            result[c]=((sampleR + sampleL) * 0.5f)
-                            idx += channelSize * 2
+        if (this.header.nChannels == 2) {
+            when (channels) {
+                WaveFileChannel.BOTH -> {
+                    when (header.bitDepth) {
+                        32 -> {
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getInt().toFloat() / renorm
+                                bbfr.clear()
+                                bbfr.put(rawData, idx + channelSize, channelSize)
+                                bbfr.rewind()
+                                sampleR = bbfr.getInt().toFloat() / renorm
+                                result[c] = ((sampleR + sampleL) * 0.5f)
+                                idx += channelSize * 2
+                            }
                         }
-                    }
-                    24 -> {
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(0)
-                            bbfr.put(rawData, idx, channelSize)
-                            bbfr.rewind()
-                            sampleL = bbfr.getInt().toFloat() / renorm
-                            bbfr.clear()
-                            bbfr.put(0)
-                            bbfr.put(rawData, idx + channelSize, channelSize)
-                            bbfr.rewind()
-                            sampleR = bbfr.getInt().toFloat() / renorm
 
-                            result[c]=((sampleR + sampleL) * 0.5f)
-                            idx += channelSize * 2
+                        24 -> {
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(0)
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getInt().toFloat() / renorm
+                                bbfr.clear()
+                                bbfr.put(0)
+                                bbfr.put(rawData, idx + channelSize, channelSize)
+                                bbfr.rewind()
+                                sampleR = bbfr.getInt().toFloat() / renorm
+
+                                result[c] = ((sampleR + sampleL) * 0.5f)
+                                idx += channelSize * 2
+                            }
                         }
-                    }
 
-                    16 -> {
-                        bbfr = ByteBuffer.allocate(2)
-                        bbfr.order(ByteOrder.LITTLE_ENDIAN)
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(rawData, idx, channelSize)
-                            bbfr.rewind()
-                            sampleL = bbfr.getShort().toFloat() / renorm
+                        16 -> {
+                            bbfr = ByteBuffer.allocate(2)
+                            bbfr.order(ByteOrder.LITTLE_ENDIAN)
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getShort().toFloat() / renorm
 
-                            bbfr.clear()
-                            bbfr.put(0)
-                            bbfr.put(rawData, idx + channelSize, channelSize)
-                            bbfr.rewind()
-                            sampleR = bbfr.getShort().toFloat() / renorm
+                                bbfr.clear()
+                                bbfr.put(0)
+                                bbfr.put(rawData, idx + channelSize, channelSize)
+                                bbfr.rewind()
+                                sampleR = bbfr.getShort().toFloat() / renorm
 
-                            result[c]=((sampleR + sampleL) * 0.5f)
-                            idx += channelSize * 2
+                                result[c] = ((sampleR + sampleL) * 0.5f)
+                                idx += channelSize * 2
+                            }
                         }
-                    }
-                    8 -> {
-                        for (c in 0 until nFrames) {
-                            sampleL = (rawData[idx].toUByte().toFloat())
-                            sampleR = (rawData[idx+channelSize].toUByte().toFloat())
-                            result[c]=((sampleR + sampleL - 256.0f) * 0.5f/256.0f)
-                            idx += channelSize * 2
-                        }
-                    }
-                }
-            }
-            else if (channels==WaveFileChannel.LEFT)
-            {
-                when (header.bitDepth) {
-                    32 -> {
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(rawData, idx, channelSize)
-                            bbfr.rewind()
-                            sampleL = bbfr.getInt().toFloat() / renorm
 
-                            result[c]=(sampleL)
-                            idx += channelSize * 2
-                        }
-                    }
-                    24 -> {
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(0)
-                            bbfr.put(rawData, idx, channelSize)
-                            bbfr.rewind()
-                            sampleL = bbfr.getInt().toFloat() / renorm
-
-                            result[c]=(sampleL)
-                            idx += channelSize * 2
-                        }
-                    }
-
-                    16 -> {
-                        bbfr = ByteBuffer.allocate(2)
-                        bbfr.order(ByteOrder.LITTLE_ENDIAN)
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(rawData, idx, channelSize)
-                            bbfr.rewind()
-                            sampleL = bbfr.getShort().toFloat() / renorm
-
-
-                            result[c]=(sampleL)
-                            idx += channelSize * 2
-                        }
-                    }
-                    8 -> {
-                        for (c in 0 until nFrames) {
-                            sampleL = (rawData[idx].toUByte().toFloat()-128.0f) / 256.0f
-                            result[c]=(sampleL)
-                            idx += channelSize * 2
+                        8 -> {
+                            for (c in 0 until nFrames) {
+                                sampleL = (rawData[idx].toUByte().toFloat())
+                                sampleR = (rawData[idx + channelSize].toUByte().toFloat())
+                                result[c] = ((sampleR + sampleL - 256.0f) * 0.5f / 256.0f)
+                                idx += channelSize * 2
+                            }
                         }
                     }
                 }
-            }
-            else if (channels==WaveFileChannel.RIGHT)
-            {
-                when (header.bitDepth) {
-                    32 -> {
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(rawData, idx+channelSize, channelSize)
-                            bbfr.rewind()
-                            sampleR = bbfr.getInt().toFloat() / renorm
-                            result[c]=(sampleR)
-                            idx += channelSize * 2
-                        }
-                    }
-                    24 -> {
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(0)
-                            bbfr.put(rawData, idx+channelSize, channelSize)
-                            bbfr.rewind()
-                            sampleR = bbfr.getInt().toFloat() / renorm
-                            result[c]=(sampleR)
-                            idx += channelSize * 2
-                        }
-                    }
 
-                    16 -> {
-                        bbfr = ByteBuffer.allocate(2)
-                        bbfr.order(ByteOrder.LITTLE_ENDIAN)
-                        for (c in 0 until nFrames) {
-                            bbfr.clear()
-                            bbfr.put(rawData, idx+channelSize, channelSize)
-                            bbfr.rewind()
-                            sampleR = bbfr.getShort().toFloat() / renorm
-                            result[c]=(sampleR)
-                            idx += channelSize * 2
-                        }
-                    }
-                    8 -> {
-                        for (c in 0 until nFrames) {
-                            sampleR = (rawData[idx+channelSize].toUByte().toFloat()-128.0f) / 256.0f
-                            result[c]=(sampleR)
-                            idx += channelSize * 2
-                        }
-                    }
-                }
-            }
+                WaveFileChannel.LEFT -> {
+                    when (header.bitDepth) {
+                        32 -> {
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getInt().toFloat() / renorm
 
-        }
-        else
-        {
-            when (header.bitDepth) {
-                32 -> {
-                    for (c in 0 until nFrames) {
-                        bbfr.clear()
-                        bbfr.put(rawData, idx, channelSize)
-                        bbfr.rewind()
-                        sampleL = bbfr.getInt().toFloat() / renorm
-                        result[c]=(sampleL)
-                        idx += channelSize
-                    }
-                }
-                24 -> {
-                    for (c in 0 until nFrames) {
-                        bbfr.clear()
-                        bbfr.put(0)
-                        bbfr.put(rawData, idx, channelSize)
-                        bbfr.rewind()
-                        sampleL = bbfr.getInt().toFloat() / renorm
-                        result[c]=(sampleL)
-                        idx += channelSize
+                                result[c] = (sampleL)
+                                idx += channelSize * 2
+                            }
+                        }
+
+                        24 -> {
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(0)
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getInt().toFloat() / renorm
+
+                                result[c] = (sampleL)
+                                idx += channelSize * 2
+                            }
+                        }
+
+                        16 -> {
+                            bbfr = ByteBuffer.allocate(2)
+                            bbfr.order(ByteOrder.LITTLE_ENDIAN)
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getShort().toFloat() / renorm
+
+
+                                result[c] = (sampleL)
+                                idx += channelSize * 2
+                            }
+                        }
+
+                        8 -> {
+                            for (c in 0 until nFrames) {
+                                sampleL = (rawData[idx].toUByte().toFloat() - 128.0f) / 256.0f
+                                result[c] = (sampleL)
+                                idx += channelSize * 2
+                            }
+                        }
                     }
                 }
 
-                16 -> {
-                    bbfr = ByteBuffer.allocate(2)
-                    for (c in 0 until nFrames) {
-                        bbfr.clear()
-                        bbfr.put(rawData, idx, channelSize)
-                        bbfr.rewind()
-                        sampleL = bbfr.getShort().toFloat() / renorm
-                        result[c]=(sampleL)
-                        idx += channelSize
-                    }
-                }
-                8 -> {
-                    for (c in 0 until nFrames) {
-                        sampleL = (rawData[c].toUByte().toFloat() - 128.0f) / 256.0f
-                        result[c]=sampleL
-                        idx += channelSize
+                WaveFileChannel.RIGHT -> {
+                    when (header.bitDepth) {
+                        32 -> {
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(rawData, idx + channelSize, channelSize)
+                                bbfr.rewind()
+                                sampleR = bbfr.getInt().toFloat() / renorm
+                                result[c] = (sampleR)
+                                idx += channelSize * 2
+                            }
+                        }
+
+                        24 -> {
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(0)
+                                bbfr.put(rawData, idx + channelSize, channelSize)
+                                bbfr.rewind()
+                                sampleR = bbfr.getInt().toFloat() / renorm
+                                result[c] = (sampleR)
+                                idx += channelSize * 2
+                            }
+                        }
+
+                        16 -> {
+                            bbfr = ByteBuffer.allocate(2)
+                            bbfr.order(ByteOrder.LITTLE_ENDIAN)
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(rawData, idx + channelSize, channelSize)
+                                bbfr.rewind()
+                                sampleR = bbfr.getShort().toFloat() / renorm
+                                result[c] = (sampleR)
+                                idx += channelSize * 2
+                            }
+                        }
+
+                        8 -> {
+                            for (c in 0 until nFrames) {
+                                sampleR = (rawData[idx + channelSize].toUByte()
+                                    .toFloat() - 128.0f) / 256.0f
+                                result[c] = (sampleR)
+                                idx += channelSize * 2
+                            }
+                        }
                     }
                 }
             }
         }
+                else  {
+                    when (header.bitDepth) {
+                        32 -> {
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getInt().toFloat() / renorm
+                                result[c] = (sampleL)
+                                idx += channelSize
+                            }
+                        }
 
-        if (expectedSamplingRate != header.sampleRate)
-        {
-            val interpolatedResult=ArrayList<Float>()
-            // sample rate conversion / interpolation
-            var fractionalIndex=0.0f
-            val relativeIncrement = header.sampleRate.toFloat()/expectedSamplingRate.toFloat()
-            var interp: Float
-            var dt: Float
-            while (floor(fractionalIndex).toInt()+1 < result.size)
-            {
-                dt = fractionalIndex -  floor(fractionalIndex)
-                interp = result[floor(fractionalIndex).toInt()] + (result[floor(fractionalIndex).toInt()+1] - result[floor(fractionalIndex).toInt()])*dt
-                interpolatedResult.add(interp)
-                fractionalIndex += relativeIncrement
+                        24 -> {
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(0)
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getInt().toFloat() / renorm
+                                result[c] = (sampleL)
+                                idx += channelSize
+                            }
+                        }
+
+                        16 -> {
+                            bbfr = ByteBuffer.allocate(2)
+                            for (c in 0 until nFrames) {
+                                bbfr.clear()
+                                bbfr.put(rawData, idx, channelSize)
+                                bbfr.rewind()
+                                sampleL = bbfr.getShort().toFloat() / renorm
+                                result[c] = (sampleL)
+                                idx += channelSize
+                            }
+                        }
+
+                        8 -> {
+                            for (c in 0 until nFrames) {
+                                sampleL = (rawData[c].toUByte().toFloat() - 128.0f) / 256.0f
+                                result[c] = sampleL
+                                idx += channelSize
+                            }
+                        }
+                    }
+                }
+
+
+            if (expectedSamplingRate != header.sampleRate) {
+                val interpolatedResult = ArrayList<Float>()
+                // sample rate conversion / interpolation
+                var fractionalIndex = 0.0f
+                val relativeIncrement = header.sampleRate.toFloat() / expectedSamplingRate.toFloat()
+                var interp: Float
+                var dt: Float
+                while (floor(fractionalIndex).toInt() + 1 < result.size) {
+                    dt = fractionalIndex - floor(fractionalIndex)
+                    interp =
+                        result[floor(fractionalIndex).toInt()] + (result[floor(fractionalIndex).toInt() + 1] - result[floor(
+                            fractionalIndex
+                        ).toInt()]) * dt
+                    interpolatedResult.add(interp)
+                    fractionalIndex += relativeIncrement
+                }
+                return interpolatedResult.toFloatArray()
             }
-            return interpolatedResult.toFloatArray()
+            return result
         }
 
-        return result
-    }
 }
 
 enum class WaveFileChannel

@@ -21,7 +21,7 @@ class SamplerTest {
 
 
     @Test
-    //@Ignore("demonstrative performance test, not useable for regression")
+    @Ignore("demonstrative performance test, not useable for regression")
     fun setSamplePerformanceTest()
     {
         System.loadLibrary("touchsamplesynth")
@@ -42,6 +42,6 @@ class SamplerTest {
             (it-avg)*(it-avg)
         }.reduce { a,b -> a+b }.get().toDouble()/(timesmeasured.size-1))
 
-        Assert.assertTrue(samplerI.sample.size>100)
+        Assert.assertTrue(variance < avg)
     }
 }
