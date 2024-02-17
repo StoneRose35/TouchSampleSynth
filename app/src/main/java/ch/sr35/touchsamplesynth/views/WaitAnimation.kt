@@ -38,7 +38,7 @@ class WaitAnimation(context: Context,attributeSet: AttributeSet?): View(context,
         transparentPaint.style = Paint.Style.FILL
         transparentPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
 
-        bitmap = Bitmap.createBitmap((context as Activity).windowManager.currentWindowMetrics.bounds.width(),(context as Activity).windowManager.currentWindowMetrics.bounds.height(),Bitmap.Config.ARGB_8888)
+        bitmap = Bitmap.createBitmap((context as Activity).windowManager.currentWindowMetrics.bounds.width(),context.windowManager.currentWindowMetrics.bounds.height(),Bitmap.Config.ARGB_8888)
         bufferCanvas = Canvas(bitmap!!)
 
 
