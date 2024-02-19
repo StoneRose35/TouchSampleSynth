@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.fragments
 import android.app.AlertDialog
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.SceneRecyclerViewAdapter
+import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.model.SceneP
-import com.developer.filepicker.model.DialogConfigs
-import com.developer.filepicker.model.DialogProperties
-import com.developer.filepicker.view.FilePickerDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
@@ -139,6 +138,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
         }
 
         buttonExport.setOnClickListener {
+            /*
             val dialogProperties = DialogProperties()
             dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
             dialogProperties.selection_type = DialogConfigs.DIR_SELECT
@@ -164,9 +164,25 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
 
             }
             dirPickerDialog.show()
+            */
+
+
+            val mainDir = ((context as TouchSampleSynthMain).filesDir.absolutePath)
+            val gson=Gson()
+            val jsonOut = gson.toJson((context as TouchSampleSynthMain).allScenes)
+            Log.i(TAG, "exporting scenes as json")
+            val f = File(mainDir + File.separator + "touchSampleSynthScenes1.json")
+            if(f.exists())
+            {
+                f.delete()
+            }
+            f.writeText(jsonOut)
+            val sb = Snackbar.make(it,resources.getText(R.string.exportSuccessful),1000)
+            sb.show()
         }
 
         buttonImport.setOnClickListener {
+            /*
             val dialogProperties = DialogProperties()
             dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
             dialogProperties.selection_type = DialogConfigs.FILE_SELECT
@@ -197,6 +213,33 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                 }
             }
             filePickerDialog.show()
+             */
+            val mainDir = ((context as TouchSampleSynthMain).filesDir.absolutePath)
+            val gson=Gson()
+            val f = File(mainDir + File.separator + "touchSampleSynthScenes1.json")
+            if (f.exists())
+            {
+                val jsondata=f.readText()
+                try {
+                    val jsonobj = gson.fromJson(jsondata, Array<SceneP>::class.java)
+                    (context as TouchSampleSynthMain).allScenes.clear()
+                    (context as TouchSampleSynthMain).allScenes.addAll(jsonobj)
+                } catch (e: Exception)
+                {
+                    when(e) {is JsonSyntaxException, is JsonParseException -> {
+                        this.view?.let {
+                            val sb = Snackbar.make(it,resources.getText(R.string.importErrorMessage),1000)
+                            sb.show()
+                        }
+                    }
+                    }
+                }
+            }
+            else
+            {
+                val sb = Snackbar.make(it,resources.getText(R.string.importFileNotFound),1000)
+                sb.show()
+            }
         }
 
         return view
