@@ -76,7 +76,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     var note: MusicalPitch? = null
     var midiChannel: Int=0
     var midiCC: Int=3
-    var midiCCOld: Byte=0
+    private var midiCCOld: Byte=0
     private var rotateRect: Rect = Rect()
     private var setSoundgenRect: Rect = Rect()
     private var deleteRect: Rect = Rect()
@@ -394,7 +394,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             if (event?.action == MotionEvent.ACTION_DOWN) {
                 performClick()
                 appContext?.rtpMidiServer?.let {
-                    if (it.isEnabled)
+                    if (it.isEnabled && this.note != null)
                     {
                         val midiData=ByteArray(3)
                         midiData[0] = (0x90 + midiChannel).toByte()
@@ -414,7 +414,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                 soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
                 appContext?.rtpMidiServer?.let {
-                    if (it.isEnabled)
+                    if (it.isEnabled && this.note != null)
                     {
                         val midiData=ByteArray(3)
                         midiData[0] = (0x80 + midiChannel).toByte()
