@@ -11,8 +11,8 @@ android {
         applicationId = "ch.sr35.touchsamplesynth"
         minSdk = 30
         targetSdk = 34
-        versionCode = 10
-        versionName = "1.8"
+        versionCode = 11
+        versionName = "1.8.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,7 +51,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.10")
     implementation("io.github.tutorialsandroid:filepicker:9.2.5")
     implementation("codes.side:andcolorpicker:0.6.2")
     testImplementation("junit:junit:4.13.2")
