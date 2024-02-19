@@ -289,6 +289,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
 
                         16 -> {
                             bbfr = ByteBuffer.allocate(2)
+                            bbfr.order(ByteOrder.LITTLE_ENDIAN)
                             for (c in 0 until nFrames) {
                                 bbfr.clear()
                                 bbfr.put(rawData, idx, channelSize)
