@@ -17,6 +17,8 @@ class TouchElementP(private var width: Int,
                     var note: Int,
                     var voiceNr: Int,
                     var color: RgbColor?,
+                    var midiChannel: Int,
+                    var midiCC: Int,
                     var soundGenerator: PersistableInstrument?
 ): Serializable, Cloneable {
 
@@ -29,6 +31,8 @@ class TouchElementP(private var width: Int,
         actionDir = touchElement.actionDir
         note = touchElement.note?.index ?: -1
         voiceNr = touchElement.voiceNr
+        midiChannel = touchElement.midiChannel
+        midiCC = touchElement.midiCC
         color = RgbColor(touchElement.fillColor.color.red,touchElement.fillColor.color.green,touchElement.fillColor.color.blue )
         soundGenerator = PersistableInstrumentFactory.fromInstrument(touchElement.soundGenerator)
     }
@@ -58,6 +62,16 @@ class TouchElementP(private var width: Int,
     }
 
     public override fun clone(): Any {
-        return TouchElementP(this.width,this.height,this.posX,this.posY,this.actionDir,this.note,this.voiceNr,this.color?.clone(), null)
+        return TouchElementP(this.width,
+            this.height,
+            this.posX,
+            this.posY,
+            this.actionDir,
+            this.note,
+            this.voiceNr,
+            this.color?.clone(),
+            this.midiChannel,
+            this.midiCC,
+            null)
     }
 }
