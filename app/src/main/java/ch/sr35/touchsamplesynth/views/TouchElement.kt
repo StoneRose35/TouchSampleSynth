@@ -1,11 +1,13 @@
 package ch.sr35.touchsamplesynth.views
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import android.os.Build
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
@@ -70,6 +72,8 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     private var oldWidth: Int = 0
     private var oldHeight: Int = 0
+    private var oldLeftMargin: Int = 0
+    private var oldTopMargin: Int = 0
     private var elementState: TouchElementState = defaultState
     var soundGenerator: Instrument? = null
     var voiceNr: Int = -1
@@ -547,6 +551,8 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         if (layoutParams != null) {
                             oldHeight = layoutParams.height
                             oldWidth = layoutParams.width
+                            oldTopMargin = layoutParams.topMargin
+                            oldLeftMargin = layoutParams.leftMargin
                         }
                         dragStart = isInCorner(event.x, event.y)
                         return true
@@ -554,7 +560,20 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 }
 
                 MotionEvent.ACTION_UP -> {
-
+                    if (dragStart != null)
+                    {
+                        if (!validatePlacement())
+                        {
+                            val restoredlayoutParams: ConstraintLayout.LayoutParams? =
+                                this.layoutParams as ConstraintLayout.LayoutParams?
+                            restoredlayoutParams?.height = oldHeight
+                            restoredlayoutParams?.width = oldWidth
+                            restoredlayoutParams?.leftMargin = oldLeftMargin
+                            restoredlayoutParams?.topMargin = oldTopMargin
+                            layoutParams = restoredlayoutParams
+                            invalidate()
+                        }
+                    }
                 }
 
                 MotionEvent.ACTION_MOVE -> {
@@ -641,6 +660,31 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
+
+    fun validatePlacement(): Boolean
+    {
+        var screenWidth: Int
+        var screenHeight: Int
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            screenWidth =
+                (context as Activity).windowManager.currentWindowMetrics.bounds.width()
+            screenHeight =
+                (context as Activity).windowManager.currentWindowMetrics.bounds.height()
+        }
+        else
+        {
+            screenWidth = (context as Activity).windowManager.defaultDisplay.width
+            screenHeight = (context as Activity).windowManager.defaultDisplay.height
+        }
+        val layoutParams: ConstraintLayout.LayoutParams? =
+            this.layoutParams as ConstraintLayout.LayoutParams?
+        layoutParams?.let {
+            return it.topMargin in 0..screenHeight - it.height
+                    && it.leftMargin in 0 .. screenWidth - it.width
+                    && it.width > 0 && it.height > 0
+        }
+        return false
+    }
 
     fun setEditmode(mode: Boolean) {
         if (mode && elementState!=TouchElementState.EDITING) {

@@ -143,8 +143,11 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
                 if (isChecked) {
                     context?.let { it1 ->
                         (context as TouchSampleSynthMain).rtpMidiServer?.let { it3 ->
-                            it3.startServer()
-                            (context as TouchSampleSynthMain).nsdHandler?.registerService(it3.port)
+                            if (!it3.isEnabled)
+                            {
+                                it3.startServer()
+                                (context as TouchSampleSynthMain).nsdHandler?.registerService(it3.port)
+                            }
                             view.findViewById<TextView>(R.id.rtpMidiPorts).also {
                                 it.text = "%d / %d".format(it3.port, it3.port + 1)
                             }

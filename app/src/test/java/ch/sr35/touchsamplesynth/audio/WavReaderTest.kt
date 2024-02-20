@@ -82,7 +82,7 @@ class WavReaderTest {
         Assert.assertNotNull(wavFile)
         val floatData = wavFile.getFloatData(48000,WaveFileChannel.LEFT)
         Assert.assertEquals(floatData.size,wavFile.rawData.size/wavFile.header.nChannels/(wavFile.header.bitDepth/8))
-        Assert.assertFalse( floatData.stream().anyMatch { el -> el > 1.0f || el < -1.0f})
+        Assert.assertNull( floatData.find  { el -> el > 1.0f || el < -1.0f})
     }
 
     @Test
