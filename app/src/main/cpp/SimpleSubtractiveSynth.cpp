@@ -44,6 +44,7 @@ float SimpleSubtractiveSynth::getNextSample() {
 
 void SimpleSubtractiveSynth::setNote(float note) {
     osc->setNote(note);
+    MusicalSoundGenerator::setNote(note);
 }
 
 void SimpleSubtractiveSynth::setAttack(float a) {
@@ -106,10 +107,12 @@ float SimpleSubtractiveSynth::getResonance() {
 void SimpleSubtractiveSynth::switchOn(float vel) {
     setCutoff(initialCutoff);
     env->switchOn();
+    MusicalSoundGenerator::switchOn(vel);
 }
 
 void SimpleSubtractiveSynth::switchOff(float vel) {
     env->switchOff();
+    MusicalSoundGenerator::switchOff(vel);
 }
 
 bool SimpleSubtractiveSynth::isSounding() {

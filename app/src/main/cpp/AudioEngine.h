@@ -17,6 +17,7 @@
 
 #define MIDI_NOTE_OFF 0x80
 #define MIDI_NOTE_ON 0x90
+#define MIDI_CC 0xB0
 
 #define MIDI_AVAILABLE_MSK 0x200
 #define MIDI_NOTE_CHANGE_MSK 0x100
@@ -41,6 +42,7 @@ public:
     float averageVolume;
     float cpuLoad;
     AMidiOutputPort * midiOutputPort;
+    AMidiInputPort * midiInputPort;
     AMidiDevice * midiDevice;
     int32_t getBufferCapacityInFrames() const;
     int8_t setBufferCapacityInFrames(int32_t);

@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.fragments
 
+import android.content.Context
 import android.database.DataSetObserver
 import android.media.midi.MidiDeviceInfo
 import android.os.Bundle
@@ -18,7 +19,6 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.BuildConfig
 import ch.sr35.touchsamplesynth.MidiDevicesChanged
-import ch.sr35.touchsamplesynth.MidiHostHandler
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.views.TouchElement
 import com.google.android.material.snackbar.Snackbar
@@ -30,7 +30,8 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
 
     private var framesPerDataCallbackIdx = -1
     private var bufferSizeInFramesIdx = -1
-    lateinit var listViewMidiDevices: ListView
+    lateinit var listViewMidiDevicesIn: ListView
+    lateinit var listViewMidiDevicesOut: ListView
 
 
 
@@ -123,13 +124,20 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
             spinnerTouchElementStyle.onItemSelectedListener = this
         }
 
-        listViewMidiDevices=view.findViewById(R.id.settingListViewMidiDevices)
-        listViewMidiDevices.adapter= (context as TouchSampleSynthMain).midiHostHandler?.let {
+        listViewMidiDevicesIn=view.findViewById(R.id.settingListViewMidiInDevices)
+        listViewMidiDevicesIn.adapter= (context as TouchSampleSynthMain).midiHostHandler?.let {
             MidiDevicesListAdapter(
-                it
+                it.midiDevicesIn, context as TouchSampleSynthMain
             )
         }
-        listViewMidiDevices.onItemSelectedListener=this
+        listViewMidiDevicesIn.onItemSelectedListener=this
+        listViewMidiDevicesOut=view.findViewById(R.id.settingListViewMidiOutDevices)
+        listViewMidiDevicesOut.adapter= (context as TouchSampleSynthMain).midiHostHandler?.let {
+            MidiDevicesListAdapter(
+                it.midiDevicesOut, context as TouchSampleSynthMain
+            )
+        }
+        listViewMidiDevicesOut.onItemSelectedListener=this
         ((context as TouchSampleSynthMain).midiHostHandler)?.midiDeviceChangedHandler =this
 
 
@@ -244,9 +252,13 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
                 (context as TouchSampleSynthMain).touchElementsDisplayMode=TouchElement.TouchElementState.PLAYING_VERBOSE
             }
         }
-        else if (p0 != null && p0.id == R.id.settingListViewMidiDevices)
+        else if (p0 != null && p0.id == R.id.settingListViewMidiInDevices)
         {
-            (context as TouchSampleSynthMain).midiHostHandler?.connectMidiDevice(p0.selectedItem as MidiDeviceInfo)
+            (context as TouchSampleSynthMain).midiHostHandler?.connectMidiDeviceIn(p0.selectedItem as MidiDeviceInfo)
+        }
+        else if (p0 != null && p0.id == R.id.settingListViewMidiOutDevices)
+        {
+            (context as TouchSampleSynthMain).midiHostHandler?.connectMidiDeviceOut(p0.selectedItem as MidiDeviceInfo)
         }
     }
 
@@ -254,7 +266,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
 
     }
 
-    class MidiDevicesListAdapter(private val midiHostHandler: MidiHostHandler) : BaseAdapter() {
+    class MidiDevicesListAdapter(private val midiDevices: ArrayList<MidiDeviceInfo>,private val context: Context) : BaseAdapter() {
         override fun registerDataSetObserver(observer: DataSetObserver?) {
         }
 
@@ -263,15 +275,15 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         }
 
         override fun getCount(): Int {
-            return midiHostHandler.midiDevices.size
+            return midiDevices.size
         }
 
         override fun getItem(position: Int): Any {
-            return midiHostHandler.midiDevices[position]
+            return midiDevices[position]
         }
 
         override fun getItemId(position: Int): Long {
-            return midiHostHandler.midiDevices[position].id.toLong()
+            return midiDevices[position].id.toLong()
         }
 
         override fun hasStableIds(): Boolean {
@@ -281,11 +293,11 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             if (convertView != null && convertView is TextView)
             {
-                convertView.text=midiHostHandler.midiDevices[position].properties.getString(MidiDeviceInfo.PROPERTY_NAME)
+                convertView.text=midiDevices[position].properties.getString(MidiDeviceInfo.PROPERTY_NAME)
                 return convertView
             }
-            return TextView(midiHostHandler.ctx).also {
-                it.text = midiHostHandler.midiDevices[position].properties.getString(MidiDeviceInfo.PROPERTY_NAME)
+            return TextView(context).also {
+                it.text = midiDevices[position].properties.getString(MidiDeviceInfo.PROPERTY_NAME)
             }
         }
 
@@ -298,7 +310,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         }
 
         override fun isEmpty(): Boolean {
-            return midiHostHandler.midiDevices.isEmpty()
+            return midiDevices.isEmpty()
         }
 
         override fun areAllItemsEnabled(): Boolean {
@@ -313,6 +325,6 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
 
 
     override fun onMidiDevicesChanged() {
-        (listViewMidiDevices.adapter as BaseAdapter).notifyDataSetChanged()
+        (listViewMidiDevicesIn.adapter as BaseAdapter).notifyDataSetChanged()
     }
 }

@@ -13,8 +13,10 @@ class AudioEngineK {
     external fun getCpuLoad(): Float
     // only for testing purposes
     external fun playFrames(nFrames: Int)
-    external fun openMidiDevice(midiDevice: MidiDevice,portNr: Int)
-    external fun closeMidiDevice()
+    external fun openMidiDeviceIn(midiDevice: MidiDevice,portNr: Int)
+    external fun closeMidiDeviceIn()
+    external fun openMidiDeviceOut(midiDevice: MidiDevice,portNr: Int)
+    external fun closeMidiDeviceOut()
     external fun setFramesPerDataCallback(fpdc: Int): Int
     external fun getFramesPerDataCallback(): Int
     external fun setBufferCapacityInFrames(bcif: Int): Int

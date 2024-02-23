@@ -21,7 +21,7 @@
         <item name="touchElementColor">@color/light_green</item>
         <item name="touchElementLine">@color/black</item>
         <item name="touchElementEditDot">@color/black</item>
-        <item name="touchElementEditBoxBgColor">@color/light_grey</item>
+        <item name="touchElementEditBoxBgColor">@color/white</item>
         <item name="touchElementEditTextColor">@color/black</item>
 
         <item name="instrumentBackgroundColor">@color/very_light_gray</item>

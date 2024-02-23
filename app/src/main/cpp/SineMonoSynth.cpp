@@ -40,13 +40,16 @@ SineMonoSynth::SineMonoSynth() {
 
 void SineMonoSynth::setNote(float note) {
     osc->setNote(note);
+    MusicalSoundGenerator::setNote(note);
 }
 
 void SineMonoSynth::switchOn(float velocity) {
+    MusicalSoundGenerator::switchOn(velocity);
     env->switchOn();
 }
 
 void SineMonoSynth::switchOff(float velocity) {
+    MusicalSoundGenerator::switchOff(velocity);
     env->switchOff();
 }
 

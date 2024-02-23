@@ -81,6 +81,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                     while (currentVoiceIdx < soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()) {
                         if (voiceNrs.stream().noneMatch { vn -> vn == currentVoiceIdx }) {
                             touchElement.voiceNr = currentVoiceIdx
+                            soundGenerators[instrumentListAdapter.checkedPosition].voices[touchElement.voiceNr].setMidiChannel(touchElement.midiChannel)
                             currentVoiceIdx =
                                 soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()
                         } else {
@@ -171,6 +172,9 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                             {
                                 v.background=null
                                 this.touchElement.midiChannel=midiChannelInt
+                                this.touchElement.soundGenerator?.let { sg ->
+                                    sg.voices[this.touchElement.voiceNr].setMidiChannel(midiChannelInt)
+                                }
                             }
                         }
                         catch (e: NumberFormatException)

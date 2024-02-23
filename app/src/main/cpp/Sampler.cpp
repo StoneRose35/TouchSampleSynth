@@ -77,13 +77,16 @@ float Sampler::getNextSample() {
 }
 
 void Sampler::setNote(float note) {
+    MusicalSoundGenerator::setNote(note);
 }
 
 void Sampler::switchOn(float vel) {
+    MusicalSoundGenerator::switchOn(vel);
     currentIndex = sampleStartIndex;
 }
 
 void Sampler::switchOff(float vel) {
+    MusicalSoundGenerator::switchOff(vel);
     currentIndex = 0xFFFFFFFF;
 }
 

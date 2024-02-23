@@ -347,12 +347,14 @@ int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
     {
         case SINE_MONO_SYNTH:
             sg=new SineMonoSynth();
+            sg->midiInputPort = midiInputPort;
             if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;
             }
             break;
         case SIMPLE_SUBTRACTIVE_SYNTH:
             sg=new SimpleSubtractiveSynth((float)samplingRate);
+            sg->midiInputPort = midiInputPort;
             if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;
             }
@@ -361,11 +363,13 @@ int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
             break;
         case SAMPLER:
             sg=new Sampler();
+            sg->midiInputPort = midiInputPort;
             if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;
             }
             break;
     }
+
     return idx;
 }
 

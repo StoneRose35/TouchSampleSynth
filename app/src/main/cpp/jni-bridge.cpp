@@ -110,7 +110,7 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_setBufferCapacityInFrames(JNIEn
 }
 
 JNIEXPORT void JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_openMidiDevice(JNIEnv* env, jobject, jobject deviceObj, jint portNumber)
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_openMidiDeviceIn(JNIEnv* env, jobject, jobject deviceObj, jint portNumber)
 {
     AudioEngine * audioEngine = getAudioEngine();
     AMidiDevice_fromJava(env, deviceObj, &audioEngine->midiDevice);
@@ -118,9 +118,68 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_openMidiDevice(JNIEnv* env, job
 }
 
 JNIEXPORT void JNICALL
-Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_closeMidiDevice(JNIEnv* , jobject)
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_closeMidiDeviceIn(JNIEnv* , jobject)
 {
     AudioEngine * audioEngine = getAudioEngine();
-    AMidiOutputPort_close(audioEngine->midiOutputPort);
+    if (audioEngine->midiOutputPort != nullptr) {
+        AMidiOutputPort_close(audioEngine->midiOutputPort);
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_openMidiDeviceOut(JNIEnv* env, jobject, jobject deviceObj, jint portNumber)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    AMidiDevice_fromJava(env, deviceObj, &audioEngine->midiDevice);
+    AMidiInputPort_open(audioEngine->midiDevice, portNumber, &audioEngine->midiInputPort);
+    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
+    {
+        if (audioEngine->getSoundGenerator(c) != nullptr) {
+            audioEngine->getSoundGenerator(c)->midiInputPort = audioEngine->midiInputPort;
+        }
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_closeMidiDeviceOut(JNIEnv* , jobject)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    if (audioEngine->midiInputPort != nullptr) {
+        AMidiInputPort_close(audioEngine->midiInputPort);
+        for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
+        {
+            if (audioEngine->getSoundGenerator(c) != nullptr) {
+                audioEngine->getSoundGenerator(c)->midiInputPort = nullptr;
+            }
+        }
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_ch_sr35_touchsamplesynth_audio_MusicalSoundGenerator_sendMidiCC(JNIEnv* env, jobject  me,jint ccNumber,jint ccValue)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(me);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if (msg->midiInputPort != nullptr)
+    {
+        msg->sendMidiCC((uint8_t)ccNumber,(uint8_t)ccValue);
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_ch_sr35_touchsamplesynth_audio_MusicalSoundGenerator_setMidiChannel(JNIEnv* env, jobject  me,jint channel)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(me);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if (msg->midiInputPort != nullptr)
+    {
+        msg->midiChannel = (uint8_t)channel;
+    }
 }
 }

@@ -83,35 +83,50 @@
                 android:minLines="2"
                 android:text="@string/midiMode"
                 />
-            <RadioGroup>
 
-                <RadioButton
-                    android:id="@+id/settingRadioButtonMidiDeviceMode"
+            <LinearLayout android:orientation="vertical">
+                <CheckBox
+                    android:id="@+id/settingCheckboxMidiDeviceMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="@string/midiDeviceMode" />
 
-                <RadioButton
-                    android:id="@+id/settingRadioButtonMidiHostMode"
+                <CheckBox
+                    android:id="@+id/settingCheckboxMidiHostMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="@string/midiHostMode" />
-            </RadioGroup>
+            </LinearLayout>
+
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/settingTextViewMidiDevices"
+                android:id="@+id/settingTextViewMidiInDevices"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:minLines="2"
-                android:text="@string/availableMidiDevices"
+                android:text="@string/availableMidiInDevices"
                 />
             <ListView
-                android:id="@+id/settingListViewMidiDevices"
+                android:id="@+id/settingListViewMidiInDevices"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/settingTextViewMidiOutDevices"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:minLines="2"
+                android:text="@string/availableMidiOutDevices"
+                />
+            <ListView
+                android:id="@+id/settingListViewMidiOutDevices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 />
         </TableRow>
         <TableRow>

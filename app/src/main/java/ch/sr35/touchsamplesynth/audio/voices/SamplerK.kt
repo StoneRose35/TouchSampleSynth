@@ -6,7 +6,7 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
-class SamplerK(context: Context): MusicalSoundGenerator {
+class SamplerK(context: Context): MusicalSoundGenerator() {
     private var instance: Byte=-1
     private var engaged: Boolean=false
     val icon= AppCompatResources.getDrawable(context, R.drawable.sampler)
@@ -30,6 +30,7 @@ class SamplerK(context: Context): MusicalSoundGenerator {
 
     override fun switchOn(vel: Float): Boolean {
         engaged=true
+        super.switchOn(vel)
         return switchOnExt(vel)
     }
 

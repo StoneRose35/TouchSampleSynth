@@ -18,7 +18,7 @@
         <item name="touchElementColor">@color/dark_green</item>
         <item name="touchElementLine">@color/light_grey</item>
         <item name="touchElementEditDot">@color/light_grey</item>
-        <item name="touchElementEditBoxBgColor">@color/darker_grey</item>
+        <item name="touchElementEditBoxBgColor">@color/white</item>
         <item name="touchElementEditTextColor">@color/light_grey</item>
         <item name="sliderDrawable">@drawable/slider</item>
 
@@ -37,7 +37,6 @@
         <item name="android:progressBackgroundTintMode">src_over</item>
         <item name="android:thumb">@drawable/slider</item>
         <item name="android:background">@color/dark_gray</item>
-
     </style>
 
 </resources>

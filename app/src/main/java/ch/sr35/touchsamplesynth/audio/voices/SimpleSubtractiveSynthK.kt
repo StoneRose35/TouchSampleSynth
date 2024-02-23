@@ -7,7 +7,7 @@ import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.AudioUtils
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
-class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator {
+class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
 
     private var instance: Byte=-1
     var actionAmount: Float=0.0f

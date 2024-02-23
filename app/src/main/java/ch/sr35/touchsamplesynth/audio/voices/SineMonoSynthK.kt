@@ -6,7 +6,7 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
-class SineMonoSynthK(context: Context): MusicalSoundGenerator {
+class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
 
     private var instance: Byte=-1
     var engaged: Boolean=false

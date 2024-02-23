@@ -23,7 +23,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet.WRAP_CONTENT
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.AudioEngineK
+import ch.sr35.touchsamplesynth.audio.MIDI_MODE_OFF
+import ch.sr35.touchsamplesynth.audio.MIDI_MODE_ON_POLY
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
@@ -180,8 +181,8 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
 
     override fun onPause() {
         super.onPause()
-        val audioEngine = AudioEngineK()
-        audioEngine.closeMidiDevice()
+        (context as TouchSampleSynthMain).soundGenerators.flatMap { sg -> sg.voices }.forEach { v -> v.setMidiMode(
+            MIDI_MODE_OFF) }
     }
 
     override fun onCreateView(
@@ -308,8 +309,10 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
     override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         if (p2 != selectedInstrument) {
             val contentView = view?.findViewById<FrameLayout>(R.id.instruments_page_content)
-            (context as TouchSampleSynthMain).soundGenerators.flatMap { sg -> sg.voices }.forEach { v -> v.setMidiMode(0) }
-            (context as TouchSampleSynthMain).soundGenerators[p2].voices.forEach { v -> v.setMidiMode(4) }
+            (context as TouchSampleSynthMain).soundGenerators.flatMap { sg -> sg.voices }.forEach { v -> v.setMidiMode(
+                MIDI_MODE_OFF) }
+            (context as TouchSampleSynthMain).soundGenerators[p2].voices.forEach { v -> v.setMidiMode(
+                MIDI_MODE_ON_POLY) }
             selectedInstrument = p2
             if (contentView != null) {
                 if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthI) {

@@ -6,6 +6,7 @@
 #define TOUCHSAMPLESYNTH_MUSICALSOUNDGENERATOR_H
 
 #include <cstdint>
+#include <amidi/AMidi.h>
 #include "SoundGenerator.h"
 
 class MusicalSoundGenerator: public SoundGenerator {
@@ -16,10 +17,16 @@ public:
 
     virtual void switchOn(float velocity);
 
+    virtual void sendMidiCC(uint8_t ccNumber,uint8_t ccValue);
+
     // bit 9: set when generally available for midi
     // bit 8: set if note change is allowed (on monophonic instruments)
     // bit 7: set if the voice is taken
-    uint16_t availableForMidi;
+    uint16_t availableForMidi=0;
+    uint8_t midiNote=69;
+    uint8_t midiChannel=0;
+
+    AMidiInputPort * midiInputPort= nullptr;
 };
 
 

@@ -10,21 +10,27 @@ import java.util.concurrent.Executor
 import java.util.stream.Collectors
 
 class MidiHostHandler(val ctx: Context) : MidiManager.DeviceCallback() {
-    val midiDevices= ArrayList<MidiDeviceInfo>()
+    val midiDevicesIn= ArrayList<MidiDeviceInfo>()
+    val midiDevicesOut= ArrayList<MidiDeviceInfo>()
     var midiDeviceChangedHandler: MidiDevicesChanged?=null
-    private var connectedDevice: MidiDeviceInfo?=null
-    private val midiManager: MidiManager = ctx.getSystemService(Context.MIDI_SERVICE) as MidiManager
+    var connectedDeviceIn: MidiDeviceInfo?=null
+    var connectedDeviceOut: MidiDeviceInfo?=null
+    val midiManager: MidiManager = ctx.getSystemService(Context.MIDI_SERVICE) as MidiManager
 
     fun startMidiDeviceListener()
     {
         // add devices already there
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            midiDevices.addAll(midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM).stream().filter { el -> el.outputPortCount > 0 }.collect(Collectors.toList()))
+            midiDevicesIn.addAll(midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM).stream().filter { el -> el.outputPortCount > 0 }.collect(Collectors.toList()))
+            midiDevicesOut.addAll(midiManager.getDevicesForTransport(MidiManager.TRANSPORT_MIDI_BYTE_STREAM).stream().filter { el -> el.inputPortCount > 0 }.collect(Collectors.toList()))
         }
         else
         {
-            midiDevices.addAll(
+            midiDevicesIn.addAll(
                 midiManager.devices.filter { el -> el.outputPortCount > 0 })
+            midiDevicesOut.addAll(
+                midiManager.devices.filter { el -> el.inputPortCount > 0 })
+
         }
 
         // register listener
@@ -44,25 +50,44 @@ class MidiHostHandler(val ctx: Context) : MidiManager.DeviceCallback() {
         }
     }
 
-    fun connectMidiDevice(dev: MidiDeviceInfo)
+    fun connectMidiDeviceIn(dev: MidiDeviceInfo)
     {
-        if (connectedDevice != null)
+        if (connectedDeviceIn != null)
         {
-            AudioEngineK().closeMidiDevice()
+            AudioEngineK().closeMidiDeviceIn()
+            connectedDeviceIn=null
         }
-        connectedDevice=null
-        midiManager.openDevice(dev,{
-            val audioEngine=AudioEngineK()
-            audioEngine.openMidiDevice(it,0)
-        },null)
-        connectedDevice = dev
+
+        midiManager.openDevice(dev, {
+            val audioEngine = AudioEngineK()
+            audioEngine.openMidiDeviceIn(it, 0)
+        }, null)
+
+        connectedDeviceIn = dev
+    }
+
+    fun connectMidiDeviceOut(dev: MidiDeviceInfo)
+    {
+        if (connectedDeviceOut != null)
+        {
+            AudioEngineK().closeMidiDeviceOut()
+            connectedDeviceOut=null
+        }
+
+        midiManager.openDevice(dev, {
+            val audioEngine = AudioEngineK()
+            audioEngine.openMidiDeviceOut(it, 0)
+        }, null)
+
+        connectedDeviceOut = dev
     }
 
 
     fun stopMidiDeviceListener()
     {
         midiManager.unregisterDeviceCallback(this)
-        midiDevices.clear()
+        midiDevicesIn.clear()
+        midiDevicesOut.clear()
     }
 
     override fun onDeviceAdded(device: MidiDeviceInfo?) {
@@ -71,7 +96,12 @@ class MidiHostHandler(val ctx: Context) : MidiManager.DeviceCallback() {
         {
             if (device.outputPortCount > 0)
             {
-                midiDevices.add(device)
+                midiDevicesIn.add(device)
+                midiDeviceChangedHandler?.onMidiDevicesChanged()
+            }
+            if (device.inputPortCount > 0)
+            {
+                midiDevicesOut.add(device)
                 midiDeviceChangedHandler?.onMidiDevicesChanged()
             }
         }
@@ -83,15 +113,17 @@ class MidiHostHandler(val ctx: Context) : MidiManager.DeviceCallback() {
 
     override fun onDeviceRemoved(device: MidiDeviceInfo?) {
         super.onDeviceRemoved(device)
-        if (device != null && device==connectedDevice)
+        if (device != null && device==connectedDeviceIn)
         {
             // kill all note just to be sure
             (ctx as TouchSampleSynthMain).soundGenerators.stream().flatMap { i -> i.voices.stream() }.forEach {
                 it.switchOff(.0f)
             }
         }
+
         midiDeviceChangedHandler?.onMidiDevicesChanged()
-        midiDevices.remove(device)
+        midiDevicesIn.remove(device)
+        midiDevicesOut.remove(device)
     }
 }
 

@@ -13,6 +13,7 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
@@ -22,7 +23,6 @@ import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import ch.sr35.touchsamplesynth.graphics.Converter
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
-import java.util.stream.IntStream
 import kotlin.concurrent.thread
 import kotlin.math.sqrt
 
@@ -89,6 +89,9 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private val boundsDelete = Rect()
     private val appContext: TouchSampleSynthMain?
 
+    private val rotateSymbol = AppCompatResources.getDrawable(context,R.drawable.rotatesymbol)
+    private val editSymbol = AppCompatResources.getDrawable(context,R.drawable.editsymbol)
+    private val deleteSymbol = AppCompatResources.getDrawable(context,R.drawable.deletesymbol)
     init {
         outLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
         outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
@@ -332,51 +335,80 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 editDotFill
             )
 
+
             editText.getTextBounds("Rotate",0,"Rotate".length,boundsRotate)
             editText.getTextBounds("Set SoundGen",0,"Set SoundGen".length,boundsSetSoundgen)
             editText.getTextBounds("Delete",0,"Delete".length,boundsDelete)
-            val editRectangleWidth = IntStream.of(boundsRotate.width(),boundsSetSoundgen.width(),boundsDelete.width()).max().orElse(1)
+            val editRectangleWidth = 70//IntStream.of(boundsRotate.width(),boundsSetSoundgen.width(),boundsDelete.width()).max().orElse(1)
 
-
-            rotateRect.left = 20
+            rotateRect.left = 40
             rotateRect.right = rotateRect.left + editRectangleWidth + Converter.toPx(3)
             rotateRect.top = EDIT_CIRCLE_OFFSET.toInt() + 50
             rotateRect.bottom = (editText.textSize.toInt() + 8 + rotateRect.top)
 
-
             canvas.drawRect(rotateRect, editBoxBackground)
-            canvas.drawText(
+            rotateSymbol?.let {
+                it.setBounds(
+                    40,
+                    EDIT_CIRCLE_OFFSET.toInt() + 50,
+                    (40 +50/it.intrinsicHeight.toFloat()*it.intrinsicWidth.toFloat()).toInt(),
+                    EDIT_CIRCLE_OFFSET.toInt() + 50 + 50
+                )
+                it.draw(canvas)
+            }
+            /*canvas.drawText(
                 "Rotate",
                 (rotateRect.left + 3).toFloat(),
                 rotateRect.top.toFloat() + editText.textSize,
                 editText
-            )
+            )*/
 
-            setSoundgenRect.left = 20
+            setSoundgenRect.left = 40
             setSoundgenRect.right = setSoundgenRect.left + editRectangleWidth + Converter.toPx(3)
             setSoundgenRect.top = rotateRect.bottom + 10
             setSoundgenRect.bottom = setSoundgenRect.top + editText.textSize.toInt() + 8
 
             canvas.drawRect(setSoundgenRect, editBoxBackground)
+
+            editSymbol?.let {
+                it.setBounds(
+                    40,
+                    rotateRect.bottom + 10,
+                    (40 +50/it.intrinsicHeight.toFloat()*it.intrinsicWidth.toFloat()).toInt(),
+                    rotateRect.bottom + 10 + 50
+                )
+                it.draw(canvas)
+            }
+            /*
             canvas.drawText(
                 "Edit",
                 (setSoundgenRect.left + 3).toFloat(),
                 setSoundgenRect.top.toFloat() + editText.textSize,
                 editText
-            )
+            )*/
 
-            deleteRect.left = 20
+            deleteRect.left = 40
             deleteRect.right = deleteRect.left + editRectangleWidth + Converter.toPx(3)
             deleteRect.top = setSoundgenRect.bottom + 10
             deleteRect.bottom = deleteRect.top + editText.textSize.toInt() + 8
 
             canvas.drawRect(deleteRect, editBoxBackground)
+            deleteSymbol?.let {
+                it.setBounds(
+                    40,
+                    setSoundgenRect.bottom + 10,
+                    (40 +50/it.intrinsicHeight.toFloat()*it.intrinsicWidth.toFloat()).toInt(),
+                    setSoundgenRect.bottom + 10 + 50
+                )
+                it.draw(canvas)
+            }
+            /*
             canvas.drawText(
                 "Delete",
                 (deleteRect.left + 3).toFloat(),
                 deleteRect.top.toFloat() + editText.textSize,
                 editText
-            )
+            )*/
         }
 
 
@@ -476,22 +508,24 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 if (touchVal>=-1.0f)
                 {
                     soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(touchVal)
-                    appContext?.rtpMidiServer?.let {
-                        if (it.isEnabled)
-                        {
-                            val midiData=ByteArray(3)
-                            midiData[0] = (0xB0 + midiChannel).toByte()
-                            midiData[1] = midiCC.toByte()
-                            midiData[2] = (touchVal*127.0f).toInt().toByte()
-                            if (midiData[2]!=midiCCOld) {
+
+                    val midiData=ByteArray(3)
+                    midiData[0] = (0xB0 + midiChannel).toByte()
+                    midiData[1] = midiCC.toByte()
+                    midiData[2] = (touchVal*127.0f).toInt().toByte()
+                    if (midiData[2]!=midiCCOld) {
+                        appContext?.rtpMidiServer?.let {
+                            if (it.isEnabled)
+                            {
                                 thread(start = true) {
                                     appContext.rtpMidiServer?.sendMidiCommand(
                                         midiData
                                     )
                                 }
-                                midiCCOld=midiData[2]
                             }
                         }
+                        soundGenerator?.voices?.get(voiceNr)?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
+                        midiCCOld=midiData[2]
                     }
                     return true
                 }
@@ -663,8 +697,8 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     fun validatePlacement(): Boolean
     {
-        var screenWidth: Int
-        var screenHeight: Int
+        val screenWidth: Int
+        val screenHeight: Int
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             screenWidth =
                 (context as Activity).windowManager.currentWindowMetrics.bounds.width()

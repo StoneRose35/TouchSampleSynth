@@ -95,9 +95,13 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
         midiHostHandler?.startMidiDeviceListener()
         midiHostHandler?.let {
-            if(it.midiDevices.size > 0)
+            if(it.midiDevicesIn.size > 0)
             {
-                it.connectMidiDevice(it.midiDevices[0])
+                it.connectMidiDeviceIn(it.midiDevicesIn[0])
+            }
+            if(it.midiDevicesOut.size > 0)
+            {
+                it.connectMidiDeviceOut(it.midiDevicesOut[0])
             }
         }
 
