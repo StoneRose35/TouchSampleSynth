@@ -37,7 +37,7 @@
         >
 
     </androidx.appcompat.widget.SwitchCompat>
-
+<!--
     <ch.sr35.touchsamplesynth.views.VuMeter
         android:id="@+id/vuMeter"
         android:layout_width="160dp"
@@ -45,8 +45,8 @@
         android:layout_marginTop="27dp"
         android:layout_marginEnd="11dp"
         app:layout_constraintEnd_toStartOf="@+id/buttonNew"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent" />-->
+<!--
     <ImageView
         android:id="@+id/imageSpeaker"
         android:layout_width="wrap_content"
@@ -59,8 +59,8 @@
         app:layout_constraintEnd_toStartOf="@id/vuMeter"
         app:layout_constraintTop_toTopOf="@id/vuMeter"
         app:layout_constraintBottom_toBottomOf="@id/vuMeter"
-        />
-
+        />-->
+    <!--
     <ch.sr35.touchsamplesynth.views.VuMeter
         android:id="@+id/cpuMeter"
         android:layout_width="160dp"
@@ -68,7 +68,8 @@
         android:layout_marginTop="27dp"
         android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toStartOf="@+id/imageSpeaker"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
+    <!--
     <ImageView
         android:id="@+id/imageCpu"
         android:layout_width="wrap_content"
@@ -81,7 +82,7 @@
         app:layout_constraintEnd_toStartOf="@id/cpuMeter"
         app:layout_constraintTop_toTopOf="@id/cpuMeter"
         app:layout_constraintBottom_toBottomOf="@id/vuMeter"
-        />
+        />-->
 
     <EditText
         android:id="@+id/editTextSceneName"
@@ -95,9 +96,9 @@
         android:visibility="invisible"
         android:autofillHints="name"
         android:hint="@string/scene_name"
-        app:layout_constraintBottom_toBottomOf="@id/cpuMeter"
-        app:layout_constraintEnd_toStartOf="@id/imageCpu"
+        app:layout_constraintBottom_toBottomOf="@id/toggleEdit"
+        app:layout_constraintEnd_toStartOf="@id/buttonNew"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/cpuMeter" />
+        app:layout_constraintTop_toTopOf="@id/buttonNew" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

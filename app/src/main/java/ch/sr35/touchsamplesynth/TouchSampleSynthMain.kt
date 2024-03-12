@@ -181,7 +181,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             playPage.view?.let { Snackbar.make(it,"Audio Engine failed to start",10) }
         }
 
-        val timer=Timer()
+        /*val timer=Timer()
         val timerTask= object: TimerTask()
         {
             override fun run() {
@@ -191,7 +191,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 findViewById<VuMeter>(R.id.cpuMeter)?.updateVuLevel(cpuLoad)
             }
         }
+
         timer.schedule(timerTask,0,100)
+        */
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
