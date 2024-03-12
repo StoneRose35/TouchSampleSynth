@@ -17,9 +17,12 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.SceneRecyclerViewAdapter
 import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.model.PersistableInstrument
+import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SceneP
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import java.io.File
@@ -215,13 +218,14 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
             filePickerDialog.show()
              */
             val mainDir = ((context as TouchSampleSynthMain).filesDir.absolutePath)
-            val gson=Gson()
+            val gson=GsonBuilder().apply { registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer()) }.create()
             val f = File(mainDir + File.separator + "touchSampleSynthScenes1.json")
             if (f.exists())
             {
                 val jsondata=f.readText()
                 try {
                     val jsonobj = gson.fromJson(jsondata, Array<SceneP>::class.java)
+
                     (context as TouchSampleSynthMain).allScenes.clear()
                     (context as TouchSampleSynthMain).allScenes.addAll(jsonobj)
                 } catch (e: Exception)

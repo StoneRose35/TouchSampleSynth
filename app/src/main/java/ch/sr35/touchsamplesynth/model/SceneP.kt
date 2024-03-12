@@ -10,6 +10,7 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
 
+
 class SceneP : Serializable, Cloneable {
     var instruments = ArrayList<PersistableInstrument>()
     var touchElements = ArrayList<TouchElementP>()

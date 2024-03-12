@@ -5,7 +5,33 @@ import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
 import java.io.Serializable
+import java.lang.reflect.Type
+
+class PersistableInstrumentDeserializer: JsonDeserializer<PersistableInstrument> {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): PersistableInstrument? {
+        if (json?.asJsonObject?.has("sampleStart")==true)
+        {
+            return context?.deserialize(json,SamplerP::class.java)
+        }
+        else if (json?.asJsonObject?.has("resonance")==true)
+        {
+            return context?.deserialize(json,SimpleSubtractiveSynthP::class.java)
+        }
+        else if (json?.asJsonObject?.has("attack")==true)
+        {
+            return context?.deserialize(json,SineMonoSynthP::class.java)
+        }
+        return null
+    }
+}
 
 open class PersistableInstrument(var nVoices: Int=0,var name: String=""): Serializable, Cloneable {
 
