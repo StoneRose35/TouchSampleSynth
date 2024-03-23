@@ -24,9 +24,27 @@
         android:layout_height="wrap_content">
         <TableRow android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/sampler_switch_mode"
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/sampler_switch_mode_looped"
+                android:layout_gravity="center_vertical">
+
+            </androidx.appcompat.widget.SwitchCompat>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_column="2"
+                android:layout_margin="10dp"
+                android:gravity="center_vertical"
+                android:labelFor="@id/sampler_switch_mode_looped"
+                android:text="@string/sampler_loop_switch" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/sampler_switch_mode_triggered"
+                android:layout_gravity="center_vertical"
                 >
 
             </androidx.appcompat.widget.SwitchCompat>
@@ -34,10 +52,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
                 android:layout_margin="10dp"
-                android:text="@string/sampler_loop_switch"
-                android:labelFor="@id/sampler_switch_mode"
+                android:text="@string/sampler_triggered_switch"
+                android:labelFor="@id/sampler_switch_mode_triggered"
                 android:layout_column="2" />
-
         </TableRow>
 
     </TableLayout>

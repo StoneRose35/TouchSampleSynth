@@ -25,11 +25,14 @@ import com.developer.filepicker.model.DialogProperties
 import com.developer.filepicker.view.FilePickerDialog
 import java.io.File
 import java.util.concurrent.Executors
+import kotlin.experimental.and
+import kotlin.experimental.or
 
 
 class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
     private val synth=s
-    private var modeSwitch: SwitchCompat?=null
+    private var modeLoopedSwitch: SwitchCompat?=null
+    private var modeTriggeredSwitch: SwitchCompat?=null
     private var waveViewer: WaveDisplay?=null
     private var buttonLoadSample: Button?=null
     //private lateinit var fileChooserResultLauncher: ActivityResultLauncher<Intent>
@@ -50,7 +53,8 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        modeSwitch=view.findViewById(R.id.sampler_switch_mode)
+        modeLoopedSwitch=view.findViewById(R.id.sampler_switch_mode_looped)
+        modeTriggeredSwitch=view.findViewById(R.id.sampler_switch_mode_triggered)
         waveViewer=view.findViewById(R.id.sampler_wave_viewer)
         buttonLoadSample=view.findViewById(R.id.sampler_button_load_sample)
         waveViewer?.onChangeListener=this
@@ -60,15 +64,34 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
         waveViewer?.loopStartMarkerPosition = (synth.getLoopStartIndex().toFloat()/synth.sample.size.toFloat())
         waveViewer?.loopEndMarkerPosition = (synth.getLoopEndIndex().toFloat()/synth.sample.size.toFloat())
         waveViewer?.invalidate()
-        modeSwitch?.isChecked = synth.getMode().toInt() == 1
-        modeSwitch?.setOnCheckedChangeListener { _, isChecked ->
+        modeLoopedSwitch?.isChecked = (synth.getMode().toInt() and 0x1) != 0
+        modeLoopedSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
             {
-                synth.setMode(1)
+                var mode = synth.getMode()
+                mode = mode.or(1)
+                synth.setMode(mode)
             }
             else
             {
-                synth.setMode(0)
+                var mode = synth.getMode()
+                mode = mode.and(-2)
+                synth.setMode(mode)
+            }
+        }
+        modeTriggeredSwitch?.isChecked = (synth.getMode().toInt() and 0x2) != 0
+        modeTriggeredSwitch?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+            {
+                var mode = synth.getMode()
+                mode = mode.or(2)
+                synth.setMode(mode)
+            }
+            else
+            {
+                var mode = synth.getMode()
+                mode = mode.and(-3)
+                synth.setMode(mode)
             }
         }
         buttonLoadSample?.setOnClickListener {

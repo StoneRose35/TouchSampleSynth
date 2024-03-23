@@ -8,8 +8,8 @@
 #include "MusicalSoundGenerator.h"
 #include <stdint.h>
 #define DEFAULT_SAMPLE_SIZE 2880000
-#define SAMPLER_MODE_ONE_SHOT 0
-#define SAMPLER_MODE_LOOP 1
+#define SAMPLER_MODE_LOOP 0
+#define SAMPLE_MODE_TRIGGERED 1
 
 class Sampler: public MusicalSoundGenerator  {
 

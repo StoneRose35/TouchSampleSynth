@@ -29,10 +29,7 @@ uint32_t Sampler::getLoopEndIndex() const {
 }
 
 void Sampler::setMode(uint8_t loopmode) {
-    if (loopmode < 2)
-    {
-        loopMode = loopmode;
-    }
+    loopMode = loopmode;
 }
 
 uint8_t Sampler::getMode() const {
@@ -53,7 +50,7 @@ void Sampler::loadSample(const float * inputData, uint32_t size) {
 float Sampler::getNextSample() {
     if (currentIndex != 0xFFFFFFFF)
     {
-        if (loopMode==SAMPLER_MODE_LOOP)
+        if ((loopMode & (1 << SAMPLER_MODE_LOOP))== (1 << SAMPLER_MODE_LOOP))
         {
             if (currentIndex == loopEndIndex)
             {
@@ -64,7 +61,10 @@ float Sampler::getNextSample() {
         {
             currentIndex=0xFFFFFFFF;
         }
-        currentIndex++;
+        else
+        {
+            currentIndex++;
+        }
     }
     if (currentIndex != 0xFFFFFFFF)
     {
@@ -87,7 +87,9 @@ void Sampler::switchOn(float vel) {
 
 void Sampler::switchOff(float vel) {
     MusicalSoundGenerator::switchOff(vel);
-    currentIndex = 0xFFFFFFFF;
+    if ((loopMode & (1 << SAMPLE_MODE_TRIGGERED))==0) {
+        currentIndex = 0xFFFFFFFF;
+    }
 }
 
 bool Sampler::isSounding() const {
@@ -109,7 +111,7 @@ Sampler::Sampler() {
     sampleStartIndex=0;
     sampleEndIndex=DEFAULT_SAMPLE_SIZE;
     currentIndex=0xFFFFFFFF;
-    loopMode=SAMPLER_MODE_ONE_SHOT;
+    loopMode=0;
     dataSize = DEFAULT_SAMPLE_SIZE;
     sampleData = (float*)malloc(DEFAULT_SAMPLE_SIZE*sizeof(float));
     for(uint32_t c=0;c<DEFAULT_SAMPLE_SIZE;c++)

@@ -22,6 +22,7 @@
     <string name="menuitem_soundgenerator">Instruments</string>
     <string name="sampler_name">Sampler</string>
     <string name="sampler_loop_switch">Loop section</string>
+    <string name="sampler_triggered_switch">Triggered</string>
     <string name="sampler_load_sample">Load sample</string>
     <string name="sampler_select_sample">Choose Wav-File</string>
     <string name="add">Add</string>

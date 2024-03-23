@@ -117,12 +117,12 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
                                 bbfr.put(0)
                                 bbfr.put(rawData, idx, channelSize)
                                 bbfr.rewind()
-                                sampleL = bbfr.getInt().toFloat() / renorm
+                                sampleL = (bbfr.getInt() shr 8).toFloat() / renorm
                                 bbfr.clear()
                                 bbfr.put(0)
                                 bbfr.put(rawData, idx + channelSize, channelSize)
                                 bbfr.rewind()
-                                sampleR = bbfr.getInt().toFloat() / renorm
+                                sampleR = (bbfr.getInt() shr 8).toFloat() / renorm
 
                                 result[c] = ((sampleR + sampleL) * 0.5f)
                                 idx += channelSize * 2
@@ -139,7 +139,6 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
                                 sampleL = bbfr.getShort().toFloat() / renorm
 
                                 bbfr.clear()
-                                bbfr.put(0)
                                 bbfr.put(rawData, idx + channelSize, channelSize)
                                 bbfr.rewind()
                                 sampleR = bbfr.getShort().toFloat() / renorm
@@ -180,7 +179,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
                                 bbfr.put(0)
                                 bbfr.put(rawData, idx, channelSize)
                                 bbfr.rewind()
-                                sampleL = bbfr.getInt().toFloat() / renorm
+                                sampleL = (bbfr.getInt() shr 8).toFloat() / renorm
 
                                 result[c] = (sampleL)
                                 idx += channelSize * 2
@@ -231,7 +230,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
                                 bbfr.put(0)
                                 bbfr.put(rawData, idx + channelSize, channelSize)
                                 bbfr.rewind()
-                                sampleR = bbfr.getInt().toFloat() / renorm
+                                sampleR = (bbfr.getInt() shr 8).toFloat() / renorm
                                 result[c] = (sampleR)
                                 idx += channelSize * 2
                             }
@@ -281,7 +280,7 @@ class WavFile(val header:WaveFileMetadata,val rawData: ByteArray)
                                 bbfr.put(0)
                                 bbfr.put(rawData, idx, channelSize)
                                 bbfr.rewind()
-                                sampleL = bbfr.getInt().toFloat() / renorm
+                                sampleL = (bbfr.getInt() shr 8).toFloat() / renorm
                                 result[c] = (sampleL)
                                 idx += channelSize
                             }

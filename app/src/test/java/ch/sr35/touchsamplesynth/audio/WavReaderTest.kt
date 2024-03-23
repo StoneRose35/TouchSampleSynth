@@ -73,6 +73,17 @@ class WavReaderTest {
     }
 
     @Test
+    fun basicWavReaderTest6()
+    {
+        val wr = WavReader()
+        val  file = File("./src/test/resources/Acoustic Snare 02.wav")
+        Assert.assertTrue(file.isFile)
+        val wavFile = wr.readWaveFile(file.inputStream())
+        wavFile.getFloatData(44100,WaveFileChannel.LEFT)
+        Assert.assertNotNull(wavFile)
+    }
+
+    @Test
     fun getFloatDataTest()
     {
         val wr = WavReader()

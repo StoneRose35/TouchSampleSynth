@@ -139,7 +139,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setSampleEndIndex(JNIEnv *en
 }
 
 JNIEXPORT jboolean JNICALL
-Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setMode(JNIEnv *env, jobject thiz,jbyte val) {
+Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setMode(JNIEnv *env, jobject thiz, jbyte val) {
     AudioEngine * audioEngine = getAudioEngine();
     jclass synth=env->GetObjectClass(thiz);
     jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
