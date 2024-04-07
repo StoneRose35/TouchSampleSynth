@@ -9,8 +9,8 @@ import ch.sr35.touchsamplesynth.graphics.RgbColor
 import ch.sr35.touchsamplesynth.views.TouchElement
 import java.io.Serializable
 
-class TouchElementP(private var width: Int,
-                    private var height: Int,
+class TouchElementP(var width: Int,
+                    var height: Int,
                     var posX:Int,
                     var posY: Int,
                     var actionDir: TouchElement.ActionDir,

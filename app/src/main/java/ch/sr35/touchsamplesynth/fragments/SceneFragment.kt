@@ -1,6 +1,8 @@
 package ch.sr35.touchsamplesynth.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -19,6 +21,7 @@ import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.model.PersistableInstrument
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
+import ch.sr35.touchsamplesynth.model.SceneListP
 import ch.sr35.touchsamplesynth.model.SceneP
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -172,7 +175,24 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
 
             val mainDir = ((context as TouchSampleSynthMain).filesDir.absolutePath)
             val gson=Gson()
-            val jsonOut = gson.toJson((context as TouchSampleSynthMain).allScenes)
+            val screenWidth: Int
+            val screenHeight: Int
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+                screenWidth =
+                    (context as Activity).windowManager.currentWindowMetrics.bounds.width()
+                screenHeight =
+                    (context as Activity).windowManager.currentWindowMetrics.bounds.height()
+            }
+            else
+            {
+                screenWidth = (context as Activity).windowManager.defaultDisplay.width
+                screenHeight = (context as Activity).windowManager.defaultDisplay.height
+            }
+            val sceneList=SceneListP()
+            sceneList.screenResolutionX=screenWidth
+            sceneList.screenResolutionY=screenHeight
+            sceneList.scenes.addAll((context as TouchSampleSynthMain).allScenes)
+            val jsonOut = gson.toJson(sceneList)
             Log.i(TAG, "exporting scenes as json")
             val f = File(mainDir + File.separator + "touchSampleSynthScenes1.json")
             if(f.exists())
@@ -224,10 +244,8 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
             {
                 val jsondata=f.readText()
                 try {
-                    val jsonobj = gson.fromJson(jsondata, Array<SceneP>::class.java)
-
-                    (context as TouchSampleSynthMain).allScenes.clear()
-                    (context as TouchSampleSynthMain).allScenes.addAll(jsonobj)
+                    val jsonobj = gson.fromJson(jsondata, SceneListP::class.java)
+                    jsonobj.importOntoDevice(context as TouchSampleSynthMain)
                 } catch (e: Exception)
                 {
                     when(e) {is JsonSyntaxException, is JsonParseException -> {
