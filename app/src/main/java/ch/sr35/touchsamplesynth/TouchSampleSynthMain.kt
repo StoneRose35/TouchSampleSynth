@@ -35,12 +35,9 @@ import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
 import ch.sr35.touchsamplesynth.network.RtpMidiServer
 import ch.sr35.touchsamplesynth.views.TouchElement
-import ch.sr35.touchsamplesynth.views.VuMeter
 import ch.sr35.touchsamplesynth.views.WaitAnimation
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
-import java.util.Timer
-import java.util.TimerTask
 import java.util.concurrent.Executors
 
 
@@ -395,7 +392,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             }
             executor.execute {
                 allScenes[position].populate(soundGenerators, touchElements, this)
-
                 handler.post {
 
 

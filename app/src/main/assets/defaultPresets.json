@@ -1,0 +1,2898 @@
+{
+  "exportDateTime": "Apr 7, 2024 16:29:58",
+  "manufacturer": "HMD Global",
+  "model": "Nokia T20",
+  "product": "RiddlerWifi_00EEA",
+  "scenes": [
+    {
+      "instruments": [
+        {
+          "loopEnd": 6571,
+          "loopStart": 0,
+          "mode": 2,
+          "sampleEnd": 10010,
+          "sampleFile": "file:///sdcard/DCIM/Samples/Kick/Acoustic%20Kick%2001.wav",
+          "sampleStart": 0,
+          "nVoices": 1,
+          "name": "Bassdrum"
+        },
+        {
+          "loopEnd": 14799,
+          "loopStart": 0,
+          "mode": 2,
+          "sampleEnd": 14799,
+          "sampleFile": "file:///sdcard/DCIM/Samples/Snare/Acoustic%20Snare%2001.wav",
+          "sampleStart": 0,
+          "nVoices": 1,
+          "name": "Snare"
+        },
+        {
+          "loopEnd": 45533,
+          "loopStart": 0,
+          "mode": 2,
+          "sampleEnd": 45533,
+          "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Hi-Hat/Closed/Acoustic%20Closed%20Hat%2001.wav",
+          "sampleStart": 0,
+          "nVoices": 1,
+          "name": "HiHat closed"
+        },
+        {
+          "loopEnd": 26266,
+          "loopStart": 0,
+          "mode": 2,
+          "sampleEnd": 26356,
+          "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Hi-Hat/Open/Acoustic%20Open%20Hat%2002.wav",
+          "sampleStart": 0,
+          "nVoices": 1,
+          "name": "HiHat open"
+        },
+        {
+          "loopEnd": 466002,
+          "loopStart": 0,
+          "mode": 2,
+          "sampleEnd": 466002,
+          "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Crash/Acoustic%20Crash%2001.wav",
+          "sampleStart": 0,
+          "nVoices": 1,
+          "name": "Crash"
+        },
+        {
+          "actionAmount": 35.8,
+          "attack": 0.01,
+          "decay": 0.488,
+          "initialCutoff": 168.32547,
+          "release": 1.684,
+          "resonance": 0.395,
+          "sustain": 1.0,
+          "nVoices": 4,
+          "name": "Bass"
+        }
+      ],
+      "name": "Drum\u0026Bass",
+      "touchElements": [
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 15,
+            "g": 15,
+            "r": 15
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 87,
+          "posX": 86,
+          "posY": 784,
+          "soundGenerator": {
+            "loopEnd": 6571,
+            "loopStart": 0,
+            "mode": 2,
+            "sampleEnd": 10010,
+            "sampleFile": "file:///sdcard/DCIM/Samples/Kick/Acoustic%20Kick%2001.wav",
+            "sampleStart": 0,
+            "nVoices": 1,
+            "name": "Bassdrum"
+          },
+          "voiceNr": 0,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 49,
+            "g": 148,
+            "r": 0
+          },
+          "height": 247,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 4,
+          "posX": 243,
+          "posY": 535,
+          "soundGenerator": {
+            "loopEnd": 14799,
+            "loopStart": 0,
+            "mode": 2,
+            "sampleEnd": 14799,
+            "sampleFile": "file:///sdcard/DCIM/Samples/Snare/Acoustic%20Snare%2001.wav",
+            "sampleStart": 0,
+            "nVoices": 1,
+            "name": "Snare"
+          },
+          "voiceNr": 0,
+          "width": 265
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 60,
+            "g": 154,
+            "r": 71
+          },
+          "height": 249,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 0,
+          "posX": 9,
+          "posY": 535,
+          "soundGenerator": {
+            "loopEnd": 14799,
+            "loopStart": 0,
+            "mode": 2,
+            "sampleEnd": 14799,
+            "sampleFile": "file:///sdcard/DCIM/Samples/Snare/Acoustic%20Snare%2001.wav",
+            "sampleStart": 0,
+            "nVoices": 1,
+            "name": "Snare"
+          },
+          "voiceNr": 0,
+          "width": 228
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 195,
+            "r": 163
+          },
+          "height": 242,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 87,
+          "posX": 415,
+          "posY": 825,
+          "soundGenerator": {
+            "loopEnd": 45533,
+            "loopStart": 0,
+            "mode": 2,
+            "sampleEnd": 45533,
+            "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Hi-Hat/Closed/Acoustic%20Closed%20Hat%2001.wav",
+            "sampleStart": 0,
+            "nVoices": 1,
+            "name": "HiHat closed"
+          },
+          "voiceNr": 0,
+          "width": 198
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 234,
+            "g": 106,
+            "r": 46
+          },
+          "height": 252,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 4,
+          "posX": 618,
+          "posY": 822,
+          "soundGenerator": {
+            "loopEnd": 26266,
+            "loopStart": 0,
+            "mode": 2,
+            "sampleEnd": 26356,
+            "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Hi-Hat/Open/Acoustic%20Open%20Hat%2002.wav",
+            "sampleStart": 0,
+            "nVoices": 1,
+            "name": "HiHat open"
+          },
+          "voiceNr": 0,
+          "width": 228
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 0,
+            "g": 82,
+            "r": 245
+          },
+          "height": 266,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 87,
+          "posX": 616,
+          "posY": 520,
+          "soundGenerator": {
+            "loopEnd": 466002,
+            "loopStart": 0,
+            "mode": 2,
+            "sampleEnd": 466002,
+            "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Crash/Acoustic%20Crash%2001.wav",
+            "sampleStart": 0,
+            "nVoices": 1,
+            "name": "Crash"
+          },
+          "voiceNr": 0,
+          "width": 235
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 20,
+            "g": 169,
+            "r": 210
+          },
+          "height": 200,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 17,
+          "posX": 14,
+          "posY": 78,
+          "soundGenerator": {
+            "actionAmount": 35.8,
+            "attack": 0.01,
+            "decay": 0.488,
+            "initialCutoff": 168.32547,
+            "release": 1.684,
+            "resonance": 0.395,
+            "sustain": 1.0,
+            "nVoices": 4,
+            "name": "Bass"
+          },
+          "voiceNr": 0,
+          "width": 989
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 22,
+            "g": 202,
+            "r": 202
+          },
+          "height": 188,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 22,
+          "posX": 18,
+          "posY": 366,
+          "soundGenerator": {
+            "actionAmount": 35.8,
+            "attack": 0.01,
+            "decay": 0.488,
+            "initialCutoff": 168.32547,
+            "release": 1.684,
+            "resonance": 0.395,
+            "sustain": 1.0,
+            "nVoices": 4,
+            "name": "Bass"
+          },
+          "voiceNr": 1,
+          "width": 984
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 58,
+            "g": 207,
+            "r": 233
+          },
+          "height": 182,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 20,
+          "posX": 18,
+          "posY": 228,
+          "soundGenerator": {
+            "actionAmount": 35.8,
+            "attack": 0.01,
+            "decay": 0.488,
+            "initialCutoff": 168.32547,
+            "release": 1.684,
+            "resonance": 0.395,
+            "sustain": 1.0,
+            "nVoices": 4,
+            "name": "Bass"
+          },
+          "voiceNr": 2,
+          "width": 983
+        }
+      ]
+    },
+    {
+      "instruments": [
+        {
+          "attack": 0.01,
+          "decay": 1.24,
+          "release": 1.14,
+          "sustain": 0.0,
+          "nVoices": 12,
+          "name": "Soft Bell"
+        }
+      ],
+      "name": "Chromatic Scale",
+      "touchElements": [
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 179,
+            "g": 179,
+            "r": 179
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 39,
+          "posX": 0,
+          "posY": 800,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 0,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 31,
+            "g": 31,
+            "r": 31
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 40,
+          "posX": 127,
+          "posY": 552,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 1,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 179,
+            "g": 179,
+            "r": 179
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 41,
+          "posX": 234,
+          "posY": 809,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 2,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 41,
+            "g": 41,
+            "r": 41
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 42,
+          "posX": 359,
+          "posY": 554,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 3,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 181,
+            "g": 181,
+            "r": 181
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 43,
+          "posX": 461,
+          "posY": 801,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 4,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 181,
+            "g": 181,
+            "r": 181
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 44,
+          "posX": 680,
+          "posY": 800,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 5,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 41,
+            "g": 41,
+            "r": 41
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 45,
+          "posX": 792,
+          "posY": 534,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 6,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 207,
+            "g": 207,
+            "r": 207
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 46,
+          "posX": 915,
+          "posY": 801,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 7,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 33,
+            "g": 33,
+            "r": 33
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 47,
+          "posX": 1038,
+          "posY": 536,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 8,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 191,
+            "g": 191,
+            "r": 191
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 48,
+          "posX": 1150,
+          "posY": 806,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 9,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 31,
+            "g": 31,
+            "r": 31
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 49,
+          "posX": 1286,
+          "posY": 537,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 10,
+          "width": 234
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 196,
+            "g": 196,
+            "r": 196
+          },
+          "height": 290,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 50,
+          "posX": 1394,
+          "posY": 802,
+          "soundGenerator": {
+            "attack": 0.01,
+            "decay": 1.24,
+            "release": 1.14,
+            "sustain": 0.0,
+            "nVoices": 12,
+            "name": "Soft Bell"
+          },
+          "voiceNr": 11,
+          "width": 234
+        }
+      ]
+    },
+    {
+      "instruments": [
+        {
+          "actionAmount": 43.85,
+          "attack": 0.648,
+          "decay": 0.01,
+          "initialCutoff": 163.2976,
+          "release": 0.698,
+          "resonance": 0.345,
+          "sustain": 1.0,
+          "nVoices": 8,
+          "name": "Pad "
+        },
+        {
+          "actionAmount": 0.0,
+          "attack": 0.01,
+          "decay": 0.584,
+          "initialCutoff": 1636.4568,
+          "release": 0.518,
+          "resonance": 0.0,
+          "sustain": 0.0,
+          "nVoices": 8,
+          "name": "Hit"
+        }
+      ],
+      "name": "Chords C",
+      "touchElements": [
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 0,
+            "g": 78,
+            "r": 194
+          },
+          "height": 910,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 15,
+          "posX": 11,
+          "posY": 134,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 0,
+          "width": 301
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 46,
+            "g": 147,
+            "r": 255
+          },
+          "height": 916,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 19,
+          "posX": 276,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 1,
+          "width": 286
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 66,
+            "g": 195,
+            "r": 255
+          },
+          "height": 918,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 20,
+          "posX": 516,
+          "posY": 121,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 2,
+          "width": 273
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 133,
+            "g": 222,
+            "r": 255
+          },
+          "height": 915,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 22,
+          "posX": 740,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 3,
+          "width": 274
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 165,
+            "r": 158
+          },
+          "height": 263,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 44,
+          "posX": 1153,
+          "posY": 159,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 0,
+          "width": 263
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 204,
+            "r": 206
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 46,
+          "posX": 1416,
+          "posY": 162,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 1,
+          "width": 237
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 220,
+            "r": 219
+          },
+          "height": 253,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 48,
+          "posX": 1649,
+          "posY": 164,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 2,
+          "width": 271
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 204,
+            "g": 34,
+            "r": 0
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 39,
+          "posX": 1165,
+          "posY": 421,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 3,
+          "width": 250
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 56,
+            "r": 26
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 41,
+          "posX": 1413,
+          "posY": 418,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 4,
+          "width": 236
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 159,
+            "r": 138
+          },
+          "height": 259,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 43,
+          "posX": 1648,
+          "posY": 414,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 5,
+          "width": 276
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 117,
+            "g": 16,
+            "r": 0
+          },
+          "height": 254,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 38,
+          "posX": 1165,
+          "posY": 678,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 6,
+          "width": 246
+        }
+      ]
+    },
+    {
+      "instruments": [
+        {
+          "actionAmount": 43.85,
+          "attack": 0.648,
+          "decay": 0.01,
+          "initialCutoff": 163.2976,
+          "release": 0.698,
+          "resonance": 0.345,
+          "sustain": 1.0,
+          "nVoices": 8,
+          "name": "Pad "
+        },
+        {
+          "actionAmount": 0.0,
+          "attack": 0.01,
+          "decay": 0.584,
+          "initialCutoff": 1636.4568,
+          "release": 0.518,
+          "resonance": 0.0,
+          "sustain": 0.0,
+          "nVoices": 8,
+          "name": "Hit"
+        }
+      ],
+      "name": "Chords D",
+      "touchElements": [
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 0,
+            "g": 78,
+            "r": 194
+          },
+          "height": 910,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 17,
+          "posX": 11,
+          "posY": 134,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 0,
+          "width": 301
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 46,
+            "g": 147,
+            "r": 255
+          },
+          "height": 916,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 21,
+          "posX": 276,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 1,
+          "width": 286
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 66,
+            "g": 195,
+            "r": 255
+          },
+          "height": 918,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 22,
+          "posX": 516,
+          "posY": 121,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 2,
+          "width": 273
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 133,
+            "g": 222,
+            "r": 255
+          },
+          "height": 915,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 24,
+          "posX": 740,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 3,
+          "width": 274
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 165,
+            "r": 158
+          },
+          "height": 263,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 46,
+          "posX": 1153,
+          "posY": 159,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 0,
+          "width": 263
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 204,
+            "r": 206
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 48,
+          "posX": 1416,
+          "posY": 162,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 1,
+          "width": 237
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 220,
+            "r": 219
+          },
+          "height": 253,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 50,
+          "posX": 1649,
+          "posY": 164,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 2,
+          "width": 271
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 204,
+            "g": 34,
+            "r": 0
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 41,
+          "posX": 1165,
+          "posY": 421,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 3,
+          "width": 250
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 56,
+            "r": 26
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 43,
+          "posX": 1413,
+          "posY": 418,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 4,
+          "width": 236
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 159,
+            "r": 138
+          },
+          "height": 259,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 45,
+          "posX": 1648,
+          "posY": 414,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 5,
+          "width": 276
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 117,
+            "g": 16,
+            "r": 0
+          },
+          "height": 254,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 40,
+          "posX": 1165,
+          "posY": 678,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 6,
+          "width": 246
+        }
+      ]
+    },
+    {
+      "instruments": [
+        {
+          "actionAmount": 43.85,
+          "attack": 0.648,
+          "decay": 0.01,
+          "initialCutoff": 163.2976,
+          "release": 0.698,
+          "resonance": 0.345,
+          "sustain": 1.0,
+          "nVoices": 8,
+          "name": "Pad "
+        },
+        {
+          "actionAmount": 0.0,
+          "attack": 0.01,
+          "decay": 0.584,
+          "initialCutoff": 1636.4568,
+          "release": 0.518,
+          "resonance": 0.0,
+          "sustain": 0.0,
+          "nVoices": 8,
+          "name": "Hit"
+        }
+      ],
+      "name": "Chords E",
+      "touchElements": [
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 0,
+            "g": 78,
+            "r": 194
+          },
+          "height": 910,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 19,
+          "posX": 11,
+          "posY": 134,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 0,
+          "width": 301
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 46,
+            "g": 147,
+            "r": 255
+          },
+          "height": 916,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 23,
+          "posX": 276,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 1,
+          "width": 286
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 66,
+            "g": 195,
+            "r": 255
+          },
+          "height": 918,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 24,
+          "posX": 516,
+          "posY": 121,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 2,
+          "width": 273
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 133,
+            "g": 222,
+            "r": 255
+          },
+          "height": 915,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 26,
+          "posX": 740,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 3,
+          "width": 274
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 165,
+            "r": 158
+          },
+          "height": 263,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 48,
+          "posX": 1153,
+          "posY": 159,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 0,
+          "width": 263
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 204,
+            "r": 206
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 50,
+          "posX": 1416,
+          "posY": 162,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 1,
+          "width": 237
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 220,
+            "r": 219
+          },
+          "height": 253,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 52,
+          "posX": 1649,
+          "posY": 164,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 2,
+          "width": 271
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 204,
+            "g": 34,
+            "r": 0
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 43,
+          "posX": 1165,
+          "posY": 421,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 3,
+          "width": 250
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 56,
+            "r": 26
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 45,
+          "posX": 1413,
+          "posY": 418,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 4,
+          "width": 236
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 159,
+            "r": 138
+          },
+          "height": 259,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 47,
+          "posX": 1648,
+          "posY": 414,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 5,
+          "width": 276
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 117,
+            "g": 16,
+            "r": 0
+          },
+          "height": 254,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 43,
+          "posX": 1165,
+          "posY": 678,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 6,
+          "width": 246
+        }
+      ]
+    },
+    {
+      "instruments": [
+        {
+          "actionAmount": 43.85,
+          "attack": 0.648,
+          "decay": 0.01,
+          "initialCutoff": 163.2976,
+          "release": 0.698,
+          "resonance": 0.345,
+          "sustain": 1.0,
+          "nVoices": 8,
+          "name": "Pad "
+        },
+        {
+          "actionAmount": 0.0,
+          "attack": 0.01,
+          "decay": 0.584,
+          "initialCutoff": 1636.4568,
+          "release": 0.518,
+          "resonance": 0.0,
+          "sustain": 0.0,
+          "nVoices": 8,
+          "name": "Hit"
+        }
+      ],
+      "name": "Chords F",
+      "touchElements": [
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 0,
+            "g": 78,
+            "r": 194
+          },
+          "height": 910,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 20,
+          "posX": 11,
+          "posY": 134,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 0,
+          "width": 301
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 46,
+            "g": 147,
+            "r": 255
+          },
+          "height": 916,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 24,
+          "posX": 276,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 1,
+          "width": 286
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 66,
+            "g": 195,
+            "r": 255
+          },
+          "height": 918,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 25,
+          "posX": 516,
+          "posY": 121,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 2,
+          "width": 273
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 133,
+            "g": 222,
+            "r": 255
+          },
+          "height": 915,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 27,
+          "posX": 740,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 3,
+          "width": 274
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 165,
+            "r": 158
+          },
+          "height": 263,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 49,
+          "posX": 1153,
+          "posY": 159,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 0,
+          "width": 263
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 204,
+            "r": 206
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 51,
+          "posX": 1416,
+          "posY": 162,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 1,
+          "width": 237
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 220,
+            "r": 219
+          },
+          "height": 253,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 53,
+          "posX": 1649,
+          "posY": 164,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 2,
+          "width": 271
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 204,
+            "g": 34,
+            "r": 0
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 44,
+          "posX": 1165,
+          "posY": 421,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 3,
+          "width": 250
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 56,
+            "r": 26
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 46,
+          "posX": 1413,
+          "posY": 418,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 4,
+          "width": 236
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 159,
+            "r": 138
+          },
+          "height": 259,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 48,
+          "posX": 1648,
+          "posY": 414,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 5,
+          "width": 276
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 117,
+            "g": 16,
+            "r": 0
+          },
+          "height": 254,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 41,
+          "posX": 1165,
+          "posY": 678,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 6,
+          "width": 246
+        }
+      ]
+    },
+    {
+      "instruments": [
+        {
+          "actionAmount": 43.85,
+          "attack": 0.648,
+          "decay": 0.01,
+          "initialCutoff": 163.2976,
+          "release": 0.698,
+          "resonance": 0.345,
+          "sustain": 1.0,
+          "nVoices": 8,
+          "name": "Pad "
+        },
+        {
+          "actionAmount": 0.0,
+          "attack": 0.01,
+          "decay": 0.584,
+          "initialCutoff": 1636.4568,
+          "release": 0.518,
+          "resonance": 0.0,
+          "sustain": 0.0,
+          "nVoices": 8,
+          "name": "Hit"
+        }
+      ],
+      "name": "Chords G",
+      "touchElements": [
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 0,
+            "g": 78,
+            "r": 194
+          },
+          "height": 910,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 22,
+          "posX": 11,
+          "posY": 134,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 0,
+          "width": 301
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 46,
+            "g": 147,
+            "r": 255
+          },
+          "height": 916,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 26,
+          "posX": 276,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 1,
+          "width": 286
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 66,
+            "g": 195,
+            "r": 255
+          },
+          "height": 918,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 27,
+          "posX": 516,
+          "posY": 121,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 2,
+          "width": 273
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 133,
+            "g": 222,
+            "r": 255
+          },
+          "height": 915,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 29,
+          "posX": 740,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 3,
+          "width": 274
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 165,
+            "r": 158
+          },
+          "height": 263,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 51,
+          "posX": 1153,
+          "posY": 159,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 0,
+          "width": 263
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 204,
+            "r": 206
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 53,
+          "posX": 1416,
+          "posY": 162,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 1,
+          "width": 237
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 220,
+            "r": 219
+          },
+          "height": 253,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 55,
+          "posX": 1649,
+          "posY": 164,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 2,
+          "width": 271
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 204,
+            "g": 34,
+            "r": 0
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 46,
+          "posX": 1165,
+          "posY": 421,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 3,
+          "width": 250
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 56,
+            "r": 26
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 48,
+          "posX": 1413,
+          "posY": 418,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 4,
+          "width": 236
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 159,
+            "r": 138
+          },
+          "height": 259,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 50,
+          "posX": 1648,
+          "posY": 414,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 5,
+          "width": 276
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 117,
+            "g": 16,
+            "r": 0
+          },
+          "height": 254,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 43,
+          "posX": 1165,
+          "posY": 678,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 6,
+          "width": 246
+        }
+      ]
+    },
+    {
+      "instruments": [
+        {
+          "actionAmount": 43.85,
+          "attack": 0.648,
+          "decay": 0.01,
+          "initialCutoff": 163.2976,
+          "release": 0.698,
+          "resonance": 0.345,
+          "sustain": 1.0,
+          "nVoices": 8,
+          "name": "Pad "
+        },
+        {
+          "actionAmount": 0.0,
+          "attack": 0.01,
+          "decay": 0.584,
+          "initialCutoff": 1636.4568,
+          "release": 0.518,
+          "resonance": 0.0,
+          "sustain": 0.0,
+          "nVoices": 8,
+          "name": "Hit"
+        }
+      ],
+      "name": "Chords A",
+      "touchElements": [
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 0,
+            "g": 78,
+            "r": 194
+          },
+          "height": 910,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 24,
+          "posX": 11,
+          "posY": 134,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 0,
+          "width": 301
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 46,
+            "g": 147,
+            "r": 255
+          },
+          "height": 916,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 28,
+          "posX": 276,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 1,
+          "width": 286
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 66,
+            "g": 195,
+            "r": 255
+          },
+          "height": 918,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 29,
+          "posX": 516,
+          "posY": 121,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 2,
+          "width": 273
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 133,
+            "g": 222,
+            "r": 255
+          },
+          "height": 915,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 31,
+          "posX": 740,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 3,
+          "width": 274
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 165,
+            "r": 158
+          },
+          "height": 263,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 53,
+          "posX": 1153,
+          "posY": 159,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 0,
+          "width": 263
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 204,
+            "r": 206
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 55,
+          "posX": 1416,
+          "posY": 162,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 1,
+          "width": 237
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 220,
+            "r": 219
+          },
+          "height": 253,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 57,
+          "posX": 1649,
+          "posY": 164,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 2,
+          "width": 271
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 204,
+            "g": 34,
+            "r": 0
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 48,
+          "posX": 1165,
+          "posY": 421,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 3,
+          "width": 250
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 56,
+            "r": 26
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 50,
+          "posX": 1413,
+          "posY": 418,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 4,
+          "width": 236
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 159,
+            "r": 138
+          },
+          "height": 259,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 52,
+          "posX": 1648,
+          "posY": 414,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 5,
+          "width": 276
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 117,
+            "g": 16,
+            "r": 0
+          },
+          "height": 254,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 45,
+          "posX": 1165,
+          "posY": 678,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 6,
+          "width": 246
+        }
+      ]
+    },
+    {
+      "instruments": [
+        {
+          "actionAmount": 43.85,
+          "attack": 0.648,
+          "decay": 0.01,
+          "initialCutoff": 163.2976,
+          "release": 0.698,
+          "resonance": 0.345,
+          "sustain": 1.0,
+          "nVoices": 8,
+          "name": "Pad "
+        },
+        {
+          "actionAmount": 0.0,
+          "attack": 0.01,
+          "decay": 0.584,
+          "initialCutoff": 1636.4568,
+          "release": 0.518,
+          "resonance": 0.0,
+          "sustain": 0.0,
+          "nVoices": 8,
+          "name": "Hit"
+        }
+      ],
+      "name": "Chords B",
+      "touchElements": [
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 0,
+            "g": 78,
+            "r": 194
+          },
+          "height": 910,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 26,
+          "posX": 11,
+          "posY": 134,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 0,
+          "width": 301
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 46,
+            "g": 147,
+            "r": 255
+          },
+          "height": 916,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 30,
+          "posX": 276,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 1,
+          "width": 286
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 66,
+            "g": 195,
+            "r": 255
+          },
+          "height": 918,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 31,
+          "posX": 516,
+          "posY": 121,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 2,
+          "width": 273
+        },
+        {
+          "actionDir": "VERTICAL_DOWN_UP",
+          "color": {
+            "b": 133,
+            "g": 222,
+            "r": 255
+          },
+          "height": 915,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 33,
+          "posX": 740,
+          "posY": 125,
+          "soundGenerator": {
+            "actionAmount": 43.85,
+            "attack": 0.648,
+            "decay": 0.01,
+            "initialCutoff": 163.2976,
+            "release": 0.698,
+            "resonance": 0.345,
+            "sustain": 1.0,
+            "nVoices": 8,
+            "name": "Pad "
+          },
+          "voiceNr": 3,
+          "width": 274
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 165,
+            "r": 158
+          },
+          "height": 263,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 55,
+          "posX": 1153,
+          "posY": 159,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 0,
+          "width": 263
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 204,
+            "r": 206
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 57,
+          "posX": 1416,
+          "posY": 162,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 1,
+          "width": 237
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 220,
+            "r": 219
+          },
+          "height": 253,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 59,
+          "posX": 1649,
+          "posY": 164,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 2,
+          "width": 271
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 204,
+            "g": 34,
+            "r": 0
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 61,
+          "posX": 1165,
+          "posY": 421,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 3,
+          "width": 250
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 56,
+            "r": 26
+          },
+          "height": 255,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 52,
+          "posX": 1413,
+          "posY": 418,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 4,
+          "width": 236
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 255,
+            "g": 159,
+            "r": 138
+          },
+          "height": 259,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 54,
+          "posX": 1648,
+          "posY": 414,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 5,
+          "width": 276
+        },
+        {
+          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "color": {
+            "b": 117,
+            "g": 16,
+            "r": 0
+          },
+          "height": 254,
+          "midiCC": 3,
+          "midiChannel": 0,
+          "note": 47,
+          "posX": 1165,
+          "posY": 678,
+          "soundGenerator": {
+            "actionAmount": 0.0,
+            "attack": 0.01,
+            "decay": 0.584,
+            "initialCutoff": 1636.4568,
+            "release": 0.518,
+            "resonance": 0.0,
+            "sustain": 0.0,
+            "nVoices": 8,
+            "name": "Hit"
+          },
+          "voiceNr": 6,
+          "width": 246
+        }
+      ]
+    }
+  ]
+}
