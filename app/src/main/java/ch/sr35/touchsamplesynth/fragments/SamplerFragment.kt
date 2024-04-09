@@ -98,7 +98,7 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
             val dialogProperties = DialogProperties()
             dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
             dialogProperties.selection_type = DialogConfigs.FILE_SELECT
-            dialogProperties.root = File(DialogConfigs.DEFAULT_DIR)
+            dialogProperties.root = context?.filesDir
             dialogProperties.error_dir = File(DialogConfigs.DEFAULT_DIR)
             dialogProperties.offset = File(DialogConfigs.DEFAULT_DIR)
             dialogProperties.extensions= arrayOf("wav")

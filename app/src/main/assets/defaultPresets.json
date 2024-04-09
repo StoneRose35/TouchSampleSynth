@@ -1,8 +1,11 @@
 {
-  "exportDateTime": "Apr 7, 2024 16:29:58",
+  "exportDateTime": "2024-04-07T16:29:13Z",
   "manufacturer": "HMD Global",
   "model": "Nokia T20",
   "product": "RiddlerWifi_00EEA",
+  "touchSampleSynthVersion": "1.8.3",
+  "screenResolutionX": 2000,
+  "screenResolutionY": 1200,
   "scenes": [
     {
       "instruments": [
@@ -11,7 +14,7 @@
           "loopStart": 0,
           "mode": 2,
           "sampleEnd": 10010,
-          "sampleFile": "file:///sdcard/DCIM/Samples/Kick/Acoustic%20Kick%2001.wav",
+          "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Kick/AcousticKick01.wav",
           "sampleStart": 0,
           "nVoices": 1,
           "name": "Bassdrum"
@@ -21,7 +24,7 @@
           "loopStart": 0,
           "mode": 2,
           "sampleEnd": 14799,
-          "sampleFile": "file:///sdcard/DCIM/Samples/Snare/Acoustic%20Snare%2001.wav",
+          "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
           "sampleStart": 0,
           "nVoices": 1,
           "name": "Snare"
@@ -31,7 +34,7 @@
           "loopStart": 0,
           "mode": 2,
           "sampleEnd": 45533,
-          "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Hi-Hat/Closed/Acoustic%20Closed%20Hat%2001.wav",
+          "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Closed/AcousticClosedHat01.wav",
           "sampleStart": 0,
           "nVoices": 1,
           "name": "HiHat closed"
@@ -41,7 +44,7 @@
           "loopStart": 0,
           "mode": 2,
           "sampleEnd": 26356,
-          "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Hi-Hat/Open/Acoustic%20Open%20Hat%2002.wav",
+          "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Open/AcousticOpenHat02.wav",
           "sampleStart": 0,
           "nVoices": 1,
           "name": "HiHat open"
@@ -51,7 +54,7 @@
           "loopStart": 0,
           "mode": 2,
           "sampleEnd": 466002,
-          "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Crash/Acoustic%20Crash%2001.wav",
+          "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Crash/AcousticCrash01.wav",
           "sampleStart": 0,
           "nVoices": 1,
           "name": "Crash"
@@ -88,7 +91,7 @@
             "loopStart": 0,
             "mode": 2,
             "sampleEnd": 10010,
-            "sampleFile": "file:///sdcard/DCIM/Samples/Kick/Acoustic%20Kick%2001.wav",
+            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Kick/AcousticKick01.wav",
             "sampleStart": 0,
             "nVoices": 1,
             "name": "Bassdrum"
@@ -114,7 +117,7 @@
             "loopStart": 0,
             "mode": 2,
             "sampleEnd": 14799,
-            "sampleFile": "file:///sdcard/DCIM/Samples/Snare/Acoustic%20Snare%2001.wav",
+            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
             "sampleStart": 0,
             "nVoices": 1,
             "name": "Snare"
@@ -140,7 +143,7 @@
             "loopStart": 0,
             "mode": 2,
             "sampleEnd": 14799,
-            "sampleFile": "file:///sdcard/DCIM/Samples/Snare/Acoustic%20Snare%2001.wav",
+            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
             "sampleStart": 0,
             "nVoices": 1,
             "name": "Snare"
@@ -166,7 +169,7 @@
             "loopStart": 0,
             "mode": 2,
             "sampleEnd": 45533,
-            "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Hi-Hat/Closed/Acoustic%20Closed%20Hat%2001.wav",
+            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Closed/AcousticClosedHat01.wav",
             "sampleStart": 0,
             "nVoices": 1,
             "name": "HiHat closed"
@@ -192,7 +195,7 @@
             "loopStart": 0,
             "mode": 2,
             "sampleEnd": 26356,
-            "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Hi-Hat/Open/Acoustic%20Open%20Hat%2002.wav",
+            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Open/AcousticOpenHat02.wav",
             "sampleStart": 0,
             "nVoices": 1,
             "name": "HiHat open"
@@ -218,7 +221,7 @@
             "loopStart": 0,
             "mode": 2,
             "sampleEnd": 466002,
-            "sampleFile": "file:///sdcard/DCIM/Samples/Cymbals/Crash/Acoustic%20Crash%2001.wav",
+            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Crash/AcousticCrash01.wav",
             "sampleStart": 0,
             "nVoices": 1,
             "name": "Crash"

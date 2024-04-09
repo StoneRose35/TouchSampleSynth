@@ -24,8 +24,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
-import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
+import ch.sr35.touchsamplesynth.dialogs.DefaultScenesInstall
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
 import ch.sr35.touchsamplesynth.fragments.PlayPageFragment
 import ch.sr35.touchsamplesynth.fragments.SceneFragment
@@ -63,7 +63,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onResume() {
         super.onResume()
-        val allNotes = MusicalPitch.generateAllNotes()
         allScenes.clear()
         val fDir = this.filesDir
         val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
@@ -86,7 +85,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 } catch (e: Exception) {
                     it.delete()
                 }
-
             }
         }
 
@@ -103,64 +101,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
 
         if (mainMenu!=null) {
-            allScenes[(mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition].populate(
-                soundGenerators,
-                touchElements,
-                this
-            )
-
-            if (supportFragmentManager.fragments[0].tag.equals("PlayPage0")) {
-                for (te in touchElements) {
-                    supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
-                        if (it != null) {
-                            te.setEditmode(it)
-                        }
-                    }
-                    (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
-                }
-            } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
-                supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)
-                    ?.invalidateViews()
-            }
-
-        }
-
-
-        if (allScenes.isEmpty()) {
-            allScenes.add(SceneP())
-            allScenes[0].name = "Default"
-            val synth = SineMonoSynthI(this,"Basic")
-            synth.generateVoices(4)
-            soundGenerators.add(synth)
-
-            var te = TouchElement(this, null)
-            te.soundGenerator = synth
-            te.voiceNr = 0
-            te.note = allNotes[44]
-            te.setEditmode(false)
-            touchElements.add(te)
-
-            te = TouchElement(this, null)
-            te.soundGenerator = synth
-            te.voiceNr = 1
-            te.note = allNotes[44 + 5]
-            te.setEditmode(false)
-            touchElements.add(te)
-
-            te = TouchElement(this, null)
-            te.soundGenerator = synth
-            te.voiceNr = 2
-            te.note = allNotes[44 + 7]
-            te.setEditmode(false)
-            touchElements.add(te)
-
-
-            te = TouchElement(this, null)
-            te.soundGenerator = synth
-            te.voiceNr = 3
-            te.note = allNotes[44 + 9]
-            te.setEditmode(false)
-            touchElements.add(te)
+            loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
         }
 
         audioEngine.startEngine()
@@ -168,7 +109,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     }
     override fun onStart() {
         super.onStart()
-
+        val defaultScenesInstall=DefaultScenesInstall(this)
         val playPage = PlayPageFragment()
         if (supportFragmentManager.fragments.isEmpty()) {
             putFragment(playPage, "PlayPage0")
@@ -176,6 +117,22 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         if (!audioEngine.startEngine())
         {
             playPage.view?.let { Snackbar.make(it,"Audio Engine failed to start",10) }
+        }
+
+        if (!defaultScenesInstall.installer.checkIfScenesAreAvailable())
+        {
+            if (!defaultScenesInstall.installer.checkSampleLibrary(defaultScenesInstall.installer.samplesFolderLvl1, DRUMSAMPLES_FOLDER_NAME))
+            {
+                defaultScenesInstall.setInstallerText(getString(R.string.installerAddDrumSamplesSamples))
+                defaultScenesInstall.show()
+            }
+            else
+            {
+                defaultScenesInstall.setInstallerText(getString(R.string.installerInstallWithSamples))
+                defaultScenesInstall.installer.installDefaultScene(true)
+                saveToBinaryFiles()
+            }
+
         }
 
         /*val timer=Timer()
@@ -280,26 +237,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onPause() {
 
-        val mainDir = File(filesDir.absolutePath)
-        persistCurrentScene()
-        mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
-            it.delete()
-        }
-        Log.i(TAG, "save to files")
-        for ((cnt, scn) in allScenes.withIndex()) {
-            val f = File(filesDir.absolutePath + File.separator + "%03dscene.scn".format(cnt))
-            Log.i(TAG, "writing file %s".format(f.name))
-            Log.i(TAG, scn.toString())
-            for (instr in scn.instruments) {
-                Log.i(TAG, instr.toString())
-            }
-            for (te in scn.touchElements) {
-                Log.i(TAG, te.toString())
-            }
-            scn.toFile(f)
-        }
-
-
+        saveToBinaryFiles()
         midiHostHandler?.stopMidiDeviceListener()
 
         if (supportFragmentManager.fragments[0].tag!=null
@@ -320,6 +258,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         val sceneArrayAdapter = ArrayAdapter<SceneP>(this, android.R.layout.simple_spinner_item,allScenes)
         sceneArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerScenes.adapter = sceneArrayAdapter
+
         if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
             spinnerScenes.setSelection(oldScenePosition, false)
         }
@@ -328,7 +267,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             spinnerScenes.setSelection(0, false)
         }
         spinnerScenes.onItemSelectedListener=this
-
         return true
     }
 
@@ -367,71 +305,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             allScenes[oldScenePosition].persist(soundGenerators, touchElements)
         }
         if (position != oldScenePosition) {
-            val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout)
-            val waitAnimation= WaitAnimation(this,null)
-            val constraintLayout = ConstraintLayout.LayoutParams(Converter.toPx(64),Converter.toPx(64))
-            constraintLayout.topToTop= ConstraintLayout.LayoutParams.PARENT_ID
-            constraintLayout.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-            constraintLayout.startToStart  = ConstraintLayout.LayoutParams.PARENT_ID
-            constraintLayout.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-            waitAnimation.layoutParams = constraintLayout
-            (mainLayout as ViewGroup).addView(waitAnimation)
-            waitAnimation.startAnimation()
-            oldScenePosition = position
-            val executor=Executors.newSingleThreadExecutor()
-            val handler = Handler(Looper.getMainLooper())
-            //unload the current scene
-            soundGenerators.flatMap { sg -> sg.voices }
-                .forEach { el -> el.detachFromAudioEngine() }
-            if (supportFragmentManager.fragments[0].tag != null
-                && supportFragmentManager.fragments[0].tag.equals("PlayPage0")
-            ) {
-                for (te in touchElements) {
-                    (supportFragmentManager.fragments[0].view as ViewGroup).removeView(te)
-                }
-            }
-            executor.execute {
-                allScenes[position].populate(soundGenerators, touchElements, this)
-                handler.post {
-
-
-                    // load the new scene
-                    if (supportFragmentManager.fragments[0].tag != null) {
-                        if (supportFragmentManager.fragments[0].tag.equals("PlayPage0")) {
-                            for (te in touchElements) {
-                                supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
-                                    if (it != null) {
-                                        te.setEditmode(it)
-                                    }
-                                }
-                                (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
-                            }
-                        } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
-                            supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)
-                                ?.invalidateViews()
-                            (supportFragmentManager.fragments[0] as InstrumentsPageFragment).selectInstrument(
-                                0,
-                                true
-                            )
-                        }
-                        supportFragmentManager.fragments[0].view?.invalidate()
-                    }
-                    waitAnimation.stopAnimation()
-                    (mainLayout as ViewGroup).removeView(waitAnimation)
-                }
-            }
-
-
-
-
-
-
-
-
-
+            loadSceneWithWaitIndicator(position)
         }
-
-
     }
 
     fun getCurrentSceneName(): String?
@@ -455,12 +330,95 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
     }
 
+    fun saveToBinaryFiles()
+    {
+        val mainDir = File(filesDir.absolutePath)
+        persistCurrentScene()
+        mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
+            it.delete()
+        }
+        Log.i(TAG, "save to files")
+        for ((cnt, scn) in allScenes.withIndex()) {
+            val f = File(filesDir.absolutePath + File.separator + "%03dscene.scn".format(cnt))
+            Log.i(TAG, "writing file %s".format(f.name))
+            Log.i(TAG, scn.toString())
+            for (instr in scn.instruments) {
+                Log.i(TAG, instr.toString())
+            }
+            for (te in scn.touchElements) {
+                Log.i(TAG, te.toString())
+            }
+            scn.toFile(f)
+        }
+    }
+
+    private fun loadSceneWithWaitIndicator(position: Int)
+    {
+        if (allScenes.size==0 || position==oldScenePosition)
+        {
+            return
+        }
+        val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout)
+        val waitAnimation= WaitAnimation(this,null)
+        val constraintLayout = ConstraintLayout.LayoutParams(Converter.toPx(64),Converter.toPx(64))
+        constraintLayout.topToTop= ConstraintLayout.LayoutParams.PARENT_ID
+        constraintLayout.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        constraintLayout.startToStart  = ConstraintLayout.LayoutParams.PARENT_ID
+        constraintLayout.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+        waitAnimation.layoutParams = constraintLayout
+        (mainLayout as ViewGroup).addView(waitAnimation)
+        waitAnimation.startAnimation()
+        oldScenePosition = position
+        val executor=Executors.newSingleThreadExecutor()
+        val handler = Handler(Looper.getMainLooper())
+        //unload the current scene
+        soundGenerators.flatMap { sg -> sg.voices }
+            .forEach { el -> el.detachFromAudioEngine() }
+        if (supportFragmentManager.fragments[0].tag != null
+            && supportFragmentManager.fragments[0].tag.equals("PlayPage0")
+        ) {
+            for (te in touchElements) {
+                (supportFragmentManager.fragments[0].view as ViewGroup).removeView(te)
+            }
+        }
+        executor.execute {
+            allScenes[position].populate(soundGenerators, touchElements, this)
+            handler.post {
+
+
+                // load the new scene
+                if (supportFragmentManager.fragments[0].tag != null) {
+                    if (supportFragmentManager.fragments[0].tag.equals("PlayPage0")) {
+                        for (te in touchElements) {
+                            supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
+                                if (it != null) {
+                                    te.setEditmode(it)
+                                }
+                            }
+                            (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
+                        }
+                    } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
+                        supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)
+                            ?.invalidateViews()
+                        (supportFragmentManager.fragments[0] as InstrumentsPageFragment).selectInstrument(
+                            0,
+                            true
+                        )
+                    }
+                    supportFragmentManager.fragments[0].view?.invalidate()
+                }
+                waitAnimation.stopAnimation()
+                (mainLayout as ViewGroup).removeView(waitAnimation)
+            }
+        }
+    }
+
     fun persistCurrentScene()
     {
         if (mainMenu != null) {
             val scenePos =
                 (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
-            if (scenePos < allScenes.size) {
+            if (scenePos < allScenes.size && scenePos > -1) {
                 allScenes[scenePos].persist(soundGenerators, touchElements)
             }
         }

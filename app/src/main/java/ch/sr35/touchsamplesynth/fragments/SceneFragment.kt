@@ -1,11 +1,8 @@
 package ch.sr35.touchsamplesynth.fragments
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.os.Build
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,14 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.SceneRecyclerViewAdapter
-import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.model.PersistableInstrument
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SceneListP
 import ch.sr35.touchsamplesynth.model.SceneP
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
@@ -173,33 +168,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
             */
 
 
-            val mainDir = ((context as TouchSampleSynthMain).filesDir.absolutePath)
-            val gson=Gson()
-            val screenWidth: Int
-            val screenHeight: Int
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-                screenWidth =
-                    (context as Activity).windowManager.currentWindowMetrics.bounds.width()
-                screenHeight =
-                    (context as Activity).windowManager.currentWindowMetrics.bounds.height()
-            }
-            else
-            {
-                screenWidth = (context as Activity).windowManager.defaultDisplay.width
-                screenHeight = (context as Activity).windowManager.defaultDisplay.height
-            }
-            val sceneList=SceneListP()
-            sceneList.screenResolutionX=screenWidth
-            sceneList.screenResolutionY=screenHeight
-            sceneList.scenes.addAll((context as TouchSampleSynthMain).allScenes)
-            val jsonOut = gson.toJson(sceneList)
-            Log.i(TAG, "exporting scenes as json")
-            val f = File(mainDir + File.separator + "touchSampleSynthScenes1.json")
-            if(f.exists())
-            {
-                f.delete()
-            }
-            f.writeText(jsonOut)
+            SceneListP.exportAsJson("touchSampleSynth1.json", context as TouchSampleSynthMain)
             val sb = Snackbar.make(it,resources.getText(R.string.exportSuccessful),1000)
             sb.show()
         }
@@ -237,9 +206,11 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
             }
             filePickerDialog.show()
              */
-            val mainDir = ((context as TouchSampleSynthMain).filesDir.absolutePath)
-            val gson=GsonBuilder().apply { registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer()) }.create()
-            val f = File(mainDir + File.separator + "touchSampleSynthScenes1.json")
+            val gson=GsonBuilder().apply {
+                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+                setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            }.create()
+            val f = File((context as TouchSampleSynthMain).filesDir,"touchSampleSynth1.json")
             if (f.exists())
             {
                 val jsondata=f.readText()

@@ -66,7 +66,7 @@
     <string name="midiDeviceMode">Device Mode (connected to Computer)</string>
     <string name="availableMidiInDevices">Midi Inputs</string>
     <string name="availableMidiOutDevices">Midi Outputs</string>
-    <string name="exportToJson" >Export</string>
+    <string name="exportToJson">Export</string>
     <string name="importFromJson">Import</string>
     <string name="exportSuccessful">Export successful</string>
     <string name="selectFolder">Select Folder to save Scenes</string>
@@ -82,4 +82,9 @@
     <string name="ipAdress">IP Address</string>
     <string name="rtpMidiPorts">RTP Midi Ports</string>
     <string name="offline">offline</string>
+    <string name="installerTitle">Preset Installer</string>
+    <string name="installerAddDrumSamplesSamples">Install royalty-free Drum Samples from https://wavbvkery.com?</string>
+    <string name="installerInstallWithSamples">Installing Presets with samples</string>
+    <string name="installerDownloadingSamples">Downloading Samples</string>
+    <string name="installerUnpackingSamples">Unpacking Samples</string>
 </resources>

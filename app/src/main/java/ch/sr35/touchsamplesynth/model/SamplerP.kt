@@ -1,6 +1,6 @@
 package ch.sr35.touchsamplesynth.model
 
-import android.net.Uri
+import androidx.core.net.toUri
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import java.io.File
@@ -35,7 +35,7 @@ class SamplerP(private var sampleStart: Int,
         if (i is SamplerI)
         {
             if (sampleFile.isNotEmpty() && File(sampleFile).exists()) {
-                i.setSampleFile(Uri.parse(sampleFile))
+                i.setSampleFile(File(sampleFile).toUri())
             }
             i.setLoopStartIndex(loopStart)
             i.setLoopEndIndex(loopEnd)
