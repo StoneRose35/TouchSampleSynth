@@ -13,18 +13,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.SCENES_FILE_NAME
 import ch.sr35.touchsamplesynth.SceneRecyclerViewAdapter
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.model.PersistableInstrument
-import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SceneListP
 import ch.sr35.touchsamplesynth.model.SceneP
+import ch.sr35.touchsamplesynth.model.importDoneFlag
+import ch.sr35.touchsamplesynth.model.importMode
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParseException
-import com.google.gson.JsonSyntaxException
-import java.io.File
-
 
 /**
  * A fragment representing a list of Items.
@@ -63,7 +59,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                     val swap = scenes[p2]
                     scenes[p2] = scenes[p1]
                     scenes[p1] = swap
-
+                (context as TouchSampleSynthMain).scenesListDirty=true
                 recyclerView.adapter?.notifyItemMoved(p1,p2)
                 return true
             }
@@ -76,6 +72,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                         .setPositiveButton((context as TouchSampleSynthMain).getString(R.string.yes)) { _, _ ->
                             scenes.removeAt(viewHolder.absoluteAdapterPosition)
                             scenesList?.adapter?.notifyItemRemoved(viewHolder.absoluteAdapterPosition)
+                            (context as TouchSampleSynthMain).scenesListDirty = true
                         }
                         .setNegativeButton((context as TouchSampleSynthMain).getString(R.string.no)) { _, _ -> }
                     val alertDlg = alertDlgBuilder.create()
@@ -95,6 +92,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                     scenes.add(viewHolder.layoutPosition, newScene)
                     scenesList?.adapter?.notifyItemInserted(viewHolder.layoutPosition)
                     scenesList?.adapter?.notifyItemChanged(viewHolder.layoutPosition+1)
+                    (context as TouchSampleSynthMain).scenesListDirty = true
                 }
             }
             }
@@ -128,6 +126,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                 scene.name = input.text.toString()
                 scenes.add(scene)
                 scenesList?.adapter?.notifyItemInserted(scenes.size-1)
+                (context as TouchSampleSynthMain).scenesListDirty = true
             }
             builder.setNegativeButton(
                 (context as TouchSampleSynthMain).getString(android.R.string.cancel)
@@ -139,100 +138,28 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
         }
 
         buttonExport.setOnClickListener {
-            /*
-            val dialogProperties = DialogProperties()
-            dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
-            dialogProperties.selection_type = DialogConfigs.DIR_SELECT
-            dialogProperties.root = File(DialogConfigs.DEFAULT_DIR)
-            dialogProperties.error_dir = File(DialogConfigs.DEFAULT_DIR)
-            dialogProperties.offset = File(DialogConfigs.DEFAULT_DIR)
-            dialogProperties.extensions=null
-            dialogProperties.show_hidden_files=false
-            val dirPickerDialog=FilePickerDialog(context,dialogProperties)
-            dirPickerDialog.setTitle(R.string.selectFolder)
-            dirPickerDialog.setDialogSelectionListener {
-                val gson=Gson()
-                val jsonOut = gson.toJson((context as TouchSampleSynthMain).allScenes)
-                val f = File(it[0],"touchSampleSynthScenes1.json")
-                if(f.exists())
-                {
-                    f.delete()
-                }
-                f.writeText(jsonOut)
-                f.setReadable(true,false)
-                f.setWritable(true,false)
-                f.setExecutable(true,false)
 
+            val jsonobj = SceneListP.importFromJson(context as TouchSampleSynthMain)
+            jsonobj?.scenes?.clear()
+            jsonobj?.scenes?.addAll((context as TouchSampleSynthMain).allScenes)
+            if (jsonobj?.exportAsJson(SCENES_FILE_NAME,context as TouchSampleSynthMain)==true) {
+                val sb = Snackbar.make(it, resources.getText(R.string.exportSuccessful), 1000)
+                sb.show()
             }
-            dirPickerDialog.show()
-            */
-
-
-            SceneListP.exportAsJson("touchSampleSynth1.json", context as TouchSampleSynthMain)
-            val sb = Snackbar.make(it,resources.getText(R.string.exportSuccessful),1000)
-            sb.show()
         }
 
         buttonImport.setOnClickListener {
-            /*
-            val dialogProperties = DialogProperties()
-            dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
-            dialogProperties.selection_type = DialogConfigs.FILE_SELECT
-            dialogProperties.root = File(DialogConfigs.DEFAULT_DIR)
-            dialogProperties.error_dir = File(DialogConfigs.DEFAULT_DIR)
-            dialogProperties.offset = File(DialogConfigs.DEFAULT_DIR)
-            dialogProperties.extensions= arrayOf("json")
-            dialogProperties.show_hidden_files=false
-            val filePickerDialog=FilePickerDialog(context,dialogProperties)
-            filePickerDialog.setTitle(R.string.selectImportFile)
-            filePickerDialog.setDialogSelectionListener { it1 ->
-                val gson=Gson()
-                val f = File(it1[0])
-                val jsondata=f.readText()
-                try {
-                    val jsonobj = gson.fromJson(jsondata, Array<SceneP>::class.java)
-                    (context as TouchSampleSynthMain).allScenes.clear()
-                    (context as TouchSampleSynthMain).allScenes.addAll(jsonobj)
-                } catch (e: Exception)
-                {
-                    when(e) {is JsonSyntaxException, is JsonParseException -> {
-                            this.view?.let {
-                                val sb = Snackbar.make(it,resources.getText(R.string.importErrorMessage),1000)
-                                sb.show()
-                            }
-                        }
-                    }
-                }
-            }
-            filePickerDialog.show()
-             */
-            val gson=GsonBuilder().apply {
-                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
-                setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            }.create()
-            val f = File((context as TouchSampleSynthMain).filesDir,"touchSampleSynth1.json")
-            if (f.exists())
+            val jsonobj = SceneListP.importFromJson(context as TouchSampleSynthMain)
+            if (jsonobj == null)
             {
-                val jsondata=f.readText()
-                try {
-                    val jsonobj = gson.fromJson(jsondata, SceneListP::class.java)
-                    jsonobj.importOntoDevice(context as TouchSampleSynthMain)
-                } catch (e: Exception)
-                {
-                    when(e) {is JsonSyntaxException, is JsonParseException -> {
-                        this.view?.let {
-                            val sb = Snackbar.make(it,resources.getText(R.string.importErrorMessage),1000)
-                            sb.show()
-                        }
-                    }
-                    }
+                this.view?.let {
+                    val sb = Snackbar.make(it,resources.getText(R.string.importErrorMessage),1000)
+                    sb.show()
                 }
+                return@setOnClickListener
             }
-            else
-            {
-                val sb = Snackbar.make(it,resources.getText(R.string.importFileNotFound),1000)
-                sb.show()
-            }
+            jsonobj.importOntoDevice(context as TouchSampleSynthMain,importMode.REPLACE,importDoneFlag.DO_NOT_CHANGE)
+            (context as TouchSampleSynthMain).scenesListDirty = true
         }
 
         return view

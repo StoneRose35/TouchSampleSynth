@@ -83,8 +83,11 @@
     <string name="rtpMidiPorts">RTP Midi Ports</string>
     <string name="offline">offline</string>
     <string name="installerTitle">Preset Installer</string>
-    <string name="installerAddDrumSamplesSamples">Install royalty-free Drum Samples from https://wavbvkery.com?</string>
+    <string name="installerPerformInstall">Install Presets?</string>
+    <string name="installerAddDrumSamples">Install royalty-free Drum Samples from https://wavbvkery.com?</string>
+    <string name="installerOverridePresets">Override existing presets?</string>
     <string name="installerInstallWithSamples">Installing Presets with samples</string>
     <string name="installerDownloadingSamples">Downloading Samples</string>
     <string name="installerUnpackingSamples">Unpacking Samples</string>
+    <string name="installerDownloadFailed">Download failed</string>
 </resources>

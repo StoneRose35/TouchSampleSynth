@@ -26,7 +26,7 @@ class SamplerP(private var sampleStart: Int,
             loopEnd = i.getLoopEndIndex()
             mode = i.getMode()
             if (i.sampleUri!=null) {
-                sampleFile = i.sampleUri!!.toString()
+                sampleFile = i.sampleUri!!.path.toString()
             }
         }
     }

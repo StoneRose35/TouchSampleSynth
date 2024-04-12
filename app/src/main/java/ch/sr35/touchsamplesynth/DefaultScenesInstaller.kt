@@ -6,6 +6,8 @@ import ch.sr35.touchsamplesynth.model.PersistableInstrument
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SamplerP
 import ch.sr35.touchsamplesynth.model.SceneListP
+import ch.sr35.touchsamplesynth.model.importDoneFlag
+import ch.sr35.touchsamplesynth.model.importMode
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -19,13 +21,25 @@ import java.util.zip.ZipInputStream
 
 enum class DefaultSceneInstallerCode
 {
-    NO_SAMPLES_DOWNLOADED,
-    INSTALLED_WITH_SAMPLES,
-    INSTALLED_WITHOUT_SAMPLES,
+    SAMPLES_DOWNLOADED,
     DOWNLOAD_FAILED,
-    UNZIPPING_FAILED
+    UNZIPPING_FAILED,
+    INSTALL_FAILED,
+    INSTALLED
 }
 
+class DefaultScenesState(var code: CurrentScenesCode,val isEmpty: Boolean)
+
+
+enum class CurrentScenesCode
+{
+    NO_CURRENT_SCENES,
+    PRESETS_NEWER_THAN_BUNDLED,
+    PRESET_NO_INSTALL_DONE,
+    PRESET_AND_OUTDATED,
+    PRESET_INSTALL_DONE
+}
+const val SCENES_FILE_NAME="touchSampleSynth1.json"
 const val DRUMSAMPLES_FOLDER_NAME = "WAVBVKERY-AcousticDrumSamples"
 class NestedFolder(val name:String)
 {
@@ -135,41 +149,33 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
         return samplesFound[0]
     }
 
-    fun installDefaultScene(withExternalSamples: Boolean): DefaultSceneInstallerCode
+    fun installDefaultScene(withExternalSamples: Boolean,importMode: importMode): DefaultSceneInstallerCode
     {
         // get default scenes Asset
         val presetsFile = appContext.assets.open("defaultPresets.json").reader().readText()
         // check is samplelibrary from https://wavbvkery.com/wp-content/uploads/WAVBVKERY-Acoustic-Drum-Samples.zip
         // is in DCIM folder and is unpacked
+        val gson=GsonBuilder().apply {
+            registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+            setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        }.create()
+        val presets = gson.fromJson(presetsFile,SceneListP::class.java)
         if (withExternalSamples)
         {
             if (!checkSampleLibrary(samplesFolderLvl1, DRUMSAMPLES_FOLDER_NAME))
             {
-                // if not, check internet connection and return status matching status
-                // dialog should be
-                // "download royalty-free drum samples from https://wavbvkery.com?"
-                return DefaultSceneInstallerCode.NO_SAMPLES_DOWNLOADED
+                return DefaultSceneInstallerCode.INSTALL_FAILED
             }
-            val gson=GsonBuilder().apply {registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer()) }.create()
-            val presets = gson.fromJson(presetsFile,SceneListP::class.java)
-            presets.importOntoDevice(appContext)
-            SceneListP.exportAsJson("touchSampleSynth1.json",appContext)
-            return DefaultSceneInstallerCode.INSTALLED_WITH_SAMPLES
-
         }
         else
         {
             // parse default presets json and remove each scene that contains a sampler"
-            val gson=GsonBuilder().apply {
-                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
-                setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            }.create()
-            val presets = gson.fromJson(presetsFile,SceneListP::class.java)
             presets.scenes.removeIf { scn -> scn.instruments.any { i -> i is SamplerP } }
-            presets.importOntoDevice(appContext)
-            SceneListP.exportAsJson("touchSampleSynth1.json",appContext)
-            return DefaultSceneInstallerCode.INSTALLED_WITHOUT_SAMPLES
         }
+        presets.importOntoDevice(appContext,importMode,importDoneFlag.SET)
+        presets.touchSampleSynthVersion = BuildConfig.VERSION_NAME
+        presets.exportAsJson(SCENES_FILE_NAME,appContext)
+        return DefaultSceneInstallerCode.INSTALLED
 
     }
 
@@ -182,7 +188,7 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
         val samplesZipped = File(dldFolder.absolutePath + "/WAVBVKERY-Acoustic-Drum-Samples.zip")
         val downloadBuffer = ByteArray(1024*1024*1) // 1 MB Buffer
         var bytesRead: Int
-        var returnCode = DefaultSceneInstallerCode.INSTALLED_WITH_SAMPLES
+        var returnCode = DefaultSceneInstallerCode.SAMPLES_DOWNLOADED
         if (!samplesZipped.exists()) {
             uiCallback?.setProgressMessage(appContext.getString(R.string.installerDownloadingSamples))
             uiCallback?.let {
@@ -268,25 +274,5 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
         return returnCode
     }
 
-    fun checkIfScenesAreAvailable(): Boolean
-    {
-        val gson= GsonBuilder().apply { registerTypeAdapter(
-            PersistableInstrument::class.java,
-            PersistableInstrumentDeserializer()
-        ) }.create()
-        val f = File(appContext.filesDir, "touchSampleSynth1.json")
-        if (f.exists())
-        {
-            val jsondata=f.readText()
-            try {
-                gson.fromJson(jsondata, SceneListP::class.java)
-                return true
-            }
-            catch (_: Exception)
-            {
-                f.delete()
-            }
-        }
-        return false
-    }
+
 }

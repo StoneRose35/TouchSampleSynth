@@ -1,6 +1,8 @@
 package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
+import android.util.Log
+import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.views.TouchElement
 import java.io.File
@@ -45,6 +47,10 @@ class SceneP : Serializable, Cloneable {
                     }
                 }
                 remainingTouchElements.removeIf { te -> te.soundGenerator == pi }
+            }
+            else
+            {
+                Log.e(TAG,"failed to instantiate ${pi}")
             }
         }
 

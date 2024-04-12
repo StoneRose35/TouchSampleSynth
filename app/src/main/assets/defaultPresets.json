@@ -1,11 +1,12 @@
 {
   "exportDateTime": "2024-04-07T16:29:13Z",
-  "manufacturer": "HMD Global",
-  "model": "Nokia T20",
-  "product": "RiddlerWifi_00EEA",
-  "touchSampleSynthVersion": "1.8.3",
+  "manufacturer": "NotARealManufacturer",
+  "model": "FictionalModel",
+  "product": "FunkyProductWhichDoesntExist",
+  "touchSampleSynthVersion": "0.0.0",
   "screenResolutionX": 2000,
   "screenResolutionY": 1200,
+  "installDone": true,
   "scenes": [
     {
       "instruments": [

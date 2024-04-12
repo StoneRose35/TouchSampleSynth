@@ -59,35 +59,13 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     var rtpMidiServer: RtpMidiServer?=null
     var mainMenu: Menu?=null
     private var oldScenePosition=-1
+    var scenesListDirty=false
 
 
     override fun onResume() {
         super.onResume()
-        allScenes.clear()
-        val fDir = this.filesDir
-        val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
-        if (sceneFiles != null) {
-            sceneFiles.sort()
-            Log.i(TAG, "restoring from Files")
-            sceneFiles.forEach {
-                try {
-                    Log.i(TAG, "reading file %s".format(it.name))
-                    SceneP.fromFile(it)?.let { it1 ->
-                        allScenes.add(it1)
-                        Log.i(TAG, it1.toString())
-                        for (instr in it1.instruments) {
-                            Log.i(TAG, instr.toString())
-                        }
-                        for (te in it1.touchElements) {
-                            Log.i(TAG, te.toString())
-                        }
-                    }
-                } catch (e: Exception) {
-                    it.delete()
-                }
-            }
-        }
 
+        loadFromBinaryFiles()
         midiHostHandler?.startMidiDeviceListener()
         midiHostHandler?.let {
             if(it.midiDevicesIn.size > 0)
@@ -99,7 +77,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 it.connectMidiDeviceOut(it.midiDevicesOut[0])
             }
         }
-
         if (mainMenu!=null) {
             loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
         }
@@ -109,7 +86,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     }
     override fun onStart() {
         super.onStart()
-        val defaultScenesInstall=DefaultScenesInstall(this)
+
         val playPage = PlayPageFragment()
         if (supportFragmentManager.fragments.isEmpty()) {
             putFragment(playPage, "PlayPage0")
@@ -119,20 +96,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             playPage.view?.let { Snackbar.make(it,"Audio Engine failed to start",10) }
         }
 
-        if (!defaultScenesInstall.installer.checkIfScenesAreAvailable())
+        val defaultScenesInstall=DefaultScenesInstall(this)
+        if (defaultScenesInstall.currentScenesState.code != CurrentScenesCode.PRESET_INSTALL_DONE)
         {
-            if (!defaultScenesInstall.installer.checkSampleLibrary(defaultScenesInstall.installer.samplesFolderLvl1, DRUMSAMPLES_FOLDER_NAME))
-            {
-                defaultScenesInstall.setInstallerText(getString(R.string.installerAddDrumSamplesSamples))
-                defaultScenesInstall.show()
-            }
-            else
-            {
-                defaultScenesInstall.setInstallerText(getString(R.string.installerInstallWithSamples))
-                defaultScenesInstall.installer.installDefaultScene(true)
-                saveToBinaryFiles()
-            }
-
+            defaultScenesInstall.show()
         }
 
         /*val timer=Timer()
@@ -230,13 +197,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         super.onDestroy()
     }
 
-    override fun onStop() {
-
-        super.onStop()
-    }
 
     override fun onPause() {
 
+        persistCurrentScene()
         saveToBinaryFiles()
         midiHostHandler?.stopMidiDeviceListener()
 
@@ -304,10 +268,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         if (oldScenePosition >= 0) {
             allScenes[oldScenePosition].persist(soundGenerators, touchElements)
         }
-        if (position != oldScenePosition) {
+        if ((position != oldScenePosition || scenesListDirty) && position > -1) {
             loadSceneWithWaitIndicator(position)
+            scenesListDirty=false
         }
     }
+
 
     fun getCurrentSceneName(): String?
     {
@@ -333,7 +299,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     fun saveToBinaryFiles()
     {
         val mainDir = File(filesDir.absolutePath)
-        persistCurrentScene()
         mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
             it.delete()
         }
@@ -352,9 +317,37 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
     }
 
-    private fun loadSceneWithWaitIndicator(position: Int)
+    fun loadFromBinaryFiles()
     {
-        if (allScenes.size==0 || position==oldScenePosition)
+        allScenes.clear()
+        val fDir = this.filesDir
+        val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
+        if (sceneFiles != null) {
+            sceneFiles.sort()
+            Log.i(TAG, "restoring from Files")
+            sceneFiles.forEach {
+                try {
+                    Log.i(TAG, "reading file %s".format(it.name))
+                    SceneP.fromFile(it)?.let { it1 ->
+                        allScenes.add(it1)
+                        Log.i(TAG, it1.toString())
+                        for (instr in it1.instruments) {
+                            Log.i(TAG, instr.toString())
+                        }
+                        for (te in it1.touchElements) {
+                            Log.i(TAG, te.toString())
+                        }
+                    }
+                } catch (e: Exception) {
+                    it.delete()
+                }
+            }
+        }
+    }
+
+    fun loadSceneWithWaitIndicator(position: Int)
+    {
+        if (allScenes.size==0 || position==oldScenePosition || position < 0 || position > allScenes.size-1)
         {
             return
         }
@@ -435,4 +428,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
     }
+
+
 }
