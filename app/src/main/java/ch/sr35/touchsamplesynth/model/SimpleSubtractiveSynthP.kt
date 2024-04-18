@@ -10,11 +10,11 @@ class SimpleSubtractiveSynthP(
     private var release: Float,
     private var initialCutoff: Float,
     private var actionAmountToFilter: Float,
-    private var actionAmountToVolume: Float,
+    actionAmountToVolume: Float,
     private var resonance: Float,
     nVoices: Int,
     name: String
-): PersistableInstrument(nVoices,name) {
+): PersistableInstrument(actionAmountToVolume, nVoices,name) {
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)
         if (i is SimpleSubtractiveSynthI)
@@ -59,7 +59,6 @@ class SimpleSubtractiveSynthP(
 
     override fun hashCode(): Int {
         return this.actionAmountToFilter.toRawBits() +
-                this.actionAmountToVolume.toRawBits() +
                 this.attack.toRawBits() +
                 this.decay.toRawBits() +
                 this.sustain.toRawBits() +

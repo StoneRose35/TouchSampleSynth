@@ -12,10 +12,10 @@ class SamplerP(private var sampleStart: Int,
                private var loopEnd: Int,
                private var mode: Byte,
                private var sampleFile: String,
-               private var actionAmountToVolume: Float,
+               actionAmountToVolume: Float,
                nVoices: Int,
                name: String
-):PersistableInstrument(nVoices,name), Serializable, Cloneable  {
+):PersistableInstrument(actionAmountToVolume, nVoices,name), Serializable, Cloneable  {
 
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)
@@ -29,7 +29,6 @@ class SamplerP(private var sampleStart: Int,
             if (i.sampleUri!=null) {
                 sampleFile = i.sampleUri!!.path.toString()
             }
-            actionAmountToVolume = i.getVolumeModulation()
         }
     }
 
@@ -44,8 +43,6 @@ class SamplerP(private var sampleStart: Int,
             i.setSampleStartIndex(sampleStart)
             i.setSampleEndIndex(sampleEnd)
             i.setMode(mode)
-            i.setVolumeModulation(actionAmountToVolume)
-
         }
     }
 

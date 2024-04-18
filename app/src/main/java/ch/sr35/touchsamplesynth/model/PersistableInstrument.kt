@@ -33,17 +33,19 @@ class PersistableInstrumentDeserializer: JsonDeserializer<PersistableInstrument>
     }
 }
 
-open class PersistableInstrument(var nVoices: Int=0,var name: String=""): Serializable, Cloneable {
+open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var nVoices: Int=0,var name: String=""): Serializable, Cloneable {
 
     open fun fromInstrument(i: Instrument)
     {
         name = i.name
         nVoices = i.voicesCount()
+        actionAmountToVolume = i.getVolumeModulation()
     }
 
     open fun toInstrument(i: Instrument)
     {
         i.name = name
+        i.setVolumeModulation(actionAmountToVolume)
     }
 
     override fun hashCode(): Int
