@@ -76,6 +76,10 @@ class SineMonoSynthFragment(s: SineMonoSynthI) : Fragment(), SeekBar.OnSeekBarCh
             R.id.seekBarRelease -> {
                 synth.setRelease(p0.progress.toFloat() / 1000.0f * 2.0f)
             }
+
+            R.id.seekBarTouchToVolume -> {
+                synth.setVolumeModulation(p0.progress.toFloat() / 1000.0f)
+            }
         }
     }
 

@@ -428,6 +428,44 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (elementState != TouchElementState.EDITING) {
             if (event?.action == MotionEvent.ACTION_DOWN) {
+                var touchVal:Float=-2.0f
+                if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+                    touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+                }
+                else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+                    touchVal = ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+                }
+                else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+                    touchVal = (event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)
+                }
+                else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+                    touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
+                }
+
+                if (touchVal>=-1.0f)
+                {
+                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(touchVal)
+
+                    val midiData=ByteArray(3)
+                    midiData[0] = (0xB0 + midiChannel).toByte()
+                    midiData[1] = midiCC.toByte()
+                    midiData[2] = (touchVal*127.0f).toInt().toByte()
+                    if (midiData[2]!=midiCCOld) {
+                        appContext?.rtpMidiServer?.let {
+                            if (it.isEnabled)
+                            {
+                                thread(start = true) {
+                                    appContext.rtpMidiServer?.sendMidiCommand(
+                                        midiData
+                                    )
+                                }
+                            }
+                        }
+                        soundGenerator?.voices?.get(voiceNr)?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
+                        midiCCOld=midiData[2]
+                    }
+                    return true
+                }
                 performClick()
                 appContext?.rtpMidiServer?.let {
                     if (it.isEnabled && this.note != null)

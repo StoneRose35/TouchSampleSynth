@@ -5,6 +5,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+import kotlin.math.log10
+import kotlin.math.pow
 
 class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
 
@@ -20,6 +22,8 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
     external fun getSustain(): Float
     external fun setRelease(a: Float): Boolean
     external fun getRelease(): Float
+    external fun getVolume(): Float
+    external fun setVolume(v: Float): Boolean
     external fun switchOnExt(vel: Float): Boolean
     external fun switchOffExt(vel: Float):Boolean
     external override fun setNote(note: Float): Boolean
@@ -60,7 +64,9 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
     }
 
     override fun applyTouchAction(a: Float) {
-
+        if (a > 0.0f) {
+            setVolume(10.0f.pow(log10(a) * actionAmountToVolume))
+        }
     }
 
     override fun switchOff(vel:Float): Boolean

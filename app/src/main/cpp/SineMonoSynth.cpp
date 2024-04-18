@@ -16,7 +16,7 @@ float SineMonoSynth::getNextSample() {
             envelopeVals[1] = env->getValue((float) envelopeUpdateInterval / sampleRate);
             currentSample = 0;
         }
-        return  nsample;
+        return  volume*nsample;
     }
     else
     {
@@ -34,6 +34,7 @@ SineMonoSynth::SineMonoSynth() {
     sampleRate = 48000.0f;
     envelopeVals[0]=0.0f;
     envelopeVals[1]=0.0f;
+    volume=1.0f;
     envelopeUpdateInterval=32;
     currentSample = 0;
 }

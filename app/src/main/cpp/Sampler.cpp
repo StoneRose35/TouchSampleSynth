@@ -68,7 +68,7 @@ float Sampler::getNextSample() {
     }
     if (currentIndex != 0xFFFFFFFF)
     {
-        return sampleData[currentIndex];
+        return volume*sampleData[currentIndex];
     }
     else
     {

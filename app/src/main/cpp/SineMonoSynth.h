@@ -18,6 +18,7 @@ private:
     int8_t envelopeUpdateInterval;
     int8_t currentSample;
     float envelopeVals[2];
+    float volume;
 public:
     float getNextSample();
 

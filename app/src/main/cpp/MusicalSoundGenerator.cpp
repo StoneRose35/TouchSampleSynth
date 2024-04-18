@@ -41,6 +41,17 @@ void MusicalSoundGenerator::sendMidiCC(uint8_t ccNumber,uint8_t ccValue) {
     }
 }
 
+void MusicalSoundGenerator::setVolume(float v) {
+    if (v >=0.0f && v<=1.0f)
+    {
+        volume = v;
+    }
+}
+
+float MusicalSoundGenerator::getVolume() {
+    return volume;
+}
+
 
 
 

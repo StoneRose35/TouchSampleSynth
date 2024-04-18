@@ -58,7 +58,7 @@ class PersistableInstrumentTest {
         i1.setSustain(0.3f)
         i1.setRelease(0.4f)
         i1.setInitialCutoff(0.5f)
-        i1.setActionAmount(0.6f)
+        i1.setActionAmountToFilter(0.6f)
         i1.setResonance(0.7f)
         val pi1 = PersistableInstrumentFactory.fromInstrument(i1)
         Assert.assertTrue(pi1 is SimpleSubtractiveSynthP)
@@ -71,7 +71,7 @@ class PersistableInstrumentTest {
             Assert.assertTrue(inRange(ii1.getSustain(),i1.getSustain()))
             Assert.assertTrue(inRange(ii1.getRelease(),i1.getRelease()))
             Assert.assertTrue(inRange(ii1.getInitialCutoff(),i1.getInitialCutoff()))
-            Assert.assertTrue(inRange(ii1.getActionAmount(),i1.getActionAmount()))
+            Assert.assertTrue(inRange(ii1.getActionAmountToFilter(),i1.getActionAmountToFilter()))
             Assert.assertTrue(inRange(ii1.getResonance(), i1.getResonance()))
         }
         else

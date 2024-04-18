@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.SeekBar
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -29,12 +30,13 @@ import kotlin.experimental.and
 import kotlin.experimental.or
 
 
-class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
+class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBarChangeListener {
     private val synth=s
     private var modeLoopedSwitch: SwitchCompat?=null
     private var modeTriggeredSwitch: SwitchCompat?=null
     private var waveViewer: WaveDisplay?=null
     private var buttonLoadSample: Button?=null
+    private var sliderVolModulation: SeekBar?=null
     //private lateinit var fileChooserResultLauncher: ActivityResultLauncher<Intent>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +59,7 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
         modeTriggeredSwitch=view.findViewById(R.id.sampler_switch_mode_triggered)
         waveViewer=view.findViewById(R.id.sampler_wave_viewer)
         buttonLoadSample=view.findViewById(R.id.sampler_button_load_sample)
+        sliderVolModulation=view.findViewById(R.id.seekBarTouchToVolume)
         waveViewer?.onChangeListener=this
         waveViewer?.waveViewBuffer = synth.waveformImg
         waveViewer?.startMarkerPosition = (synth.getSampleStartIndex().toFloat()/synth.sample.size.toFloat())
@@ -94,6 +97,7 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
                 synth.setMode(mode)
             }
         }
+        sliderVolModulation?.setOnSeekBarChangeListener(this)
         buttonLoadSample?.setOnClickListener {
             val dialogProperties = DialogProperties()
             dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
@@ -161,5 +165,21 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener {
 
     override fun loopEndMarkerChanged(v: Float) {
         synth.setLoopEndIndex((v*synth.sample.size).toInt())
+    }
+
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        when(seekBar?.id)
+        {
+            R.id.seekBarTouchToVolume ->
+            {
+                synth.setVolumeModulation(seekBar.progress.toFloat() / 1000.0f)
+            }
+        }
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
     }
 }

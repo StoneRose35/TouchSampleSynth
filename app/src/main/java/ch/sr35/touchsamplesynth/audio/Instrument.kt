@@ -31,13 +31,10 @@ open class Instrument(var name: String) {
 
     fun getPolyphonyDescription(): String
     {
-        if (voicesCount()  < 2 )
-        {
-            return "M"
-        }
-        else
-        {
-            return "P " + voicesCount().toString()
+        return if (voicesCount()  < 2 ) {
+            "M"
+        } else {
+            "P " + voicesCount().toString()
         }
     }
 
@@ -46,6 +43,22 @@ open class Instrument(var name: String) {
 
     }
 
+    open fun setVolumeModulation(mod: Float)
+    {
+        for (voice in voices)
+        {
+            voice.actionAmountToVolume = mod
+        }
+    }
+
+    open fun getVolumeModulation(): Float
+    {
+        if (voices.isNotEmpty())
+        {
+            return voices[0].actionAmountToVolume
+        }
+        return 0.0f
+    }
 
     override fun equals(other: Any?): Boolean {
         if (other is Instrument)

@@ -8,6 +8,7 @@ class SineMonoSynthP(private var attack: Float,
                      private var decay: Float,
                      private var sustain: Float,
                      private var release: Float,
+                     private var actionAmountToVolume: Float,
                      nVoices: Int,
                      name: String
 ): PersistableInstrument(nVoices,name),Serializable, Cloneable {
@@ -20,6 +21,7 @@ class SineMonoSynthP(private var attack: Float,
             decay = i.getDecay()
             sustain = i.getSustain()
             release = i.getRelease()
+            actionAmountToVolume =i.getVolumeModulation()
         }
     }
 
@@ -30,7 +32,7 @@ class SineMonoSynthP(private var attack: Float,
             i.setDecay(decay)
             i.setSustain(sustain)
             i.setRelease(release)
-
+            i.setVolumeModulation(actionAmountToVolume)
         }
     }
 
@@ -56,7 +58,7 @@ class SineMonoSynthP(private var attack: Float,
     }
 
     override fun clone(): Any {
-        return SineMonoSynthP(this.attack,this.decay,this.sustain,this.release,this.nVoices,this.name)
+        return SineMonoSynthP(this.attack,this.decay,this.sustain,this.release,this.actionAmountToVolume,this.nVoices,this.name)
     }
 
 }

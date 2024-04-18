@@ -21,98 +21,111 @@
 
     </TextView>
 
-    <LinearLayout
+    <TableLayout
         android:baselineAligned="false"
         android:layout_width="match_parent"
-        android:theme="@style/Theme.TouchSampleSynth.Instrument"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:padding="10dp"
-            android:orientation="vertical">
-
+        android:layout_height="wrap_content"
+        android:stretchColumns="1"
+        android:theme="@style/Theme.TouchSampleSynth.Instrument">
+        <TableRow>
             <SeekBar
                 android:id="@+id/seekBarAttack"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
                 android:thumb="?attr/sliderDrawable"
                 android:max="1000" />
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_margin="10dp"
+                android:text="@string/synth_attack"
+                android:labelFor="@id/seekBarAttack"
+                />
+        </TableRow>
+        <TableRow>
             <SeekBar
                 android:id="@+id/seekBarDecay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
                 android:thumb="?attr/sliderDrawable"
                 android:max="1000" />
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_margin="10dp"
+                android:labelFor="@id/seekBarDecay"
+                android:text="@string/synth_decay" />
+        </TableRow>
+        <TableRow>
             <SeekBar
                 android:id="@+id/seekBarSustain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
                 android:max="1000"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
                 android:thumb="?attr/sliderDrawable" />
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_margin="10dp"
+                android:labelFor="@id/seekBarSustain"
+                android:text="@string/synth_sustain" />
+        </TableRow>
+        <TableRow>
             <SeekBar
                 android:id="@+id/seekBarRelease"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
                 android:max="1000"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
                 android:progress="0"
                 android:thumb="?attr/sliderDrawable"
-/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="30dp"
-            android:orientation="vertical">
-
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/synth_attack"
-                android:labelFor="@id/seekBarAttack"
-                 />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_marginTop="10dp"
-                android:labelFor="@id/seekBarDecay"
-                android:text="@string/synth_decay" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_marginTop="10dp"
-                android:labelFor="@id/seekBarSustain"
-                android:text="@string/synth_sustain" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_marginTop="10dp"
+                android:layout_margin="10dp"
                 android:labelFor="@id/seekBarRelease"
                 android:text="@string/synth_release" />
-        </LinearLayout>
-    </LinearLayout>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <SeekBar
+                android:id="@+id/seekBarTouchToVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:max="1000"
+                android:layout_gravity="center_vertical"
+                android:layout_column="1"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:progress="0"
+                android:thumb="?attr/sliderDrawable"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_margin="10dp"
+                android:text="@string/touch_to_volume"
+                android:labelFor="@id/seekBarAttack"
+                android:layout_column="2"
+                />
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

@@ -6,6 +6,8 @@ const val MIDI_MODE_OFF=0
 const val MIDI_MODE_ON_POLY=4
 const val MIDI_MODE_ON_MONO=6
 open class MusicalSoundGenerator {
+    var actionAmountToVolume: Float=0.0f
+
     open fun setNote(note: Float): Boolean {return false}
     open fun switchOn(vel: Float): Boolean {return false}
     open fun switchOff(vel: Float): Boolean {return false}

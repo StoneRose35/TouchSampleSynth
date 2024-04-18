@@ -81,52 +81,56 @@ class PersistableInstrumentFactory
     {
         fun fromInstrument(msg: Instrument?): PersistableInstrument?
         {
-            if (msg is SimpleSubtractiveSynthI)
-            {
-                val pi = SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, 0, "")
-                pi.fromInstrument(msg)
-                return pi
-            }
-            else if (msg is SineMonoSynthI)
-            {
-                val pi = SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0,"")
-                pi.fromInstrument(msg)
-                return pi
-            }
-            else if (msg is SamplerI)
-            {
-                val pi = SamplerP(0,0,0,0,0,"",0,"")
-                pi.fromInstrument(msg)
-                return pi
-            }
-            else
-            {
-                return null
+            when (msg) {
+                is SimpleSubtractiveSynthI -> {
+                    val pi = SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, 0, "")
+                    pi.fromInstrument(msg)
+                    return pi
+                }
+
+                is SineMonoSynthI -> {
+                    val pi = SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0,"")
+                    pi.fromInstrument(msg)
+                    return pi
+                }
+
+                is SamplerI -> {
+                    val pi = SamplerP(0,0,0,0,0,"",0.0f,0,"")
+                    pi.fromInstrument(msg)
+                    return pi
+                }
+
+                else -> {
+                    return null
+                }
             }
         }
         fun toInstrument(pi: PersistableInstrument,context: Context): Instrument?
         {
-            if (pi is SimpleSubtractiveSynthP) {
-                val instr = SimpleSubtractiveSynthI(context,pi.name)
-                instr.generateVoices(pi.nVoices)
-                pi.toInstrument(instr)
-                return instr
+            when (pi) {
+                is SimpleSubtractiveSynthP -> {
+                    val instr = SimpleSubtractiveSynthI(context,pi.name)
+                    instr.generateVoices(pi.nVoices)
+                    pi.toInstrument(instr)
+                    return instr
+                }
+
+                is SineMonoSynthP -> {
+                    val instr = SineMonoSynthI(context,pi.name)
+                    instr.generateVoices(pi.nVoices)
+                    pi.toInstrument(instr)
+                    return instr
+                }
+
+                is SamplerP -> {
+                    val instr = SamplerI(context,pi.name)
+                    instr.generateVoices(pi.nVoices)
+                    pi.toInstrument(instr)
+                    return instr
+                }
+
+                else -> return null
             }
-            else if (pi is SineMonoSynthP)
-            {
-                val instr = SineMonoSynthI(context,pi.name)
-                instr.generateVoices(pi.nVoices)
-                pi.toInstrument(instr)
-                return instr
-            }
-            else if (pi is SamplerP)
-            {
-                val instr = SamplerI(context,pi.name)
-                instr.generateVoices(pi.nVoices)
-                pi.toInstrument(instr)
-                return instr
-            }
-            return null
         }
 
     }

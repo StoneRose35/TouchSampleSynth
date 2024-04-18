@@ -9,7 +9,8 @@ class SimpleSubtractiveSynthP(
     private var sustain: Float,
     private var release: Float,
     private var initialCutoff: Float,
-    private var actionAmount: Float,
+    private var actionAmountToFilter: Float,
+    private var actionAmountToVolume: Float,
     private var resonance: Float,
     nVoices: Int,
     name: String
@@ -23,7 +24,8 @@ class SimpleSubtractiveSynthP(
             sustain = i.getSustain()
             release = i.getRelease()
             initialCutoff = i.getInitialCutoff()
-            actionAmount = i.getActionAmount()
+            actionAmountToFilter = i.getActionAmountToFilter()
+            actionAmountToVolume = i.getVolumeModulation()
             resonance = i.getResonance()
         }
     }
@@ -36,7 +38,8 @@ class SimpleSubtractiveSynthP(
             i.setSustain(sustain)
             i.setRelease(release)
             i.setInitialCutoff(initialCutoff)
-            i.setActionAmount(actionAmount)
+            i.setActionAmountToFilter(actionAmountToFilter)
+            i.setVolumeModulation(actionAmountToVolume)
             i.setResonance(resonance)
         }
     }
@@ -55,7 +58,8 @@ class SimpleSubtractiveSynthP(
     }
 
     override fun hashCode(): Int {
-        return this.actionAmount.toRawBits() +
+        return this.actionAmountToFilter.toRawBits() +
+                this.actionAmountToVolume.toRawBits() +
                 this.attack.toRawBits() +
                 this.decay.toRawBits() +
                 this.sustain.toRawBits() +
@@ -65,7 +69,7 @@ class SimpleSubtractiveSynthP(
     }
 
     override fun clone(): Any {
-        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmount,this.resonance,this.nVoices,this.name)
+        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmountToFilter, this.actionAmountToVolume,this.resonance,this.nVoices,this.name)
         return klon
     }
 }

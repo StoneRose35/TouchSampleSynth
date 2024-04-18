@@ -6,11 +6,13 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.AudioUtils
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+import kotlin.math.log10
+import kotlin.math.pow
 
 class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
 
     private var instance: Byte=-1
-    var actionAmount: Float=0.0f
+    var actionAmountToFilter: Float=0.0f
     var engaged: Boolean=false
     val icon=AppCompatResources.getDrawable(context,R.drawable.simplesubtractivesynth)
     external fun setAttack(a: Float): Boolean
@@ -27,6 +29,8 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
     external fun getResonance():Float
     external fun setInitialCutoff(ic: Float): Boolean
     external fun getInitialCutoff(): Float
+    external fun getVolume(): Float
+    external fun setVolume(v: Float): Boolean
     private external fun switchOnExt(vel: Float): Boolean
     private external fun switchOffExt(vel: Float):Boolean
     external override fun isSounding(): Boolean
@@ -40,7 +44,8 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
         other.setRelease(getRelease())
         other.setInitialCutoff(getInitialCutoff())
         other.setResonance(getResonance())
-        other.actionAmount = actionAmount
+        other.actionAmountToFilter = actionAmountToFilter
+        other.actionAmountToVolume = actionAmountToVolume
     }
 
 
@@ -92,10 +97,13 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
     }
 
     override fun applyTouchAction(a: Float) {
-        if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmount) > 20.0f &&
-            AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmount) < 20000.0f)
+        if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmountToFilter) > 20.0f &&
+            AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmountToFilter) < 20000.0f)
         {
-            setCutoff(AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff())+a*actionAmount))
+            setCutoff(AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff())+a*actionAmountToFilter))
+        }
+        if (a > 0.0f) {
+            setVolume(10.0f.pow(log10(a) * actionAmountToVolume))
         }
     }
 

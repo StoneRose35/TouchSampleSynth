@@ -56,7 +56,37 @@
                 android:labelFor="@id/sampler_switch_mode_triggered"
                 android:layout_column="2" />
         </TableRow>
-
+    </TableLayout>
+    <TableLayout
+        android:baselineAligned="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1"
+        android:theme="@style/Theme.TouchSampleSynth.Instrument">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <SeekBar
+            android:id="@+id/seekBarTouchToVolume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:max="1000"
+            android:layout_gravity="center_vertical"
+            android:layout_column="1"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:progress="0"
+            android:thumb="?attr/sliderDrawable"
+            />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_margin="10dp"
+                android:text="@string/touch_to_volume"
+                android:labelFor="@id/seekBarAttack"
+                android:layout_column="2"
+                />
+        </TableRow>
     </TableLayout>
     <Button
         android:layout_width="wrap_content"

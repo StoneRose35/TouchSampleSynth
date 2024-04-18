@@ -194,6 +194,50 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOnExt(JNIEnv* en
     return true;
 }
 
+
+JNIEXPORT jboolean JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_setVolume(JNIEnv* env,
+                                                                             jobject /* this */me,
+                                                                             jfloat volume)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(me);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if  (msg == nullptr)
+    {
+        return false;
+    }
+    if (msg->getType() != SINE_MONO_SYNTH)
+    {
+        return false;
+    }
+    ((SineMonoSynth*)msg)->setVolume(volume);
+    return true;
+}
+
+JNIEXPORT jfloat JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_getVolume(JNIEnv* env,
+                                                                             jobject /* this */me)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(me);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if  (msg == nullptr)
+    {
+        return -1.0f;
+    }
+    if (msg->getType() != SINE_MONO_SYNTH)
+    {
+        return -1.0f;
+    }
+    return ((SineMonoSynth*)msg)->getVolume();
+}
+
+
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SineMonoSynthK_switchOffExt(JNIEnv* env,
                                                             jobject /* this */me,

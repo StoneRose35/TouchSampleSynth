@@ -11,8 +11,8 @@ android {
         applicationId = "ch.sr35.touchsamplesynth"
         minSdk = 29
         targetSdk = 34
-        versionCode = 14
-        versionName = "1.8.4"
+        versionCode = 15
+        versionName = "1.8.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,7 +45,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")

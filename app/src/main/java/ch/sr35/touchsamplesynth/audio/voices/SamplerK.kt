@@ -5,6 +5,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
+import kotlin.math.log10
+import kotlin.math.pow
 
 class SamplerK(context: Context): MusicalSoundGenerator() {
     private var instance: Byte=-1
@@ -20,7 +22,8 @@ class SamplerK(context: Context): MusicalSoundGenerator() {
     external fun setSampleEndIndex(se: Int): Boolean
     external fun setMode(mode: Byte): Boolean
     external fun getMode(): Byte
-
+    external fun getVolume(): Float
+    external fun setVolume(v: Float): Boolean
     external fun loadSample(sampleData: FloatArray): Boolean
     external fun switchOnExt(vel: Float): Boolean
     external fun switchOffExt(vel: Float):Boolean
@@ -70,6 +73,9 @@ class SamplerK(context: Context): MusicalSoundGenerator() {
     }
 
     override fun applyTouchAction(a: Float) {
+        if (a > 0.0f) {
+            setVolume(10.0f.pow(log10(a) * actionAmountToVolume))
+        }
     }
     override fun hashCode(): Int {
         return 3000 + instance

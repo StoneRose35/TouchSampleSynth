@@ -30,7 +30,7 @@ float SimpleSubtractiveSynth::getNextSample() {
             envelopeVals[1] = env->getValue((float) envelopeUpdateInterval / sampleRate);
             currentSample = 0;
         }
-        return  nsample;
+        return  volume*nsample;
     }
     else
     {
@@ -126,7 +126,6 @@ SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) {
     envelopeVals[0]=0.0f;
     envelopeVals[1]=0.0f;
     initialCutoff=20000.0f;
-
     currentFilterCutoff=0.0f;
     currentResonance=0.0f;
     newFilterCutoff=0.0f;

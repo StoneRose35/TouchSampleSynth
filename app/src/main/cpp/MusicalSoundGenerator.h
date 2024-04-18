@@ -17,6 +17,9 @@ public:
 
     virtual void switchOn(float velocity);
 
+    void setVolume(float);
+    float getVolume();
+
     virtual void sendMidiCC(uint8_t ccNumber,uint8_t ccValue);
 
     // bit 9: set when generally available for midi
@@ -25,7 +28,7 @@ public:
     uint16_t availableForMidi=0;
     uint8_t midiNote=69;
     uint8_t midiChannel=0;
-
+    float volume=1.0f;
     AMidiInputPort * midiInputPort= nullptr;
 };
 

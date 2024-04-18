@@ -101,19 +101,19 @@ class SimpleSubtractiveSynthI(private val context: Context,
     }
 
 
-    fun setActionAmount(v: Float)
+    fun setActionAmountToFilter(v: Float)
     {
         for (voice in voices)
         {
-            (voice as SimpleSubtractiveSynthK).actionAmount = v
+            (voice as SimpleSubtractiveSynthK).actionAmountToFilter = v
         }
     }
 
-    fun getActionAmount(): Float
+    fun getActionAmountToFilter(): Float
     {
         if (voices.isNotEmpty())
         {
-            return (voices[0] as SimpleSubtractiveSynthK).actionAmount
+            return (voices[0] as SimpleSubtractiveSynthK).actionAmountToFilter
         }
         return 0.0f
     }
