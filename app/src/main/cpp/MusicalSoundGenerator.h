@@ -13,12 +13,15 @@ class MusicalSoundGenerator: public SoundGenerator {
 public:
     virtual void setNote(float note);
 
-    virtual void switchOff(float velocity);
+    virtual void switchOff(uint8_t);
 
-    virtual void switchOn(float velocity);
+    virtual void switchOn(uint8_t);
 
     void setVolume(float);
+    void setVolumeImmediate(float);
     float getVolume();
+
+    float getNextSampleVolume();
 
     virtual void sendMidiCC(uint8_t ccNumber,uint8_t ccValue);
 
@@ -28,8 +31,12 @@ public:
     uint16_t availableForMidi=0;
     uint8_t midiNote=69;
     uint8_t midiChannel=0;
-    float volume=1.0f;
+    float currentVolume=1.0f;
+    float newVolume =1.0f;
+    float alphaVolumeChange;
+    float midiVelocityScaling;
     AMidiInputPort * midiInputPort= nullptr;
+    MusicalSoundGenerator(float sr);
 };
 
 

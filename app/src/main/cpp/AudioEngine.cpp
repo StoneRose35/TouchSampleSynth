@@ -77,21 +77,21 @@ aaudio_data_callback_result_t dataCallback(
                 {
                     lastMidiStatus = MIDI_NOTE_ON;
                     //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note on: %d",midiDataBuffer[1]);
-                    audioEngine->startNextVoice(midiDataBuffer+1);
+                    AudioEngine::startNextVoice(midiDataBuffer+1);
                 }
                 // note on with velocity 0, this is effectively a note off
                 else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_ON && midiBytesReceived==3 && midiDataBuffer[2] == 0x0)
                 {
                     lastMidiStatus = MIDI_NOTE_ON;
                     //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note on with vel 0: %d",midiDataBuffer[1]);
-                    audioEngine->stopVoice(midiDataBuffer+1);
+                    AudioEngine::stopVoice(midiDataBuffer+1);
                 }
                 // ordinary note off
                 else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_OFF && midiBytesReceived==3)
                 {
                     lastMidiStatus = MIDI_NOTE_OFF;
                     //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note off: %d",midiDataBuffer[1]);
-                    audioEngine->stopVoice(midiDataBuffer+1);
+                    AudioEngine::stopVoice(midiDataBuffer+1);
                 }
                 // unhandled midi command
                 else if ((*(midiDataBuffer + 0) & 0x80) != 0) // unhandled midi command
@@ -106,17 +106,17 @@ aaudio_data_callback_result_t dataCallback(
                     if (lastMidiStatus==MIDI_NOTE_ON && midiDataBuffer[1] != 0)
                     {
                         //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note on: %d",midiDataBuffer[0]);
-                        audioEngine->startNextVoice(midiDataBuffer);
+                        AudioEngine::startNextVoice(midiDataBuffer);
                     }
                     // running status note on with velocity zero -> note off
                     else if (lastMidiStatus==MIDI_NOTE_ON && midiDataBuffer[1] == 0)
                     {
                         //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note on with vel 0: %d",midiDataBuffer[0]);
-                        audioEngine->stopVoice(midiDataBuffer);
+                        AudioEngine::stopVoice(midiDataBuffer);
                     }
                     else if (lastMidiStatus==MIDI_NOTE_OFF) {
                         //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note off: %d",midiDataBuffer[0]);
-                        audioEngine->stopVoice(midiDataBuffer);
+                        AudioEngine::stopVoice(midiDataBuffer);
                     }
                 }
             }
@@ -198,7 +198,8 @@ bool AudioEngine::startNextVoice(uint8_t *midiData) {
             && midiProcessed == 0) {
             __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching on voice %d",c);
             audioEngine->getSoundGenerator(c)->setNote((float)midiData[0]-69.0f);
-            audioEngine->getSoundGenerator(c)->switchOn((float)midiData[1]);
+            audioEngine->getSoundGenerator(c)->setVolumeImmediate(1.0f - audioEngine->getSoundGenerator(c)->midiVelocityScaling + ((float)midiData[1])/127.0f*audioEngine->getSoundGenerator(c)->midiVelocityScaling);
+            audioEngine->getSoundGenerator(c)->switchOn(midiData[1]);
             audioEngine->getSoundGenerator(c)->availableForMidi |= MIDI_TAKEN_MSK | midiData[0];
             midiProcessed = 1;
         }
@@ -216,7 +217,7 @@ bool AudioEngine::stopVoice(uint8_t * midiData) {
             && ((audioEngine->getSoundGenerator(c)->availableForMidi & 0x7F) == midiData[0] )
             ) {
             __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching off voice %d",c);
-            audioEngine->getSoundGenerator(c)->switchOff((float)midiData[1]);
+            audioEngine->getSoundGenerator(c)->switchOff(midiData[1]);
             audioEngine->getSoundGenerator(c)->availableForMidi &= ~(0xFF);
             midiProcessed = 1;
         }
@@ -277,6 +278,7 @@ AudioEngine::AudioEngine() {
     soundGenerators=(MusicalSoundGenerator**)malloc(MAX_SOUND_GENERATORS* sizeof(MusicalSoundGenerator*));
     stream_ = nullptr;
     midiOutputPort = nullptr;
+    midiInputPort = nullptr;
     midiDevice = nullptr;
     samplingRate = 48000.0f;
     cpuLoad=0.0f;
@@ -346,14 +348,14 @@ int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
     switch(sgt)
     {
         case SINE_MONO_SYNTH:
-            sg=new SineMonoSynth();
+            sg=new SineMonoSynth((float) samplingRate);
             sg->midiInputPort = midiInputPort;
             if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;
             }
             break;
         case SIMPLE_SUBTRACTIVE_SYNTH:
-            sg=new SimpleSubtractiveSynth((float)samplingRate);
+            sg= new SimpleSubtractiveSynth((float) samplingRate);
             sg->midiInputPort = midiInputPort;
             if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;
@@ -362,7 +364,7 @@ int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
         case FM_SYNTH:
             break;
         case SAMPLER:
-            sg=new Sampler();
+            sg=new Sampler((float) samplingRate);
             sg->midiInputPort = midiInputPort;
             if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;

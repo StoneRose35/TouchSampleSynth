@@ -51,6 +51,10 @@ class SineMonoSynthFragment(s: SineMonoSynthI) : Fragment(), SeekBar.OnSeekBarCh
         release.progress = (synth.getRelease()/2.0f*1000.0f).toInt()
         release.setOnSeekBarChangeListener(this)
 
+        val volumeModulation = view.findViewById<SeekBar>(R.id.seekBarTouchToVolume)
+        volumeModulation.progress = (synth.getVolumeModulation()*1000.0f).toInt()
+        volumeModulation.setOnSeekBarChangeListener(this)
+
     }
 
     companion object {

@@ -209,7 +209,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setVolume(JNIEnv* env,
     {
         return false;
     }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
+    if (msg->getType() != SAMPLER)
     {
         return false;
     }
@@ -230,11 +230,33 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getVolume(JNIEnv* env,
     {
         return -1.0f;
     }
-    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
+    if (msg->getType() != SAMPLER)
     {
         return -1.0f;
     }
     return ((Sampler*)msg)->getVolume();
+}
+
+JNIEXPORT jboolean JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setMidiVelocityScaling(JNIEnv* env,
+                                                              jobject /* this */me,
+                                                              jfloat scaling)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(me);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if  (msg == nullptr)
+    {
+        return false;
+    }
+    if (msg->getType() != SAMPLER)
+    {
+        return false;
+    }
+    (msg)->midiVelocityScaling = scaling;
+    return true;
 }
 
 

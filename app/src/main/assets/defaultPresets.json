@@ -17,6 +17,7 @@
           "sampleEnd": 10010,
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Kick/AcousticKick01.wav",
           "sampleStart": 0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 1,
           "name": "Bassdrum"
         },
@@ -27,6 +28,7 @@
           "sampleEnd": 14799,
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
           "sampleStart": 0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 1,
           "name": "Snare"
         },
@@ -37,6 +39,7 @@
           "sampleEnd": 45533,
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Closed/AcousticClosedHat01.wav",
           "sampleStart": 0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 1,
           "name": "HiHat closed"
         },
@@ -47,6 +50,7 @@
           "sampleEnd": 26356,
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Open/AcousticOpenHat02.wav",
           "sampleStart": 0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 1,
           "name": "HiHat open"
         },
@@ -57,17 +61,19 @@
           "sampleEnd": 466002,
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Crash/AcousticCrash01.wav",
           "sampleStart": 0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 1,
           "name": "Crash"
         },
         {
-          "actionAmount": 35.8,
+          "actionAmountToFilter": 35.8,
           "attack": 0.01,
           "decay": 0.488,
           "initialCutoff": 168.32547,
           "release": 1.684,
           "resonance": 0.395,
           "sustain": 1.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 4,
           "name": "Bass"
         }
@@ -94,6 +100,7 @@
             "sampleEnd": 10010,
             "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Kick/AcousticKick01.wav",
             "sampleStart": 0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 1,
             "name": "Bassdrum"
           },
@@ -120,6 +127,7 @@
             "sampleEnd": 14799,
             "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
             "sampleStart": 0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 1,
             "name": "Snare"
           },
@@ -146,6 +154,7 @@
             "sampleEnd": 14799,
             "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
             "sampleStart": 0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 1,
             "name": "Snare"
           },
@@ -172,6 +181,7 @@
             "sampleEnd": 45533,
             "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Closed/AcousticClosedHat01.wav",
             "sampleStart": 0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 1,
             "name": "HiHat closed"
           },
@@ -198,6 +208,7 @@
             "sampleEnd": 26356,
             "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Open/AcousticOpenHat02.wav",
             "sampleStart": 0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 1,
             "name": "HiHat open"
           },
@@ -224,6 +235,7 @@
             "sampleEnd": 466002,
             "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Crash/AcousticCrash01.wav",
             "sampleStart": 0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 1,
             "name": "Crash"
           },
@@ -244,13 +256,14 @@
           "posX": 14,
           "posY": 78,
           "soundGenerator": {
-            "actionAmount": 35.8,
+            "actionAmountToFilter": 35.8,
             "attack": 0.01,
             "decay": 0.488,
             "initialCutoff": 168.32547,
             "release": 1.684,
             "resonance": 0.395,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 4,
             "name": "Bass"
           },
@@ -271,13 +284,14 @@
           "posX": 18,
           "posY": 366,
           "soundGenerator": {
-            "actionAmount": 35.8,
+            "actionAmountToFilter": 35.8,
             "attack": 0.01,
             "decay": 0.488,
             "initialCutoff": 168.32547,
             "release": 1.684,
             "resonance": 0.395,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 4,
             "name": "Bass"
           },
@@ -298,13 +312,14 @@
           "posX": 18,
           "posY": 228,
           "soundGenerator": {
-            "actionAmount": 35.8,
+            "actionAmountToFilter": 35.8,
             "attack": 0.01,
             "decay": 0.488,
             "initialCutoff": 168.32547,
             "release": 1.684,
             "resonance": 0.395,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 4,
             "name": "Bass"
           },
@@ -320,6 +335,7 @@
           "decay": 1.24,
           "release": 1.14,
           "sustain": 0.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 12,
           "name": "Soft Bell"
         }
@@ -344,6 +360,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -368,6 +385,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -392,6 +410,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -416,6 +435,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -440,6 +460,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -464,6 +485,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -488,6 +510,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -512,6 +535,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -536,6 +560,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -560,6 +585,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -584,6 +610,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -608,6 +635,7 @@
             "decay": 1.24,
             "release": 1.14,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 12,
             "name": "Soft Bell"
           },
@@ -619,24 +647,26 @@
     {
       "instruments": [
         {
-          "actionAmount": 43.85,
+          "actionAmountToFilter": 43.85,
           "attack": 0.648,
           "decay": 0.01,
           "initialCutoff": 163.2976,
           "release": 0.698,
           "resonance": 0.345,
           "sustain": 1.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Pad "
         },
         {
-          "actionAmount": 0.0,
+          "actionAmountToFilter": 0.0,
           "attack": 0.01,
           "decay": 0.584,
           "initialCutoff": 1636.4568,
           "release": 0.518,
           "resonance": 0.0,
           "sustain": 0.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Hit"
         }
@@ -657,13 +687,14 @@
           "posX": 11,
           "posY": 134,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -684,13 +715,14 @@
           "posX": 276,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -711,13 +743,14 @@
           "posX": 516,
           "posY": 121,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -738,13 +771,14 @@
           "posX": 740,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -765,13 +799,14 @@
           "posX": 1153,
           "posY": 159,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -792,13 +827,14 @@
           "posX": 1416,
           "posY": 162,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -819,13 +855,14 @@
           "posX": 1649,
           "posY": 164,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -846,13 +883,14 @@
           "posX": 1165,
           "posY": 421,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -873,13 +911,14 @@
           "posX": 1413,
           "posY": 418,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -900,13 +939,14 @@
           "posX": 1648,
           "posY": 414,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -927,13 +967,14 @@
           "posX": 1165,
           "posY": 678,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -945,24 +986,26 @@
     {
       "instruments": [
         {
-          "actionAmount": 43.85,
+          "actionAmountToFilter": 43.85,
           "attack": 0.648,
           "decay": 0.01,
           "initialCutoff": 163.2976,
           "release": 0.698,
           "resonance": 0.345,
           "sustain": 1.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Pad "
         },
         {
-          "actionAmount": 0.0,
+          "actionAmountToFilter": 0.0,
           "attack": 0.01,
           "decay": 0.584,
           "initialCutoff": 1636.4568,
           "release": 0.518,
           "resonance": 0.0,
           "sustain": 0.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Hit"
         }
@@ -983,13 +1026,14 @@
           "posX": 11,
           "posY": 134,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1010,13 +1054,14 @@
           "posX": 276,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1037,13 +1082,14 @@
           "posX": 516,
           "posY": 121,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1064,13 +1110,14 @@
           "posX": 740,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1091,13 +1138,14 @@
           "posX": 1153,
           "posY": 159,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1118,13 +1166,14 @@
           "posX": 1416,
           "posY": 162,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1145,13 +1194,14 @@
           "posX": 1649,
           "posY": 164,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1172,13 +1222,14 @@
           "posX": 1165,
           "posY": 421,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1199,13 +1250,14 @@
           "posX": 1413,
           "posY": 418,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1226,13 +1278,14 @@
           "posX": 1648,
           "posY": 414,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1253,13 +1306,14 @@
           "posX": 1165,
           "posY": 678,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1271,24 +1325,26 @@
     {
       "instruments": [
         {
-          "actionAmount": 43.85,
+          "actionAmountToFilter": 43.85,
           "attack": 0.648,
           "decay": 0.01,
           "initialCutoff": 163.2976,
           "release": 0.698,
           "resonance": 0.345,
           "sustain": 1.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Pad "
         },
         {
-          "actionAmount": 0.0,
+          "actionAmountToFilter": 0.0,
           "attack": 0.01,
           "decay": 0.584,
           "initialCutoff": 1636.4568,
           "release": 0.518,
           "resonance": 0.0,
           "sustain": 0.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Hit"
         }
@@ -1309,13 +1365,14 @@
           "posX": 11,
           "posY": 134,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1336,13 +1393,14 @@
           "posX": 276,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1363,13 +1421,14 @@
           "posX": 516,
           "posY": 121,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1390,13 +1449,14 @@
           "posX": 740,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1417,13 +1477,14 @@
           "posX": 1153,
           "posY": 159,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1444,13 +1505,14 @@
           "posX": 1416,
           "posY": 162,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1471,13 +1533,14 @@
           "posX": 1649,
           "posY": 164,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1498,13 +1561,14 @@
           "posX": 1165,
           "posY": 421,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1525,13 +1589,14 @@
           "posX": 1413,
           "posY": 418,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1552,13 +1617,14 @@
           "posX": 1648,
           "posY": 414,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1579,13 +1645,14 @@
           "posX": 1165,
           "posY": 678,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1597,24 +1664,26 @@
     {
       "instruments": [
         {
-          "actionAmount": 43.85,
+          "actionAmountToFilter": 43.85,
           "attack": 0.648,
           "decay": 0.01,
           "initialCutoff": 163.2976,
           "release": 0.698,
           "resonance": 0.345,
           "sustain": 1.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Pad "
         },
         {
-          "actionAmount": 0.0,
+          "actionAmountToFilter": 0.0,
           "attack": 0.01,
           "decay": 0.584,
           "initialCutoff": 1636.4568,
           "release": 0.518,
           "resonance": 0.0,
           "sustain": 0.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Hit"
         }
@@ -1635,13 +1704,14 @@
           "posX": 11,
           "posY": 134,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1662,13 +1732,14 @@
           "posX": 276,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1689,13 +1760,14 @@
           "posX": 516,
           "posY": 121,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1716,13 +1788,14 @@
           "posX": 740,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1743,13 +1816,14 @@
           "posX": 1153,
           "posY": 159,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1770,13 +1844,14 @@
           "posX": 1416,
           "posY": 162,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1797,13 +1872,14 @@
           "posX": 1649,
           "posY": 164,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1824,13 +1900,14 @@
           "posX": 1165,
           "posY": 421,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1851,13 +1928,14 @@
           "posX": 1413,
           "posY": 418,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1878,13 +1956,14 @@
           "posX": 1648,
           "posY": 414,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1905,13 +1984,14 @@
           "posX": 1165,
           "posY": 678,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -1923,24 +2003,26 @@
     {
       "instruments": [
         {
-          "actionAmount": 43.85,
+          "actionAmountToFilter": 43.85,
           "attack": 0.648,
           "decay": 0.01,
           "initialCutoff": 163.2976,
           "release": 0.698,
           "resonance": 0.345,
           "sustain": 1.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Pad "
         },
         {
-          "actionAmount": 0.0,
+          "actionAmountToFilter": 0.0,
           "attack": 0.01,
           "decay": 0.584,
           "initialCutoff": 1636.4568,
           "release": 0.518,
           "resonance": 0.0,
           "sustain": 0.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Hit"
         }
@@ -1961,13 +2043,14 @@
           "posX": 11,
           "posY": 134,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -1988,13 +2071,14 @@
           "posX": 276,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2015,13 +2099,14 @@
           "posX": 516,
           "posY": 121,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2042,13 +2127,14 @@
           "posX": 740,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2069,13 +2155,14 @@
           "posX": 1153,
           "posY": 159,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2096,13 +2183,14 @@
           "posX": 1416,
           "posY": 162,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2123,13 +2211,14 @@
           "posX": 1649,
           "posY": 164,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2150,13 +2239,14 @@
           "posX": 1165,
           "posY": 421,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2177,13 +2267,14 @@
           "posX": 1413,
           "posY": 418,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2204,13 +2295,14 @@
           "posX": 1648,
           "posY": 414,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2231,13 +2323,14 @@
           "posX": 1165,
           "posY": 678,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2249,24 +2342,26 @@
     {
       "instruments": [
         {
-          "actionAmount": 43.85,
+          "actionAmountToFilter": 43.85,
           "attack": 0.648,
           "decay": 0.01,
           "initialCutoff": 163.2976,
           "release": 0.698,
           "resonance": 0.345,
           "sustain": 1.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Pad "
         },
         {
-          "actionAmount": 0.0,
+          "actionAmountToFilter": 0.0,
           "attack": 0.01,
           "decay": 0.584,
           "initialCutoff": 1636.4568,
           "release": 0.518,
           "resonance": 0.0,
           "sustain": 0.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Hit"
         }
@@ -2287,13 +2382,14 @@
           "posX": 11,
           "posY": 134,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2314,13 +2410,14 @@
           "posX": 276,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2341,13 +2438,14 @@
           "posX": 516,
           "posY": 121,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2368,13 +2466,14 @@
           "posX": 740,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2395,13 +2494,14 @@
           "posX": 1153,
           "posY": 159,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2422,13 +2522,14 @@
           "posX": 1416,
           "posY": 162,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2449,13 +2550,14 @@
           "posX": 1649,
           "posY": 164,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2476,13 +2578,14 @@
           "posX": 1165,
           "posY": 421,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2503,13 +2606,14 @@
           "posX": 1413,
           "posY": 418,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2530,13 +2634,14 @@
           "posX": 1648,
           "posY": 414,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2557,13 +2662,14 @@
           "posX": 1165,
           "posY": 678,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2575,24 +2681,26 @@
     {
       "instruments": [
         {
-          "actionAmount": 43.85,
+          "actionAmountToFilter": 43.85,
           "attack": 0.648,
           "decay": 0.01,
           "initialCutoff": 163.2976,
           "release": 0.698,
           "resonance": 0.345,
           "sustain": 1.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Pad "
         },
         {
-          "actionAmount": 0.0,
+          "actionAmountToFilter": 0.0,
           "attack": 0.01,
           "decay": 0.584,
           "initialCutoff": 1636.4568,
           "release": 0.518,
           "resonance": 0.0,
           "sustain": 0.0,
+          "actionAmountToVolume": 0.0,
           "nVoices": 8,
           "name": "Hit"
         }
@@ -2613,13 +2721,14 @@
           "posX": 11,
           "posY": 134,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2640,13 +2749,14 @@
           "posX": 276,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2667,13 +2777,14 @@
           "posX": 516,
           "posY": 121,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2694,13 +2805,14 @@
           "posX": 740,
           "posY": 125,
           "soundGenerator": {
-            "actionAmount": 43.85,
+            "actionAmountToFilter": 43.85,
             "attack": 0.648,
             "decay": 0.01,
             "initialCutoff": 163.2976,
             "release": 0.698,
             "resonance": 0.345,
             "sustain": 1.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Pad "
           },
@@ -2721,13 +2833,14 @@
           "posX": 1153,
           "posY": 159,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2748,13 +2861,14 @@
           "posX": 1416,
           "posY": 162,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2775,13 +2889,14 @@
           "posX": 1649,
           "posY": 164,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2802,13 +2917,14 @@
           "posX": 1165,
           "posY": 421,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2829,13 +2945,14 @@
           "posX": 1413,
           "posY": 418,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2856,13 +2973,14 @@
           "posX": 1648,
           "posY": 414,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },
@@ -2883,13 +3001,14 @@
           "posX": 1165,
           "posY": 678,
           "soundGenerator": {
-            "actionAmount": 0.0,
+            "actionAmountToFilter": 0.0,
             "attack": 0.01,
             "decay": 0.584,
             "initialCutoff": 1636.4568,
             "release": 0.518,
             "resonance": 0.0,
             "sustain": 0.0,
+            "actionAmountToVolume": 0.0,
             "nVoices": 8,
             "name": "Hit"
           },

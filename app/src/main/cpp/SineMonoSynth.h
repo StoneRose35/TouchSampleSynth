@@ -18,16 +18,15 @@ private:
     int8_t envelopeUpdateInterval;
     int8_t currentSample;
     float envelopeVals[2];
-    float volume;
 public:
-    float getNextSample();
+    float getNextSample() override;
 
-    SineMonoSynth();
+    SineMonoSynth(float sr);
 
-    void setNote(float note);
-    void switchOn(float velocity);
-    void switchOff(float velocity);
-    int getType();
+    void setNote(float note) override;
+    void switchOn(uint8_t) override;
+    void switchOff(uint8_t) override;
+    int getType() override;
     bool isSounding();
 
     // specific interface

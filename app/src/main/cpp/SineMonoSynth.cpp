@@ -16,7 +16,7 @@ float SineMonoSynth::getNextSample() {
             envelopeVals[1] = env->getValue((float) envelopeUpdateInterval / sampleRate);
             currentSample = 0;
         }
-        return  volume*nsample;
+        return  getNextSampleVolume()*nsample;
     }
     else
     {
@@ -28,13 +28,12 @@ float SineMonoSynth::getNextSample() {
     return 0.0f;
 }
 
-SineMonoSynth::SineMonoSynth() {
-    osc = new SineOscillator(48000.0f);
+SineMonoSynth::SineMonoSynth(float sr): MusicalSoundGenerator(sr) {
+    osc = new SineOscillator(sr);
     env = new AdsrEnvelope();
-    sampleRate = 48000.0f;
+    sampleRate = sr;
     envelopeVals[0]=0.0f;
     envelopeVals[1]=0.0f;
-    volume=1.0f;
     envelopeUpdateInterval=32;
     currentSample = 0;
 }
@@ -44,12 +43,12 @@ void SineMonoSynth::setNote(float note) {
     MusicalSoundGenerator::setNote(note);
 }
 
-void SineMonoSynth::switchOn(float velocity) {
+void SineMonoSynth::switchOn(uint8_t velocity) {
     MusicalSoundGenerator::switchOn(velocity);
     env->switchOn();
 }
 
-void SineMonoSynth::switchOff(float velocity) {
+void SineMonoSynth::switchOff(uint8_t velocity) {
     MusicalSoundGenerator::switchOff(velocity);
     env->switchOff();
 }

@@ -30,6 +30,7 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
     external override fun isSounding(): Boolean
     external override fun setMidiMode(midiMode: Int)
     external override fun getMidiMode(): Int
+    external override fun setMidiVelocityScaling(mv: Float): Boolean
     override fun copyParamsTo(other: MusicalSoundGenerator) {
         (other as SineMonoSynthK).setAttack(getAttack())
         other.setMidiMode(this.getMidiMode())

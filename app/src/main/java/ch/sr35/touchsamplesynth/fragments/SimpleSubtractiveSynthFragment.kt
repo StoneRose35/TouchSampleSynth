@@ -56,10 +56,13 @@ class SimpleSubtractiveSynthFragment(private val synth: SimpleSubtractiveSynthI)
         resonance.progress = (synth.getResonance()*1000.0f).toInt()
         resonance.setOnSeekBarChangeListener(this)
 
-
         val actionAmount = view.findViewById<SeekBar>(R.id.seekBarCutoffModulation)
         actionAmount.progress = (synth.getActionAmountToFilter()/50.0f*1000.0f).toInt()
         actionAmount.setOnSeekBarChangeListener(this)
+
+        val actionAmountToVolume = view.findViewById<SeekBar>(R.id.seekBarTouchToVolume)
+        actionAmountToVolume.progress = (synth.getVolumeModulation()*1000.0f).toInt()
+        actionAmountToVolume.setOnSeekBarChangeListener(this)
     }
 
     companion object {

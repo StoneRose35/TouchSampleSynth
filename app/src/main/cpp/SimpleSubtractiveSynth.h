@@ -30,8 +30,8 @@ public:
     SimpleSubtractiveSynth(float);
     float getNextSample() override;
     void setNote(float note) override;
-    void switchOn(float) override;
-    void switchOff(float) override;
+    void switchOn(uint8_t) override;
+    void switchOff(uint8_t) override;
     int getType() override;
 
     void setAttack(float);

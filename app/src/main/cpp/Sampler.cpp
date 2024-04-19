@@ -68,7 +68,7 @@ float Sampler::getNextSample() {
     }
     if (currentIndex != 0xFFFFFFFF)
     {
-        return volume*sampleData[currentIndex];
+        return getNextSampleVolume()*sampleData[currentIndex];
     }
     else
     {
@@ -80,12 +80,12 @@ void Sampler::setNote(float note) {
     MusicalSoundGenerator::setNote(note);
 }
 
-void Sampler::switchOn(float vel) {
+void Sampler::switchOn(uint8_t vel) {
     MusicalSoundGenerator::switchOn(vel);
     currentIndex = sampleStartIndex;
 }
 
-void Sampler::switchOff(float vel) {
+void Sampler::switchOff(uint8_t vel) {
     MusicalSoundGenerator::switchOff(vel);
     if ((loopMode & (1 << SAMPLE_MODE_TRIGGERED))==0) {
         currentIndex = 0xFFFFFFFF;
@@ -105,7 +105,7 @@ uint32_t Sampler::getSample(float ** samplePtr) {
     return dataSize;
 }
 
-Sampler::Sampler() {
+Sampler::Sampler(float sr): MusicalSoundGenerator(sr) {
     loopStartIndex=0;
     loopEndIndex=DEFAULT_SAMPLE_SIZE;
     sampleStartIndex=0;

@@ -48,6 +48,7 @@ open class Instrument(var name: String) {
         for (voice in voices)
         {
             voice.actionAmountToVolume = mod
+            voice.setMidiVelocityScaling(mod)
         }
     }
 

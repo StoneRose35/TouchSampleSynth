@@ -464,7 +464,6 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         soundGenerator?.voices?.get(voiceNr)?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
                         midiCCOld=midiData[2]
                     }
-                    return true
                 }
                 performClick()
                 appContext?.rtpMidiServer?.let {

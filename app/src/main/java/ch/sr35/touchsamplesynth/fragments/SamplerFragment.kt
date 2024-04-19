@@ -145,6 +145,9 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekB
             }
             filePickerDialog.show()
         }
+
+        sliderVolModulation?.progress = (synth.getVolumeModulation()*1000.0f).toInt()
+        sliderVolModulation?.setOnSeekBarChangeListener(this)
     }
 
     companion object {

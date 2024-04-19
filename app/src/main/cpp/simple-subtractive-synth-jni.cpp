@@ -304,6 +304,28 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_getVolume(JNI
     return ((SimpleSubtractiveSynth*)msg)->getVolume();
 }
 
+JNIEXPORT jboolean JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_setMidiVelocityScaling(JNIEnv* env,
+                                                                           jobject /* this */me,
+                                                                           jfloat scaling)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(me);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(me,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if  (msg == nullptr)
+    {
+        return false;
+    }
+    if (msg->getType() != SIMPLE_SUBTRACTIVE_SYNTH)
+    {
+        return false;
+    }
+    (msg)->midiVelocityScaling = scaling;
+    return true;
+}
+
 
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SimpleSubtractiveSynthK_switchOnExt(JNIEnv* env,

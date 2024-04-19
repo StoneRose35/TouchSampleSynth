@@ -42,6 +42,8 @@ class SamplerK(context: Context): MusicalSoundGenerator() {
         return switchOffExt(vel)
     }
 
+    external override fun setMidiVelocityScaling(mv: Float): Boolean
+
     override fun isEngaged(): Boolean {
         return engaged
     }

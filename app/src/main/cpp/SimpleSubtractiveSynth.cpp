@@ -30,7 +30,7 @@ float SimpleSubtractiveSynth::getNextSample() {
             envelopeVals[1] = env->getValue((float) envelopeUpdateInterval / sampleRate);
             currentSample = 0;
         }
-        return  volume*nsample;
+        return  getNextSampleVolume()*nsample;
     }
     else
     {
@@ -104,13 +104,13 @@ float SimpleSubtractiveSynth::getResonance() {
     return filter->reso;
 }
 
-void SimpleSubtractiveSynth::switchOn(float vel) {
+void SimpleSubtractiveSynth::switchOn(uint8_t vel) {
     setCutoff(initialCutoff);
     env->switchOn();
     MusicalSoundGenerator::switchOn(vel);
 }
 
-void SimpleSubtractiveSynth::switchOff(float vel) {
+void SimpleSubtractiveSynth::switchOff(uint8_t vel) {
     env->switchOff();
     MusicalSoundGenerator::switchOff(vel);
 }
@@ -119,7 +119,7 @@ bool SimpleSubtractiveSynth::isSounding() {
     return env->isSounding();
 }
 
-SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) {
+SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) : MusicalSoundGenerator(sr) {
     sampleRate=sr;
     currentSample=0;
     envelopeUpdateInterval=32;

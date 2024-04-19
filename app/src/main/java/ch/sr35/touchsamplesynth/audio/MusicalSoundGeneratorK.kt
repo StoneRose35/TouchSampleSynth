@@ -11,13 +11,12 @@ open class MusicalSoundGenerator {
     open fun setNote(note: Float): Boolean {return false}
     open fun switchOn(vel: Float): Boolean {return false}
     open fun switchOff(vel: Float): Boolean {return false}
+    open fun setMidiVelocityScaling(mv: Float): Boolean {return false}
     open fun getInstance(): Byte{return -1}
     open fun generateAttachedInstance(context: Context): MusicalSoundGenerator {return MusicalSoundGenerator()}
     open fun bindToAudioEngine() {}
     open fun detachFromAudioEngine() {}
-    open fun applyTouchAction(a: Float)
-    {
-    }
+    open fun applyTouchAction(a: Float) {}
     external fun setMidiChannel(channel: Int)
     external fun sendMidiCC(ccNumber: Int,ccValue: Int)
     open fun isSounding(): Boolean {return false}
