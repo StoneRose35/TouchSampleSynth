@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.descendants
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
@@ -61,29 +62,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private var oldScenePosition=-1
     var scenesListDirty=false
 
-
-    override fun onResume() {
-        super.onResume()
-
-        loadFromBinaryFiles()
-        midiHostHandler?.startMidiDeviceListener()
-        midiHostHandler?.let {
-            if(it.midiDevicesIn.size > 0)
-            {
-                it.connectMidiDeviceIn(it.midiDevicesIn[0])
-            }
-            if(it.midiDevicesOut.size > 0)
-            {
-                it.connectMidiDeviceOut(it.midiDevicesOut[0])
-            }
-        }
-        if (mainMenu!=null) {
-            loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
-        }
-
-        audioEngine.startEngine()
-
-    }
     override fun onStart() {
         super.onStart()
 
@@ -116,7 +94,27 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         timer.schedule(timerTask,0,100)
         */
 
+        loadFromBinaryFiles()
+        midiHostHandler?.startMidiDeviceListener()
+        midiHostHandler?.let {
+            if(it.midiDevicesIn.size > 0)
+            {
+                it.connectMidiDeviceIn(it.midiDevicesIn[0])
+            }
+            if(it.midiDevicesOut.size > 0)
+            {
+                it.connectMidiDeviceOut(it.midiDevicesOut[0])
+            }
+        }
+        if (mainMenu!=null) {
+            (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).adapter
+            loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
+        }
+
+        audioEngine.startEngine()
     }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         /*
@@ -186,7 +184,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     }
 
     override fun onDestroy() {
-
+        super.onDestroy()
         val f = File("default.scn")
         if (f.exists())
         {
@@ -194,11 +192,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
-        super.onDestroy()
+
     }
 
 
-    override fun onPause() {
+    override fun onStop() {
+        super.onStop()
 
         persistCurrentScene()
         saveToBinaryFiles()
@@ -213,7 +212,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
-        super.onPause()
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
@@ -221,6 +219,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
         val sceneArrayAdapter = ArrayAdapter<SceneP>(this, android.R.layout.simple_spinner_item,allScenes)
         sceneArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        sceneArrayAdapter.setNotifyOnChange(true)
         spinnerScenes.adapter = sceneArrayAdapter
 
         if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
@@ -230,6 +229,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         {
             spinnerScenes.setSelection(0, false)
         }
+        loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
         spinnerScenes.onItemSelectedListener=this
         return true
     }
@@ -367,21 +367,20 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         //unload the current scene
         soundGenerators.flatMap { sg -> sg.voices }
             .forEach { el -> el.detachFromAudioEngine() }
-        if (supportFragmentManager.fragments[0].tag != null
-            && supportFragmentManager.fragments[0].tag.equals("PlayPage0")
-        ) {
-            for (te in touchElements) {
-                (supportFragmentManager.fragments[0].view as ViewGroup).removeView(te)
-            }
-        }
+
         executor.execute {
             allScenes[position].populate(soundGenerators, touchElements, this)
-            handler.post {
 
+            handler.post {
 
                 // load the new scene
                 if (supportFragmentManager.fragments[0].tag != null) {
                     if (supportFragmentManager.fragments[0].tag.equals("PlayPage0")) {
+                        val remainingChildres = (supportFragmentManager.fragments[0].view as ViewGroup).descendants.dropWhile { v -> v is TouchElement }
+                        (supportFragmentManager.fragments[0].view as ViewGroup).removeAllViews()
+                        remainingChildres.asIterable().forEach {
+                            rc -> (supportFragmentManager.fragments[0].view as ViewGroup).addView(rc)
+                        }
                         for (te in touchElements) {
                             supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
                                 if (it != null) {
