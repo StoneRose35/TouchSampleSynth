@@ -37,7 +37,6 @@ import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
 import ch.sr35.touchsamplesynth.network.RtpMidiServer
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.WaitAnimation
-import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.util.concurrent.Executors
 
@@ -68,10 +67,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         val playPage = PlayPageFragment()
         if (supportFragmentManager.fragments.isEmpty()) {
             putFragment(playPage, "PlayPage0")
-        }
-        if (!audioEngine.startEngine())
-        {
-            playPage.view?.let { Snackbar.make(it,"Audio Engine failed to start",10) }
         }
 
         val defaultScenesInstall=DefaultScenesInstall(this)
@@ -106,14 +101,21 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 it.connectMidiDeviceOut(it.midiDevicesOut[0])
             }
         }
+
+        //if (!audioEngine.startEngine())
+        //{
+        //    playPage.view?.let { Snackbar.make(it,"Audio Engine failed to start",10) }
+        //}
+    }
+
+    override fun onResume() {
+        super.onResume()
+        audioEngine.startEngine()
         if (mainMenu!=null) {
             (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).adapter
             loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
         }
-
-        audioEngine.startEngine()
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -195,9 +197,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     }
 
-
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
 
         persistCurrentScene()
         saveToBinaryFiles()
@@ -212,6 +213,13 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+
+
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
