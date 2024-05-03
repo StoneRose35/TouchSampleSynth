@@ -125,7 +125,7 @@ class SceneListP {
 
             screenResolutionX = screenWidth
             screenResolutionY = screenHeight
-            scenes.addAll((context as TouchSampleSynthMain).allScenes)
+            scenes.addAll((context as TouchSampleSynthMain).getScenesList())
             val jsonOut = gson.toJson(this)
             Log.i(TAG, "exporting scenes as json")
             val f = File(mainDir + File.separator + fileName)
@@ -166,7 +166,7 @@ class SceneListP {
                 val sceneList = SceneListP()
                 sceneList.screenResolutionX = screenWidth
                 sceneList.screenResolutionY = screenHeight
-                sceneList.scenes.addAll((context as TouchSampleSynthMain).allScenes)
+                sceneList.scenes.addAll((context as TouchSampleSynthMain).getScenesList())
                 val jsonOut = gson.toJson(sceneList)
                 Log.i(TAG, "exporting scenes as json")
                 val f = File(mainDir + File.separator + fileName)

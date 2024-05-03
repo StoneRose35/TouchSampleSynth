@@ -21,7 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.descendants
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
@@ -60,6 +60,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     var mainMenu: Menu?=null
     private var oldScenePosition=-1
     var scenesListDirty=false
+    var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
 
     override fun onStart() {
         super.onStart()
@@ -101,11 +102,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 it.connectMidiDeviceOut(it.midiDevicesOut[0])
             }
         }
-
-        //if (!audioEngine.startEngine())
-        //{
-        //    playPage.view?.let { Snackbar.make(it,"Audio Engine failed to start",10) }
-        //}
     }
 
     override fun onResume() {
@@ -133,6 +129,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             controller.hide(WindowInsetsCompat.Type.systemBars())
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+        scenesArrayAdapter = ArrayAdapter<SceneP>(this, android.R.layout.simple_spinner_item,allScenes)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         {
             ActivityCompat.requestPermissions(this,
@@ -225,10 +222,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         menuInflater.inflate(R.menu.main_menu,menu)
         mainMenu=menu
         val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
-        val sceneArrayAdapter = ArrayAdapter<SceneP>(this, android.R.layout.simple_spinner_item,allScenes)
-        sceneArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        sceneArrayAdapter.setNotifyOnChange(true)
-        spinnerScenes.adapter = sceneArrayAdapter
+
+        scenesArrayAdapter?.let {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            it.setNotifyOnChange(true)
+            spinnerScenes.adapter = it
+        }
 
         if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
             spinnerScenes.setSelection(oldScenePosition, false)
@@ -384,9 +383,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 // load the new scene
                 if (supportFragmentManager.fragments[0].tag != null) {
                     if (supportFragmentManager.fragments[0].tag.equals("PlayPage0")) {
-                        val remainingChildres = (supportFragmentManager.fragments[0].view as ViewGroup).descendants.dropWhile { v -> v is TouchElement }
+                        val remainingChildren = ArrayList<View>()
+                        (supportFragmentManager.fragments[0].view as ViewGroup).children.filter { v  -> v !is TouchElement }.forEach {
+                            el -> remainingChildren.add(el)
+                        }
                         (supportFragmentManager.fragments[0].view as ViewGroup).removeAllViews()
-                        remainingChildres.asIterable().forEach {
+                        remainingChildren.asIterable().forEach {
                             rc -> (supportFragmentManager.fragments[0].view as ViewGroup).addView(rc)
                         }
                         for (te in touchElements) {
@@ -434,6 +436,11 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     }
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
+    }
+
+    fun getScenesList(): List<SceneP>
+    {
+        return allScenes.toList()
     }
 
 

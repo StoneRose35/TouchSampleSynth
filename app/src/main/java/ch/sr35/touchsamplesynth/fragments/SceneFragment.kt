@@ -59,8 +59,8 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                     val swap = scenes[p2]
                     scenes[p2] = scenes[p1]
                     scenes[p1] = swap
-                (context as TouchSampleSynthMain).scenesListDirty=true
                 recyclerView.adapter?.notifyItemMoved(p1,p2)
+                (context as TouchSampleSynthMain).scenesArrayAdapter?.notifyDataSetChanged()
                 return true
             }
 
@@ -72,7 +72,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                         .setPositiveButton((context as TouchSampleSynthMain).getString(R.string.yes)) { _, _ ->
                             scenes.removeAt(viewHolder.absoluteAdapterPosition)
                             scenesList?.adapter?.notifyItemRemoved(viewHolder.absoluteAdapterPosition)
-                            (context as TouchSampleSynthMain).scenesListDirty = true
+                            (context as TouchSampleSynthMain).scenesArrayAdapter?.notifyDataSetChanged()
                         }
                         .setNegativeButton((context as TouchSampleSynthMain).getString(R.string.no)) { _, _ -> }
                     val alertDlg = alertDlgBuilder.create()
@@ -92,7 +92,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                     scenes.add(viewHolder.layoutPosition, newScene)
                     scenesList?.adapter?.notifyItemInserted(viewHolder.layoutPosition)
                     scenesList?.adapter?.notifyItemChanged(viewHolder.layoutPosition+1)
-                    (context as TouchSampleSynthMain).scenesListDirty = true
+                    (context as TouchSampleSynthMain).scenesArrayAdapter?.notifyDataSetChanged()
                 }
             }
             }
@@ -126,7 +126,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                 scene.name = input.text.toString()
                 scenes.add(scene)
                 scenesList?.adapter?.notifyItemInserted(scenes.size-1)
-                (context as TouchSampleSynthMain).scenesListDirty = true
+                (context as TouchSampleSynthMain).scenesArrayAdapter?.notifyDataSetChanged()
             }
             builder.setNegativeButton(
                 (context as TouchSampleSynthMain).getString(android.R.string.cancel)
@@ -141,7 +141,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
 
             val jsonobj = SceneListP.importFromJson(context as TouchSampleSynthMain)
             jsonobj?.scenes?.clear()
-            jsonobj?.scenes?.addAll((context as TouchSampleSynthMain).allScenes)
+            jsonobj?.scenes?.addAll((context as TouchSampleSynthMain).getScenesList())
             if (jsonobj?.exportAsJson(SCENES_FILE_NAME,context as TouchSampleSynthMain)==true) {
                 val sb = Snackbar.make(it, resources.getText(R.string.exportSuccessful), 1000)
                 sb.show()

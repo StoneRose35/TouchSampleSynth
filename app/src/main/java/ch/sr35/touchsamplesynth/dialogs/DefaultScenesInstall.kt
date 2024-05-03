@@ -56,7 +56,7 @@ class DefaultScenesInstall(private var context: Context,) : Dialog(context) {
     override fun onStop() {
         super.onStop()
         if (state == State.DONE) {
-            (context as TouchSampleSynthMain).loadSceneWithWaitIndicator(0)
+            (context as TouchSampleSynthMain).scenesArrayAdapter?.notifyDataSetChanged()
         }
     }
 
@@ -253,7 +253,7 @@ class DefaultScenesInstall(private var context: Context,) : Dialog(context) {
                     }
                     (context as TouchSampleSynthMain).loadFromBinaryFiles()
                     SceneListP.exportAsJson(SCENES_FILE_NAME,context)
-                    scenesEmpty = (context as TouchSampleSynthMain).allScenes.isEmpty()
+                    scenesEmpty = (context as TouchSampleSynthMain).scenesArrayAdapter!!.isEmpty
                     return DefaultScenesState(CurrentScenesCode.PRESET_AND_OUTDATED,scenesEmpty)
                 }
                 if (scenesList.installDone)
@@ -272,7 +272,7 @@ class DefaultScenesInstall(private var context: Context,) : Dialog(context) {
         {
             (context as TouchSampleSynthMain).loadFromBinaryFiles()
             SceneListP.exportAsJson(SCENES_FILE_NAME,context)
-            scenesEmpty = (context as TouchSampleSynthMain).allScenes.isEmpty()
+            scenesEmpty = (context as TouchSampleSynthMain).scenesArrayAdapter!!.isEmpty
             return DefaultScenesState(CurrentScenesCode.PRESET_AND_OUTDATED,scenesEmpty)
         }
     }
