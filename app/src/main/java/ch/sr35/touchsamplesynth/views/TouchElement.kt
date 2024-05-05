@@ -19,6 +19,7 @@ import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import ch.sr35.touchsamplesynth.graphics.Converter
 import com.google.android.material.color.MaterialColors
@@ -76,7 +77,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private var oldTopMargin: Int = 0
     private var elementState: TouchElementState = defaultState
     var soundGenerator: Instrument? = null
-    var voiceNr: Int = -1
+    private var currentVoice: MusicalSoundGenerator? = null
     var note: MusicalPitch? = null
     var midiChannel: Int=0
     var midiCC: Int=3
@@ -441,10 +442,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
                     touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
                 }
-
+                currentVoice = soundGenerator?.getNextFreeVoice()
+                currentVoice?.setMidiChannel(midiChannel)
                 if (touchVal>=-1.0f)
                 {
-                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(touchVal)
+                    currentVoice?.applyTouchAction(touchVal)
 
                     val midiData=ByteArray(3)
                     midiData[0] = (0xB0 + midiChannel).toByte()
@@ -461,7 +463,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                                 }
                             }
                         }
-                        soundGenerator?.voices?.get(voiceNr)?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
+                        currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
                         midiCCOld=midiData[2]
                     }
                 }
@@ -485,7 +487,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 return true
             } else if (event?.action == MotionEvent.ACTION_UP) {
                 outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-                soundGenerator?.voices?.get(voiceNr)?.switchOff(1.0f)
+                currentVoice?.switchOff(1.0f)
                 appContext?.rtpMidiServer?.let {
                     if (it.isEnabled && this.note != null)
                     {
@@ -500,13 +502,14 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         }
                     }
                 }
+                currentVoice = null
                 invalidate()
                 return true
             } else if (event?.action == MotionEvent.ACTION_MOVE) {
                 var touchVal:Float=-2.0f
                 if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
                     outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-                    soundGenerator?.voices?.get(voiceNr)?.let {
+                    currentVoice?.let {
                         if (it.isEngaged())
                         {
                             it.switchOff(1.0f)
@@ -527,7 +530,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                             invalidate()
                         }
                     }
-
+                    currentVoice=null
                     return true
                 } else if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
                     touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
@@ -544,7 +547,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
                 if (touchVal>=-1.0f)
                 {
-                    soundGenerator?.voices?.get(voiceNr)?.applyTouchAction(touchVal)
+                    currentVoice?.applyTouchAction(touchVal)
 
                     val midiData=ByteArray(3)
                     midiData[0] = (0xB0 + midiChannel).toByte()
@@ -561,7 +564,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                                 }
                             }
                         }
-                        soundGenerator?.voices?.get(voiceNr)?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
+                        currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
                         midiCCOld=midiData[2]
                     }
                     return true
@@ -694,8 +697,8 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
 
     override fun performClick(): Boolean {
-        note?.value?.let { soundGenerator?.voices?.get(voiceNr)?.setNote(it) }
-        if (soundGenerator?.voices?.get(voiceNr)?.switchOn(1.0f)==true)
+        note?.value?.let { currentVoice?.setNote(it) }
+        if (currentVoice?.switchOn(1.0f)==true)
         {
             outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
         }

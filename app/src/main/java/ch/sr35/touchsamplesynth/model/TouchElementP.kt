@@ -30,7 +30,6 @@ class TouchElementP(var width: Int,
         posY = (touchElement.layoutParams as ConstraintLayout.LayoutParams).topMargin
         actionDir = touchElement.actionDir
         note = touchElement.note?.index ?: -1
-        voiceNr = touchElement.voiceNr
         midiChannel = touchElement.midiChannel
         midiCC = touchElement.midiCC
         color = RgbColor(touchElement.fillColor.color.red,touchElement.fillColor.color.green,touchElement.fillColor.color.blue )

@@ -40,6 +40,7 @@
         android:id="@+id/instruments_page_instr_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+
         android:layout_width="310dp"
         android:autofillHints="name"
         android:inputType="text"
@@ -48,21 +49,7 @@
         android:hint="@string/instrument_name"
         android:padding="6dp"
         />
-    <EditText
-        android:background="?attr/instrumentBackgroundColor"
-        android:theme="@style/Theme.TouchSampleSynth.Instrument"
-        android:id="@+id/instruments_page_nr_voices"
-        android:layout_width="48dp"
-        android:minWidth="48dp"
-        android:layout_height="48dp"
-        android:inputType="numberDecimal"
-        android:autofillHints="postalCode"
-        android:hint="@string/nr_voices_description"
-        app:layout_constraintTop_toTopOf="parent"
-        android:imeOptions="actionDone"
-        android:padding="6dp"
-        app:layout_constraintStart_toEndOf="@id/instruments_page_instr_name"
-        />
+
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="0dp"

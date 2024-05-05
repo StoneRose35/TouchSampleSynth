@@ -32,7 +32,7 @@ class TouchElementTest {
         val i1 = SineMonoSynthI(context,"Basic")
         i1.generateVoices(3)
         te.soundGenerator=i1
-        te.voiceNr=1
+
 
         //touch
         var evnt = MotionEventBuilder.newBuilder()
@@ -44,7 +44,7 @@ class TouchElementTest {
         te.onTouchEvent(evnt)
 
         //check that instrument is on
-        Assert.assertTrue(i1.voices[1].isSounding())
+        Assert.assertTrue(i1.voices[0].isSounding())
 
         // release
         evnt = MotionEventBuilder.newBuilder()

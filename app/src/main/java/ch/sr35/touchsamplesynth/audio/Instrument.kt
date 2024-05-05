@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 open class Instrument(var name: String) {
 
     open var voices=ArrayList<MusicalSoundGenerator>()
+    var isMonophonic=false
 
     open fun getType(): String
     {
@@ -16,7 +17,12 @@ open class Instrument(var name: String) {
     }
     fun getNextFreeVoice(): MusicalSoundGenerator?
     {
-        return voices.stream().map { a -> a as MusicalSoundGenerator}?.filter { v -> !v.isSounding() }?.findFirst()?.orElse(null)
+        return if (isMonophonic && voices.isNotEmpty()) {
+            voices[0]
+        } else {
+            voices.stream().map { a -> a as MusicalSoundGenerator }
+                ?.filter { v -> !v.isSounding() }?.findFirst()?.orElse(null)
+        }
     }
 
     fun hasVoice(msg: MusicalSoundGenerator?): Boolean

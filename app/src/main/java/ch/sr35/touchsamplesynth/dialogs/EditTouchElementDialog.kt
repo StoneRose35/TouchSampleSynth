@@ -71,30 +71,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         numberPickerNotes?.value = touchElement.note?.index ?: -1
         val buttonOk=findViewById<Button>(R.id.edit_te_button_ok)
         buttonOk?.setOnClickListener {
-            if (instrumentListAdapter.checkedPosition > -1) {
-                touchElement.soundGenerator = availableSoundGenerators[instrumentListAdapter.checkedPosition]
-                if (touchElement.soundGenerator!!.voicesCount() > 1) {
-                    val voiceNrs = (context as TouchSampleSynthMain).touchElements.stream()
-                        .filter { te -> te.soundGenerator?.name == availableSoundGenerators[instrumentListAdapter.checkedPosition].name && te.soundGenerator!!.getType() == availableSoundGenerators[instrumentListAdapter.checkedPosition].getType() }
-                        .map { te -> te.voiceNr }.collect(Collectors.toList())
-                    var currentVoiceIdx = 0
-                    while (currentVoiceIdx < soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()) {
-                        if (voiceNrs.stream().noneMatch { vn -> vn == currentVoiceIdx }) {
-                            touchElement.voiceNr = currentVoiceIdx
-                            soundGenerators[instrumentListAdapter.checkedPosition].voices[touchElement.voiceNr].setMidiChannel(touchElement.midiChannel)
-                            currentVoiceIdx =
-                                soundGenerators[instrumentListAdapter.checkedPosition].voicesCount()
-                        } else {
-                            currentVoiceIdx++
-                        }
-                    }
-                }
-                else // monophonic case
-                {
-                    touchElement.voiceNr = 0
-                }
 
-            }
             pickedColor?.let {
                 touchElement.fillColor.color = it.toColorInt()
             }
@@ -172,9 +149,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                             {
                                 v.background=null
                                 this.touchElement.midiChannel=midiChannelInt
-                                this.touchElement.soundGenerator?.let { sg ->
-                                    sg.voices[this.touchElement.voiceNr].setMidiChannel(midiChannelInt)
-                                }
+
                             }
                         }
                         catch (e: NumberFormatException)

@@ -33,18 +33,12 @@ class SceneP : Serializable, Cloneable {
             val instr = PersistableInstrumentFactory.toInstrument(pi, context)
             if (instr != null) {
                 sg.add(instr)
-                var voiceIdx = 0
                 // generate all touchElements which use the current instrument
                 touchElements.stream().filter { te -> te.soundGenerator == pi }.forEach {
                     val touchElement = TouchElement(context, null)
                     it.toTouchElement(touchElement)
                     touchElement.soundGenerator = instr
-                    touchElement.voiceNr = voiceIdx
                     tels.add(touchElement)
-                    if (voiceIdx < pi.nVoices-1)
-                    {
-                        voiceIdx++
-                    }
                 }
                 remainingTouchElements.removeIf { te -> te.soundGenerator == pi }
             }

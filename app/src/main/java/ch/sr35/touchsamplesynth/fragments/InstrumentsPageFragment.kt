@@ -120,6 +120,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             return@setOnEditorActionListener false
         }
 
+        /*
         view.findViewById<EditText>(R.id.instruments_page_nr_voices).setOnEditorActionListener { textView, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE)
             {
@@ -174,7 +175,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
-        }
+        }*/
 
     }
 
