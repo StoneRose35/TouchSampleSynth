@@ -12,9 +12,9 @@ class SimpleSubtractiveSynthP(
     private var actionAmountToFilter: Float,
     actionAmountToVolume: Float,
     private var resonance: Float,
-    nVoices: Int,
+    isMono: Boolean,
     name: String
-): PersistableInstrument(actionAmountToVolume, nVoices,name) {
+): PersistableInstrument(actionAmountToVolume,isMono,name) {
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)
         if (i is SimpleSubtractiveSynthI)
@@ -54,7 +54,7 @@ class SimpleSubtractiveSynthP(
 
     override fun toString(): String
     {
-        return "SimpleSubtractiveSynth: %s, voices: %d".format(this.name, this.nVoices)
+        return "SimpleSubtractiveSynth: %s, voices: %d".format(this.name, this.isMonophonic)
     }
 
     override fun hashCode(): Int {
@@ -68,7 +68,7 @@ class SimpleSubtractiveSynthP(
     }
 
     override fun clone(): Any {
-        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmountToFilter, this.actionAmountToVolume,this.resonance,this.nVoices,this.name)
+        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmountToFilter, this.actionAmountToVolume,this.resonance,this.isMonophonic,this.name)
         return klon
     }
 }

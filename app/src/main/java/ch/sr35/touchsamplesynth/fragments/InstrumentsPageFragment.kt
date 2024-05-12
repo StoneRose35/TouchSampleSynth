@@ -23,12 +23,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet.WRAP_CONTENT
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_OFF
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_ON_POLY
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
-import java.lang.NumberFormatException
 
 
 /**
@@ -53,8 +53,6 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         instrumentsList.adapter = this
         instrumentsList.onItemClickListener = this
 
-
-        view.findViewById<EditText>(R.id.instruments_page_nr_voices).text.clear()
         view.findViewById<EditText>(R.id.instruments_page_instr_name).text.clear()
         if (selectedInstrument == -1) {
             if (instrumentsList.adapter.count > 0) {
@@ -95,7 +93,6 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                         selectedInstrument = -1
                         instrumentsList.invalidateViews()
                         removeCurrentFragment()
-                        view.findViewById<EditText>(R.id.instruments_page_nr_voices).text.clear()
                         view.findViewById<EditText>(R.id.instruments_page_instr_name).text.clear()
                     }
                     .setNegativeButton((context as TouchSampleSynthMain).getString(R.string.no)) { _, _ -> }
@@ -120,63 +117,33 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             return@setOnEditorActionListener false
         }
 
-        /*
-        view.findViewById<EditText>(R.id.instruments_page_nr_voices).setOnEditorActionListener { textView, i, _ ->
-            if (i == EditorInfo.IME_ACTION_DONE)
+        view.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly).setOnClickListener { it ->
+            var voicesToGenerate: Int
+            if ((it as CheckBox).isChecked)
             {
-                if (selectedInstrument >= 0 && selectedInstrument < (context as TouchSampleSynthMain).soundGenerators.size) {
-                    val voicesInt: Int = try {
-                        Integer.parseInt(textView.text.toString())
-                    } catch (e: NumberFormatException) {
-                        -1
-                    }
-                    if (voicesInt in 1..16) {
-                        // check that less voices are assigned than requested
-                        val nAssignedSoundGenerators =
-                            (context as TouchSampleSynthMain).touchElements.stream()
-                                .map { te -> te.soundGenerator }
-                                .filter { sg ->
-                                    sg == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]
-                                }
-                                .count()
-                        if (nAssignedSoundGenerators <= voicesInt) {
-                            if (voicesInt < (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
-                                // remove voices
-                                val nVoicesToRemove =
-                                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount() - voicesInt
+                view.findViewById<TextView>(R.id.instruments_page_tv_monopoly).text = getString(R.string.polyphonic)
+                voicesToGenerate = Instrument.DEFAULT_POLYPHONY
+            }
+            else
+            {
+                view.findViewById<TextView>(R.id.instruments_page_tv_monopoly).text = getString(R.string.monophonic)
+                voicesToGenerate = 1
+            }
+            if (selectedInstrument > -1)
+            {
+                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].isMonophonic = !it.isChecked
+                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.forEach {
+                        v -> v.detachFromAudioEngine()
 
-                                for (c in 0 until nVoicesToRemove) {
-                                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices[0]
-                                        .detachFromAudioEngine()
-                                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.removeAt(
-                                        0
-                                    )
-                                }
-                                var currentVoiceIndex = 0
-                                (context as TouchSampleSynthMain).touchElements
-                                    .stream()
-                                    .filter { te -> te.soundGenerator == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument] }
-                                    .forEach { t -> t.voiceNr = currentVoiceIndex++ }
-                            } else if (voicesInt > (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()) {
-                                val voicesToAdd =
-                                    voicesInt - (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voicesCount()
-                                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(
-                                    voicesToAdd
-                                )
-                                // add voices
-                            }
-                        }
-                    }
-                    ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-                        textView.windowToken,
-                        0
+                }
+                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.clear()
+                if ( (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].isMonophonic) {
+                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(
+                        voicesToGenerate
                     )
                 }
-                return@setOnEditorActionListener true
             }
-            return@setOnEditorActionListener false
-        }*/
-
+        }
     }
 
 
@@ -302,8 +269,9 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 }
                 it.commit()
             }
-            view?.findViewById<EditText>(R.id.instruments_page_nr_voices)?.text?.clear()
             view?.findViewById<EditText>(R.id.instruments_page_instr_name)?.text?.clear()
+            view?.findViewById<TextView>(R.id.instruments_page_tv_monopoly)?.text = ""
+            view?.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly)?.isChecked = false
         }
     }
 
@@ -356,13 +324,16 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                     }
                 }
             }
-            if (view?.findViewById<TextView>(R.id.instruments_page_instr_name) != null) {
-                view?.findViewById<TextView>(R.id.instruments_page_instr_name)?.text=
+            view?.findViewById<TextView>(R.id.instruments_page_instr_name)?.text =
                     (context as TouchSampleSynthMain).soundGenerators[p2].name
+            view?.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly)?.isChecked = !(context as TouchSampleSynthMain).soundGenerators[p2].isMonophonic
+            if ((context as TouchSampleSynthMain).soundGenerators[p2].isMonophonic)
+            {
+                view?.findViewById<TextView>(R.id.instruments_page_tv_monopoly)?.text = getString(R.string.monophonic)
             }
-            if (view?.findViewById<TextView>(R.id.instruments_page_nr_voices)!= null) {
-                view?.findViewById<TextView>(R.id.instruments_page_nr_voices)?.text =
-                    (context as TouchSampleSynthMain).soundGenerators[p2].voicesCount().toString()
+            else
+            {
+                view?.findViewById<TextView>(R.id.instruments_page_tv_monopoly)?.text = getString(R.string.polyphonic)
             }
             (p0 as ListView).invalidateViews()
         }

@@ -142,7 +142,7 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
             val jsonobj = SceneListP.importFromJson(context as TouchSampleSynthMain)
             jsonobj?.scenes?.clear()
             jsonobj?.scenes?.addAll((context as TouchSampleSynthMain).getScenesList())
-            if (jsonobj?.exportAsJson(SCENES_FILE_NAME,context as TouchSampleSynthMain)==true) {
+            if (SceneListP.exportAsJson(SCENES_FILE_NAME,context as TouchSampleSynthMain)) {
                 val sb = Snackbar.make(it, resources.getText(R.string.exportSuccessful), 1000)
                 sb.show()
             }

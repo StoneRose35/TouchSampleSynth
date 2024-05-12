@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 open class Instrument(var name: String) {
 
     open var voices=ArrayList<MusicalSoundGenerator>()
-    var isMonophonic=false
+    var isMonophonic=true
 
     open fun getType(): String
     {
@@ -25,10 +25,6 @@ open class Instrument(var name: String) {
         }
     }
 
-    fun hasVoice(msg: MusicalSoundGenerator?): Boolean
-    {
-        return voices.contains(msg)
-    }
 
     fun voicesCount(): Int
     {
@@ -77,5 +73,9 @@ open class Instrument(var name: String) {
 
     override fun hashCode(): Int {
         return this.name.hashCode() + this.getType().hashCode()
+    }
+
+    companion object {
+        val DEFAULT_POLYPHONY = 4
     }
 }

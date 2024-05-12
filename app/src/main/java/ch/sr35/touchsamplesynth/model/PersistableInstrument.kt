@@ -33,12 +33,12 @@ class PersistableInstrumentDeserializer: JsonDeserializer<PersistableInstrument>
     }
 }
 
-open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var nVoices: Int=0,var name: String=""): Serializable, Cloneable {
+open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMonophonic: Boolean=true,var name: String=""): Serializable, Cloneable {
 
     open fun fromInstrument(i: Instrument)
     {
         name = i.name
-        nVoices = i.voicesCount()
+        isMonophonic = i.isMonophonic
         actionAmountToVolume = i.getVolumeModulation()
     }
 
@@ -48,22 +48,6 @@ open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var nVoice
         i.setVolumeModulation(actionAmountToVolume)
     }
 
-    override fun hashCode(): Int
-    {
-        return name.hashCode() + nVoices
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as PersistableInstrument
-
-        if (nVoices != other.nVoices) return false
-        if (name != other.name) return false
-
-        return true
-    }
 
    public override fun clone(): Any {
         return super.clone()
@@ -71,7 +55,7 @@ open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var nVoice
 
     override fun toString(): String
     {
-        return "PersistableInstrument: %s, voices: %d".format(this.name, this.nVoices)
+        return "PersistableInstrument: %s, monophonic: %b".format(this.name, this.isMonophonic)
     }
 
 
@@ -83,56 +67,48 @@ class PersistableInstrumentFactory
     {
         fun fromInstrument(msg: Instrument?): PersistableInstrument?
         {
-            when (msg) {
+            val pi: PersistableInstrument = when (msg) {
                 is SimpleSubtractiveSynthI -> {
-                    val pi = SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, 0, "")
-                    pi.fromInstrument(msg)
-                    return pi
+                    SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, true, "")
                 }
-
                 is SineMonoSynthI -> {
-                    val pi = SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0,"")
-                    pi.fromInstrument(msg)
-                    return pi
+                    SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,true,"")
                 }
-
                 is SamplerI -> {
-                    val pi = SamplerP(0,0,0,0,0,"",0.0f,0,"")
-                    pi.fromInstrument(msg)
-                    return pi
+                    SamplerP(0,0,0,0,0,"",0.0f,true,"")
                 }
-
                 else -> {
                     return null
                 }
             }
+            pi.fromInstrument(msg)
+            return pi
         }
         fun toInstrument(pi: PersistableInstrument,context: Context): Instrument?
         {
-            when (pi) {
+            val instr: Instrument = when (pi) {
                 is SimpleSubtractiveSynthP -> {
-                    val instr = SimpleSubtractiveSynthI(context,pi.name)
-                    instr.generateVoices(pi.nVoices)
-                    pi.toInstrument(instr)
-                    return instr
+                    SimpleSubtractiveSynthI(context,pi.name)
                 }
 
                 is SineMonoSynthP -> {
-                    val instr = SineMonoSynthI(context,pi.name)
-                    instr.generateVoices(pi.nVoices)
-                    pi.toInstrument(instr)
-                    return instr
+                    SineMonoSynthI(context,pi.name)
                 }
 
                 is SamplerP -> {
-                    val instr = SamplerI(context,pi.name)
-                    instr.generateVoices(pi.nVoices)
-                    pi.toInstrument(instr)
-                    return instr
+                    SamplerI(context,pi.name)
                 }
-
                 else -> return null
             }
+            if (pi.isMonophonic) {
+                instr.generateVoices(1)
+            }
+            else
+            {
+                instr.generateVoices(Instrument.DEFAULT_POLYPHONY)
+            }
+            pi.toInstrument(instr)
+            return instr
         }
 
     }

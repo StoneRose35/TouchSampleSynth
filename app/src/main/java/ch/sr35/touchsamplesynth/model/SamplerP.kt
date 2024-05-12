@@ -13,9 +13,9 @@ class SamplerP(private var sampleStart: Int,
                private var mode: Byte,
                private var sampleFile: String,
                actionAmountToVolume: Float,
-               nVoices: Int,
+               isMono: Boolean,
                name: String
-):PersistableInstrument(actionAmountToVolume, nVoices,name), Serializable, Cloneable  {
+):PersistableInstrument(actionAmountToVolume, isMono,name), Serializable, Cloneable  {
 
     override fun fromInstrument(i: Instrument) {
         super.fromInstrument(i)
@@ -63,9 +63,9 @@ class SamplerP(private var sampleStart: Int,
 
     override fun toString(): String
     {
-        return "Sampler: %s, voices: %d".format(this.name, this.nVoices)
+        return "Sampler: %s, monophonic: %d".format(this.name, this.isMonophonic)
     }
     override fun clone(): Any {
-        return SamplerP(this.sampleStart,this.sampleEnd,this.loopStart,this.loopEnd,this.mode,this.sampleFile,this.actionAmountToVolume,this.nVoices,this.name)
+        return SamplerP(this.sampleStart,this.sampleEnd,this.loopStart,this.loopEnd,this.mode,this.sampleFile,this.actionAmountToVolume,this.isMonophonic,this.name)
     }
 }

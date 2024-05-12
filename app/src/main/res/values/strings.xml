@@ -91,4 +91,6 @@
     <string name="installerDownloadingSamples">Downloading Samples</string>
     <string name="installerUnpackingSamples">Unpacking Samples</string>
     <string name="installerDownloadFailed">Download failed</string>
+    <string name="monophonic">Mono</string>
+    <string name="polyphonic">Poly</string>
 </resources>

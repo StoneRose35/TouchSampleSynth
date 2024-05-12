@@ -68,7 +68,7 @@ class SceneP : Serializable, Cloneable {
         }
         for (te in touchEls)
         {
-            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LEFT_RIGHT,0,0,null,0,3,null)
+            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LEFT_RIGHT,0,null,0,3,null)
             pte.fromTouchElement(te)
             touchElements.add(pte)
         }

@@ -1,5 +1,6 @@
 <resources>
     <!-- Base application theme. -->
+
     <style name="Theme.TouchSampleSynth" parent="Theme.AppCompat.DayNight.NoActionBar">
 
         <!-- Primary brand color. -->
@@ -15,7 +16,6 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
-
         <!-- Customize your theme here. -->
         <item name="touchElementTouchedColor">@color/light_red</item>
         <item name="touchElementColor">@color/light_green</item>
@@ -23,14 +23,12 @@
         <item name="touchElementEditDot">@color/black</item>
         <item name="touchElementEditBoxBgColor">@color/white</item>
         <item name="touchElementEditTextColor">@color/black</item>
-
         <item name="instrumentBackgroundColor">@color/very_light_gray</item>
         <item name="instrumentPageTitleTextColor">@color/red_dark</item>
         <item name="sliderDrawable">@drawable/slider_dark</item>
-
         <item name="sceneEditBackgroundColor">@color/very_light_gray</item>
     </style>
-    <style name="Theme.TouchSampleSynth.Instrument">
+    <style name="Theme.Instrument" parent="Theme.TouchSampleSynth">
         <item name="android:textColor">@color/black</item>
         <item name="android:shadowColor">@color/dark_gray</item>
         <item name="android:shadowRadius">10</item>
@@ -39,7 +37,8 @@
         <item name="android:progressTintMode">src_over</item>
         <item name="android:progressBackgroundTintMode">src_over</item>
         <item name="android:thumb">@drawable/slider_dark</item>
-        <item name="android:background">@color/very_light_gray</item>
+        <item name="android:background">@color/light_grey</item>
     </style>
+
 
 </resources>

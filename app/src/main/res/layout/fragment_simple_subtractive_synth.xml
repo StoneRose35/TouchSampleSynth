@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="358dp"
     android:layout_height="match_parent"
-    android:background="?attr/instrumentBackgroundColor"
+
     android:orientation="vertical"
+    android:theme="@style/Theme.TouchSampleSynth.Instrument"
     tools:context=".fragments.SimpleSubtractiveSynthFragment">
 
     <TextView

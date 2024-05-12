@@ -15,7 +15,6 @@ class TouchElementP(var width: Int,
                     var posY: Int,
                     var actionDir: TouchElement.ActionDir,
                     var note: Int,
-                    var voiceNr: Int,
                     var color: RgbColor?,
                     var midiChannel: Int,
                     var midiCC: Int,
@@ -56,8 +55,8 @@ class TouchElementP(var width: Int,
 
     override fun toString(): String
     {
-        return "TouchElement, w: %d, h: %d, x: %d, y: %d, actionDir: %s, note: %s, voiceNr: %d, soundGen: %s"
-            .format(this.width,this.height,this.posX,this.posY,this.actionDir,this.note, this.voiceNr, this.soundGenerator)
+        return "TouchElement, w: %d, h: %d, x: %d, y: %d, actionDir: %s, note: %s, soundGen: %s"
+            .format(this.width,this.height,this.posX,this.posY,this.actionDir,this.note, this.soundGenerator)
     }
 
     public override fun clone(): Any {
@@ -67,7 +66,6 @@ class TouchElementP(var width: Int,
             this.posY,
             this.actionDir,
             this.note,
-            this.voiceNr,
             this.color?.clone(),
             this.midiChannel,
             this.midiCC,
