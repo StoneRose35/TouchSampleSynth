@@ -9,15 +9,15 @@ class ScenePTest {
     @Test
     fun toJsonTest()
     {
-        val synth1=SineMonoSynthP(0.684f,0.438f,0.1111f,0.93234f,0.1f,4,"HuntersMoon")
-        val synth2 = SamplerP(12532,5959594,13000,5700000,0,"/sdcard/searchlight.wav",0.25f,1,"WatcherInTheSky")
+        val synth1=SineMonoSynthP(0.684f,0.438f,0.1111f,0.93234f,0.1f,false,"HuntersMoon")
+        val synth2 = SamplerP(12532,5959594,13000,5700000,0,"/sdcard/searchlight.wav",0.25f,false,"WatcherInTheSky")
         val touchElement1 = TouchElementP(234,546,154,673,
-            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,45,0,null,0,3,synth1)
+            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,45,null,0,3,synth1)
         val touchElement2 = TouchElementP(24,541,354,273,
-            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,34,1,null,0,7,synth1)
+            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,34,null,0,7,synth1)
         val touchElement3 = TouchElementP(342,343,44,55,
-            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,45,0,null,0,11,synth1)
-        val touchElement4 = TouchElementP(563,92,100,200,TouchElement.ActionDir.VERTICAL_DOWN_UP,62,0,null,0,3,synth2)
+            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,45,null,0,11,synth1)
+        val touchElement4 = TouchElementP(563,92,100,200,TouchElement.ActionDir.VERTICAL_DOWN_UP,62,null,0,3,synth2)
         val scene=SceneP()
         scene.instruments.add(synth1)
         scene.instruments.add(synth2)

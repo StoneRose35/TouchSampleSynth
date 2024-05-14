@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.model
 
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
@@ -135,5 +136,45 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
         }
     }
 
+}
+
+class JsonComparator
+{
+    companion object{
+        fun compareJsonObject(a: JsonElement, b: JsonElement): Boolean
+        {
+            var res = true
+            if (a.isJsonArray && b.isJsonArray && a.asJsonArray.size() == b.asJsonArray.size())
+            {
+                a.asJsonArray.forEach {
+                    aEntry ->
+                    res = res && b.asJsonArray.any {
+                        bEntry ->
+                        compareJsonObject(aEntry,bEntry)
+                    }
+
+                }
+            }
+            else if (a.isJsonObject && b.isJsonObject && a.asJsonObject.size() == b.asJsonObject.size())
+            {
+                val aEntrySet = a.asJsonObject.entrySet()
+                val bKeySet = b.asJsonObject.keySet()
+                aEntrySet.forEach {
+                    aentry ->
+                    if (!bKeySet.contains(aentry.key))
+                    {
+                        return false
+                    }
+                    res = res && compareJsonObject(aentry.value,b.asJsonObject.get(aentry.key))
+                }
+            }
+            else if (a.isJsonPrimitive && b.isJsonPrimitive)
+            {
+                return  a.asJsonPrimitive.equals(b.asJsonPrimitive)
+            }
+            return res
+
+        }
+    }
 }
 

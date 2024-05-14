@@ -8,7 +8,7 @@ class SimpleSubtractiveSynthPTest {
     @Test
     fun toJsonTest()
     {
-        val synth=SimpleSubtractiveSynthP(0.1f,0.23f,0.98f,0.564f,0.2323f,0.78f,0.6754f,0.2323f,4,"TestIt")
+        val synth=SimpleSubtractiveSynthP(0.1f,0.23f,0.98f,0.564f,0.2323f,0.78f,0.6754f,0.2323f,false,"TestIt")
         val gson = Gson()
         val json = gson.toJson(synth)
         Assert.assertTrue(json.contains("TestIt"))
