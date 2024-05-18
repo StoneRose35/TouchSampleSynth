@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ch.sr35.touchsamplesynth.views.PlayArea xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +7,7 @@
     android:id="@+id/playpage_layout"
     tools:context=".fragments.PlayPageFragment">
 
-
+    <!--
     <ImageButton
         android:id="@+id/buttonNew"
         android:src="@drawable/addtouchelement"
@@ -20,7 +20,7 @@
         android:background="?attr/colorOnSecondary"
         app:layout_constraintEnd_toStartOf="@id/toggleEdit"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        />-->
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/toggleEdit"
@@ -33,19 +33,27 @@
         android:text="@string/editToggleEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/buttonNew"
-        >
+         />
 
-    </androidx.appcompat.widget.SwitchCompat>
-<!--
-    <ch.sr35.touchsamplesynth.views.VuMeter
-        android:id="@+id/vuMeter"
-        android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="11dp"
-        app:layout_constraintEnd_toStartOf="@+id/buttonNew"
-        app:layout_constraintTop_toTopOf="parent" />-->
+    <LinearLayout
+        android:id="@+id/playpage_instrument_chips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal" />
+
+
+    <!--
+        <ch.sr35.touchsamplesynth.views.VuMeter
+            android:id="@+id/vuMeter"
+            android:layout_width="160dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="11dp"
+            app:layout_constraintEnd_toStartOf="@+id/buttonNew"
+            app:layout_constraintTop_toTopOf="parent" />-->
 <!--
     <ImageView
         android:id="@+id/imageSpeaker"
@@ -84,6 +92,7 @@
         app:layout_constraintBottom_toBottomOf="@id/vuMeter"
         />-->
 
+    <!--
     <EditText
         android:id="@+id/editTextSceneName"
         android:layout_width="0dp"
@@ -100,5 +109,5 @@
         app:layout_constraintEnd_toStartOf="@id/buttonNew"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/buttonNew" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+-->
+</ch.sr35.touchsamplesynth.views.PlayArea>

@@ -54,7 +54,7 @@ class SimpleSubtractiveSynthP(
 
     override fun toString(): String
     {
-        return "SimpleSubtractiveSynth: %s, voices: %d".format(this.name, this.isMonophonic)
+        return "SimpleSubtractiveSynth: %s, monophonic: %b".format(this.name, this.isMonophonic)
     }
 
     override fun hashCode(): Int {

@@ -63,7 +63,7 @@ class SamplerP(private var sampleStart: Int,
 
     override fun toString(): String
     {
-        return "Sampler: %s, monophonic: %d".format(this.name, this.isMonophonic)
+        return "Sampler: %s, monophonic: %b".format(this.name, this.isMonophonic)
     }
     override fun clone(): Any {
         return SamplerP(this.sampleStart,this.sampleEnd,this.loopStart,this.loopEnd,this.mode,this.sampleFile,this.actionAmountToVolume,this.isMonophonic,this.name)

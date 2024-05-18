@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:background="@drawable/instrument_chip_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/instrument_chip_name"
+        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@android:string/yes"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:drawableTopCompat="@drawable/sinemonosynth" />
+
+
+    <TextView
+        android:id="@+id/instrument_chip_monopoly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rounded_corner"
+        android:buttonTint="#673AB7"
+        android:checked="true"
+        android:clickable="false"
+        android:paddingLeft="6dp"
+        android:paddingTop="2dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="2dp"
+        android:text="@string/polyphonic"
+        android:textAlignment="center"
+        android:textColor="@color/light_grey"
+        android:textStyle="normal"
+        app:checkedIconTint="#C60000"
+        app:chipBackgroundColor="#983535"
+        app:chipCornerRadius="12dp"
+        app:closeIconEnabled="true" />
+
+</LinearLayout>

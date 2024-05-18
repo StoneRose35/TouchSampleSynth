@@ -16,10 +16,10 @@ class PersistableInstrumentTest {
     fun equalityTest()
     {
         val o1 = PersistableInstrument()
-        o1.nVoices = 3
+        o1.isMonophonic = false
         o1.name="poly"
         val o2 = PersistableInstrument()
-        o2.nVoices = 3
+        o2.isMonophonic = false
         o2.name="poly"
         Assert.assertEquals(o1,o2)
     }
@@ -28,11 +28,11 @@ class PersistableInstrumentTest {
     fun unequalityTest()
     {
         val o1 = PersistableInstrument()
-        o1.nVoices = 3
+        o1.isMonophonic = false
         o1.name="poly"
         val o2 = PersistableInstrument()
-        o2.nVoices = 5
-        o2.name="poly"
+        o2.isMonophonic = false
+        o2.name="poly 2"
         Assert.assertNotEquals(o1,o2)
     }
 
@@ -40,10 +40,10 @@ class PersistableInstrumentTest {
     fun unequalityTest2()
     {
         val o1 = PersistableInstrument()
-        o1.nVoices = 3
+        o1.isMonophonic = true
         o1.name="poly"
         val o2 = PersistableInstrument()
-        o2.nVoices = 3
+        o2.isMonophonic = false
         o2.name="polyphia"
         Assert.assertNotEquals(o1,o2)
     }
@@ -53,6 +53,7 @@ class PersistableInstrumentTest {
     {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val i1 = SimpleSubtractiveSynthI(context,"Breiss")
+        i1.generateVoices(1)
         i1.setAttack(0.1f)
         i1.setDecay(0.2f)
         i1.setSustain(0.3f)
@@ -86,6 +87,7 @@ class PersistableInstrumentTest {
     {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val i1 = SineMonoSynthI(context, "SeinOderNichtSein")
+        i1.generateVoices(1)
         i1.setAttack(0.1f)
         i1.setDecay(0.2f)
         i1.setSustain(0.3f)

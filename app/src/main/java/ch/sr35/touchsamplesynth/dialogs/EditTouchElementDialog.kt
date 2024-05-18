@@ -36,7 +36,6 @@ import codes.side.andcolorpicker.hsl.HSLColorPickerSeekBar
 import codes.side.andcolorpicker.model.IntegerHSLColor
 import codes.side.andcolorpicker.view.picker.ColorSeekBar
 import java.lang.NumberFormatException
-import java.util.stream.Collectors
 import java.util.stream.IntStream
 
 
@@ -50,18 +49,12 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.edit_touchelement)
         val soundGenerators = (context as TouchSampleSynthMain).soundGenerators
-        val touchElements = (context as TouchSampleSynthMain).touchElements
+        //val touchElements = (context as TouchSampleSynthMain).touchElements
         val instrumentList = findViewById<RecyclerView>(R.id.edit_te_soundgenerator_list)
 
-        // filter soundgenerators to contain only monophonic instruments and
-        // polyphonic whose voices haven't been taken yet
-        val availableSoundGenerators = soundGenerators.stream().filter { i ->
-            (touchElements.stream().map { te -> te.soundGenerator }
-                .filter { el -> (el?.getType() ?: "") == i.getType() && (el?.name ?: "")== i.name}.count() < i.voicesCount())
-                    || i.voicesCount() == 1
-        }.collect(Collectors.toList())
 
-        val instrumentListAdapter = SoundGeneratorListAdapter(availableSoundGenerators,touchElement)
+
+        val instrumentListAdapter = SoundGeneratorListAdapter(soundGenerators,touchElement)
         instrumentList.adapter = instrumentListAdapter
 
         val numberPickerNotes = findViewById<NumberPicker>(R.id.numberPickerNote)
@@ -72,8 +65,11 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         val buttonOk=findViewById<Button>(R.id.edit_te_button_ok)
         buttonOk?.setOnClickListener {
 
-            pickedColor?.let {
-                touchElement.fillColor.color = it.toColorInt()
+            if (instrumentListAdapter.checkedPosition > -1) {
+                touchElement.soundGenerator = soundGenerators[instrumentListAdapter.checkedPosition]
+                pickedColor?.let {
+                    touchElement.fillColor.color = it.toColorInt()
+                }
             }
             touchElement.invalidate()
             touchElement.note = MusicalPitch.generateAllNotes()[numberPickerNotes?.value!!] //spinnerNotesAdapter.note

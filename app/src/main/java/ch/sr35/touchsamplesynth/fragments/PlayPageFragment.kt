@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,17 +7,13 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Spinner
+import android.widget.LinearLayout
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.graphics.Converter
+import ch.sr35.touchsamplesynth.views.InstrumentChip
 import ch.sr35.touchsamplesynth.views.TouchElement
 
 
@@ -26,6 +21,7 @@ import ch.sr35.touchsamplesynth.views.TouchElement
  * A simple [Fragment] subclass.
  */
 class PlayPageFragment : Fragment() {
+
 
 
 
@@ -66,9 +62,10 @@ class PlayPageFragment : Fragment() {
         {
             return
         }
-        val newButton = view.findViewById<ImageButton>(R.id.buttonNew)
+        //val newButton = view.findViewById<ImageButton>(R.id.buttonNew)
         val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
-        val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
+        val instrumentChipsContainer= view.findViewById<LinearLayout>(R.id.playpage_instrument_chips)
+        //val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
 
         val toggleSwitch = view.findViewById<SwitchCompat>(R.id.toggleEdit)
         toggleSwitch.setOnCheckedChangeListener { _, toggleval ->
@@ -78,9 +75,30 @@ class PlayPageFragment : Fragment() {
                 {
                     touchel.setEditmode(true)
                 }
-                newButton.visibility = View.VISIBLE
-                sceneNameEditText.setText((context as TouchSampleSynthMain).getCurrentSceneName())
-                sceneNameEditText.visibility = View.VISIBLE
+                //newButton.visibility = View.VISIBLE
+                //sceneNameEditText.setText((context as TouchSampleSynthMain).getCurrentSceneName())
+                //sceneNameEditText.visibility = View.VISIBLE
+                instrumentChipsContainer.removeAllViewsInLayout()
+                (context as TouchSampleSynthMain).soundGenerators.forEach { it ->
+                    val instrChip = InstrumentChip(context as TouchSampleSynthMain,null)
+                    instrChip.setInstrument(it)
+                    instrChip.setOnClickListener { ic ->
+                        // TODO generate TouchElement and place it at the emptiest location
+
+                        val lp = ConstraintLayout.LayoutParams(Converter.toPx(134),Converter.toPx(166))
+                        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                        lp.marginStart = Converter.toPx(60)
+                        lp.topMargin = Converter.toPx(10)
+                        val te = TouchElement(context as TouchSampleSynthMain,null)
+                        te.soundGenerator = (ic as InstrumentChip).getInstrument()
+                        te.setDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
+                        te.setEditmode(true)
+                        te.layoutParams = lp
+                        playPageLayout.addView(te)
+                    }
+                    instrumentChipsContainer.addView(instrChip)
+                }
 
                 (context as TouchSampleSynthMain).lockSceneSelection()
             }
@@ -90,14 +108,14 @@ class PlayPageFragment : Fragment() {
                 {
                     touchel.setEditmode(false)
                 }
-                newButton.visibility = View.INVISIBLE
-                sceneNameEditText.visibility = View.INVISIBLE
+                //newButton.visibility = View.INVISIBLE
+                //sceneNameEditText.visibility = View.INVISIBLE
                 (context as TouchSampleSynthMain).persistCurrentScene()
                 (context as TouchSampleSynthMain).unlockSceneSelection()
             }
         }
 
-
+/*
         newButton.setOnClickListener {
 
             val lp = ConstraintLayout.LayoutParams(Converter.toPx(134),Converter.toPx(166))
@@ -113,7 +131,8 @@ class PlayPageFragment : Fragment() {
             (context as TouchSampleSynthMain).touchElements.add(te)
 
         }
-
+        */
+        /*
         sceneNameEditText.setOnEditorActionListener { _, actionId, _ ->
             if(actionId==EditorInfo.IME_ACTION_DONE)
             {
@@ -126,6 +145,7 @@ class PlayPageFragment : Fragment() {
             }
             return@setOnEditorActionListener false
         }
+         */
 
         view.post {
             val height = view.height

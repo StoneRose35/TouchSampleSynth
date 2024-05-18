@@ -118,7 +118,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
                             te ->
                         val sg = te.asJsonObject.getAsJsonObject("soundGenerator").deepCopy()
                         te.asJsonObject.remove("soundGenerator")
-                        te.asJsonObject.addProperty("soundGenerator",instrUuids[sg])
+                        te.asJsonObject.addProperty("soundGenerator",instrUuids.filter { el -> JsonComparator.compareJsonObject(el.key,sg) }.entries.first().value)
                         te.asJsonObject.remove("voiceNr")
                     }
                 }

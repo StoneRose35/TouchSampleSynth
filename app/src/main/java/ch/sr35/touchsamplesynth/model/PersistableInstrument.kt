@@ -33,7 +33,7 @@ class PersistableInstrumentDeserializer: JsonDeserializer<PersistableInstrument>
     }
 }
 
-open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMonophonic: Boolean=true,var name: String=""): Serializable, Cloneable {
+open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMonophonic: Boolean=true,var name: String="",var id: String=""): Serializable, Cloneable {
 
     open fun fromInstrument(i: Instrument)
     {
@@ -53,9 +53,29 @@ open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMono
         return super.clone()
     }
 
+    override fun equals(other: Any?):
+            Boolean
+    {
+        return if (other !is PersistableInstrument) {
+            false
+        } else {
+            this.name == other.name && this.id == other.id && this.isMonophonic == other.isMonophonic
+        }
+    }
+
+
+
     override fun toString(): String
     {
         return "PersistableInstrument: %s, monophonic: %b".format(this.name, this.isMonophonic)
+    }
+
+    override fun hashCode(): Int {
+        var result = actionAmountToVolume.hashCode()
+        result = 31 * result + isMonophonic.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + id.hashCode()
+        return result
     }
 
 

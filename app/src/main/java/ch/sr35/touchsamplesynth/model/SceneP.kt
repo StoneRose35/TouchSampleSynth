@@ -11,6 +11,7 @@ import java.io.FileOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
+import java.util.UUID
 
 
 class SceneP : Serializable, Cloneable {
@@ -34,13 +35,13 @@ class SceneP : Serializable, Cloneable {
             if (instr != null) {
                 sg.add(instr)
                 // generate all touchElements which use the current instrument
-                touchElements.stream().filter { te -> te.soundGenerator == pi }.forEach {
+                touchElements.stream().filter { te -> te.soundGeneratorId == pi.id }.forEach {
                     val touchElement = TouchElement(context, null)
                     it.toTouchElement(touchElement)
                     touchElement.soundGenerator = instr
                     tels.add(touchElement)
                 }
-                remainingTouchElements.removeIf { te -> te.soundGenerator == pi }
+                remainingTouchElements.removeIf { te -> te.soundGeneratorId == pi.id }
             }
             else
             {
@@ -61,15 +62,21 @@ class SceneP : Serializable, Cloneable {
     {
         instruments.clear()
         touchElements.clear()
+        var uuid: String
+        val instrumentWithIds = HashMap<Instrument,String>()
         for(sg in soundGenerators)
         {
             val pi = PersistableInstrumentFactory.fromInstrument(sg)
-            instruments.add(pi!!)
+            uuid = UUID.randomUUID().toString()
+            instrumentWithIds[sg] = uuid
+            pi!!.id = uuid
+            instruments.add(pi)
         }
         for (te in touchEls)
         {
-            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LEFT_RIGHT,0,null,0,3,null)
+            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LEFT_RIGHT,0,null,0,3,"")
             pte.fromTouchElement(te)
+            pte.soundGeneratorId = instrumentWithIds[te.soundGenerator].toString()
             touchElements.add(pte)
         }
     }
@@ -96,7 +103,7 @@ class SceneP : Serializable, Cloneable {
         for (te in this.touchElements)
         {
             klon.touchElements.add(te.clone() as TouchElementP)
-            klon.touchElements[klon.touchElements.size-1].soundGenerator=klon.instruments[this.instruments.indexOf(te.soundGenerator)]
+            //klon.touchElements[klon.touchElements.size-1].soundGeneratorId=te.soundGeneratorId//klon.instruments[this.instruments.indexOf(te.soundGenerator)]
 
         }
         klon.name = this.name
