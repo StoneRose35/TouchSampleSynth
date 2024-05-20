@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.graphics
 
+import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -33,12 +34,14 @@ class Point(var x: Double,var y: Double)
     }
 }
 
+class PointAndDistance(val point: Point, val d: Double)
+
 enum class Overlap
 {
     LEFT, RIGHT, TOP, BOTTOM, FULL, CENTER, NONE, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT
 }
 
-class OverlapAndIntersectionLine(var overlap: Overlap,var interesctingLines: Array<XYLine>)
+class OverlapAndIntersectionLine(var overlap: Overlap,var intersectingLines: Array<XYLine>)
 class SlidingRectangle(var xyLine: XYLine,val r: Rectangle)
 {
     var boundingRectangle: Rectangle = if (xyLine.orientation == XYLineOrientation.HORIZONTAL) {
@@ -82,7 +85,7 @@ class SlidingRectangle(var xyLine: XYLine,val r: Rectangle)
         {
             return arrayOf(this)
         }
-        val perpendicularCuts = linesInSlidingRect.interesctingLines.filter {
+        val perpendicularCuts = linesInSlidingRect.intersectingLines.filter {
             il -> il.orientation != xyLine.orientation
         }.toList()
         if (perpendicularCuts.isEmpty())
@@ -287,7 +290,7 @@ class Rectangle(p1: Point,p2: Point)
         val pointsInsideR = edgePoints.filter { ep -> r.isInside(ep) }.toList()
         val pointsInsideThis = r.edgePoints().filter { ep -> isInside(ep) }.toList()
         var intersectingPoint: Point
-        /*
+        /*   Case a
               --------------------
               |       -----      |
               |       |   |      |
@@ -299,7 +302,7 @@ class Rectangle(p1: Point,p2: Point)
         {
             return OverlapAndIntersectionLine(Overlap.FULL,emptyArray())
         }
-        /*
+        /*   Case B
               --------------------
               |                  |
               |                -----------
@@ -312,14 +315,14 @@ class Rectangle(p1: Point,p2: Point)
          */
         else if (pointsInsideThis.size == 2 && pointsInsideR.isEmpty())
         {
-            if (pointsInsideThis[0].y - pointsInsideThis[1].y < EPS)
+            if (abs(pointsInsideThis[0].x - pointsInsideThis[1].x) < EPS)
             {
                 return if (topLeft.x < r.topLeft.x) {
                     intersectingPoint = Point(this.bottomRight.x,r.topLeft.y)
-                    OverlapAndIntersectionLine(Overlap.LEFT,arrayOf(XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.height())))
+                    OverlapAndIntersectionLine(Overlap.RIGHT,arrayOf(XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.height())))
                 } else {
                     intersectingPoint = Point(this.topLeft.x, r.topLeft.y)
-                    OverlapAndIntersectionLine(Overlap.RIGHT,
+                    OverlapAndIntersectionLine(Overlap.LEFT,
                     arrayOf(
                         XYLine(
                             intersectingPoint,
@@ -331,13 +334,13 @@ class Rectangle(p1: Point,p2: Point)
             }
             else
             {
-                return if (topLeft.y > r.topLeft.y) {
-                    intersectingPoint = Point(r.topLeft.x,topLeft.y)
-                    OverlapAndIntersectionLine(Overlap.TOP,
-                    arrayOf(XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.width())))
-                } else {
+                return if (topLeft.y < r.topLeft.y) {
                     intersectingPoint = Point(r.topLeft.x,bottomRight.y)
                     OverlapAndIntersectionLine(Overlap.BOTTOM,
+                    arrayOf(XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.width())))
+                } else {
+                    intersectingPoint = Point(r.topLeft.x,topLeft.y)
+                    OverlapAndIntersectionLine(Overlap.TOP,
                     arrayOf(XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.width())))
                 }
             }
@@ -577,6 +580,56 @@ class XYLine(var sp: Point,var orientation: XYLineOrientation,var d: Double)
             "vertical line, start: %d, distance: %.3f".format(sp,d)
         }
     }
+
+    fun calculatePointAndMinDistanceFrom(p: Point): PointAndDistance
+    {
+        if (orientation == XYLineOrientation.HORIZONTAL)
+        {
+            val x0 = sp.x
+            val x1 = sp.x + d
+            val qAtMinimum = (p.x - (x0*(x1-x0)))/(x1-x0)/(x1-x0)
+            if (qAtMinimum in 0.0..1.0)
+            {
+                return PointAndDistance(Point(sp.x + qAtMinimum*d,sp.y), sqrt((p.y - sp.y)*(p.y - sp.y) + (p.x - (sp.x + qAtMinimum*d))*(p.x - (sp.x + qAtMinimum*d))))
+            }
+            else
+            {
+                val d1 = sqrt((p.y - sp.y)*(p.y - sp.y) +(p.x - sp.x)*(p.x - sp.x))
+                val d2 = sqrt((p.y - sp.y)*(p.y - sp.y) +(p.x - sp.x - d)*(p.x - sp.x - d))
+                return if (d1 < d2)
+                {
+                    PointAndDistance(sp,d1)
+                }
+                else
+                {
+                    PointAndDistance(Point(sp.x+d,sp.y),d2)
+                }
+            }
+        }
+        else
+        {
+            val y0 = sp.y
+            val y1 = sp.y + d
+            val qAtMinimum = (p.y - (y0*(y1-y0)))/(y1-y0)/(y1-y0)
+            if (qAtMinimum in 0.0..1.0)
+            {
+                return PointAndDistance(Point(sp.x,sp.y+qAtMinimum*d), sqrt((p.x - sp.x)*(p.x - sp.x) + (p.y - (sp.y + qAtMinimum*d))*(p.y - (sp.y + qAtMinimum*d))))
+            }
+            else
+            {
+                val d1 = sqrt((p.x - sp.x)*(p.x - sp.x) +(p.y - sp.y)*(p.y - sp.y))
+                val d2 = sqrt((p.x - sp.x)*(p.x - sp.x) +(p.y - sp.y - d)*(p.y - sp.y - d))
+                return if (d1 < d2)
+                {
+                    PointAndDistance(sp,d1)
+                }
+                else
+                {
+                    PointAndDistance(Point(sp.x,sp.y+d),d2)
+                }
+            }
+        }
+    }
 }
 
 class Line(var a: Point, var b: Point)
@@ -608,7 +661,7 @@ class PlacementCandidate(var slidingRectangle: SlidingRectangle, var checked: Bo
 class TouchElementPlacementCalculator {
     companion object
     {
-        fun calculateBestPlacement(rectangle: Rectangle, neighbours: Array<Rectangle>, allRectangles: Array<Rectangle>)
+        fun calculateBestPlacement(rectangle: Rectangle, neighbours: Array<Rectangle>, allRectangles: Array<Rectangle>): Rectangle?
         {
             val placementsToEvaluate= ArrayDeque<PlacementCandidate>()
             // compute all placement possibilities as sliding rectangles along each neighbour
@@ -639,7 +692,22 @@ class TouchElementPlacementCalculator {
                     el.checked = true
                 }
             }
-
+            val avgPoint = Point(allRectangles.map { r -> r.center() }.sumOf { c -> c.x }/allRectangles.size,
+                allRectangles.map { r -> r.center() }.sumOf { c -> c.y }/allRectangles.size
+                )
+            return if (placementsToEvaluate.isNotEmpty())
+            {
+                val bestCenterPoint = placementsToEvaluate.map { pe -> pe.slidingRectangle.xyLine.calculatePointAndMinDistanceFrom(avgPoint) }.sortedBy { ptAndDist -> ptAndDist.d }.first()
+                val bestTopLeft = Point(bestCenterPoint.point.x - rectangle.width()/2,bestCenterPoint.point.y - rectangle.height()/2)
+                val bestBottomRight = Point(bestCenterPoint.point.x + rectangle.width()/2,bestCenterPoint.point.y + rectangle.height()/2)
+                Rectangle(bestTopLeft,bestBottomRight)
+            }
+            else
+            {
+                // bailing point, choose default location at a margin distance from top left
+                Rectangle(Point(Converter.toPx(50.0f).toDouble(),Converter.toPx(50.0f).toDouble()),
+                    Point(Converter.toPx(50.0f).toDouble() + rectangle.width(),Converter.toPx(50.0f).toDouble() + rectangle.height()))
+            }
         }
     }
 }
