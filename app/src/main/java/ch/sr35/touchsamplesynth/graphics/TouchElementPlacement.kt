@@ -345,7 +345,8 @@ class Rectangle(p1: Point,p2: Point)
                 }
             }
         }
-        /*        ------
+        /* Case C
+                  ------
                   |    |
                   |this|
                   |    |
@@ -358,7 +359,7 @@ class Rectangle(p1: Point,p2: Point)
         else if (pointsInsideThis.isEmpty()
             && pointsInsideR.isEmpty())
         {
-            return if (topLeft.x > r.topLeft.x && topLeft.x < r.bottomRight.x)
+            return if (topLeft.x > r.topLeft.x && bottomRight.x < r.bottomRight.x)
             {
                 intersectingPoint = Point(topLeft.x,r.topLeft.y)
                 val il1 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.height())
@@ -371,7 +372,7 @@ class Rectangle(p1: Point,p2: Point)
                 intersectingPoint = Point(r.topLeft.x,topLeft.y)
                 val il1 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.width())
                 intersectingPoint = Point(r.topLeft.x,bottomRight.y)
-                val il2 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.height())
+                val il2 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.width())
                 OverlapAndIntersectionLine(Overlap.CENTER, arrayOf(il1,il2))
             }
             else
@@ -379,7 +380,7 @@ class Rectangle(p1: Point,p2: Point)
                 OverlapAndIntersectionLine(Overlap.NONE, emptyArray())
             }
         }
-        /*
+        /* Case D
       --------------------
       |                  |
       |                -----------
@@ -392,7 +393,7 @@ class Rectangle(p1: Point,p2: Point)
  */
         else if (pointsInsideR.size == 2 && pointsInsideThis.isEmpty())
         {
-            if (pointsInsideR[0].y - pointsInsideR[1].y < EPS)
+            if (abs(pointsInsideR[0].y - pointsInsideR[1].y) < EPS)
             {
                 if (topLeft.y > r.topLeft.y && topLeft.y < r.bottomRight.y)
                 {
@@ -414,9 +415,9 @@ class Rectangle(p1: Point,p2: Point)
                 else
                 {
                     intersectingPoint = Point(topLeft.x,r.topLeft.y)
-                    val il1 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.topLeft.y - bottomRight.y)
+                    val il1 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,-(r.topLeft.y - bottomRight.y))
                     intersectingPoint = Point(bottomRight.x,r.topLeft.y)
-                    val il2 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.topLeft.y - bottomRight.y)
+                    val il2 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,-(r.topLeft.y - bottomRight.y))
                     intersectingPoint = if (pointsInsideR[0].x < pointsInsideR[1].x)
                     {
                         pointsInsideR[0]
@@ -452,7 +453,7 @@ class Rectangle(p1: Point,p2: Point)
                 {
                     intersectingPoint = pointsInsideR[0]
                     val il1 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.bottomRight.x - topLeft.x)
-                    intersectingPoint = Point(r.topLeft.x,bottomRight.y)
+                    intersectingPoint = pointsInsideR[1]
                     val il2 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.bottomRight.x - topLeft.x)
                     intersectingPoint = if (pointsInsideR[0].y < pointsInsideR[1].y)
                     {
@@ -467,7 +468,7 @@ class Rectangle(p1: Point,p2: Point)
                 }
             }
         }
-        /*
+        /* Case E
                      ---------------
                      |             |
                      |       r     |
@@ -497,7 +498,7 @@ class Rectangle(p1: Point,p2: Point)
             else if (pointsInsideR[0].x < pointsInsideThis[0].x && pointsInsideR[0].y > pointsInsideThis[0].y)
             {
                 intersectingPoint = Point(topLeft.x,r.topLeft.y)
-                val il1 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.topLeft.y-bottomRight.y)
+                val il1 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,-(r.topLeft.y-bottomRight.y))
                 intersectingPoint = pointsInsideR[0]
                 val il2 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.bottomRight.x - topLeft.x)
                 return OverlapAndIntersectionLine(Overlap.TOPRIGHT, arrayOf(il1, il2))
@@ -508,7 +509,7 @@ class Rectangle(p1: Point,p2: Point)
                 intersectingPoint = Point(r.topLeft.x,topLeft.y)
                 val il1 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,bottomRight.x- r.topLeft.x)
                 intersectingPoint = pointsInsideR[0]
-                val il2 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,topLeft.y - r.bottomRight.y)
+                val il2 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,-(topLeft.y - r.bottomRight.y))
                 return OverlapAndIntersectionLine(Overlap.BOTTOMLEFT,arrayOf(il1, il2))
             }
             // bottom right
@@ -520,6 +521,9 @@ class Rectangle(p1: Point,p2: Point)
                 return OverlapAndIntersectionLine(Overlap.BOTTOMRIGHT,arrayOf(il1,il2))
             }
         }
+        /*
+        * Case F
+        * */
         else if (pointsInsideR.size==4 && pointsInsideThis.isEmpty())
         {
             intersectingPoint = topLeft
