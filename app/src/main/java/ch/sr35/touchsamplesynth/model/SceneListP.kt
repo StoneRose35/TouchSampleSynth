@@ -103,6 +103,29 @@ class SceneListP {
         appInstance.allScenes.addAll(this.scenes)
     }
 
+    fun exportAsJson(fileName: String, context: Context): Boolean
+    {
+        try {
+            val mainDir = (context.filesDir.absolutePath)
+            val gson = GsonBuilder().apply {
+                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+                setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            }.create()
+            val jsonOut = gson.toJson(this)
+            Log.i(TAG, "exporting scenes as json")
+            val f = File(mainDir + File.separator + fileName)
+            if (f.exists()) {
+                f.delete()
+            }
+            f.writeText(jsonOut)
+        }
+        catch (_: Exception)
+        {
+            return false
+        }
+        return true
+    }
+
     companion object {
         fun exportAsJson(fileName: String, context: Context): Boolean
         {

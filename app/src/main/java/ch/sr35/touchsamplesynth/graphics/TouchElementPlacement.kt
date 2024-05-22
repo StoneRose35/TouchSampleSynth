@@ -665,8 +665,13 @@ class PlacementCandidate(var slidingRectangle: SlidingRectangle, var checked: Bo
 class TouchElementPlacementCalculator {
     companion object
     {
-        fun calculateBestPlacement(rectangle: Rectangle, neighbours: Array<Rectangle>, allRectangles: Array<Rectangle>): Rectangle?
+        fun calculateBestPlacement(rectangle: Rectangle, neighbours: Array<Rectangle>, allRectangles: Array<Rectangle>): Rectangle
         {
+            if (neighbours.isEmpty())
+            {
+                return Rectangle(Point(Converter.toPx(50.0f).toDouble(),Converter.toPx(50.0f).toDouble()),
+                    Point(Converter.toPx(50.0f).toDouble() + rectangle.width(),Converter.toPx(50.0f).toDouble() + rectangle.height()))
+            }
             val placementsToEvaluate= ArrayDeque<PlacementCandidate>()
             // compute all placement possibilities as sliding rectangles along each neighbour
             val allPlacementPossibilities = neighbours.flatMap { n -> n.adjacentPlacementPossibilities(rectangle).asIterable() }.filterNotNull()

@@ -38,4 +38,10 @@ class DataMigrationTest {
         val json2 = "{\"b\":\"b is good\",\"a\": 100,\"c\": [\"butmore\", \"harmonica\",\"nomore\", \"cowbell\"]}"
         Assert.assertFalse(JsonComparator.compareJsonObject(JsonParser.parseString(json1),JsonParser.parseString(json2)))
     }
+
+    @Test
+    fun migrateDefaultPresetsTo_1_8_7()
+    {
+
+    }
 }

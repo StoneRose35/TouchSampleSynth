@@ -31,6 +31,7 @@ class SimpleSubtractiveSynthP(
     }
 
     override fun toInstrument(i: Instrument) {
+        super.toInstrument(i)
         if (i is SimpleSubtractiveSynthI)
         {
             i.setAttack(attack)

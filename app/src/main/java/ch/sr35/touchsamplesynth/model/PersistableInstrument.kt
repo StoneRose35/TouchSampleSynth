@@ -45,6 +45,7 @@ open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMono
     open fun toInstrument(i: Instrument)
     {
         i.name = name
+        i.isMonophonic = isMonophonic
         i.setVolumeModulation(actionAmountToVolume)
     }
 

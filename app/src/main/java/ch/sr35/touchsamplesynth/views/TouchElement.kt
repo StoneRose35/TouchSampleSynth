@@ -22,6 +22,8 @@ import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import ch.sr35.touchsamplesynth.graphics.Converter
+import ch.sr35.touchsamplesynth.graphics.Point
+import ch.sr35.touchsamplesynth.graphics.Rectangle
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
 import kotlin.concurrent.thread
@@ -779,6 +781,16 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
-
-
+    fun asRectangle(): Rectangle
+    {
+        return Rectangle(
+            Point(
+                (layoutParams as ConstraintLayout.LayoutParams).marginStart.toDouble(),
+                (layoutParams as ConstraintLayout.LayoutParams).topMargin.toDouble()),
+            Point((layoutParams as ConstraintLayout.LayoutParams).marginStart.toDouble() + (layoutParams as ConstraintLayout.LayoutParams).width.toDouble(),
+                (layoutParams as ConstraintLayout.LayoutParams).topMargin.toDouble()+ (layoutParams as ConstraintLayout.LayoutParams).height.toDouble())
+        )
+    }
 }
+
+

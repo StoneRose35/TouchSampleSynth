@@ -3,10 +3,10 @@
   "manufacturer": "NotARealManufacturer",
   "model": "FictionalModel",
   "product": "FunkyProductWhichDoesntExist",
-  "touchSampleSynthVersion": "0.0.0",
   "screenResolutionX": 2000,
   "screenResolutionY": 1200,
   "installDone": true,
+  "touchSampleSynthVersion": "1.8.7",
   "scenes": [
     {
       "instruments": [
@@ -18,8 +18,9 @@
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Kick/AcousticKick01.wav",
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 1,
-          "name": "Bassdrum"
+          "name": "Bassdrum",
+          "isMonophonic": true,
+          "id": "08867b1b-c565-402a-b4bc-cc84b20af267"
         },
         {
           "loopEnd": 14799,
@@ -29,8 +30,9 @@
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 1,
-          "name": "Snare"
+          "name": "Snare",
+          "isMonophonic": true,
+          "id": "5bf70365-81e5-442a-b4e2-b165818fdbeb"
         },
         {
           "loopEnd": 45533,
@@ -40,8 +42,9 @@
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Closed/AcousticClosedHat01.wav",
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 1,
-          "name": "HiHat closed"
+          "name": "HiHat closed",
+          "isMonophonic": true,
+          "id": "320a4209-a138-42e8-823c-91f187364a48"
         },
         {
           "loopEnd": 26266,
@@ -51,8 +54,9 @@
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Open/AcousticOpenHat02.wav",
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 1,
-          "name": "HiHat open"
+          "name": "HiHat open",
+          "isMonophonic": true,
+          "id": "57cef220-67e0-4492-9ead-0c3a035cc65c"
         },
         {
           "loopEnd": 466002,
@@ -62,8 +66,9 @@
           "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Crash/AcousticCrash01.wav",
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 1,
-          "name": "Crash"
+          "name": "Crash",
+          "isMonophonic": true,
+          "id": "f8994699-0bfa-48f6-a086-9a4083619a2d"
         },
         {
           "actionAmountToFilter": 35.8,
@@ -74,11 +79,12 @@
           "resonance": 0.395,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 4,
-          "name": "Bass"
+          "name": "Bass",
+          "isMonophonic": false,
+          "id": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         }
       ],
-      "name": "Drum\u0026Bass",
+      "name": "Drum&Bass",
       "touchElements": [
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -93,19 +99,8 @@
           "note": 87,
           "posX": 86,
           "posY": 784,
-          "soundGenerator": {
-            "loopEnd": 6571,
-            "loopStart": 0,
-            "mode": 2,
-            "sampleEnd": 10010,
-            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Kick/AcousticKick01.wav",
-            "sampleStart": 0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 1,
-            "name": "Bassdrum"
-          },
-          "voiceNr": 0,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -120,19 +115,8 @@
           "note": 4,
           "posX": 243,
           "posY": 535,
-          "soundGenerator": {
-            "loopEnd": 14799,
-            "loopStart": 0,
-            "mode": 2,
-            "sampleEnd": 14799,
-            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
-            "sampleStart": 0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 1,
-            "name": "Snare"
-          },
-          "voiceNr": 0,
-          "width": 265
+          "width": 265,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -147,19 +131,8 @@
           "note": 0,
           "posX": 9,
           "posY": 535,
-          "soundGenerator": {
-            "loopEnd": 14799,
-            "loopStart": 0,
-            "mode": 2,
-            "sampleEnd": 14799,
-            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Snare/AcousticSnare01.wav",
-            "sampleStart": 0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 1,
-            "name": "Snare"
-          },
-          "voiceNr": 0,
-          "width": 228
+          "width": 228,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -174,19 +147,8 @@
           "note": 87,
           "posX": 415,
           "posY": 825,
-          "soundGenerator": {
-            "loopEnd": 45533,
-            "loopStart": 0,
-            "mode": 2,
-            "sampleEnd": 45533,
-            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Closed/AcousticClosedHat01.wav",
-            "sampleStart": 0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 1,
-            "name": "HiHat closed"
-          },
-          "voiceNr": 0,
-          "width": 198
+          "width": 198,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -201,19 +163,8 @@
           "note": 4,
           "posX": 618,
           "posY": 822,
-          "soundGenerator": {
-            "loopEnd": 26266,
-            "loopStart": 0,
-            "mode": 2,
-            "sampleEnd": 26356,
-            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Hi-Hat/Open/AcousticOpenHat02.wav",
-            "sampleStart": 0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 1,
-            "name": "HiHat open"
-          },
-          "voiceNr": 0,
-          "width": 228
+          "width": 228,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -228,19 +179,8 @@
           "note": 87,
           "posX": 616,
           "posY": 520,
-          "soundGenerator": {
-            "loopEnd": 466002,
-            "loopStart": 0,
-            "mode": 2,
-            "sampleEnd": 466002,
-            "sampleFile": "/data/data/ch.sr35.touchsamplesynth/files/WAVBVKERY-AcousticDrumSamples/Cymbals/Crash/AcousticCrash01.wav",
-            "sampleStart": 0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 1,
-            "name": "Crash"
-          },
-          "voiceNr": 0,
-          "width": 235
+          "width": 235,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -255,20 +195,8 @@
           "note": 17,
           "posX": 14,
           "posY": 78,
-          "soundGenerator": {
-            "actionAmountToFilter": 35.8,
-            "attack": 0.01,
-            "decay": 0.488,
-            "initialCutoff": 168.32547,
-            "release": 1.684,
-            "resonance": 0.395,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 4,
-            "name": "Bass"
-          },
-          "voiceNr": 0,
-          "width": 989
+          "width": 989,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -283,20 +211,8 @@
           "note": 22,
           "posX": 18,
           "posY": 366,
-          "soundGenerator": {
-            "actionAmountToFilter": 35.8,
-            "attack": 0.01,
-            "decay": 0.488,
-            "initialCutoff": 168.32547,
-            "release": 1.684,
-            "resonance": 0.395,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 4,
-            "name": "Bass"
-          },
-          "voiceNr": 1,
-          "width": 984
+          "width": 984,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -311,20 +227,8 @@
           "note": 20,
           "posX": 18,
           "posY": 228,
-          "soundGenerator": {
-            "actionAmountToFilter": 35.8,
-            "attack": 0.01,
-            "decay": 0.488,
-            "initialCutoff": 168.32547,
-            "release": 1.684,
-            "resonance": 0.395,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 4,
-            "name": "Bass"
-          },
-          "voiceNr": 2,
-          "width": 983
+          "width": 983,
+          "soundGeneratorId": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         }
       ]
     },
@@ -336,8 +240,9 @@
           "release": 1.14,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 12,
-          "name": "Soft Bell"
+          "name": "Soft Bell",
+          "isMonophonic": false,
+          "id": "029bd827-8b22-4b9c-8328-19c444219ace"
         }
       ],
       "name": "Chromatic Scale",
@@ -355,17 +260,8 @@
           "note": 39,
           "posX": 0,
           "posY": 800,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 0,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -380,17 +276,8 @@
           "note": 40,
           "posX": 127,
           "posY": 552,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 1,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -405,17 +292,8 @@
           "note": 41,
           "posX": 234,
           "posY": 809,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 2,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -430,17 +308,8 @@
           "note": 42,
           "posX": 359,
           "posY": 554,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 3,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -455,17 +324,8 @@
           "note": 43,
           "posX": 461,
           "posY": 801,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 4,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -480,17 +340,8 @@
           "note": 44,
           "posX": 680,
           "posY": 800,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 5,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -505,17 +356,8 @@
           "note": 45,
           "posX": 792,
           "posY": 534,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 6,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -530,17 +372,8 @@
           "note": 46,
           "posX": 915,
           "posY": 801,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 7,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -555,17 +388,8 @@
           "note": 47,
           "posX": 1038,
           "posY": 536,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 8,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -580,17 +404,8 @@
           "note": 48,
           "posX": 1150,
           "posY": 806,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 9,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -605,17 +420,8 @@
           "note": 49,
           "posX": 1286,
           "posY": 537,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 10,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -630,17 +436,8 @@
           "note": 50,
           "posX": 1394,
           "posY": 802,
-          "soundGenerator": {
-            "attack": 0.01,
-            "decay": 1.24,
-            "release": 1.14,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 12,
-            "name": "Soft Bell"
-          },
-          "voiceNr": 11,
-          "width": 234
+          "width": 234,
+          "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         }
       ]
     },
@@ -655,8 +452,9 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Pad "
+          "name": "Pad ",
+          "isMonophonic": false,
+          "id": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
           "actionAmountToFilter": 0.0,
@@ -667,8 +465,9 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Hit"
+          "name": "Hit",
+          "isMonophonic": false,
+          "id": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         }
       ],
       "name": "Chords C",
@@ -686,20 +485,8 @@
           "note": 15,
           "posX": 11,
           "posY": 134,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 0,
-          "width": 301
+          "width": 301,
+          "soundGeneratorId": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -714,20 +501,8 @@
           "note": 19,
           "posX": 276,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 1,
-          "width": 286
+          "width": 286,
+          "soundGeneratorId": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -742,20 +517,8 @@
           "note": 20,
           "posX": 516,
           "posY": 121,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 2,
-          "width": 273
+          "width": 273,
+          "soundGeneratorId": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -770,20 +533,8 @@
           "note": 22,
           "posX": 740,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 3,
-          "width": 274
+          "width": 274,
+          "soundGeneratorId": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -798,20 +549,8 @@
           "note": 44,
           "posX": 1153,
           "posY": 159,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 0,
-          "width": 263
+          "width": 263,
+          "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -826,20 +565,8 @@
           "note": 46,
           "posX": 1416,
           "posY": 162,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 1,
-          "width": 237
+          "width": 237,
+          "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -854,20 +581,8 @@
           "note": 48,
           "posX": 1649,
           "posY": 164,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 2,
-          "width": 271
+          "width": 271,
+          "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -882,20 +597,8 @@
           "note": 39,
           "posX": 1165,
           "posY": 421,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 3,
-          "width": 250
+          "width": 250,
+          "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -910,20 +613,8 @@
           "note": 41,
           "posX": 1413,
           "posY": 418,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 4,
-          "width": 236
+          "width": 236,
+          "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -938,20 +629,8 @@
           "note": 43,
           "posX": 1648,
           "posY": 414,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 5,
-          "width": 276
+          "width": 276,
+          "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -966,20 +645,8 @@
           "note": 38,
           "posX": 1165,
           "posY": 678,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 6,
-          "width": 246
+          "width": 246,
+          "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         }
       ]
     },
@@ -994,8 +661,9 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Pad "
+          "name": "Pad ",
+          "isMonophonic": false,
+          "id": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
           "actionAmountToFilter": 0.0,
@@ -1006,8 +674,9 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Hit"
+          "name": "Hit",
+          "isMonophonic": false,
+          "id": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         }
       ],
       "name": "Chords D",
@@ -1025,20 +694,8 @@
           "note": 17,
           "posX": 11,
           "posY": 134,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 0,
-          "width": 301
+          "width": 301,
+          "soundGeneratorId": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1053,20 +710,8 @@
           "note": 21,
           "posX": 276,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 1,
-          "width": 286
+          "width": 286,
+          "soundGeneratorId": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1081,20 +726,8 @@
           "note": 22,
           "posX": 516,
           "posY": 121,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 2,
-          "width": 273
+          "width": 273,
+          "soundGeneratorId": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1109,20 +742,8 @@
           "note": 24,
           "posX": 740,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 3,
-          "width": 274
+          "width": 274,
+          "soundGeneratorId": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1137,20 +758,8 @@
           "note": 46,
           "posX": 1153,
           "posY": 159,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 0,
-          "width": 263
+          "width": 263,
+          "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1165,20 +774,8 @@
           "note": 48,
           "posX": 1416,
           "posY": 162,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 1,
-          "width": 237
+          "width": 237,
+          "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1193,20 +790,8 @@
           "note": 50,
           "posX": 1649,
           "posY": 164,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 2,
-          "width": 271
+          "width": 271,
+          "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1221,20 +806,8 @@
           "note": 41,
           "posX": 1165,
           "posY": 421,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 3,
-          "width": 250
+          "width": 250,
+          "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1249,20 +822,8 @@
           "note": 43,
           "posX": 1413,
           "posY": 418,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 4,
-          "width": 236
+          "width": 236,
+          "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1277,20 +838,8 @@
           "note": 45,
           "posX": 1648,
           "posY": 414,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 5,
-          "width": 276
+          "width": 276,
+          "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1305,20 +854,8 @@
           "note": 40,
           "posX": 1165,
           "posY": 678,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 6,
-          "width": 246
+          "width": 246,
+          "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         }
       ]
     },
@@ -1333,8 +870,9 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Pad "
+          "name": "Pad ",
+          "isMonophonic": false,
+          "id": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
           "actionAmountToFilter": 0.0,
@@ -1345,8 +883,9 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Hit"
+          "name": "Hit",
+          "isMonophonic": false,
+          "id": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         }
       ],
       "name": "Chords E",
@@ -1364,20 +903,8 @@
           "note": 19,
           "posX": 11,
           "posY": 134,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 0,
-          "width": 301
+          "width": 301,
+          "soundGeneratorId": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1392,20 +919,8 @@
           "note": 23,
           "posX": 276,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 1,
-          "width": 286
+          "width": 286,
+          "soundGeneratorId": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1420,20 +935,8 @@
           "note": 24,
           "posX": 516,
           "posY": 121,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 2,
-          "width": 273
+          "width": 273,
+          "soundGeneratorId": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1448,20 +951,8 @@
           "note": 26,
           "posX": 740,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 3,
-          "width": 274
+          "width": 274,
+          "soundGeneratorId": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1476,20 +967,8 @@
           "note": 48,
           "posX": 1153,
           "posY": 159,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 0,
-          "width": 263
+          "width": 263,
+          "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1504,20 +983,8 @@
           "note": 50,
           "posX": 1416,
           "posY": 162,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 1,
-          "width": 237
+          "width": 237,
+          "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1532,20 +999,8 @@
           "note": 52,
           "posX": 1649,
           "posY": 164,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 2,
-          "width": 271
+          "width": 271,
+          "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1560,20 +1015,8 @@
           "note": 43,
           "posX": 1165,
           "posY": 421,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 3,
-          "width": 250
+          "width": 250,
+          "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1588,20 +1031,8 @@
           "note": 45,
           "posX": 1413,
           "posY": 418,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 4,
-          "width": 236
+          "width": 236,
+          "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1616,20 +1047,8 @@
           "note": 47,
           "posX": 1648,
           "posY": 414,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 5,
-          "width": 276
+          "width": 276,
+          "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1644,20 +1063,8 @@
           "note": 43,
           "posX": 1165,
           "posY": 678,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 6,
-          "width": 246
+          "width": 246,
+          "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         }
       ]
     },
@@ -1672,8 +1079,9 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Pad "
+          "name": "Pad ",
+          "isMonophonic": false,
+          "id": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
           "actionAmountToFilter": 0.0,
@@ -1684,8 +1092,9 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Hit"
+          "name": "Hit",
+          "isMonophonic": false,
+          "id": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         }
       ],
       "name": "Chords F",
@@ -1703,20 +1112,8 @@
           "note": 20,
           "posX": 11,
           "posY": 134,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 0,
-          "width": 301
+          "width": 301,
+          "soundGeneratorId": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1731,20 +1128,8 @@
           "note": 24,
           "posX": 276,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 1,
-          "width": 286
+          "width": 286,
+          "soundGeneratorId": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1759,20 +1144,8 @@
           "note": 25,
           "posX": 516,
           "posY": 121,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 2,
-          "width": 273
+          "width": 273,
+          "soundGeneratorId": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -1787,20 +1160,8 @@
           "note": 27,
           "posX": 740,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 3,
-          "width": 274
+          "width": 274,
+          "soundGeneratorId": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1815,20 +1176,8 @@
           "note": 49,
           "posX": 1153,
           "posY": 159,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 0,
-          "width": 263
+          "width": 263,
+          "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1843,20 +1192,8 @@
           "note": 51,
           "posX": 1416,
           "posY": 162,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 1,
-          "width": 237
+          "width": 237,
+          "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1871,20 +1208,8 @@
           "note": 53,
           "posX": 1649,
           "posY": 164,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 2,
-          "width": 271
+          "width": 271,
+          "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1899,20 +1224,8 @@
           "note": 44,
           "posX": 1165,
           "posY": 421,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 3,
-          "width": 250
+          "width": 250,
+          "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1927,20 +1240,8 @@
           "note": 46,
           "posX": 1413,
           "posY": 418,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 4,
-          "width": 236
+          "width": 236,
+          "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1955,20 +1256,8 @@
           "note": 48,
           "posX": 1648,
           "posY": 414,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 5,
-          "width": 276
+          "width": 276,
+          "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -1983,20 +1272,8 @@
           "note": 41,
           "posX": 1165,
           "posY": 678,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 6,
-          "width": 246
+          "width": 246,
+          "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         }
       ]
     },
@@ -2011,8 +1288,9 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Pad "
+          "name": "Pad ",
+          "isMonophonic": false,
+          "id": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
           "actionAmountToFilter": 0.0,
@@ -2023,8 +1301,9 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Hit"
+          "name": "Hit",
+          "isMonophonic": false,
+          "id": "0956383c-1410-4336-a5a6-47c746eb5089"
         }
       ],
       "name": "Chords G",
@@ -2042,20 +1321,8 @@
           "note": 22,
           "posX": 11,
           "posY": 134,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 0,
-          "width": 301
+          "width": 301,
+          "soundGeneratorId": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2070,20 +1337,8 @@
           "note": 26,
           "posX": 276,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 1,
-          "width": 286
+          "width": 286,
+          "soundGeneratorId": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2098,20 +1353,8 @@
           "note": 27,
           "posX": 516,
           "posY": 121,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 2,
-          "width": 273
+          "width": 273,
+          "soundGeneratorId": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2126,20 +1369,8 @@
           "note": 29,
           "posX": 740,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 3,
-          "width": 274
+          "width": 274,
+          "soundGeneratorId": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2154,20 +1385,8 @@
           "note": 51,
           "posX": 1153,
           "posY": 159,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 0,
-          "width": 263
+          "width": 263,
+          "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2182,20 +1401,8 @@
           "note": 53,
           "posX": 1416,
           "posY": 162,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 1,
-          "width": 237
+          "width": 237,
+          "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2210,20 +1417,8 @@
           "note": 55,
           "posX": 1649,
           "posY": 164,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 2,
-          "width": 271
+          "width": 271,
+          "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2238,20 +1433,8 @@
           "note": 46,
           "posX": 1165,
           "posY": 421,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 3,
-          "width": 250
+          "width": 250,
+          "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2266,20 +1449,8 @@
           "note": 48,
           "posX": 1413,
           "posY": 418,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 4,
-          "width": 236
+          "width": 236,
+          "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2294,20 +1465,8 @@
           "note": 50,
           "posX": 1648,
           "posY": 414,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 5,
-          "width": 276
+          "width": 276,
+          "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2322,20 +1481,8 @@
           "note": 43,
           "posX": 1165,
           "posY": 678,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 6,
-          "width": 246
+          "width": 246,
+          "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         }
       ]
     },
@@ -2350,8 +1497,9 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Pad "
+          "name": "Pad ",
+          "isMonophonic": false,
+          "id": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
           "actionAmountToFilter": 0.0,
@@ -2362,8 +1510,9 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Hit"
+          "name": "Hit",
+          "isMonophonic": false,
+          "id": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         }
       ],
       "name": "Chords A",
@@ -2381,20 +1530,8 @@
           "note": 24,
           "posX": 11,
           "posY": 134,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 0,
-          "width": 301
+          "width": 301,
+          "soundGeneratorId": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2409,20 +1546,8 @@
           "note": 28,
           "posX": 276,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 1,
-          "width": 286
+          "width": 286,
+          "soundGeneratorId": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2437,20 +1562,8 @@
           "note": 29,
           "posX": 516,
           "posY": 121,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 2,
-          "width": 273
+          "width": 273,
+          "soundGeneratorId": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2465,20 +1578,8 @@
           "note": 31,
           "posX": 740,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 3,
-          "width": 274
+          "width": 274,
+          "soundGeneratorId": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2493,20 +1594,8 @@
           "note": 53,
           "posX": 1153,
           "posY": 159,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 0,
-          "width": 263
+          "width": 263,
+          "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2521,20 +1610,8 @@
           "note": 55,
           "posX": 1416,
           "posY": 162,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 1,
-          "width": 237
+          "width": 237,
+          "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2549,20 +1626,8 @@
           "note": 57,
           "posX": 1649,
           "posY": 164,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 2,
-          "width": 271
+          "width": 271,
+          "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2577,20 +1642,8 @@
           "note": 48,
           "posX": 1165,
           "posY": 421,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 3,
-          "width": 250
+          "width": 250,
+          "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2605,20 +1658,8 @@
           "note": 50,
           "posX": 1413,
           "posY": 418,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 4,
-          "width": 236
+          "width": 236,
+          "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2633,20 +1674,8 @@
           "note": 52,
           "posX": 1648,
           "posY": 414,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 5,
-          "width": 276
+          "width": 276,
+          "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2661,20 +1690,8 @@
           "note": 45,
           "posX": 1165,
           "posY": 678,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 6,
-          "width": 246
+          "width": 246,
+          "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         }
       ]
     },
@@ -2689,8 +1706,9 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Pad "
+          "name": "Pad ",
+          "isMonophonic": false,
+          "id": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
           "actionAmountToFilter": 0.0,
@@ -2701,8 +1719,9 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
-          "nVoices": 8,
-          "name": "Hit"
+          "name": "Hit",
+          "isMonophonic": false,
+          "id": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         }
       ],
       "name": "Chords B",
@@ -2720,20 +1739,8 @@
           "note": 26,
           "posX": 11,
           "posY": 134,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 0,
-          "width": 301
+          "width": 301,
+          "soundGeneratorId": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2748,20 +1755,8 @@
           "note": 30,
           "posX": 276,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 1,
-          "width": 286
+          "width": 286,
+          "soundGeneratorId": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2776,20 +1771,8 @@
           "note": 31,
           "posX": 516,
           "posY": 121,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 2,
-          "width": 273
+          "width": 273,
+          "soundGeneratorId": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
           "actionDir": "VERTICAL_DOWN_UP",
@@ -2804,20 +1787,8 @@
           "note": 33,
           "posX": 740,
           "posY": 125,
-          "soundGenerator": {
-            "actionAmountToFilter": 43.85,
-            "attack": 0.648,
-            "decay": 0.01,
-            "initialCutoff": 163.2976,
-            "release": 0.698,
-            "resonance": 0.345,
-            "sustain": 1.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Pad "
-          },
-          "voiceNr": 3,
-          "width": 274
+          "width": 274,
+          "soundGeneratorId": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2832,20 +1803,8 @@
           "note": 55,
           "posX": 1153,
           "posY": 159,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 0,
-          "width": 263
+          "width": 263,
+          "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2860,20 +1819,8 @@
           "note": 57,
           "posX": 1416,
           "posY": 162,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 1,
-          "width": 237
+          "width": 237,
+          "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2888,20 +1835,8 @@
           "note": 59,
           "posX": 1649,
           "posY": 164,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 2,
-          "width": 271
+          "width": 271,
+          "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2916,20 +1851,8 @@
           "note": 61,
           "posX": 1165,
           "posY": 421,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 3,
-          "width": 250
+          "width": 250,
+          "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2944,20 +1867,8 @@
           "note": 52,
           "posX": 1413,
           "posY": 418,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 4,
-          "width": 236
+          "width": 236,
+          "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -2972,20 +1883,8 @@
           "note": 54,
           "posX": 1648,
           "posY": 414,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 5,
-          "width": 276
+          "width": 276,
+          "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
           "actionDir": "HORIZONTAL_LEFT_RIGHT",
@@ -3000,20 +1899,8 @@
           "note": 47,
           "posX": 1165,
           "posY": 678,
-          "soundGenerator": {
-            "actionAmountToFilter": 0.0,
-            "attack": 0.01,
-            "decay": 0.584,
-            "initialCutoff": 1636.4568,
-            "release": 0.518,
-            "resonance": 0.0,
-            "sustain": 0.0,
-            "actionAmountToVolume": 0.0,
-            "nVoices": 8,
-            "name": "Hit"
-          },
-          "voiceNr": 6,
-          "width": 246
+          "width": 246,
+          "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         }
       ]
     }

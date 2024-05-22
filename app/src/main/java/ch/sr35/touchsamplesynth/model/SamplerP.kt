@@ -33,6 +33,7 @@ class SamplerP(private var sampleStart: Int,
     }
 
     override fun toInstrument(i: Instrument) {
+        super.toInstrument(i)
         if (i is SamplerI)
         {
             if (sampleFile.isNotEmpty() && File(sampleFile).exists()) {

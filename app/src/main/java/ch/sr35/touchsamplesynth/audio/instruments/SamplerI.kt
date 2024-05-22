@@ -41,6 +41,7 @@ class SamplerI(private val context: Context,
         return "Sampler"
     }
 
+
     override fun getInstrumentIcon(): Drawable? {
         return icon
     }

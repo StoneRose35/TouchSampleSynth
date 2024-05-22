@@ -46,7 +46,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
         {
             val tg = JsonObject()
             tg.addProperty("error", msg)
-            return tg.asString
+            return tg.toString()
         }
 
         val updatersList= listOf(Updater1() as DataUpdater)
@@ -89,6 +89,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
                 copyJsonProperty("installDone",rootObj,targetJson)
                 targetJson.addProperty("touchSampleSynthVersion",versionTo.toString())
                 val scenes = rootObj.getAsJsonArray("scenes").deepCopy()
+                targetJson.add("scenes",scenes)
 
                 scenes.forEach {
                         scn ->
@@ -113,16 +114,16 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
                         i.asJsonObject.remove("nVoices")
                         i.asJsonObject.addProperty("id",instrUuid)
                     }
-                    val touchElements = scn.asJsonObject.getAsJsonArray("instruments")
+                    val touchElements = scn.asJsonObject.getAsJsonArray("touchElements")
                     touchElements.forEach {
                             te ->
                         val sg = te.asJsonObject.getAsJsonObject("soundGenerator").deepCopy()
                         te.asJsonObject.remove("soundGenerator")
-                        te.asJsonObject.addProperty("soundGenerator",instrUuids.filter { el -> JsonComparator.compareJsonObject(el.key,sg) }.entries.first().value)
+                        te.asJsonObject.addProperty("soundGeneratorId",instrUuids.filter { el -> JsonComparator.compareJsonObject(el.key,sg) }.entries.first().value)
                         te.asJsonObject.remove("voiceNr")
                     }
                 }
-                return targetJson.asString
+                return targetJson.toString()
             }
 
             catch (e: JsonParseException)

@@ -26,6 +26,7 @@ class SineMonoSynthP(private var attack: Float,
     }
 
     override fun toInstrument(i: Instrument) {
+        super.toInstrument(i)
         if (i is SineMonoSynthI)
         {
             i.setAttack(attack)

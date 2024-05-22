@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.graphics.Converter
+import ch.sr35.touchsamplesynth.graphics.TouchElementPlacementCalculator
 import ch.sr35.touchsamplesynth.views.InstrumentChip
 import ch.sr35.touchsamplesynth.views.TouchElement
 
@@ -82,20 +84,34 @@ class PlayPageFragment : Fragment() {
                 (context as TouchSampleSynthMain).soundGenerators.forEach { it ->
                     val instrChip = InstrumentChip(context as TouchSampleSynthMain,null)
                     instrChip.setInstrument(it)
+                    instrChip.invalidate()
                     instrChip.setOnClickListener { ic ->
-                        // TODO generate TouchElement and place it at the emptiest location
-
                         val lp = ConstraintLayout.LayoutParams(Converter.toPx(134),Converter.toPx(166))
                         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                         lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
                         lp.marginStart = Converter.toPx(60)
                         lp.topMargin = Converter.toPx(10)
                         val te = TouchElement(context as TouchSampleSynthMain,null)
+                        te.note = MusicalPitch.generateAllNotes()[63]
                         te.soundGenerator = (ic as InstrumentChip).getInstrument()
                         te.setDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
                         te.setEditmode(true)
                         te.layoutParams = lp
+
+
+
+                        val allrectrangles = (context as TouchSampleSynthMain).touchElements.map {
+                            it.asRectangle() }.toTypedArray()
+                        val neighbouringRectangles = (context as TouchSampleSynthMain).touchElements.filter {
+                            te1 ->
+                            te1.soundGenerator!! == te.soundGenerator
+                        }.map { it.asRectangle() }.toTypedArray()
+                        val finalLocation = TouchElementPlacementCalculator.calculateBestPlacement(te.asRectangle(),neighbouringRectangles,allrectrangles)
+                        (te.layoutParams as ConstraintLayout.LayoutParams).topMargin= finalLocation!!.topLeft.y.toInt()
+                        (te.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
+                        (context as TouchSampleSynthMain).touchElements.add(te)
                         playPageLayout.addView(te)
+
                     }
                     instrumentChipsContainer.addView(instrChip)
                 }
@@ -108,6 +124,7 @@ class PlayPageFragment : Fragment() {
                 {
                     touchel.setEditmode(false)
                 }
+                instrumentChipsContainer.removeAllViewsInLayout()
                 //newButton.visibility = View.INVISIBLE
                 //sceneNameEditText.visibility = View.INVISIBLE
                 (context as TouchSampleSynthMain).persistCurrentScene()
