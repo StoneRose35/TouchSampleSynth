@@ -13,16 +13,17 @@ import kotlin.random.nextUInt
 // documentation used: https://developer.apple.com/library/archive/documentation/Audio/Conceptual/MIDINetworkDriverProtocol/MIDI/MIDI.html
 class RtpMidiServer {
     var port: Int=0
-    var controlSocket: DatagramSocket?=null
-    var dataSocket: DatagramSocket?=null
-    var packetBuffer= ByteArray(2048)
-    var packetBufferData= ByteArray(2048)
-    val connections=ArrayList<ClientConnectionData>()
+    private var controlSocket: DatagramSocket?=null
+    private var dataSocket: DatagramSocket?=null
+    private var packetBuffer= ByteArray(2048)
+    private var packetBufferData= ByteArray(2048)
+    private val connections=ArrayList<ClientConnectionData>()
     private var temporalOrigin: Long = System.nanoTime()/100000
-    var ssrc: UInt = Random.nextUInt(0xFFFFFFFFu)
+    private var ssrc: UInt = Random.nextUInt(0xFFFFFFFFu)
     var name: String="TSS Midi Server"
     var isEnabled:Boolean=false
-    var journal=RtpMidiJournal(128)
+    private var journal=RtpMidiJournal(128)
+    private val midiSendQueue =  ArrayDeque<ByteArray>()
     fun startServer(): Boolean
     {
         var controlPort= 1024
@@ -103,11 +104,18 @@ class RtpMidiServer {
                                 val lastSeqReceived = (p.data[8].toUInt() and 0xFFu shl 8) or
                                                       (p.data[9].toUInt() and 0xFFu  shl 0)
                                 val indexes = journal.getIndexesOfNewerThan(lastSeqReceived)
+                                if (indexes[1] != indexes[0]) {
+                                    Log.w(
+                                        TAG,
+                                        "got ${indexes[1] - indexes[0]} indexes newer than $lastSeqReceived"
+                                    )
+                                }
                                 var runningIdx=indexes[0]
                                 while(runningIdx!= indexes[1])
                                 {
                                     journal.get(runningIdx)?.let {
-                                        sendMidiCommand(it.data)
+                                        Log.w(TAG,"Resending data at index ${it.timestamp}")
+                                        addToSendQueue(it.data)
                                     }
 
                                     runningIdx+=1
@@ -125,7 +133,7 @@ class RtpMidiServer {
                 Log.i(TAG,"TSS Midi control socket exception occurred, probably on purpose")
             }
         }
-        thread(start = true,name="TSS Midi data", priority = 10) {
+        thread(start = true,name="TSS Midi data", priority = 5) {
             val p = DatagramPacket(packetBufferData,packetBufferData.size)
             val previousTimeStamps = ArrayList<ULong>()
             try {
@@ -201,6 +209,18 @@ class RtpMidiServer {
             }
         }
         isEnabled=true
+        thread(start = true,name="Midi Send Queue", priority = 10){
+            while(isEnabled)
+            {
+                if(midiSendQueue.isNotEmpty())
+                {
+                    val el = midiSendQueue.removeFirst()
+                    sendMidiCommand(el)
+                }
+            }
+
+        }
+
         return isEnabled
     }
 
@@ -209,6 +229,11 @@ class RtpMidiServer {
         dataSocket?.close()
         controlSocket?.close()
         isEnabled=false
+    }
+
+    fun addToSendQueue(midiData: ByteArray)
+    {
+        midiSendQueue.add(midiData)
     }
 
     private fun sendCommand(command: String,client: ClientConnectionData,onDataPort: Boolean,s: DatagramSocket)
@@ -294,14 +319,14 @@ class RtpMidiServer {
         return currentTime.toULong()
     }
 
-    fun sendMidiCommand(midiData: ByteArray)
+    private fun sendMidiCommand(midiData: ByteArray)
     {
         for (conn in connections)
         {
             dataSocket?.let {sendMidiCommand(midiData,it,conn)}
         }
     }
-    fun sendMidiCommand(midiData: ByteArray,s:DatagramSocket, conn: ClientConnectionData)
+    private fun sendMidiCommand(midiData: ByteArray,s:DatagramSocket, conn: ClientConnectionData)
     {
         val message=ByteArray(2048)
         message[0]=0x80.toByte()
@@ -330,7 +355,7 @@ class RtpMidiServer {
         s.send(p)
 
         journal.push(midiData,conn.sequenceNumber)
-        Log.i(TAG,"Pushed ${conn.sequenceNumber} to Midi Journal")
+        //Log.i(TAG,"Pushed ${conn.sequenceNumber} to Midi Journal")
         conn.sequenceNumber += 1u
         conn.sequenceNumber = conn.sequenceNumber and 0xFFFFu
     }
@@ -351,7 +376,7 @@ class ClientConnectionData
     var timeOffset: ULong=0u
     val itBytes=ByteArray(4)
 
-    var sequenceNumber = Random.nextUInt() and 0xFFFFu
+    var sequenceNumber = Random.nextUInt() and 0xFFFu
 
     fun computeTimeOffset()
     {
