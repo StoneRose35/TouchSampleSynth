@@ -456,8 +456,10 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         appContext?.rtpMidiServer?.let {
                             if (it.isEnabled)
                             {
-                                thread(start = true) {
+                                var sentNotes=0
+                                while(sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
                                     appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                    sentNotes += 1
                                 }
                             }
                         }
@@ -473,8 +475,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         midiData[0] = (0x90 + midiChannel).toByte()
                         midiData[1] = (this.note!!.value+48).toInt().toByte()
                         midiData[2] = 0x7F.toByte()
-                        thread(start = true) {
+                        var sentNotes=0
+                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
+                        {
                             appContext.rtpMidiServer?.addToSendQueue(midiData)
+                            sentNotes += 1
                         }
                     }
                 }
@@ -491,9 +496,12 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         midiData[0] = (0x80 + midiChannel).toByte()
                         midiData[1] = (this.note!!.value+48).toInt().toByte()
                         midiData[2] = 0x7F.toByte()
-                        thread(start = true) {
+                        var sentNotes=0
+                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
                             appContext.rtpMidiServer?.addToSendQueue(midiData)
+                            sentNotes += 1
                         }
+
                     }
                 }
                 invalidate()
@@ -513,7 +521,12 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                                     midiData[0] = (0x90 + midiChannel).toByte()
                                     midiData[1] = (this.note!!.value+48).toInt().toByte()
                                     midiData[2] = 0x7F.toByte()
-                                    midiserver.addToSendQueue(midiData)
+                                    var sentNotes = 0
+                                    while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
+                                    {
+                                        midiserver.addToSendQueue(midiData)
+                                        sentNotes +=  1
+                                    }
                                 }
                             }
                             invalidate()

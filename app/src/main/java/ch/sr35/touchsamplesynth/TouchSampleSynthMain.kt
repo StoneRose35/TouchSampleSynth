@@ -61,6 +61,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private var oldScenePosition=-1
     var scenesListDirty=false
     var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
+    var rtpMidiNotesRepeat=1 // defines how many times note on and note off commands are repeated over rtp midi
 
     override fun onStart() {
         super.onStart()

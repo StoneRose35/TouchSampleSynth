@@ -28,15 +28,16 @@
                 android:minLines="2"
                 android:labelFor="@id/spinnerFramesPerDataCallback"
                 android:text="@string/framesPerDataCallbackDescription" />
+
             <Spinner
                 android:id="@+id/spinnerFramesPerDataCallback"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:entries="@array/framesPerDataCallbackValues"
                 android:paddingStart="30dp"
-                android:paddingEnd="30dp"
                 android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                />
+                android:paddingEnd="30dp"
+                android:paddingBottom="10dp" />
         </TableRow>
         <TableRow>
             <TextView
@@ -46,15 +47,16 @@
                 android:minLines="2"
                 android:labelFor="@id/spinnerBufferCapacityInFrames"
                 android:text="@string/bufferCapacityInFramesDescription" />
+
             <Spinner
                 android:id="@+id/spinnerBufferCapacityInFrames"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:entries="@array/bufferCapacityInFramesValues"
                 android:paddingStart="30dp"
-                android:paddingEnd="30dp"
                 android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                />
+                android:paddingEnd="30dp"
+                android:paddingBottom="10dp" />
         </TableRow>
         <TableRow>
             <TextView
@@ -65,15 +67,16 @@
                 android:labelFor="@id/spinnerBufferCapacityInFrames"
                 android:text="@string/touchElementDiplay"
                 />
+
             <Spinner
                 android:id="@+id/spinnerTouchElementsDisplay"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:entries="@array/touchElementDisplayStyle"
                 android:paddingStart="30dp"
-                android:paddingEnd="30dp"
                 android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                />
+                android:paddingEnd="30dp"
+                android:paddingBottom="10dp" />
         </TableRow>
         <TableRow>
             <TextView
@@ -143,6 +146,27 @@
                 android:layout_height="match_parent"
                 android:text="@string/enable"
                 />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/settingsRtpMidiNoteRepeat"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:text="@string/rtpMidiNoteRepeat"
+                />
+
+            <Spinner
+                android:id="@+id/spinnerRtpMidiNoteRepeat"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/rtpMidiNoteRepeatValues"
+                android:paddingStart="30dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="30dp"
+                android:paddingBottom="10dp">
+
+            </Spinner>
         </TableRow>
         <TableRow>
             <TextView
