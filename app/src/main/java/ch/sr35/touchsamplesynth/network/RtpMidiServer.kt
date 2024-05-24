@@ -233,6 +233,12 @@ class RtpMidiServer {
 
     fun addToSendQueue(midiData: ByteArray)
     {
+        var cnt = 0
+        val midiDataCopy = ByteArray(midiData.size)
+        midiData.forEach {
+            midiDataCopy[cnt] = it
+            cnt += 1
+        }
         midiSendQueue.add(midiData)
     }
 
