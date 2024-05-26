@@ -56,7 +56,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         val audioEngine = AudioEngineK()
         super.onViewCreated(view, savedInstanceState)
         val framesPerDataCallback = view.findViewById<Spinner>(R.id.spinnerFramesPerDataCallback)
-        ArrayAdapter.createFromResource(
+        /*ArrayAdapter.createFromResource(
             view.context,
             R.array.framesPerDataCallbackValues,
             android.R.layout.simple_spinner_item
@@ -65,7 +65,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             // Apply the adapter to the spinner.
             framesPerDataCallback.adapter = adapter
-        }
+        }*/
         val fpdcVals = resources.getStringArray(R.array.framesPerDataCallbackValues)
         val currentFpdc = audioEngine.getFramesPerDataCallback()
         var idx = 0
@@ -85,7 +85,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         framesPerDataCallback.onItemSelectedListener = this
 
         val bufferCapacityInFrames = view.findViewById<Spinner>(R.id.spinnerBufferCapacityInFrames)
-        ArrayAdapter.createFromResource(
+        /*ArrayAdapter.createFromResource(
             view.context,
             R.array.bufferCapacityInFramesValues,
             android.R.layout.simple_spinner_item
@@ -94,7 +94,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             // Apply the adapter to the spinner.
             bufferCapacityInFrames.adapter = adapter
-        }
+        }*/
         val bcifVals = resources.getStringArray(R.array.bufferCapacityInFramesValues)
         val currentBcif = audioEngine.getBufferCapacityInFrames()
         idx = 0
@@ -114,15 +114,16 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         bufferCapacityInFrames.onItemSelectedListener = this
 
         val spinnerTouchElementStyle = view.findViewById<Spinner>(R.id.spinnerTouchElementsDisplay)
-        ArrayAdapter.createFromResource(view.context,
+        /*ArrayAdapter.createFromResource(view.context,
             R.array.touchElementDisplayStyle,
             android.R.layout.simple_spinner_item
             ).also {
                 arrayAdapter -> arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinnerTouchElementStyle.adapter = arrayAdapter
             spinnerTouchElementStyle.setSelection(0,false)
-            spinnerTouchElementStyle.onItemSelectedListener = this
-        }
+
+        }*/
+        spinnerTouchElementStyle.onItemSelectedListener = this
 
         listViewMidiDevicesIn=view.findViewById(R.id.settingListViewMidiInDevices)
         listViewMidiDevicesIn.adapter= (context as TouchSampleSynthMain).midiHostHandler?.let {
@@ -174,6 +175,9 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
                 }
             }
         }
+
+        val spinnerRtpMidiNoteRepeat = view.findViewById<Spinner>(R.id.spinnerRtpMidiNoteRepeat)
+        spinnerRtpMidiNoteRepeat.onItemSelectedListener=this
 
         val ipAdressTextView = view.findViewById<TextView>(R.id.ipAddress)
         try {
@@ -259,6 +263,10 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         else if (p0 != null && p0.id == R.id.settingListViewMidiOutDevices)
         {
             (context as TouchSampleSynthMain).midiHostHandler?.connectMidiDeviceOut(p0.selectedItem as MidiDeviceInfo)
+        }
+        else if (p0 != null && p0.id == R.id.spinnerRtpMidiNoteRepeat)
+        {
+            (context as TouchSampleSynthMain).rtpMidiNotesRepeat = (p0.selectedItem.toString().toInt())
         }
     }
 

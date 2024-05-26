@@ -9,6 +9,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
@@ -17,6 +18,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
@@ -458,10 +460,10 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         appContext?.rtpMidiServer?.let {
                             if (it.isEnabled)
                             {
-                                thread(start = true) {
-                                    appContext.rtpMidiServer?.sendMidiCommand(
-                                        midiData
-                                    )
+                                var sentNotes=0
+                                while(sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                                    appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                    sentNotes += 1
                                 }
                             }
                         }
@@ -477,10 +479,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         midiData[0] = (0x90 + midiChannel).toByte()
                         midiData[1] = (this.note!!.value+48).toInt().toByte()
                         midiData[2] = 0x7F.toByte()
-                        thread(start = true) {
-                            appContext.rtpMidiServer?.sendMidiCommand(
-                                midiData
-                            )
+                        var sentNotes=0
+                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
+                        {
+                            appContext.rtpMidiServer?.addToSendQueue(midiData)
+                            sentNotes += 1
                         }
                     }
                 }
@@ -497,11 +500,12 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         midiData[0] = (0x80 + midiChannel).toByte()
                         midiData[1] = (this.note!!.value+48).toInt().toByte()
                         midiData[2] = 0x7F.toByte()
-                        thread(start = true) {
-                            appContext.rtpMidiServer?.sendMidiCommand(
-                                midiData
-                            )
+                        var sentNotes=0
+                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                            appContext.rtpMidiServer?.addToSendQueue(midiData)
+                            sentNotes += 1
                         }
+
                     }
                 }
                 currentVoice = null
@@ -522,10 +526,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                                     midiData[0] = (0x90 + midiChannel).toByte()
                                     midiData[1] = (this.note!!.value+48).toInt().toByte()
                                     midiData[2] = 0x7F.toByte()
-                                    thread(start = true) {
-                                        midiserver.sendMidiCommand(
-                                            midiData
-                                        )
+                                    var sentNotes = 0
+                                    while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
+                                    {
+                                        midiserver.addToSendQueue(midiData)
+                                        sentNotes +=  1
                                     }
                                 }
                             }
@@ -559,11 +564,9 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         appContext?.rtpMidiServer?.let {
                             if (it.isEnabled)
                             {
-                                thread(start = true) {
-                                    appContext.rtpMidiServer?.sendMidiCommand(
-                                        midiData
-                                    )
-                                }
+                                appContext.rtpMidiServer?.addToSendQueue(
+                                    midiData
+                                )
                             }
                         }
                         currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
