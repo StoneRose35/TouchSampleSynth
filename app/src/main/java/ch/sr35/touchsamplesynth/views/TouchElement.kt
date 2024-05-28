@@ -788,9 +788,9 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     {
         return Rectangle(
             Point(
-                (layoutParams as ConstraintLayout.LayoutParams).marginStart.toDouble(),
+                (layoutParams as ConstraintLayout.LayoutParams).leftMargin.toDouble(),
                 (layoutParams as ConstraintLayout.LayoutParams).topMargin.toDouble()),
-            Point((layoutParams as ConstraintLayout.LayoutParams).marginStart.toDouble() + (layoutParams as ConstraintLayout.LayoutParams).width.toDouble(),
+            Point((layoutParams as ConstraintLayout.LayoutParams).leftMargin.toDouble() + (layoutParams as ConstraintLayout.LayoutParams).width.toDouble(),
                 (layoutParams as ConstraintLayout.LayoutParams).topMargin.toDouble()+ (layoutParams as ConstraintLayout.LayoutParams).height.toDouble())
         )
     }

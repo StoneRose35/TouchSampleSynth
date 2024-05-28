@@ -7,6 +7,7 @@ import kotlin.math.sqrt
 
 
 const val EPS=0.000001
+const val PLACEMENT_DELTA = 3.0
 
 class PlacementException(val msg: String): Exception()
 {
@@ -81,6 +82,10 @@ class SlidingRectangle(var xyLine: XYLine,val r: Rectangle)
     fun cutOverlappingPartsWith(rect: Rectangle): Array<SlidingRectangle>
     {
         val linesInSlidingRect = rect.lineInsideOf(boundingRectangle)
+        if (boundingRectangle.lineInsideOf(rect).overlap == Overlap.FULL)
+        {
+            return emptyArray()
+        }
         if (linesInSlidingRect.overlap == Overlap.NONE)
         {
             return arrayOf(this)
@@ -103,7 +108,7 @@ class SlidingRectangle(var xyLine: XYLine,val r: Rectangle)
                     linesInSlidingRect.overlap == Overlap.BOTTOMLEFT ||
                     linesInSlidingRect.overlap == Overlap.LEFT)
                 {
-                    return if (perpendicularCuts[0].sp.x + perpendicularCuts[0].d > endPositionRectangle.topLeft.x)
+                    return if (perpendicularCuts[0].sp.x  > endPositionRectangle.topLeft.x)
                     {
                         emptyArray()
                     }
@@ -111,7 +116,7 @@ class SlidingRectangle(var xyLine: XYLine,val r: Rectangle)
                     {
                         // trimming left
                         arrayOf(SlidingRectangle(XYLine(Point(perpendicularCuts[0].sp.x + r.width()/2,xyLine.sp.y),XYLineOrientation.HORIZONTAL,
-                            xyLine.d - (perpendicularCuts[0].sp.x + r.width()/2 - startPositionRectangle.topLeft.x)),r))
+                            xyLine.d - (perpendicularCuts[0].sp.x - startPositionRectangle.topLeft.x)),r))
 
                     }
                 }
@@ -168,8 +173,8 @@ class SlidingRectangle(var xyLine: XYLine,val r: Rectangle)
                 else if (perpendicularCuts[0].sp.x < startPositionRectangle.bottomRight.x)
                 {
                     // trimming left
-                    return arrayOf(SlidingRectangle(XYLine(Point(perpendicularCuts[0].sp.x + r.width()/2,xyLine.sp.y),XYLineOrientation.HORIZONTAL,
-                        xyLine.d - (perpendicularCuts[0].sp.x + r.width()/2 - startPositionRectangle.topLeft.x)),r))
+                    return arrayOf(SlidingRectangle(XYLine(Point(perpendicularCuts[1].sp.x + r.width()/2,xyLine.sp.y),XYLineOrientation.HORIZONTAL,
+                        xyLine.d - (perpendicularCuts[1].sp.x - startPositionRectangle.topLeft.x)),r))
                 }
                 else if (perpendicularCuts[1].sp.x > startPositionRectangle.bottomRight.x)
                 {
@@ -271,9 +276,21 @@ class Rectangle(p1: Point,p2: Point)
         return arrayOf(topLeft,Point(bottomRight.x,topLeft.y),Point(topLeft.x,bottomRight.y),bottomRight)
     }
 
-    fun isInside(p: Point): Boolean
+    fun centerAt(p: Point): Rectangle
     {
-        return p.x >= topLeft.x && p.x <= bottomRight.x && p.y >= topLeft.y && p.y <= bottomRight.y
+        return Rectangle(topLeft-center()+p,bottomRight-center()+p)
+    }
+
+    fun isInside(p: Point,strict: Boolean=true): Boolean
+    {
+
+        return if (strict) {
+            p.x > topLeft.x && p.x < bottomRight.x && p.y > topLeft.y && p.y < bottomRight.y
+        }
+        else
+        {
+            p.x >= topLeft.x && p.x <= bottomRight.x && p.y >= topLeft.y && p.y <= bottomRight.y
+        }
     }
 
     override fun toString(): String {
@@ -288,7 +305,7 @@ class Rectangle(p1: Point,p2: Point)
     {
         val edgePoints = edgePoints()
         val pointsInsideR = edgePoints.filter { ep -> r.isInside(ep) }.toList()
-        val pointsInsideThis = r.edgePoints().filter { ep -> isInside(ep) }.toList()
+        val pointsInsideThis = r.edgePoints().filter { ep -> isInside(ep,false) }.toList()
         var intersectingPoint: Point
         /*   Case a
               --------------------
@@ -317,12 +334,12 @@ class Rectangle(p1: Point,p2: Point)
         {
             if (abs(pointsInsideThis[0].x - pointsInsideThis[1].x) < EPS)
             {
-                return if (topLeft.x < r.topLeft.x) {
+                return if (bottomRight.x < r.bottomRight.x) {
                     intersectingPoint = Point(this.bottomRight.x,r.topLeft.y)
-                    OverlapAndIntersectionLine(Overlap.RIGHT,arrayOf(XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.height())))
+                    OverlapAndIntersectionLine(Overlap.LEFT,arrayOf(XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.height())))
                 } else {
                     intersectingPoint = Point(this.topLeft.x, r.topLeft.y)
-                    OverlapAndIntersectionLine(Overlap.LEFT,
+                    OverlapAndIntersectionLine(Overlap.RIGHT,
                     arrayOf(
                         XYLine(
                             intersectingPoint,
@@ -491,7 +508,7 @@ class Rectangle(p1: Point,p2: Point)
                 intersectingPoint = Point(bottomRight.x,r.topLeft.y)
                 val il1 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,bottomRight.y-r.topLeft.y)
                 intersectingPoint = Point(r.topLeft.x,bottomRight.y)
-                val il2 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,bottomRight.y-r.topLeft.y)
+                val il2 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,bottomRight.x-r.topLeft.x)
                 return OverlapAndIntersectionLine(Overlap.TOPLEFT,arrayOf(il1,il2))
             }
             // top right
@@ -543,24 +560,24 @@ class Rectangle(p1: Point,p2: Point)
         val res = Array<SlidingRectangle?>(4) {null}
         if (r.width() > width())
         {
-            res[0] = SlidingRectangle(XYLine(Point((topLeft.x + bottomRight.x)/2,topLeft.y - r.height()/2),XYLineOrientation.HORIZONTAL,0.0),r)
-            res[1] = SlidingRectangle(XYLine(Point((topLeft.x + bottomRight.x)/2,bottomRight.y + r.height()/2),XYLineOrientation.HORIZONTAL,0.0),r)
+            res[0] = SlidingRectangle(XYLine(Point((topLeft.x + bottomRight.x)/2,topLeft.y - r.height()/2 - PLACEMENT_DELTA),XYLineOrientation.HORIZONTAL,0.0),r)
+            res[1] = SlidingRectangle(XYLine(Point((topLeft.x + bottomRight.x)/2,bottomRight.y + r.height()/2 + PLACEMENT_DELTA),XYLineOrientation.HORIZONTAL,0.0),r)
         }
         else
         {
-            res[0] = SlidingRectangle(XYLine(Point(topLeft.x + r.width()/2,topLeft.y - r.height()/2),XYLineOrientation.HORIZONTAL,width()-r.width()),r)
-            res[1] = SlidingRectangle(XYLine(Point(topLeft.x + r.width()/2,bottomRight.y + r.height()/2),XYLineOrientation.HORIZONTAL,width()-r.width()),r)
+            res[0] = SlidingRectangle(XYLine(Point(topLeft.x + r.width()/2,topLeft.y - r.height()/2 - PLACEMENT_DELTA),XYLineOrientation.HORIZONTAL,width()-r.width()),r)
+            res[1] = SlidingRectangle(XYLine(Point(topLeft.x + r.width()/2,bottomRight.y + r.height()/2 + PLACEMENT_DELTA),XYLineOrientation.HORIZONTAL,width()-r.width()),r)
         }
 
         if (r.height() > height())
         {
-            res[2] = SlidingRectangle(XYLine(Point(topLeft.x - r.width()/2,(topLeft.y + bottomRight.y)/2),XYLineOrientation.VERTICAL, 0.0),r)
-            res[3] = SlidingRectangle(XYLine(Point(bottomRight.x + r.width()/2,(topLeft.y + bottomRight.y)/2),XYLineOrientation.VERTICAL, 0.0),r)
+            res[2] = SlidingRectangle(XYLine(Point(topLeft.x - r.width()/2- PLACEMENT_DELTA,(topLeft.y + bottomRight.y)/2),XYLineOrientation.VERTICAL, 0.0),r)
+            res[3] = SlidingRectangle(XYLine(Point(bottomRight.x + r.width()/2+ PLACEMENT_DELTA,(topLeft.y + bottomRight.y)/2),XYLineOrientation.VERTICAL, 0.0),r)
         }
         else
         {
-            res[2] = SlidingRectangle(XYLine(Point(topLeft.x - r.width()/2,(topLeft.y + height())/2),XYLineOrientation.VERTICAL,height()-r.height()),r)
-            res[3] = SlidingRectangle(XYLine(Point(bottomRight.x + r.width()/2,(topLeft.y + height())/2), XYLineOrientation.VERTICAL,height()-r.height()),r)
+            res[2] = SlidingRectangle(XYLine(Point(topLeft.x - r.width()/2- PLACEMENT_DELTA,(topLeft.y + height())/2),XYLineOrientation.VERTICAL,height()-r.height()),r)
+            res[3] = SlidingRectangle(XYLine(Point(bottomRight.x + r.width()/2+ PLACEMENT_DELTA,(topLeft.y + height())/2), XYLineOrientation.VERTICAL,height()-r.height()),r)
         }
         return res
     }
@@ -577,11 +594,11 @@ class XYLine(var sp: Point,var orientation: XYLineOrientation,var d: Double)
     override fun toString(): String {
         return if (orientation == XYLineOrientation.HORIZONTAL)
         {
-            "horizontal line, start: %d, distance: %.3f".format(sp,d)
+            "horizontal line, start: %s, distance: %.3f".format(sp,d)
         }
         else
         {
-            "vertical line, start: %d, distance: %.3f".format(sp,d)
+            "vertical line, start: %s, distance: %.3f".format(sp,d)
         }
     }
 
@@ -665,7 +682,7 @@ class PlacementCandidate(var slidingRectangle: SlidingRectangle, var checked: Bo
 class TouchElementPlacementCalculator {
     companion object
     {
-        fun calculateBestPlacement(rectangle: Rectangle, neighbours: Array<Rectangle>, allRectangles: Array<Rectangle>): Rectangle
+        fun calculateBestPlacement(rectangle: Rectangle, neighbours: Array<Rectangle>, allRectangles: Array<Rectangle>,placementArea: Rectangle?): Rectangle
         {
             if (neighbours.isEmpty())
             {
@@ -706,10 +723,53 @@ class TouchElementPlacementCalculator {
                 )
             return if (placementsToEvaluate.isNotEmpty())
             {
-                val bestCenterPoint = placementsToEvaluate.map { pe -> pe.slidingRectangle.xyLine.calculatePointAndMinDistanceFrom(avgPoint) }.sortedBy { ptAndDist -> ptAndDist.d }.first()
-                val bestTopLeft = Point(bestCenterPoint.point.x - rectangle.width()/2,bestCenterPoint.point.y - rectangle.height()/2)
-                val bestBottomRight = Point(bestCenterPoint.point.x + rectangle.width()/2,bestCenterPoint.point.y + rectangle.height()/2)
-                Rectangle(bestTopLeft,bestBottomRight)
+                val bestCenterPoint = placementsToEvaluate
+                    .map { pe -> pe.slidingRectangle.xyLine.calculatePointAndMinDistanceFrom(avgPoint) }
+                    .filter { ptMinDist ->
+                        if (placementArea != null) {
+                            val ptTopLeft = Point(
+                                ptMinDist.point.x - rectangle.width() / 2,
+                                ptMinDist.point.y - rectangle.height() / 2
+                            )
+                            val ptTopRight = Point(
+                                ptMinDist.point.x + rectangle.width() / 2,
+                                ptMinDist.point.y - rectangle.height() / 2
+                            )
+                            val ptBottomLeft = Point(
+                                ptMinDist.point.x - rectangle.width() / 2,
+                                ptMinDist.point.y + rectangle.height() / 2
+                            )
+                            val ptBottomRight = Point(
+                                ptMinDist.point.x + rectangle.width() / 2,
+                                ptMinDist.point.y + rectangle.height() / 2
+                            )
+                            placementArea.isInside(ptTopLeft)
+                                    && placementArea.isInside(ptTopRight)
+                                    && placementArea.isInside(ptBottomLeft)
+                                    && placementArea.isInside(ptBottomRight)
+                        }
+                        else
+                        {
+                            true
+                        }
+                      }
+                    .sortedBy { ptAndDist -> ptAndDist.d }.firstOrNull()
+                if (bestCenterPoint != null) {
+                    val bestTopLeft = Point(
+                        bestCenterPoint.point.x - rectangle.width() / 2,
+                        bestCenterPoint.point.y - rectangle.height() / 2
+                    )
+                    val bestBottomRight = Point(
+                        bestCenterPoint.point.x + rectangle.width() / 2,
+                        bestCenterPoint.point.y + rectangle.height() / 2
+                    )
+                    Rectangle(bestTopLeft, bestBottomRight)
+                }
+                else
+                {
+                    Rectangle(Point(Converter.toPx(50.0f).toDouble(),Converter.toPx(50.0f).toDouble()),
+                        Point(Converter.toPx(50.0f).toDouble() + rectangle.width(),Converter.toPx(50.0f).toDouble() + rectangle.height()))
+                }
             }
             else
             {

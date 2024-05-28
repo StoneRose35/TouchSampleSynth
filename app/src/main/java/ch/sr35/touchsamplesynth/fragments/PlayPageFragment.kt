@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.LinearLayout
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,6 +16,8 @@ import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.graphics.Converter
+import ch.sr35.touchsamplesynth.graphics.Point
+import ch.sr35.touchsamplesynth.graphics.Rectangle
 import ch.sr35.touchsamplesynth.graphics.TouchElementPlacementCalculator
 import ch.sr35.touchsamplesynth.views.InstrumentChip
 import ch.sr35.touchsamplesynth.views.TouchElement
@@ -24,9 +28,19 @@ import ch.sr35.touchsamplesynth.views.TouchElement
  */
 class PlayPageFragment : Fragment() {
 
+    class DeletableGlobalLayoutListener(val view: View,var playPageAreaRect: Rectangle): ViewTreeObserver.OnGlobalLayoutListener
+    {
+        override fun onGlobalLayout() {
+            playPageAreaRect.topLeft.x=0.0
+            playPageAreaRect.topLeft.y=0.0
+            playPageAreaRect.bottomRight.x=view.width.toDouble()
+            playPageAreaRect.bottomRight.y=view.height.toDouble()
+            view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+        }
 
+    }
 
-
+    var playPageAreaRect: Rectangle?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,11 +64,13 @@ class PlayPageFragment : Fragment() {
                 }
             }
         }
-        playPageView.setOnClickListener {
 
-        }
+
+        playPageAreaRect= Rectangle(Point(0.0,0.0), Point(1.0,1.0))
+
         return playPageView
     }
+
 
 
 
@@ -68,6 +84,10 @@ class PlayPageFragment : Fragment() {
         val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
         val instrumentChipsContainer= view.findViewById<LinearLayout>(R.id.playpage_instrument_chips)
         //val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
+
+        val globalLayoutListener =
+            playPageAreaRect?.let { DeletableGlobalLayoutListener(this.requireView(), it) }
+        view.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
 
         val toggleSwitch = view.findViewById<SwitchCompat>(R.id.toggleEdit)
         toggleSwitch.setOnCheckedChangeListener { _, toggleval ->
@@ -99,14 +119,16 @@ class PlayPageFragment : Fragment() {
                         te.layoutParams = lp
 
 
-
                         val allrectrangles = (context as TouchSampleSynthMain).touchElements.map {
                             it.asRectangle() }.toTypedArray()
                         val neighbouringRectangles = (context as TouchSampleSynthMain).touchElements.filter {
                             te1 ->
                             te1.soundGenerator!! == te.soundGenerator
                         }.map { it.asRectangle() }.toTypedArray()
-                        val finalLocation = TouchElementPlacementCalculator.calculateBestPlacement(te.asRectangle(),neighbouringRectangles,allrectrangles)
+
+
+
+                        val finalLocation = TouchElementPlacementCalculator.calculateBestPlacement(te.asRectangle(),neighbouringRectangles,allrectrangles,playPageAreaRect)
                         (te.layoutParams as ConstraintLayout.LayoutParams).topMargin= finalLocation!!.topLeft.y.toInt()
                         (te.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
                         (context as TouchSampleSynthMain).touchElements.add(te)
