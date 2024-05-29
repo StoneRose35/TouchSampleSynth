@@ -2,11 +2,13 @@ package ch.sr35.touchsamplesynth.graphics
 
 import org.junit.Assert
 import org.junit.Test
+import kotlin.math.abs
 
-class SlidingRectangleTest {
+class SlidingRectangleTestCenterHorizontal {
+
 
     @Test
-    fun slidingRectrangeTestTrimLeft1_1()
+    fun slidingRectangleTestFullUp()
     {
         val sr = SlidingRectangle(
             XYLine(
@@ -19,17 +21,15 @@ class SlidingRectangleTest {
             )
         )
         val overlapRectangle = Rectangle(
-            Point(2.0,1.0),
-            Point(5.0,3.0)
+            Point(1.0,1.0),
+            Point(20.0,3.0)
         )
         val trimmedSlidingRectangle = sr.cutOverlappingPartsWith(overlapRectangle)
-        Assert.assertTrue(trimmedSlidingRectangle.size == 1)
-        Assert.assertTrue(pointEqual(trimmedSlidingRectangle.first().xyLine.sp,Point(6.0,3.0)))
-        Assert.assertEquals(trimmedSlidingRectangle.first().xyLine.d,12.0,TEPS)
+        Assert.assertTrue(trimmedSlidingRectangle.isEmpty())
     }
 
     @Test
-    fun slidingRectrangeTestTrimLeft2_1()
+    fun slidingRectangleTestFullCenter()
     {
         val sr = SlidingRectangle(
             XYLine(
@@ -42,17 +42,15 @@ class SlidingRectangleTest {
             )
         )
         val overlapRectangle = Rectangle(
-            Point(2.1,1.0),
-            Point(5.0,3.0)
+            Point(1.0,2.1),
+            Point(20.0,2.9)
         )
         val trimmedSlidingRectangle = sr.cutOverlappingPartsWith(overlapRectangle)
-        Assert.assertTrue(trimmedSlidingRectangle.size == 1)
-        Assert.assertTrue(pointEqual(trimmedSlidingRectangle.first().xyLine.sp,Point(6.0,3.0)))
-        Assert.assertEquals(trimmedSlidingRectangle.first().xyLine.d,12.0,TEPS)
+        Assert.assertTrue(trimmedSlidingRectangle.isEmpty())
     }
 
     @Test
-    fun slidingRectrangeTestTrimLeft3_1()
+    fun slidingRectangleTestFullBottom()
     {
         val sr = SlidingRectangle(
             XYLine(
@@ -65,17 +63,15 @@ class SlidingRectangleTest {
             )
         )
         val overlapRectangle = Rectangle(
-            Point(1.9,1.0),
-            Point(5.0,3.0)
+            Point(1.0,3.0),
+            Point(20.0,5.0)
         )
         val trimmedSlidingRectangle = sr.cutOverlappingPartsWith(overlapRectangle)
-        Assert.assertTrue(trimmedSlidingRectangle.size == 1)
-        Assert.assertTrue(pointEqual(trimmedSlidingRectangle.first().xyLine.sp,Point(6.0,3.0)))
-        Assert.assertEquals(trimmedSlidingRectangle.first().xyLine.d,12.0,TEPS)
+        Assert.assertTrue(trimmedSlidingRectangle.isEmpty())
     }
 
     @Test
-    fun slidingRectrangeTestTrimLeft1_2()
+    fun slidingRectangleTestFullUp_2()
     {
         val sr = SlidingRectangle(
             XYLine(
@@ -88,17 +84,15 @@ class SlidingRectangleTest {
             )
         )
         val overlapRectangle = Rectangle(
-            Point(2.0,1.0),
-            Point(5.0,5.0)
+            Point(3.0,1.0),
+            Point(18.0,3.0)
         )
         val trimmedSlidingRectangle = sr.cutOverlappingPartsWith(overlapRectangle)
-        Assert.assertTrue(trimmedSlidingRectangle.size == 1)
-        Assert.assertTrue(pointEqual(trimmedSlidingRectangle.first().xyLine.sp,Point(6.0,3.0)))
-        Assert.assertEquals(trimmedSlidingRectangle.first().xyLine.d,12.0,TEPS)
+        Assert.assertTrue(trimmedSlidingRectangle.isEmpty())
     }
 
     @Test
-    fun slidingRectrangeTestTrimLeft2_2()
+    fun slidingRectangleTestFullCenter_2()
     {
         val sr = SlidingRectangle(
             XYLine(
@@ -106,22 +100,20 @@ class SlidingRectangleTest {
                 XYLineOrientation.HORIZONTAL,
                 15.0),
             Rectangle(
-                Point(2.0,2.0),
-                Point(4.0,4.0)
+                Point(3.0,2.0),
+                Point(18.0,4.0)
             )
         )
         val overlapRectangle = Rectangle(
-            Point(2.1,1.0),
-            Point(5.0,5.0)
+            Point(1.0,2.1),
+            Point(20.0,2.9)
         )
         val trimmedSlidingRectangle = sr.cutOverlappingPartsWith(overlapRectangle)
-        Assert.assertTrue(trimmedSlidingRectangle.size == 1)
-        Assert.assertTrue(pointEqual(trimmedSlidingRectangle.first().xyLine.sp,Point(6.0,3.0)))
-        Assert.assertEquals(trimmedSlidingRectangle.first().xyLine.d,12.0,TEPS)
+        Assert.assertTrue(trimmedSlidingRectangle.isEmpty())
     }
 
     @Test
-    fun slidingRectrangeTestTrimLeft3_2()
+    fun slidingRectangleTestFullBottom_2()
     {
         val sr = SlidingRectangle(
             XYLine(
@@ -134,13 +126,57 @@ class SlidingRectangleTest {
             )
         )
         val overlapRectangle = Rectangle(
-            Point(1.9,1.0),
-            Point(5.0,5.0)
+            Point(3.0,3.0),
+            Point(18.0,5.0)
         )
         val trimmedSlidingRectangle = sr.cutOverlappingPartsWith(overlapRectangle)
-        Assert.assertTrue(trimmedSlidingRectangle.size == 1)
-        Assert.assertTrue(pointEqual(trimmedSlidingRectangle.first().xyLine.sp,Point(6.0,3.0)))
-        Assert.assertEquals(trimmedSlidingRectangle.first().xyLine.d,12.0,TEPS)
+        Assert.assertTrue(trimmedSlidingRectangle.isEmpty())
+    }
+
+    @Test
+    fun slidingRectangleTestFull()
+    {
+        val sr = SlidingRectangle(
+            XYLine(
+                Point(3.0,3.0),
+                XYLineOrientation.HORIZONTAL,
+                15.0),
+            Rectangle(
+                Point(2.0,2.0),
+                Point(4.0,4.0)
+            )
+        )
+        val overlapRectangle = Rectangle(
+            Point(0.0,0.0),
+            Point(30.0,10.0)
+        )
+        val trimmedSlidingRectangle = sr.cutOverlappingPartsWith(overlapRectangle)
+        Assert.assertTrue(trimmedSlidingRectangle.isEmpty())
+    }
+
+    @Test
+    fun slidingRectangleTestCut()
+    {
+        val sr = SlidingRectangle(
+            XYLine(
+                Point(3.0,3.0),
+                XYLineOrientation.HORIZONTAL,
+                15.0),
+            Rectangle(
+                Point(2.0,2.0),
+                Point(4.0,4.0)
+            )
+        )
+        val overlapRectangle = Rectangle(
+            Point(7.0,1.0),
+            Point(9.0,5.0)
+        )
+        val trimmedSlidingRectangle = sr.cutOverlappingPartsWith(overlapRectangle)
+        Assert.assertTrue(trimmedSlidingRectangle.size==2)
+        Assert.assertTrue(trimmedSlidingRectangle.any { el -> pointEqual(el.xyLine.sp,Point(3.0,3.0)) })
+        Assert.assertTrue(trimmedSlidingRectangle.any { el -> pointEqual(el.xyLine.sp,Point(10.0,3.0)) })
+        Assert.assertTrue(trimmedSlidingRectangle.any { el -> abs(el.xyLine.d-3.0) < TEPS })
+        Assert.assertTrue(trimmedSlidingRectangle.any { el -> abs(el.xyLine.d-8.0) < TEPS })
     }
 
     fun pointEqual(actual: Point, expected: Point): Boolean

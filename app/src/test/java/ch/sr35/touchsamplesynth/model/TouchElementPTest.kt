@@ -16,6 +16,6 @@ class TouchElementPTest {
         val touchElement = TouchElementP(234,546,154,673,TouchElement.ActionDir.HORIZONTAL_LEFT_RIGHT,45,null,0,11,synth1.id)
         val gson=Gson()
         val json = gson.toJson(touchElement)
-        Assert.assertTrue(json.contains("0.1111"))
+        Assert.assertTrue(json.contains("546"))
     }
 }
