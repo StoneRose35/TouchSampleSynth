@@ -9,10 +9,6 @@ import kotlin.math.sqrt
 const val EPS=0.000001
 const val PLACEMENT_DELTA = 3.0
 
-class PlacementException(val msg: String): Exception()
-{
-
-}
 class Point(var x: Double,var y: Double)
 {
     operator fun plus(p: Point): Point
@@ -280,10 +276,6 @@ class Rectangle(p1: Point,p2: Point)
         return arrayOf(topLeft,Point(bottomRight.x,topLeft.y),Point(topLeft.x,bottomRight.y),bottomRight)
     }
 
-    fun centerAt(p: Point): Rectangle
-    {
-        return Rectangle(topLeft-center()+p,bottomRight-center()+p)
-    }
 
     fun isInside(p: Point,strict: Boolean=true): Boolean
     {
@@ -388,7 +380,7 @@ class Rectangle(p1: Point,p2: Point)
                 val il2 = XYLine(intersectingPoint,XYLineOrientation.VERTICAL,r.height())
                 OverlapAndIntersectionLine(Overlap.CENTER, arrayOf(il1,il2))
             }
-            else if (topLeft.y > r.topLeft.y && topLeft.y < r.bottomRight.y)
+            else if (topLeft.y > r.topLeft.y && bottomRight.y < r.bottomRight.y)
             {
                 intersectingPoint = Point(r.topLeft.x,topLeft.y)
                 val il1 = XYLine(intersectingPoint,XYLineOrientation.HORIZONTAL,r.width())

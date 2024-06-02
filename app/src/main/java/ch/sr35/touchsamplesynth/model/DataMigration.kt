@@ -53,12 +53,12 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     }
 
     /**
-     * Update from 1.8.6 to 1.8.7:
+     * Update from 1.8.6 to 1.9.0:
      * * replace nVoices as number with isMonophonic as boolean
      * * replace full instrument declaration with uuid in touchElement
      * * remove voiceNr property in touchElement
      */
-    private class Updater1: DataUpdater(Version(1,8,6), Version(1,8,7))
+    private class Updater1: DataUpdater(Version(1,8,6), Version(1,9,0))
     {
 
         override fun processData(jsonData: String): String {

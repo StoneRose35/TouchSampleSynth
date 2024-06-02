@@ -49,7 +49,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     val soundGenerators=ArrayList<Instrument>()
     val touchElements=ArrayList<TouchElement>()
     val allScenes = ArrayList<SceneP>()
-    var touchElementsDisplayMode: TouchElement.TouchElementState=TouchElement.TouchElementState.PLAYING
     private val playPageFragment=PlayPageFragment()
     private val instrumentsPageFragment=InstrumentsPageFragment()
     private val settingsFrament= SettingsFragment()
@@ -61,7 +60,12 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private var oldScenePosition=-1
     var scenesListDirty=false
     var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
+
+    // global settings
     var rtpMidiNotesRepeat=1 // defines how many times note on and note off commands are repeated over rtp midi
+    var touchElementsDisplayMode: TouchElement.TouchElementState=TouchElement.TouchElementState.PLAYING
+    var connectorDisplay = false
+    var isInEditMode = false
 
     override fun onStart() {
         super.onStart()

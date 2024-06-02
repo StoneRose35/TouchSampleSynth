@@ -80,6 +80,21 @@
         </TableRow>
         <TableRow>
             <TextView
+                android:id="@+id/settingsTextViewConnectors"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:labelFor="@id/toggleButtonShowConnectors"
+                android:text="@string/settings_connector_display"
+                />
+                <ToggleButton
+                    android:id="@+id/toggleButtonShowConnectors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
                 android:id="@+id/settingTextViewMidiMode"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

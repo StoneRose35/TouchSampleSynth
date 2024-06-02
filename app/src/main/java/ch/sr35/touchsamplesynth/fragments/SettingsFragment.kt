@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.Spinner
@@ -112,6 +111,10 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
             bufferSizeInFramesIdx = idx
         }
         bufferCapacityInFrames.onItemSelectedListener = this
+
+        view.findViewById<ToggleButton>(R.id.toggleButtonShowConnectors).setOnCheckedChangeListener { _, isChecked ->
+            (context as TouchSampleSynthMain).connectorDisplay = isChecked
+        }
 
         val spinnerTouchElementStyle = view.findViewById<Spinner>(R.id.spinnerTouchElementsDisplay)
         /*ArrayAdapter.createFromResource(view.context,

@@ -26,6 +26,8 @@
         <item name="instrumentBackgroundColor">@color/medium_gray</item>
 
         <item name="sceneEditBackgroundColor">@color/dark_gray</item>
+        <item name="touchElementLinkColor">@color/vu_meter_green</item>
+        <item name="touchElementLinkSize">8.0</item>
     </style>
     <style name="Theme.TouchSampleSynth.Instrument">
         <item name="android:textColor">@color/vu_meter_background</item>

@@ -42,6 +42,12 @@
     <string name="bufferCapacityInFramesDescription">Audio Buffer Capacity</string>
     <string name="audioBuffersErrorMessage">Chunksize must be half the audio buffer size or less</string>
     <string name="touchElementDiplay">Touch Elements Display Style</string>
+    <string name="settings_connector_display">Show Connectors</string>
+    <string-array name="settings_connector_display_types">
+        <item>Always</item>
+        <item>In edit mode</item>
+        <item>Never</item>
+    </string-array>
     <string-array name="framesPerDataCallbackValues">
         <item>32</item>
         <item>64</item>

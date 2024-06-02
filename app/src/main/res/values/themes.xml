@@ -27,6 +27,8 @@
         <item name="instrumentPageTitleTextColor">@color/red_dark</item>
         <item name="sliderDrawable">@drawable/slider_dark</item>
         <item name="sceneEditBackgroundColor">@color/very_light_gray</item>
+        <item name="touchElementLinkColor">@color/vu_meter_green</item>
+        <item name="touchElementLinkSize">8.0</item>
     </style>
     <style name="Theme.Instrument" parent="Theme.TouchSampleSynth">
         <item name="android:textColor">@color/black</item>

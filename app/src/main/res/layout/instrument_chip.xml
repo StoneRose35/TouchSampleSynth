@@ -4,6 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="4dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="34dp"
     android:background="@drawable/instrument_chip_bg"
     android:orientation="vertical">
 

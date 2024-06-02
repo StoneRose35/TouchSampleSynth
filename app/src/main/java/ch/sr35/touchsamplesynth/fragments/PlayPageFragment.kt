@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,6 +19,7 @@ import ch.sr35.touchsamplesynth.graphics.Point
 import ch.sr35.touchsamplesynth.graphics.Rectangle
 import ch.sr35.touchsamplesynth.graphics.TouchElementPlacementCalculator
 import ch.sr35.touchsamplesynth.views.InstrumentChip
+import ch.sr35.touchsamplesynth.views.PlayArea
 import ch.sr35.touchsamplesynth.views.TouchElement
 
 
@@ -54,9 +54,8 @@ class PlayPageFragment : Fragment() {
             {
                 MotionEvent.ACTION_DOWN-> {
                     v.performClick()
-                }
-                MotionEvent.ACTION_UP-> {
                     view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked=false
+                    playPageView.invalidate()
                     return@setOnTouchListener true
                 }
                 else -> {
@@ -81,8 +80,9 @@ class PlayPageFragment : Fragment() {
             return
         }
         //val newButton = view.findViewById<ImageButton>(R.id.buttonNew)
-        val playPageLayout = view.findViewById<ConstraintLayout>(R.id.playpage_layout)
+        val playPageLayout = view.findViewById<PlayArea>(R.id.playpage_layout)
         val instrumentChipsContainer= view.findViewById<LinearLayout>(R.id.playpage_instrument_chips)
+        playPageLayout.instrumentChipContainer = instrumentChipsContainer
         //val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
 
         val globalLayoutListener =
@@ -97,10 +97,9 @@ class PlayPageFragment : Fragment() {
                 {
                     touchel.setEditmode(true)
                 }
-                //newButton.visibility = View.VISIBLE
-                //sceneNameEditText.setText((context as TouchSampleSynthMain).getCurrentSceneName())
-                //sceneNameEditText.visibility = View.VISIBLE
+
                 instrumentChipsContainer.removeAllViewsInLayout()
+                (context as TouchSampleSynthMain).isInEditMode = true
                 (context as TouchSampleSynthMain).soundGenerators.forEach { it ->
                     val instrChip = InstrumentChip(context as TouchSampleSynthMain,null)
                     instrChip.setInstrument(it)
@@ -129,7 +128,7 @@ class PlayPageFragment : Fragment() {
 
 
                         val finalLocation = TouchElementPlacementCalculator.calculateBestPlacement(te.asRectangle(),neighbouringRectangles,allrectrangles,playPageAreaRect)
-                        (te.layoutParams as ConstraintLayout.LayoutParams).topMargin= finalLocation!!.topLeft.y.toInt()
+                        (te.layoutParams as ConstraintLayout.LayoutParams).topMargin= finalLocation.topLeft.y.toInt()
                         (te.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
                         (context as TouchSampleSynthMain).touchElements.add(te)
                         playPageLayout.addView(te)
@@ -142,49 +141,18 @@ class PlayPageFragment : Fragment() {
             }
             else
             {
+                (context as TouchSampleSynthMain).isInEditMode = false
                 for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
                 {
                     touchel.setEditmode(false)
                 }
+                playPageLayout.invalidate()
                 instrumentChipsContainer.removeAllViewsInLayout()
-                //newButton.visibility = View.INVISIBLE
-                //sceneNameEditText.visibility = View.INVISIBLE
                 (context as TouchSampleSynthMain).persistCurrentScene()
                 (context as TouchSampleSynthMain).unlockSceneSelection()
             }
         }
 
-/*
-        newButton.setOnClickListener {
-
-            val lp = ConstraintLayout.LayoutParams(Converter.toPx(134),Converter.toPx(166))
-            lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-            lp.marginStart = Converter.toPx(10)
-            lp.topMargin = Converter.toPx(10)
-            val te = TouchElement(context as TouchSampleSynthMain,null)
-            te.setDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
-            te.setEditmode(true)
-            te.layoutParams = lp
-            playPageLayout.addView(te)
-            (context as TouchSampleSynthMain).touchElements.add(te)
-
-        }
-        */
-        /*
-        sceneNameEditText.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId==EditorInfo.IME_ACTION_DONE)
-            {
-                (context as TouchSampleSynthMain).setCurrentSceneName(sceneNameEditText.text.toString())
-                (context as TouchSampleSynthMain).persistCurrentScene()
-                ((context as Context).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(sceneNameEditText.windowToken,0)
-
-                (((context as TouchSampleSynthMain).mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).adapter as ArrayAdapter<*>).notifyDataSetChanged()
-                return@setOnEditorActionListener true
-            }
-            return@setOnEditorActionListener false
-        }
-         */
 
         view.post {
             val height = view.height
