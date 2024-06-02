@@ -22,9 +22,11 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.SCENES_FILE_NAME
 import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import ch.sr35.touchsamplesynth.model.DataUpdater
 import ch.sr35.touchsamplesynth.model.PersistableInstrument
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SceneListP
+import ch.sr35.touchsamplesynth.model.Version
 import ch.sr35.touchsamplesynth.model.importMode
 import com.google.gson.GsonBuilder
 import java.io.File
@@ -254,7 +256,21 @@ class DefaultScenesInstall(private var context: Context,) : Dialog(context) {
                     (context as TouchSampleSynthMain).loadFromBinaryFiles()
                     SceneListP.exportAsJson(SCENES_FILE_NAME,context)
                     scenesEmpty = (context as TouchSampleSynthMain).scenesArrayAdapter!!.isEmpty
-                    return DefaultScenesState(CurrentScenesCode.PRESET_AND_OUTDATED,scenesEmpty)
+                    val updatedJson = DataUpdater.updatersList.find {
+                                        du -> du.versionFrom == Version(majorMinorSubScenes[0].toInt(),majorMinorSubScenes[1].toInt(),majorMinorSubScenes[2].toInt())
+                                    }?.processData(jsondata)
+
+                    return if (updatedJson != null)
+                    {
+                        f.writeText(updatedJson)
+                        DefaultScenesState(CurrentScenesCode.PRESET_INSTALL_DONE,scenesEmpty)
+                    }
+                    else {
+                        DefaultScenesState(
+                            CurrentScenesCode.PRESET_AND_OUTDATED,
+                            scenesEmpty
+                        )
+                    }
                 }
                 if (scenesList.installDone)
                 {
@@ -264,8 +280,29 @@ class DefaultScenesInstall(private var context: Context,) : Dialog(context) {
             }
             catch (_: Exception)
             {
-                f.delete()
-                return DefaultScenesState(CurrentScenesCode.NO_CURRENT_SCENES,scenesEmpty)
+                val oldVersion = DataUpdater.getVersion(jsondata)
+                if (oldVersion != null)
+                {
+                    val updatedJson = DataUpdater.updatersList.find {
+                            du -> du.versionFrom == oldVersion
+                    }?.processData(jsondata)
+
+                    return if (updatedJson != null)
+                    {
+                        f.writeText(updatedJson)
+                        DefaultScenesState(CurrentScenesCode.PRESET_INSTALL_DONE,scenesEmpty)
+                    }
+                    else
+                    {
+                        DefaultScenesState(
+                            CurrentScenesCode.PRESET_AND_OUTDATED,
+                            scenesEmpty
+                        )
+                    }
+                } else {
+                    f.delete()
+                    return DefaultScenesState(CurrentScenesCode.NO_CURRENT_SCENES, scenesEmpty)
+                }
             }
         }
         else

@@ -49,6 +49,23 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
             return tg.toString()
         }
 
+        fun getVersion(jsonData: String): Version?
+        {
+            val rootElement = JsonParser.parseString(jsonData)
+            val targetJson = JsonObject()
+            val rootObj = rootElement.asJsonObject
+            if (!rootObj.has("touchSampleSynthVersion")) {
+                return null
+            }
+            val srcVersion = rootObj.get("touchSampleSynthVersion").asString
+            val versionNumbers = srcVersion.split(".")
+            if (versionNumbers.size != 3)
+            {
+                return null
+            }
+            return Version(versionNumbers[0].toInt(),versionNumbers[1].toInt(),versionNumbers[2].toInt())
+        }
+
         val updatersList= listOf(Updater1() as DataUpdater)
     }
 
