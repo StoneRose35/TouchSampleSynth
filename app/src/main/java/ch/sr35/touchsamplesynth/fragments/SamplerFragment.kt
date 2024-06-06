@@ -1,6 +1,7 @@
 package ch.sr35.touchsamplesynth.fragments
 
 
+import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -98,52 +99,75 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekB
             }
         }
         sliderVolModulation?.setOnSeekBarChangeListener(this)
+        var loadPath = File(DialogConfigs.DEFAULT_DIR)
         buttonLoadSample?.setOnClickListener {
-            val dialogProperties = DialogProperties()
-            dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
-            dialogProperties.selection_type = DialogConfigs.FILE_SELECT
-            dialogProperties.root = context?.filesDir
-            dialogProperties.error_dir = File(DialogConfigs.DEFAULT_DIR)
-            dialogProperties.offset = File(DialogConfigs.DEFAULT_DIR)
-            dialogProperties.extensions= arrayOf("wav")
-            dialogProperties.show_hidden_files=false
-            val filePickerDialog= FilePickerDialog(context,dialogProperties)
-            filePickerDialog.setTitle(R.string.sampler_select_sample)
-            filePickerDialog.setDialogSelectionListener { it1 ->
-                val waitAnimation= context?.let { it2 -> WaitAnimation(it2, null) }
-                val constraintLayout = ConstraintLayout.LayoutParams(Converter.toPx(64), Converter.toPx(64))
-                constraintLayout.topToTop= ConstraintLayout.LayoutParams.PARENT_ID
-                constraintLayout.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                constraintLayout.startToStart  = ConstraintLayout.LayoutParams.PARENT_ID
-                constraintLayout.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                waitAnimation?.layoutParams = constraintLayout
-                val mainLayout = (context as TouchSampleSynthMain).findViewById<ConstraintLayout>(R.id.mainLayout)
-                (mainLayout as ViewGroup).addView(waitAnimation)
-                waitAnimation?.startAnimation()
-                val sampleUri = Uri.fromFile(File(it1[0]))
-                val executor=Executors.newSingleThreadExecutor()
-                val handler= Handler(Looper.getMainLooper())
-                executor.execute {
-                    synth.setSampleFile(sampleUri)
-                    Log.i("TouchSampleSynth","loading sample for %s".format(synth.name))
-                    handler.post {
-                        waveViewer?.waveViewBuffer = synth.waveformImg
-                        waveViewer?.startMarkerPosition =
-                            (synth.getSampleStartIndex().toFloat() / synth.sample.size.toFloat())
-                        waveViewer?.endMarkerPosition =
-                            (synth.getSampleEndIndex().toFloat() / synth.sample.size.toFloat())
-                        waveViewer?.loopStartMarkerPosition =
-                            (synth.getLoopStartIndex().toFloat() / synth.sample.size.toFloat())
-                        waveViewer?.loopEndMarkerPosition =
-                            (synth.getLoopEndIndex().toFloat() / synth.sample.size.toFloat())
-                        waveViewer?.invalidate()
-                        waitAnimation?.stopAnimation()
-                        (mainLayout as ViewGroup).removeView(waitAnimation)
+            AlertDialog.Builder(context)
+                .setTitle(getString(R.string.sampleLoadPath))
+                .setSingleChoiceItems(arrayOf(getString(R.string.loadPathExternal),getString(R.string.loadPathInternal)),1)
+                { _, which ->
+                    loadPath = if (which == 0) {
+                        File(DialogConfigs.DEFAULT_DIR)
+                    } else {
+                        context?.filesDir!!
                     }
                 }
+                .setPositiveButton(getString(android.R.string.ok)
+                ) { _, _ ->
+                    val dialogProperties = DialogProperties()
+                    dialogProperties.selection_mode = DialogConfigs.SINGLE_MODE
+                    dialogProperties.selection_type = DialogConfigs.FILE_SELECT
+                    dialogProperties.root = loadPath
+                    dialogProperties.error_dir = File(DialogConfigs.DEFAULT_DIR)
+                    dialogProperties.offset = File(DialogConfigs.DEFAULT_DIR)
+                    dialogProperties.extensions = arrayOf("wav")
+                    dialogProperties.show_hidden_files = false
+                    val filePickerDialog = FilePickerDialog(context, dialogProperties)
+                    filePickerDialog.setTitle(R.string.sampler_select_sample)
+                    filePickerDialog.setDialogSelectionListener { it1 ->
+                        val waitAnimation = context?.let { it2 -> WaitAnimation(it2, null) }
+                        val constraintLayout =
+                            ConstraintLayout.LayoutParams(Converter.toPx(64), Converter.toPx(64))
+                        constraintLayout.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                        constraintLayout.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                        constraintLayout.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                        constraintLayout.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                        waitAnimation?.layoutParams = constraintLayout
+                        val mainLayout =
+                            (context as TouchSampleSynthMain).findViewById<ConstraintLayout>(R.id.mainLayout)
+                        (mainLayout as ViewGroup).addView(waitAnimation)
+                        waitAnimation?.startAnimation()
+                        val sampleUri = Uri.fromFile(File(it1[0]))
+                        val executor = Executors.newSingleThreadExecutor()
+                        val handler = Handler(Looper.getMainLooper())
+                        executor.execute {
+                            synth.setSampleFile(sampleUri)
+                            Log.i("TouchSampleSynth", "loading sample for %s".format(synth.name))
+                            handler.post {
+                                waveViewer?.waveViewBuffer = synth.waveformImg
+                                waveViewer?.startMarkerPosition =
+                                    (synth.getSampleStartIndex()
+                                        .toFloat() / synth.sample.size.toFloat())
+                                waveViewer?.endMarkerPosition =
+                                    (synth.getSampleEndIndex()
+                                        .toFloat() / synth.sample.size.toFloat())
+                                waveViewer?.loopStartMarkerPosition =
+                                    (synth.getLoopStartIndex()
+                                        .toFloat() / synth.sample.size.toFloat())
+                                waveViewer?.loopEndMarkerPosition =
+                                    (synth.getLoopEndIndex()
+                                        .toFloat() / synth.sample.size.toFloat())
+                                waveViewer?.invalidate()
+                                waitAnimation?.stopAnimation()
+                                (mainLayout as ViewGroup).removeView(waitAnimation)
+                            }
+                        }
 
-            }
-            filePickerDialog.show()
+                    }
+                    filePickerDialog.show()
+                }
+                .create()
+                .show()
+
         }
 
         sliderVolModulation?.progress = (synth.getVolumeModulation()*1000.0f).toInt()

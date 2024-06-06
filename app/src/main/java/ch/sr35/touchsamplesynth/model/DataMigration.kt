@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException
 import java.util.UUID
 
 
+
 class Version(val major: Int,val minor: Int,val revision: Int) {
 
     override fun equals(other: Any?): Boolean {
@@ -33,7 +34,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
 {
 
 
-    abstract fun processData(jsonData: String): String
+    abstract fun processData(jsonData: String): String?
 
     companion object
     {
@@ -42,17 +43,9 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
             dest.add(propertyName,src.get(propertyName))
         }
 
-        fun generateErrorJson(msg: String): String
-        {
-            val tg = JsonObject()
-            tg.addProperty("error", msg)
-            return tg.toString()
-        }
-
         fun getVersion(jsonData: String): Version?
         {
             val rootElement = JsonParser.parseString(jsonData)
-            val targetJson = JsonObject()
             val rootObj = rootElement.asJsonObject
             if (!rootObj.has("touchSampleSynthVersion")) {
                 return null
@@ -66,7 +59,23 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
             return Version(versionNumbers[0].toInt(),versionNumbers[1].toInt(),versionNumbers[2].toInt())
         }
 
-        val updatersList= listOf(Updater1() as DataUpdater)
+        fun upgradeToCurrent(jsonData: String): String?
+        {
+            var updatedData:String = jsonData
+            val startVersion = getVersion(jsonData) ?: return null
+            var currentVersion: Version? = startVersion
+            while (currentVersion != null) {
+                updatersList.firstOrNull { el -> el.versionFrom == currentVersion }.also {
+                    currentVersion = it?.versionTo
+                    if (currentVersion != null) {
+                        updatedData = it?.processData(updatedData).toString()
+                    }
+                }
+            }
+            return updatedData
+        }
+
+        val updatersList= listOf(Updater1() as DataUpdater, Updater2() as DataUpdater)
     }
 
     /**
@@ -78,24 +87,24 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     private class Updater1: DataUpdater(Version(1,8,6), Version(1,9,0))
     {
 
-        override fun processData(jsonData: String): String {
+        override fun processData(jsonData: String): String? {
             try {
                 val rootElement = JsonParser.parseString(jsonData)
                 val targetJson = JsonObject()
                 val rootObj = rootElement.asJsonObject
                 if (!rootObj.has("touchSampleSynthVersion")) {
-                    return generateErrorJson("could not find touchSampleSynthVersion")
+                    return null
                 }
                 val srcVersion = rootObj.get("touchSampleSynthVersion").asString
                 val versionNumbers = srcVersion.split(".")
                 if (versionNumbers.size != 3)
                 {
-                    return generateErrorJson("version string could not be parsed")
+                    return null
                 }
                 val versionFromFile = Version(versionNumbers[0].toInt(),versionNumbers[1].toInt(),versionNumbers[2].toInt())
                 if (versionFromFile != this.versionFrom)
                 {
-                    return generateErrorJson("ile version: $versionFromFile differs from source version of the updater: ${versionFrom}")
+                    return null
                 }
                 copyJsonProperty("exportDateTime",rootObj,targetJson)
                 copyJsonProperty("manufacturer",rootObj,targetJson)
@@ -126,7 +135,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
                         }
                         else
                         {
-                            return generateErrorJson("illegal number of voices at instrument $i")
+                            return null
                         }
                         i.asJsonObject.remove("nVoices")
                         i.asJsonObject.addProperty("id",instrUuid)
@@ -145,13 +154,39 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
 
             catch (e: JsonParseException)
             {
-                return "{\"error\": \"JsonParseException: ${e.message}\"}"
+                return null
             }
             catch (e: JsonSyntaxException)
             {
-                return "{\"error\": \"JsonSyntaxException: ${e.message}\"}"
+                return null
             }
         }
+    }
+
+    private class Updater2: DataUpdater(versionFrom = Version(1,9,0),versionTo = Version(1,9,1))
+    {
+        override fun processData(jsonData: String): String? {
+            val rootElement = JsonParser.parseString(jsonData)
+            val rootObj = rootElement.asJsonObject
+            if (!rootObj.has("touchSampleSynthVersion")) {
+                return null
+            }
+            val srcVersion = rootObj.get("touchSampleSynthVersion").asString
+            val versionNumbers = srcVersion.split(".")
+            if (versionNumbers.size != 3)
+            {
+                return null
+            }
+            val versionFromFile = Version(versionNumbers[0].toInt(),versionNumbers[1].toInt(),versionNumbers[2].toInt())
+            if (versionFromFile != this.versionFrom)
+            {
+                return null
+            }
+            rootObj.remove("touchSampleSynthVersion")
+            rootObj.addProperty("touchSampleSynthVersion",versionTo.toString())
+            return rootObj.toString()
+        }
+
     }
 
 }

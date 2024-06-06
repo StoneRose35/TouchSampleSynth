@@ -76,6 +76,9 @@
         <item>5</item>
         <item>10</item>
     </string-array>
+    <string name="sampleLoadPath">Load Path</string>
+    <string name="loadPathInternal">Internal/Bundled Samples</string>
+    <string name="loadPathExternal">External</string>
     <string name="midiMode">Midi Mode</string>
     <string name="midiHostMode">Host Mode (connected to Keyboard)</string>
     <string name="midiDeviceMode">Device Mode (connected to Computer)</string>

@@ -26,7 +26,6 @@ import ch.sr35.touchsamplesynth.model.DataUpdater
 import ch.sr35.touchsamplesynth.model.PersistableInstrument
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SceneListP
-import ch.sr35.touchsamplesynth.model.Version
 import ch.sr35.touchsamplesynth.model.importMode
 import com.google.gson.GsonBuilder
 import java.io.File
@@ -256,9 +255,7 @@ class DefaultScenesInstall(private var context: Context,) : Dialog(context) {
                     (context as TouchSampleSynthMain).loadFromBinaryFiles()
                     SceneListP.exportAsJson(SCENES_FILE_NAME,context)
                     scenesEmpty = (context as TouchSampleSynthMain).scenesArrayAdapter!!.isEmpty
-                    val updatedJson = DataUpdater.updatersList.find {
-                                        du -> du.versionFrom == Version(majorMinorSubScenes[0].toInt(),majorMinorSubScenes[1].toInt(),majorMinorSubScenes[2].toInt())
-                                    }?.processData(jsondata)
+                    val updatedJson = DataUpdater.upgradeToCurrent(jsondata)
 
                     return if (updatedJson != null)
                     {
@@ -283,10 +280,7 @@ class DefaultScenesInstall(private var context: Context,) : Dialog(context) {
                 val oldVersion = DataUpdater.getVersion(jsondata)
                 if (oldVersion != null)
                 {
-                    val updatedJson = DataUpdater.updatersList.find {
-                            du -> du.versionFrom == oldVersion
-                    }?.processData(jsondata)
-
+                    val updatedJson = DataUpdater.upgradeToCurrent(jsondata)
                     return if (updatedJson != null)
                     {
                         f.writeText(updatedJson)
