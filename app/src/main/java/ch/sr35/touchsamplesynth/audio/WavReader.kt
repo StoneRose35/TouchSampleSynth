@@ -56,6 +56,14 @@ class WavReader {
                 fis.read(remainingHeader, 0, headerLength - 16)
             }
             fis.read(idData,0,4)
+            if (String(idData)=="LIST")
+            {
+                val dataSizeBytesArray = ByteArray(4)
+                fis.read(dataSizeBytesArray,0,4)
+                val dataSize = littleEndianConversion(dataSizeBytesArray)
+                fis.skip(dataSize.toLong())
+                fis.read(idData,0,4)
+            }
             if (String(idData)!="data")
             {
                 throw WavReaderException("expected data tag")

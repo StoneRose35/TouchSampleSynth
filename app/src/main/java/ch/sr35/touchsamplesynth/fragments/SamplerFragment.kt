@@ -103,7 +103,7 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekB
         buttonLoadSample?.setOnClickListener {
             AlertDialog.Builder(context)
                 .setTitle(getString(R.string.sampleLoadPath))
-                .setSingleChoiceItems(arrayOf(getString(R.string.loadPathExternal),getString(R.string.loadPathInternal)),1)
+                .setSingleChoiceItems(arrayOf(getString(R.string.loadPathExternal),getString(R.string.loadPathInternal)),-1)
                 { _, which ->
                     loadPath = if (which == 0) {
                         File(DialogConfigs.DEFAULT_DIR)
