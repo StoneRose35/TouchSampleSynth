@@ -137,11 +137,9 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
 
                 }
                 (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.clear()
-                if ( (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].isMonophonic) {
                     (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(
                         voicesToGenerate
                     )
-                }
             }
         }
     }
