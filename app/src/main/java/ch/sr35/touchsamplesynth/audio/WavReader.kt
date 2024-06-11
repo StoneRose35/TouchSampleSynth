@@ -1,43 +1,53 @@
 package ch.sr35.touchsamplesynth.audio
 
-import java.io.InputStream
+import java.io.RandomAccessFile
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.floor
 
-class WavReader {
+class WaveHeaderTag(val description: String,val size:Int,val position: Long)
 
-    fun readWaveFile(fis: InputStream): WavFile
+class WavReader() {
+
+    fun readWaveFile(file: RandomAccessFile): WavFile
     {
+        val tags = ArrayList<WaveHeaderTag>()
         val headerData= ByteArray(32)
         val idData= ByteArray(4)
-        fis.read(headerData,0,12) // read header
-        fis.read(idData,0,4)
-        if (String(idData) == "JUNK")
+        var samplingRate = -1
+        var channels = -1
+        var formatTag: Int
+        var headerLength: Int
+        var bitsPerSample = -1
+
+        file.read(headerData,0,12) // read header
+
+        while (file.filePointer < file.length())
         {
-            fis.read(idData,0,4)
-            val junksize = littleEndianConversion(idData)
-            if (junksize and 1 != 0)
+            file.read(idData,0,4)
+
+            if (isValidTagDescriptor(idData))
             {
-                fis.skip((junksize + 1).toLong())
-            }
-            else
-            {
-                fis.skip((junksize + 0).toLong())
+                val descr = String(idData)
+                file.read(idData,0,4)
+
+                val size = littleEndianConversion(idData)
+                val wavTag = WaveHeaderTag(descr,size,file.filePointer-8)
+                tags.add(wavTag)
+                file.skipBytes(size)
             }
         }
-        //else
-        //{
-        //    fis.skip(-4)
-        //}
-        if (String(idData)=="fmt ")
-        {
-            fis.read(headerData,0,20)
-            val samplingRate = littleEndianConversion(headerData.copyOfRange(8,12))
-            val channels = littleEndianConversion(headerData.copyOfRange(6,8))
-            val formatTag = littleEndianConversion(headerData.copyOfRange(4,6))
-            val headerLength = littleEndianConversion(headerData.copyOfRange(0,4))
-            val bitsPerSample = littleEndianConversion(headerData.copyOfRange(18,20))
+
+        file.seek(0)
+        tags.find { tag -> tag.description == "fmt " }?.let {
+            file.seek(it.position+4)
+
+            file.read(headerData,0,20)
+            samplingRate = littleEndianConversion(headerData.copyOfRange(8,12))
+            channels = littleEndianConversion(headerData.copyOfRange(6,8))
+            formatTag = littleEndianConversion(headerData.copyOfRange(4,6))
+            headerLength = littleEndianConversion(headerData.copyOfRange(0,4))
+            bitsPerSample = littleEndianConversion(headerData.copyOfRange(18,20))
             if (formatTag != 1)
             {
                 throw WavReaderException("Wav file is compressed, only uncompressed files supported")
@@ -53,32 +63,24 @@ class WavReader {
 
             if (headerLength - 16 > 0) {
                 val remainingHeader=ByteArray(headerLength-16)
-                fis.read(remainingHeader, 0, headerLength - 16)
+                file.read(remainingHeader, 0, headerLength - 16)
             }
-            fis.read(idData,0,4)
-            if (String(idData)=="LIST")
-            {
-                val dataSizeBytesArray = ByteArray(4)
-                fis.read(dataSizeBytesArray,0,4)
-                val dataSize = littleEndianConversion(dataSizeBytesArray)
-                fis.skip(dataSize.toLong())
-                fis.read(idData,0,4)
-            }
-            if (String(idData)!="data")
-            {
-                throw WavReaderException("expected data tag")
-            }
-            val dataSizeBytesArray = ByteArray(4)
-            fis.read(dataSizeBytesArray,0,4)
-            val dataSize = littleEndianConversion(dataSizeBytesArray)
-            val rawByteData = ByteArray(dataSize)
-            fis.read(rawByteData,0,dataSize)
-            fis.close()
-            return WavFile(WaveFileMetadata(samplingRate,bitsPerSample,channels),rawByteData)
+        }
+        if (samplingRate == -1)
+        {
+            throw WavReaderException("no format tag found")
         }
         else
         {
-            throw WavReaderException("expected format tag")
+            file.seek(0)
+            tags.find { tag -> tag.description == "data" }?.let {
+                file.seek(it.position+8)
+                val rawByteData = ByteArray(it.size)
+                file.read(rawByteData,0,it.size)
+                file.close()
+                return WavFile(WaveFileMetadata(samplingRate,bitsPerSample,channels),rawByteData)
+            }
+            throw WavReaderException("no data tag found")
         }
     }
 
@@ -349,7 +351,6 @@ enum class WaveFileChannel
 }
 class WaveFileMetadata(var sampleRate: Int,var bitDepth: Int,var nChannels: Int)
 
-
 fun littleEndianConversion(bytes: ByteArray): Int {
     var result = 0
     for (i in bytes.indices) {
@@ -358,6 +359,17 @@ fun littleEndianConversion(bytes: ByteArray): Int {
         } else {
             result or (bytes[i].toInt() shl 8 * i)
         }
+    }
+    return result
+}
+
+fun isValidTagDescriptor(bytes: ByteArray): Boolean
+{
+    var result=true
+    for (i in bytes.indices)
+    {
+        result = result.and((bytes[i].toUByte() > 96u && bytes[i].toUByte() < 122u) || (bytes[i].toUByte() > 64u && bytes[i].toUByte() < 91u) || bytes[i].toUByte()
+            .toUInt() == 32u)
     }
     return result
 }

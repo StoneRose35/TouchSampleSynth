@@ -7,13 +7,14 @@ import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.net.toFile
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.WavReader
 import ch.sr35.touchsamplesynth.audio.WaveFileChannel
 import ch.sr35.touchsamplesynth.audio.voices.SamplerK
-import java.io.InputStream
+import java.io.RandomAccessFile
 
 const val WAVE_BMP_WIDTH=768
 const val WAVE_BMP_HEIGHT=512
@@ -46,10 +47,10 @@ class SamplerI(private val context: Context,
         return icon
     }
 
-    fun setSampleFile(inputStream: InputStream)
+    fun setSampleFile(file: RandomAccessFile)
     {
         val wr = WavReader()
-        val wavFile = wr.readWaveFile(inputStream)
+        val wavFile = wr.readWaveFile(file)
         val ae = AudioEngineK()
         val floatSamples = wavFile.getFloatData(ae.getSamplingRate(),WaveFileChannel.LEFT)
         sample.clear()
@@ -72,10 +73,9 @@ class SamplerI(private val context: Context,
     fun setSampleFile(fileName: Uri)
     {
 
-        val inputStream = context.contentResolver.openInputStream(fileName)
-        setSampleFile(inputStream!!)
+        val randomAccessFile = RandomAccessFile(fileName.toFile(),"r")
+        setSampleFile(randomAccessFile)
         sampleUri = fileName
-        inputStream.close()
 
     }
 

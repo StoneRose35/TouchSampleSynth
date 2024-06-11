@@ -4,6 +4,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert
 import org.junit.Test
 import org.junit.Ignore
+import java.io.RandomAccessFile
 import kotlin.math.sqrt
 import kotlin.system.measureTimeMillis
 
@@ -30,7 +31,7 @@ class SamplerTest {
         val context = InstrumentationRegistry.getInstrumentation().context
         val timesmeasured = ArrayList<Long>()
         for (c in 0 until 512) {
-            val exampleWavStream = context.assets.open("Funny-06.wav")
+            val exampleWavStream = RandomAccessFile(context.getFileStreamPath("Funny-06.wav"),"r") // .open("Funny-06.wav")
             val timeInMsUsed = measureTimeMillis {
                 samplerI.setSampleFile(exampleWavStream)
             }

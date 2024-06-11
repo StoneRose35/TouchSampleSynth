@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.audio
 import org.junit.Assert
 import org.junit.Test
 import java.io.File
+import java.io.RandomAccessFile
 
 class WavReaderTest {
 
@@ -12,7 +13,7 @@ class WavReaderTest {
         val wr = WavReader()
         val  file = File("./src/test/resources/exampleWav.wav")
         Assert.assertTrue(file.isFile)
-        val wavFile = wr.readWaveFile(file.inputStream())
+        val wavFile = wr.readWaveFile(RandomAccessFile(file,"r"))
         Assert.assertNotNull(wavFile)
         Assert.assertEquals(wavFile.header.sampleRate,48000)
         Assert.assertEquals(wavFile.header.nChannels, 2)
@@ -26,7 +27,7 @@ class WavReaderTest {
         val wr = WavReader()
         val  file = File("./src/test/resources/exampleWav24.wav")
         Assert.assertTrue(file.isFile)
-        val wavFile = wr.readWaveFile(file.inputStream())
+        val wavFile = wr.readWaveFile(RandomAccessFile(file,"r"))
         Assert.assertNotNull(wavFile)
         Assert.assertEquals(wavFile.header.sampleRate,48000)
         Assert.assertEquals(wavFile.header.nChannels, 2)
@@ -39,7 +40,7 @@ class WavReaderTest {
         val wr = WavReader()
         val  file = File("./src/test/resources/exampleWav32.wav")
         Assert.assertTrue(file.isFile)
-        val wavFile = wr.readWaveFile(file.inputStream())
+        val wavFile = wr.readWaveFile(RandomAccessFile(file,"r"))
         Assert.assertNotNull(wavFile)
         Assert.assertEquals(wavFile.header.sampleRate,48000)
         Assert.assertEquals(wavFile.header.nChannels, 2)
@@ -52,7 +53,7 @@ class WavReaderTest {
         val wr = WavReader()
         val  file = File("./src/test/resources/exampleWav44100.wav")
         Assert.assertTrue(file.isFile)
-        val wavFile = wr.readWaveFile(file.inputStream())
+        val wavFile = wr.readWaveFile(RandomAccessFile(file,"r"))
         Assert.assertNotNull(wavFile)
         Assert.assertEquals(wavFile.header.sampleRate,44100)
         Assert.assertEquals(wavFile.header.nChannels, 2)
@@ -65,7 +66,7 @@ class WavReaderTest {
         val wr = WavReader()
         val  file = File("./src/test/resources/exampleWavU8.wav")
         Assert.assertTrue(file.isFile)
-        val wavFile = wr.readWaveFile(file.inputStream())
+        val wavFile = wr.readWaveFile(RandomAccessFile(file,"r"))
         Assert.assertNotNull(wavFile)
         Assert.assertEquals(wavFile.header.sampleRate,48000)
         Assert.assertEquals(wavFile.header.nChannels, 2)
@@ -78,7 +79,7 @@ class WavReaderTest {
         val wr = WavReader()
         val  file = File("./src/test/resources/Acoustic Snare 02.wav")
         Assert.assertTrue(file.isFile)
-        val wavFile = wr.readWaveFile(file.inputStream())
+        val wavFile = wr.readWaveFile(RandomAccessFile(file,"r"))
         wavFile.getFloatData(44100,WaveFileChannel.LEFT)
         Assert.assertNotNull(wavFile)
     }
@@ -89,7 +90,7 @@ class WavReaderTest {
         val wr = WavReader()
         val  file = File("./src/test/resources/exampleWav.wav")
         Assert.assertTrue(file.isFile)
-        val wavFile = wr.readWaveFile(file.inputStream())
+        val wavFile = wr.readWaveFile(RandomAccessFile(file,"r"))
         Assert.assertNotNull(wavFile)
         val floatData = wavFile.getFloatData(48000,WaveFileChannel.LEFT)
         Assert.assertEquals(floatData.size,wavFile.rawData.size/wavFile.header.nChannels/(wavFile.header.bitDepth/8))
@@ -102,7 +103,7 @@ class WavReaderTest {
         val wr = WavReader()
         val  file = File("./src/test/resources/exampleWav44100.wav")
         Assert.assertTrue(file.isFile)
-        val wavFile = wr.readWaveFile(file.inputStream())
+        val wavFile = wr.readWaveFile(RandomAccessFile(file,"r"))
         Assert.assertNotNull(wavFile)
         val floatData = wavFile.getFloatData(48000,WaveFileChannel.BOTH)
         Assert.assertTrue(floatData.size > 220000)
