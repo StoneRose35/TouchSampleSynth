@@ -8,11 +8,8 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.widget.LinearLayout
-
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet.Motion
 import androidx.core.view.children
-import androidx.core.view.marginLeft
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import com.google.android.material.color.MaterialColors
 import ch.sr35.touchsamplesynth.R

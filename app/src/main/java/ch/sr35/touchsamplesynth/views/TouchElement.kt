@@ -9,7 +9,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
@@ -18,7 +17,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
-import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
@@ -28,7 +26,6 @@ import ch.sr35.touchsamplesynth.graphics.Point
 import ch.sr35.touchsamplesynth.graphics.Rectangle
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
-import kotlin.concurrent.thread
 import kotlin.math.sqrt
 
 const val PADDING: Float = 32.0f
