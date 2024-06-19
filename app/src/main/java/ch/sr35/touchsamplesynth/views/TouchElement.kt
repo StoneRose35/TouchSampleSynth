@@ -775,6 +775,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
+    fun isEditing(): Boolean
+    {
+        return this.elementState == TouchElementState.EDITING
+    }
+
     fun setDefaultMode(mode: TouchElementState)
     {
         this.defaultState = mode
@@ -793,6 +798,15 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             Point((layoutParams as ConstraintLayout.LayoutParams).leftMargin.toDouble() + (layoutParams as ConstraintLayout.LayoutParams).width.toDouble(),
                 (layoutParams as ConstraintLayout.LayoutParams).topMargin.toDouble()+ (layoutParams as ConstraintLayout.LayoutParams).height.toDouble())
         )
+    }
+
+    fun isInside(pt: Point): Boolean
+    {
+        return pt.x >  (layoutParams as ConstraintLayout.LayoutParams).leftMargin + PADDING &&
+                pt.x < (layoutParams as ConstraintLayout.LayoutParams).leftMargin + (layoutParams as ConstraintLayout.LayoutParams).width - PADDING &&
+                pt.y > (layoutParams as ConstraintLayout.LayoutParams).topMargin + PADDING &&
+                pt.y < (layoutParams as ConstraintLayout.LayoutParams).topMargin + (layoutParams as ConstraintLayout.LayoutParams).height - PADDING
+
     }
 }
 
