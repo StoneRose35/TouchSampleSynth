@@ -27,7 +27,7 @@ private:
 
 public:
     float initialCutoff;
-    SimpleSubtractiveSynth(float);
+    explicit SimpleSubtractiveSynth(float);
     float getNextSample() override;
     void setNote(float note) override;
     void switchOn(uint8_t) override;

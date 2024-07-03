@@ -58,7 +58,14 @@ float AdsrEnvelope::getValue(float deltaT) {
             if (currentVal > 1.0f)
             {
                 currentVal = 1.0f;
-                phase++;
+                if (isTriggered == 1)
+                {
+                    phase = 4;
+                }
+                else
+                {
+                    phase++;
+                }
             }
             break;
         case 2:

@@ -35,10 +35,11 @@ class TouchElementTest {
 
 
         //touch
-        var evnt = MotionEventBuilder.newBuilder()
-            .setAction(MotionEvent.ACTION_DOWN)
-            .setPointer(0.1f,0.1f)
-            .build()
+        var evnt = MotionEventBuilder.newBuilder().apply {
+            setAction(MotionEvent.ACTION_DOWN)
+            setPointer( 0.1f,0.1f)
+        }.build()
+
         te.setEditmode(false)
         // virtually click
         te.onTouchEvent(evnt)

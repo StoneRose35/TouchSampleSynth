@@ -38,7 +38,7 @@ public:
     float alphaVolumeChange;
     float midiVelocityScaling;
     AMidiInputPort * midiInputPort= nullptr;
-    MusicalSoundGenerator(float sr);
+    explicit MusicalSoundGenerator(float sr);
 };
 
 

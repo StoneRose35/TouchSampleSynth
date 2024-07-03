@@ -6,7 +6,7 @@
 #define TOUCHSAMPLESYNTH_SAMPLER_H
 
 #include "MusicalSoundGenerator.h"
-#include <stdint.h>
+#include <cstdint>
 #define DEFAULT_SAMPLE_SIZE 2880000
 #define SAMPLER_MODE_LOOP 0
 #define SAMPLE_MODE_TRIGGERED 1
@@ -44,7 +44,7 @@ public:
     void trigger(uint8_t) override;
     int getType() override;
     bool isSounding() const;
-    Sampler(float sr);
+    explicit Sampler(float sr);
     ~Sampler();
 };
 

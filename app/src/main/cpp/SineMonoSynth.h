@@ -7,7 +7,7 @@
 #include "MusicalSoundGenerator.h"
 #include "AdsrEnvelope.h"
 #include "SineOscillator.h"
-#include <stdlib.h>
+#include <cstdlib>
 
 
 class SineMonoSynth: public MusicalSoundGenerator {
@@ -21,7 +21,7 @@ private:
 public:
     float getNextSample() override;
 
-    SineMonoSynth(float sr);
+    explicit SineMonoSynth(float sr);
 
     void setNote(float note) override;
     void switchOn(uint8_t) override;
