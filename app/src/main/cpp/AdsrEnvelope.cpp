@@ -90,6 +90,13 @@ float AdsrEnvelope::getValue(float deltaT) {
 
 float AdsrEnvelope::switchOn() {
     phase = 1;
+    isTriggered = 0;
+    return getValue(0.0f);
+}
+
+float AdsrEnvelope::trigger() {
+    phase = 1;
+    isTriggered =1;
     return getValue(0.0f);
 }
 
@@ -109,6 +116,7 @@ AdsrEnvelope::AdsrEnvelope() {
     release=0.01f;
     phase=0;
     currentVal = 0.0f;
+    isTriggered = 0;
 }
 
 

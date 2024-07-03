@@ -21,7 +21,7 @@ open class Instrument(var name: String) {
             voices[0]
         } else {
             voices.stream().map { a -> a as MusicalSoundGenerator }
-                ?.filter { v -> !v.isSounding() }?.findFirst()?.orElse(null)
+                ?.filter { v -> !(v.isSounding()) }?.findFirst()?.orElse(null)
         }
     }
 

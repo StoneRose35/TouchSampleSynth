@@ -17,6 +17,8 @@ public:
 
     virtual void switchOn(uint8_t);
 
+    virtual void trigger(uint8_t);
+
     void setVolume(float);
     void setVolumeImmediate(float);
     float getVolume();

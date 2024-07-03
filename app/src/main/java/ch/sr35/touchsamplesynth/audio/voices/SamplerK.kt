@@ -27,6 +27,7 @@ class SamplerK(context: Context): MusicalSoundGenerator() {
     external fun loadSample(sampleData: FloatArray): Boolean
     external fun switchOnExt(vel: Float): Boolean
     external fun switchOffExt(vel: Float):Boolean
+    external fun triggerExt(vel: Float): Boolean
     override fun setNote(note: Float): Boolean {
         return true
     }

@@ -26,6 +26,7 @@ public:
     void setNote(float note) override;
     void switchOn(uint8_t) override;
     void switchOff(uint8_t) override;
+    void trigger(uint8_t) override;
     int getType() override;
     bool isSounding();
 

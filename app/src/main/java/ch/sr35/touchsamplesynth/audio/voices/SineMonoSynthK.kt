@@ -26,6 +26,7 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
     external fun setVolume(v: Float): Boolean
     external fun switchOnExt(vel: Float): Boolean
     external fun switchOffExt(vel: Float):Boolean
+    external fun triggerExt(vel: Float): Boolean
     external override fun setNote(note: Float): Boolean
     external override fun isSounding(): Boolean
     external override fun setMidiMode(midiMode: Int)
@@ -80,6 +81,10 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
     {
         engaged=true
         return switchOnExt(vel)
+    }
+
+    override fun trigger(vel: Float): Boolean {
+        return triggerExt(vel)
     }
 
     override fun isEngaged(): Boolean {

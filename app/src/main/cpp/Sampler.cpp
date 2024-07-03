@@ -80,6 +80,11 @@ void Sampler::setNote(float note) {
     MusicalSoundGenerator::setNote(note);
 }
 
+void Sampler::trigger(uint8_t vel) {
+    MusicalSoundGenerator::trigger(vel);
+    currentIndex = sampleStartIndex;
+}
+
 void Sampler::switchOn(uint8_t vel) {
     MusicalSoundGenerator::switchOn(vel);
     currentIndex = sampleStartIndex;

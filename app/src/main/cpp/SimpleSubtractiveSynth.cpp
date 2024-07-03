@@ -104,6 +104,12 @@ float SimpleSubtractiveSynth::getResonance() {
     return filter->reso;
 }
 
+void SimpleSubtractiveSynth::trigger(uint8_t vel) {
+    MusicalSoundGenerator::trigger(vel);
+    setCutoff(initialCutoff);
+    env->trigger();
+}
+
 void SimpleSubtractiveSynth::switchOn(uint8_t vel) {
     setCutoff(initialCutoff);
     env->switchOn();

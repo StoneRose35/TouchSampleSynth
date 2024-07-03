@@ -259,6 +259,26 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setMidiVelocityScaling(JNIEn
     return true;
 }
 
+JNIEXPORT jboolean JNICALL
+        Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_triggerExt(JNIEnv *env, jobject thiz,
+                                                                       jfloat vel) {
+    AudioEngine * audioEngine = getAudioEngine();
+    jclass synth=env->GetObjectClass(thiz);
+    jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
+    int8_t instance = env->CallByteMethod(thiz,getInstance);
+    MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
+    if  (msg == nullptr)
+    {
+        return false;
+    }
+    if (msg->getType() != SAMPLER)
+    {
+        return false;
+    }
+    ((Sampler*)msg)->trigger(vel);
+    return true;
+}
+
 
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_switchOnExt(JNIEnv *env, jobject thiz,

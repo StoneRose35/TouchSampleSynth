@@ -14,6 +14,7 @@ private:
     float release;
     int phase;
     float currentVal;
+    char isTriggered;
 public:
     void setAttack(float);
     float getAttack() const;
@@ -27,6 +28,7 @@ public:
 
     float getValue(float);
     float switchOn();
+    float trigger();
     float switchOff();
     bool isSounding();
 };

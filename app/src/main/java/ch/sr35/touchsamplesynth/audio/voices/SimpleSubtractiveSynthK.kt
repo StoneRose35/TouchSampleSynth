@@ -33,6 +33,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
     external fun setVolume(v: Float): Boolean
     private external fun switchOnExt(vel: Float): Boolean
     private external fun switchOffExt(vel: Float):Boolean
+    external fun triggerExt(vel: Float): Boolean
     external override fun isSounding(): Boolean
     external override fun setMidiMode(midiMode: Int)
     external override fun getMidiMode(): Int

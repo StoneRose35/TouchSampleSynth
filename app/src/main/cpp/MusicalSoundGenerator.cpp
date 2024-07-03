@@ -28,6 +28,18 @@ void MusicalSoundGenerator::switchOn(uint8_t vel) {
     }
 }
 
+void MusicalSoundGenerator::trigger(uint8_t vel) {
+    uint8_t midiCommand[3];
+    midiCommand[0]=MIDI_NOTE_ON | midiChannel;
+    midiCommand[1]=midiNote;
+    midiCommand[2]=vel;
+    AMidiInputPort_send(midiInputPort,midiCommand,3);
+    midiCommand[0]=MIDI_NOTE_OFF | midiChannel;
+    midiCommand[1]=midiNote;
+    midiCommand[2]=vel;
+    AMidiInputPort_send(midiInputPort,midiCommand,3);
+}
+
 void MusicalSoundGenerator::switchOff(uint8_t vel) {
     if (midiInputPort != nullptr)
     {

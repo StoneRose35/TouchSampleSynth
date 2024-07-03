@@ -10,6 +10,7 @@ open class MusicalSoundGenerator {
 
     open fun setNote(note: Float): Boolean {return false}
     open fun switchOn(vel: Float): Boolean {return false}
+    open fun trigger(vel: Float): Boolean {return false}
     open fun switchOff(vel: Float): Boolean {return false}
     open fun setMidiVelocityScaling(mv: Float): Boolean {return false}
     open fun getInstance(): Byte{return -1}

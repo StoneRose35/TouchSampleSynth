@@ -31,6 +31,14 @@ class Point(var x: Double,var y: Double)
     }
 }
 
+class Line(var p1: Point,var p2: Point)
+{
+    fun length(): Double
+    {
+        return sqrt((p1.x - p2.x) *(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y))
+    }
+}
+
 class PointAndDistance(val point: Point, val d: Double)
 
 enum class Overlap
@@ -276,6 +284,59 @@ class Rectangle(p1: Point,p2: Point)
         return arrayOf(topLeft,Point(bottomRight.x,topLeft.y),Point(topLeft.x,bottomRight.y),bottomRight)
     }
 
+    fun getIntersectingSides(l: Line): List<Overlap>
+    {
+        if ((l.p1.x >= topLeft.x && l.p2.x <= bottomRight.x)
+            && (l.p2.x >= topLeft.x && l.p2.x <= bottomRight.x)
+            && ((l.p1.y < topLeft.y && l.p2.y > bottomRight.y) || (l.p2.y < topLeft.y && l.p1.y > bottomRight.y))
+            )
+        {
+            return listOf(Overlap.TOP,Overlap.BOTTOM)
+        }
+        else if ((l.p1.y >= topLeft.y && l.p2.y <= bottomRight.y)
+            && (l.p2.y >= topLeft.y && l.p2.y <= bottomRight.y)
+            && ((l.p1.x < topLeft.x && l.p2.x > bottomRight.x) || (l.p2.x < topLeft.x && l.p1.x > bottomRight.x))
+        )
+        {
+            return listOf(Overlap.LEFT,Overlap.RIGHT)
+        }
+        else if ((l.p1.x >= topLeft.x && l.p1.x <= bottomRight.x && ((l.p1.y < topLeft.y && isInside(l.p2))
+                )) ||
+            (l.p2.x >= topLeft.x && l.p2.x <= bottomRight.x && ((l.p2.y < topLeft.y && isInside(l.p1))
+                    ))
+            )
+        {
+            return listOf(Overlap.TOP)
+        }
+        else if ((l.p1.y >= topLeft.y && l.p1.y <= bottomRight.y && ((l.p1.x < topLeft.x && isInside(l.p2))
+                    )) ||
+            (l.p2.y >= topLeft.y && l.p2.y <= bottomRight.y && ((l.p2.y < topLeft.y && isInside(l.p1))
+                    ))
+        )
+        {
+            return listOf(Overlap.LEFT)
+        }
+        else if ((l.p1.y >= topLeft.y && l.p1.y <= bottomRight.y && ((l.p1.x > bottomRight.x && isInside(l.p2))
+                    )) ||
+            (l.p2.y >= topLeft.y && l.p2.y <= bottomRight.y && ((l.p2.y > bottomRight.y && isInside(l.p1))
+                    ))
+        )
+        {
+            return listOf(Overlap.RIGHT)
+        }
+        else if ((l.p1.x >= topLeft.x && l.p1.x <= bottomRight.x && ((l.p1.y > bottomRight.y && isInside(l.p2))
+                    )) ||
+            (l.p2.x >= topLeft.x && l.p2.x <= bottomRight.x && ((l.p2.y > bottomRight.y && isInside(l.p1))
+                    ))
+        )
+        {
+            return listOf(Overlap.BOTTOM)
+        }
+        else
+        {
+            return listOf()
+        }
+    }
 
     fun isInside(p: Point,strict: Boolean=true): Boolean
     {

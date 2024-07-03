@@ -48,6 +48,11 @@ void SineMonoSynth::switchOn(uint8_t velocity) {
     env->switchOn();
 }
 
+void SineMonoSynth::trigger(uint8_t velocity) {
+    MusicalSoundGenerator::trigger(velocity);
+    env->trigger();
+}
+
 void SineMonoSynth::switchOff(uint8_t velocity) {
     MusicalSoundGenerator::switchOff(velocity);
     env->switchOff();
