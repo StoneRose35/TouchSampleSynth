@@ -310,7 +310,7 @@ class Rectangle(p1: Point,p2: Point)
         }
         else if ((l.p1.y >= topLeft.y && l.p1.y <= bottomRight.y && ((l.p1.x < topLeft.x && isInside(l.p2))
                     )) ||
-            (l.p2.y >= topLeft.y && l.p2.y <= bottomRight.y && ((l.p2.y < topLeft.y && isInside(l.p1))
+            (l.p2.y >= topLeft.y && l.p2.y <= bottomRight.y && ((l.p2.x < topLeft.x && isInside(l.p1))
                     ))
         )
         {
@@ -318,7 +318,7 @@ class Rectangle(p1: Point,p2: Point)
         }
         else if ((l.p1.y >= topLeft.y && l.p1.y <= bottomRight.y && ((l.p1.x > bottomRight.x && isInside(l.p2))
                     )) ||
-            (l.p2.y >= topLeft.y && l.p2.y <= bottomRight.y && ((l.p2.y > bottomRight.y && isInside(l.p1))
+            (l.p2.y >= topLeft.y && l.p2.y <= bottomRight.y && ((l.p2.x > bottomRight.x && isInside(l.p1))
                     ))
         )
         {
