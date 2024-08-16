@@ -189,7 +189,15 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                 }
                 // find all touch element which might have been intersected by the line going from oldposition to currentposition
                 touchElements.filter {
-                    it.asRectangle().getIntersectingSides(Line(oldPositions[ptrIndex]!!,currentPositions[ptrIndex]!!)).size == 2
+                    if (oldPositions[ptrIndex] != null && currentPositions[ptrIndex] != null) {
+                        return it.asRectangle().getIntersectingSides(
+                            Line(
+                                oldPositions[ptrIndex]!!,
+                                currentPositions[ptrIndex]!!
+                            )
+                        ).size == 2
+                    }
+                    return false
                 }.forEach {
                     if (it.asRectangle().getIntersectingSides(Line(oldPositions[ptrIndex]!!,currentPositions[ptrIndex]!!)).contains(Overlap.TOP))
                     {
