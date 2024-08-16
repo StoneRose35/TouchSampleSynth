@@ -358,12 +358,6 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 )
                 it.draw(canvas)
             }
-            /*canvas.drawText(
-                "Rotate",
-                (rotateRect.left + 3).toFloat(),
-                rotateRect.top.toFloat() + editText.textSize,
-                editText
-            )*/
 
             setSoundgenRect.left = 40
             setSoundgenRect.right = setSoundgenRect.left + editRectangleWidth + Converter.toPx(3)
@@ -381,13 +375,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 )
                 it.draw(canvas)
             }
-            /*
-            canvas.drawText(
-                "Edit",
-                (setSoundgenRect.left + 3).toFloat(),
-                setSoundgenRect.top.toFloat() + editText.textSize,
-                editText
-            )*/
+
 
             deleteRect.left = 40
             deleteRect.right = deleteRect.left + editRectangleWidth + Converter.toPx(3)
@@ -404,13 +392,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 )
                 it.draw(canvas)
             }
-            /*
-            canvas.drawText(
-                "Delete",
-                (deleteRect.left + 3).toFloat(),
-                deleteRect.top.toFloat() + editText.textSize,
-                editText
-            )*/
+
         }
 
 
@@ -474,19 +456,14 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             if (it.isEnabled && this.note != null)
             {
                 val midiData=ByteArray(3)
-                midiData[0] = (0x90 + midiChannel).toByte()
-                midiData[1] = (this.note!!.value+48).toInt().toByte()
-                midiData[2] = 0x7F.toByte()
+                setMidiNoteOn(midiData)
                 var sentNotes=0
                 while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
                 {
                     appContext.rtpMidiServer?.addToSendQueue(midiData)
                     sentNotes += 1
                 }
-
-                midiData[0] = (0x80 + midiChannel).toByte()
-                midiData[1] = (this.note!!.value+48).toInt().toByte()
-                midiData[2] = 0x7F.toByte()
+                setMidiNoteOff(midiData)
                 sentNotes=0
                 while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
                 {
@@ -543,9 +520,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     if (it.isEnabled && this.note != null)
                     {
                         val midiData=ByteArray(3)
-                        midiData[0] = (0x90 + midiChannel).toByte()
-                        midiData[1] = (this.note!!.value+48).toInt().toByte()
-                        midiData[2] = 0x7F.toByte()
+                        setMidiNoteOn(midiData)
                         var sentNotes=0
                         while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
                         {
@@ -564,9 +539,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     if (it.isEnabled && this.note != null)
                     {
                         val midiData=ByteArray(3)
-                        midiData[0] = (0x80 + midiChannel).toByte()
-                        midiData[1] = (this.note!!.value+48).toInt().toByte()
-                        midiData[2] = 0x7F.toByte()
+                        setMidiNoteOff(midiData)
                         var sentNotes=0
                         while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
                             appContext.rtpMidiServer?.addToSendQueue(midiData)
@@ -590,9 +563,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                                 if (midiserver.isEnabled)
                                 {
                                     val midiData=ByteArray(3)
-                                    midiData[0] = (0x90 + midiChannel).toByte()
-                                    midiData[1] = (this.note!!.value+48).toInt().toByte()
-                                    midiData[2] = 0x7F.toByte()
+                                    setMidiNoteOn(midiData)
                                     var sentNotes = 0
                                     while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
                                     {
@@ -806,6 +777,20 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
+
+    private fun setMidiNoteOn(midiData: ByteArray)
+    {
+        midiData[0] = (0x90 + midiChannel).toByte()
+        midiData[1] = (this.note!!.value+69).toInt().toByte()
+        midiData[2] = 0x7F.toByte()
+    }
+
+    private fun setMidiNoteOff(midiData: ByteArray)
+    {
+        midiData[0] = (0x80 + midiChannel).toByte()
+        midiData[1] = (this.note!!.value+69).toInt().toByte()
+        midiData[2] = 0x7F.toByte()
+    }
 
     fun validatePlacement(): Boolean
     {
