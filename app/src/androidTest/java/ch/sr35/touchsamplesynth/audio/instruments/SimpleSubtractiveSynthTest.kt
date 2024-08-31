@@ -1,13 +1,10 @@
 package ch.sr35.touchsamplesynth.audio.instruments
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.AudioTest
-import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 
 
 class SimpleSubtractiveSynthTest : AudioTest() {

@@ -109,13 +109,9 @@ aaudio_data_callback_result_t dataCallback(
                         AudioEngine::startNextVoice(midiDataBuffer);
                     }
                     // running status note on with velocity zero -> note off
-                    else if (lastMidiStatus==MIDI_NOTE_ON && midiDataBuffer[1] == 0)
+                    else if ((lastMidiStatus==MIDI_NOTE_ON && midiDataBuffer[1] == 0) || lastMidiStatus==MIDI_NOTE_OFF)
                     {
                         //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note on with vel 0: %d",midiDataBuffer[0]);
-                        AudioEngine::stopVoice(midiDataBuffer);
-                    }
-                    else if (lastMidiStatus==MIDI_NOTE_OFF) {
-                        //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note off: %d",midiDataBuffer[0]);
                         AudioEngine::stopVoice(midiDataBuffer);
                     }
                 }

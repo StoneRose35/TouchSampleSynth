@@ -6,7 +6,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.AudioTest
 import ch.sr35.touchsamplesynth.MusicalPitch
-import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.views.TouchElement

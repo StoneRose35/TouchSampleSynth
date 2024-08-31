@@ -1,14 +1,11 @@
 package ch.sr35.touchsamplesynth.model
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.AudioTest
-import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 
 class PersistableInstrumentTest : AudioTest(){
 

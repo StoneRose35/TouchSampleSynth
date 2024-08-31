@@ -15,13 +15,13 @@ abstract class AudioTest {
     {
         @JvmStatic
         @BeforeClass
-        fun setupAudioTest(): Unit {
+        fun setupAudioTest() {
 
         }
 
         @JvmStatic
         @AfterClass
-        fun teardownAudioTest(): Unit {
+        fun teardownAudioTest() {
             val audioEngineK = AudioEngineK()
             audioEngineK.emptySoundGenerators()
         }
