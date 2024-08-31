@@ -49,6 +49,8 @@ class TouchElementP(var width: Int,
         color?.let {
             te.fillColor.color = it.toColorInt()
         }
+        te.midiChannel = midiChannel
+        te.midiCC = midiCC
         te.actionDir = actionDir
     }
 
