@@ -563,7 +563,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                                 if (midiserver.isEnabled)
                                 {
                                     val midiData=ByteArray(3)
-                                    setMidiNoteOn(midiData)
+                                    setMidiNoteOff(midiData)
                                     var sentNotes = 0
                                     while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
                                     {
