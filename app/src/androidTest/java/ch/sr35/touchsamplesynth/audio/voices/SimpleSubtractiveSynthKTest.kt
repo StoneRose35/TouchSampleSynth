@@ -53,6 +53,8 @@ class SimpleSubtractiveSynthKTest {
         synth1.bindToAudioEngine()
         synth2.bindToAudioEngine()
         Assert.assertNotEquals(synth1,synth2)
+        synth1.detachFromAudioEngine()
+        synth2.detachFromAudioEngine()
     }
 
     @Test
@@ -63,5 +65,6 @@ class SimpleSubtractiveSynthKTest {
         val obj2 = Color.BLACK
         synth1.bindToAudioEngine()
         Assert.assertNotEquals(synth1,obj2)
+        synth1.detachFromAudioEngine()
     }
 }

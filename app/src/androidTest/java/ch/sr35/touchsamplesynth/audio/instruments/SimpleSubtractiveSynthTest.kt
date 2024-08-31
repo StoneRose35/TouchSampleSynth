@@ -2,13 +2,15 @@ package ch.sr35.touchsamplesynth.audio.instruments
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.sr35.touchsamplesynth.AudioTest
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class SimpleSubtractiveSynthTest {
+
+class SimpleSubtractiveSynthTest : AudioTest() {
 
 
 
@@ -52,6 +54,7 @@ class SimpleSubtractiveSynthTest {
             Assert.assertTrue(instr.getActionAmountToFilter() - 0.989f > -EPS && instr.getActionAmountToFilter() - 0.989f < EPS)
             Assert.assertTrue(instr.getVolumeModulation() - 0.125f > -EPS && instr.getVolumeModulation() - 0.125f < EPS)
             Assert.assertTrue(instr.getResonance() - 0.5887f > -EPS && instr.getResonance() - 0.5887f < EPS)
+
         }
 
         @Test

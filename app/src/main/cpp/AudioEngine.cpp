@@ -383,6 +383,19 @@ void AudioEngine::removeSoundGenerator(int idx) {
     }
 }
 
+void AudioEngine::emptySoundGenerators()
+{
+    int c=0;
+    for (c=0;c<MAX_SOUND_GENERATORS;c++)
+    {
+        if(*(soundGenerators + c) != nullptr)
+        {
+            delete (*(soundGenerators + c));
+            *(soundGenerators + c) = nullptr;
+        }
+    }
+}
+
 void AudioEngine::setNSoundGenerators(int8_t nsg) {
     nSoundGenerators = nsg;
 }

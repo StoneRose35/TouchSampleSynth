@@ -3,12 +3,12 @@ package ch.sr35.touchsamplesynth.audio.voices
 import android.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.sr35.touchsamplesynth.AudioTest
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class SineMonoSynthKTest {
+class SineMonoSynthKTest: AudioTest() {
 
 
     @Test
@@ -53,6 +53,7 @@ class SineMonoSynthKTest {
         synth1.bindToAudioEngine()
         synth2.bindToAudioEngine()
         Assert.assertNotEquals(synth1,synth2)
+
     }
 
     @Test

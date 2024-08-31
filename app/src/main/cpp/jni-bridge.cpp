@@ -48,6 +48,16 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_removeSoundGenerator(JNIEnv *, 
     return 0;
 }
 
+JNIEXPORT jbyte JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_emptySoundGenerators(JNIEnv *, jobject)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    audioEngine->emptySoundGenerators();
+    return 0;
+}
+
+
+
 JNIEXPORT jboolean JNICALL
 Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_startEngine(JNIEnv *, jobject /* this */) {
     AudioEngine * audioEngine = getAudioEngine();

@@ -2,13 +2,14 @@ package ch.sr35.touchsamplesynth.audio.instruments
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.sr35.touchsamplesynth.AudioTest
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class SineMonoSynthTest {
+class SineMonoSynthTest : AudioTest(){
     private val EPS=0.000001f
     @Test
     fun generationTest() {

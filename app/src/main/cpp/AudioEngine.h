@@ -37,6 +37,7 @@ public:
     MusicalSoundGenerator * getSoundGenerator(int8_t);
     int8_t addSoundGenerator(SoundGeneratorType);
     void removeSoundGenerator(int idx);
+    void emptySoundGenerators();
     AudioEngine();
     ~AudioEngine();
     float averageVolume;

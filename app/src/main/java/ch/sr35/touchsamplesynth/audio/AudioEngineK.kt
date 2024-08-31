@@ -21,4 +21,5 @@ class AudioEngineK {
     external fun getFramesPerDataCallback(): Int
     external fun setBufferCapacityInFrames(bcif: Int): Int
     external fun getBufferCapacityInFrames(): Int
+    external fun emptySoundGenerators(): Byte
 }

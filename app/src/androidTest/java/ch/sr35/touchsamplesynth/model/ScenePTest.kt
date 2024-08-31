@@ -4,7 +4,9 @@ import android.view.ContextThemeWrapper
 
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.sr35.touchsamplesynth.AudioTest
 import ch.sr35.touchsamplesynth.MusicalPitch
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.Instrument
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.views.TouchElement
@@ -13,7 +15,7 @@ import org.junit.Test
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.graphics.Converter
 
-class ScenePTest {
+class ScenePTest: AudioTest() {
 
     @Test
     fun toSceneAndBackTest()
@@ -88,6 +90,7 @@ class ScenePTest {
         val scene = SceneP().also {
             it.persist(instruments,touchelements)
         }
+        instruments.flatMap { instr -> instr.voices }.forEach { it.detachFromAudioEngine() }
         val regeneratedInstruments = ArrayList<Instrument>()
         val regeneratedTouchElements = ArrayList<TouchElement>()
         scene.populate(regeneratedInstruments,regeneratedTouchElements,themedContext)

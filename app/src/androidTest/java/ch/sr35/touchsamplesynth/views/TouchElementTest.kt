@@ -25,8 +25,11 @@ class TouchElementTest {
     @Test
     fun virtuallyPlayTouchElement()
     {
+        System.loadLibrary("touchsamplesynth")
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
+        val audioEngine = AudioEngineK()
+        audioEngine.startEngine()
         context.setTheme(R.style.Theme_TouchSampleSynth)
         val te = TouchElement(context,null)
         val i1 = SineMonoSynthI(context,"Basic")
@@ -55,8 +58,8 @@ class TouchElementTest {
         te.onTouchEvent(evnt)
 
 
-        val ae = AudioEngineK()
-        ae.playFrames(200)
+        audioEngine.playFrames(200)
         Assert.assertFalse(i1.voices[1].isSounding())
+        audioEngine.stopEngine()
     }
 }
