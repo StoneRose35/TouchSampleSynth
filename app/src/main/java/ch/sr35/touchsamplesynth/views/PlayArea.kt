@@ -8,15 +8,12 @@ import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
-import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import com.google.android.material.color.MaterialColors
 import ch.sr35.touchsamplesynth.R
-import ch.sr35.touchsamplesynth.graphics.Line
-import ch.sr35.touchsamplesynth.graphics.Overlap
 import ch.sr35.touchsamplesynth.graphics.Point
 import ch.sr35.touchsamplesynth.TAG
 
@@ -281,7 +278,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                     event.offsetLocation(-(associatedTouchElement.layoutParams as LayoutParams).leftMargin.toFloat(),-(associatedTouchElement.layoutParams as LayoutParams).topMargin.toFloat())
                     associatedTouchElement.dispatchTouchEvent(event)
                     touchElementsOnPointer.remove(event.getPointerId(event.actionIndex))
-                    Log.i(ch.sr35.touchsamplesynth.TAG,"removed Pointer $event.getPointerId(event.actionIndex)")
+                    Log.i(TAG,"removed Pointer $event.getPointerId(event.actionIndex)")
                     return true
                 }
             }

@@ -9,6 +9,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="HMD Global Nokia T20" value="120" />
                   <entry key="Pixel_C_API_34" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
@@ -25,6 +26,19 @@
                   <entry key="Pixel_C_API_34" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung SM-X210" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-533302167">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="HMD Global Nokia T20" value="120" />
+                  <entry key="Tests" value="360" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
@@ -63,8 +77,23 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="HMD Global Nokia T20" value="120" />
+                  <entry key="Pixel_C_API_34" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung SM-X210" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="934395952">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="HMD Global Nokia T20" value="120" />
+                  <entry key="Tests" value="360" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
