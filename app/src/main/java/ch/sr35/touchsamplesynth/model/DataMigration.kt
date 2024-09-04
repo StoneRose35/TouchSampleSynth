@@ -75,7 +75,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
             return updatedData
         }
 
-        val updatersList= listOf(Updater1() as DataUpdater, Updater2() as DataUpdater, Updater3() as DataUpdater)
+        val updatersList= listOf(Updater1() as DataUpdater, Updater2() as DataUpdater, Updater3() as DataUpdater, Updater4() as DataUpdater)
     }
 
     /**
@@ -190,6 +190,32 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     }
 
     private class Updater3: DataUpdater(versionFrom = Version(1,9,1),versionTo = Version(1,9,2))
+    {
+        override fun processData(jsonData: String): String? {
+            val rootElement = JsonParser.parseString(jsonData)
+            val rootObj = rootElement.asJsonObject
+            if (!rootObj.has("touchSampleSynthVersion")) {
+                return null
+            }
+            val srcVersion = rootObj.get("touchSampleSynthVersion").asString
+            val versionNumbers = srcVersion.split(".")
+            if (versionNumbers.size != 3)
+            {
+                return null
+            }
+            val versionFromFile = Version(versionNumbers[0].toInt(),versionNumbers[1].toInt(),versionNumbers[2].toInt())
+            if (versionFromFile != this.versionFrom)
+            {
+                return null
+            }
+            rootObj.remove("touchSampleSynthVersion")
+            rootObj.addProperty("touchSampleSynthVersion",versionTo.toString())
+            return rootObj.toString()
+        }
+
+    }
+
+    private class Updater4: DataUpdater(versionFrom = Version(1,9,2),versionTo = Version(1,9,3))
     {
         override fun processData(jsonData: String): String? {
             val rootElement = JsonParser.parseString(jsonData)

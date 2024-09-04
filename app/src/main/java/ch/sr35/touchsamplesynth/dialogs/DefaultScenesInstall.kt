@@ -38,7 +38,7 @@ enum class State
     ASKING_WHETHER_OVERRIDE,
     DONE
 }
-class DefaultScenesInstall(private var context: Context,) : Dialog(context) {
+class DefaultScenesInstall(private var context: Context) : Dialog(context) {
     private var textfieldInstallerText: TextView?=null
     var installer = DefaultScenesInstaller(context as TouchSampleSynthMain)
     private var buttonYes: Button?=null

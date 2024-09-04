@@ -173,7 +173,7 @@ Java_ch_sr35_touchsamplesynth_audio_MusicalSoundGenerator_sendMidiCC(JNIEnv* env
     jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
     int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
-    if (msg->midiInputPort != nullptr)
+    if (msg != nullptr)
     {
         msg->sendMidiCC((uint8_t)ccNumber,(uint8_t)ccValue);
     }
@@ -187,7 +187,7 @@ Java_ch_sr35_touchsamplesynth_audio_MusicalSoundGenerator_setMidiChannel(JNIEnv*
     jmethodID getInstance=env->GetMethodID(synth,"getInstance","()B");
     int8_t instance = env->CallByteMethod(me,getInstance);
     MusicalSoundGenerator * msg = audioEngine->getSoundGenerator(instance);
-    if (msg->midiInputPort != nullptr)
+    if (msg != nullptr)
     {
         msg->midiChannel = (uint8_t)channel;
     }

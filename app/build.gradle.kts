@@ -11,8 +11,8 @@ android {
         applicationId = "ch.sr35.touchsamplesynth"
         minSdk = 29
         targetSdk = 34
-        versionCode = 20
-        versionName = "1.9.2"
+        versionCode = 21
+        versionName = "1.9.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

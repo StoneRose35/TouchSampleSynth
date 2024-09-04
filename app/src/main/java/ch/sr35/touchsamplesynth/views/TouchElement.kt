@@ -476,7 +476,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (elementState != TouchElementState.EDITING) {
-            if (event?.action == MotionEvent.ACTION_DOWN) {
+            if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
                 var touchVal:Float=-2.0f
                 if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
                     touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
@@ -532,7 +532,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 px = event.x
                 py = event.y
                 return true
-            } else if (event?.action == MotionEvent.ACTION_UP) {
+            } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP) {
                 outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                 currentVoice?.switchOff(1.0f)
                 appContext?.rtpMidiServer?.let {
@@ -551,7 +551,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 currentVoice = null
                 invalidate()
                 return true
-            } else if (event?.action == MotionEvent.ACTION_MOVE) {
+            } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
                 var touchVal:Float=-2.0f
                 if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
                     outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
@@ -612,7 +612,6 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     }
                     return true
                 }
-
             }
         } else {
             when (event?.action) {

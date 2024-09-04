@@ -35,6 +35,7 @@ import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
 import ch.sr35.touchsamplesynth.network.RtpMidiServer
+import ch.sr35.touchsamplesynth.views.PlayArea
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.WaitAnimation
 import java.io.File
@@ -114,6 +115,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         audioEngine.startEngine()
         if (mainMenu!=null) {
             (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).adapter
+            oldScenePosition=-1
             loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
         }
     }
@@ -210,7 +212,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             && supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
         {
             for (te in touchElements) {
-                (supportFragmentManager.fragments[0].view as ViewGroup).removeView(te)
+                (supportFragmentManager.fragments[0].view as PlayArea).removeView(te)
             }
         }
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
