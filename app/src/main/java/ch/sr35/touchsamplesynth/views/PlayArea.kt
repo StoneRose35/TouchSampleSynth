@@ -93,6 +93,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 val ptrIndex = event.actionIndex
                 pointerIds.add(event.getPointerId(event.actionIndex))
+                currentPositions[event.getPointerId(event.actionIndex)] = Point(event.getX(ptrIndex).toDouble(),event.getY(ptrIndex).toDouble())
                 touchElements.find { te -> te.isInside(Point(event.getX(ptrIndex).toDouble(),event.getY(ptrIndex).toDouble())) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)}?.let {
                     touchElementsOnPointer[event.getPointerId(ptrIndex)] = it
                     event.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
@@ -107,13 +108,13 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
 
             MotionEvent.ACTION_MOVE ->
             {
-                var movePointerCounter=0
                 var processedMoveEvent=false
                 for (pid in pointerIds) {
 
                     val pidx = event.findPointerIndex(pid)
                     val associatedTouchElement = touchElementsOnPointer[pid]
                     var copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
+
                     if (associatedTouchElement != null) {
 
 
@@ -134,7 +135,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                             )
                         ) {
                             Log.i(TAG,"Moved out of touchelement: $associatedTouchElement")
-                            touchElementsOnPointer.remove(copiedEvent.getPointerId(movePointerCounter))
+                            touchElementsOnPointer.remove(pid)
                             touchElements.find { te ->
                                 te.isInside(
                                     Point(
@@ -143,7 +144,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                                     )
                                 ) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)
                             }?.let {
-                                touchElementsOnPointer[copiedEvent.getPointerId(movePointerCounter)] = it
+                                touchElementsOnPointer[pid] = it
                                 copiedEvent.offsetLocation(
                                     -(it.layoutParams as LayoutParams).leftMargin.toFloat(),
                                     -(it.layoutParams as LayoutParams).topMargin.toFloat()
@@ -174,6 +175,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                         }
                     }
 
+                    copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
                     if (currentPositions[pid] != null) {
                         oldPositions[pid] = currentPositions[pid] as Point
                         currentPositions[pid] =
@@ -183,7 +185,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                             Point(copiedEvent.x.toDouble(), copiedEvent.y.toDouble())
                     }
 
-                    touchElements.filter { slidingOVerCandidate ->
+                    val touchElementsSlidedOver = touchElements.filter { slidingOVerCandidate ->
                         if (oldPositions[pid] != null && currentPositions[pid] != null) {
                             return@filter slidingOVerCandidate.asRectangle().getIntersectingSides(
                                 Line(
@@ -193,7 +195,9 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                             ).size == 2
                         }
                         return@filter false
-                    } /*.forEach {
+                    }
+                    touchElementsSlidedOver.forEach {
+                        Log.i(TAG,"Slideover Event for $it")
                         if (it.asRectangle().getIntersectingSides(
                                 Line(
                                     oldPositions[pid]!!,
@@ -235,8 +239,8 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                                 )
                             )
                         }
-                    }*/
-                    movePointerCounter += 1
+                    }
+
                 }
                 return processedMoveEvent
             }
@@ -268,6 +272,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 val ptrIndex = ev.actionIndex
                 pointerIds.add(ev.getPointerId(ev.actionIndex))
+                currentPositions[ev.getPointerId(ev.actionIndex)] = Point(ev.getX(ptrIndex).toDouble(),ev.getY(ptrIndex).toDouble())
                 touchElements.find { te -> te.isInside(Point(ev.getX(ptrIndex).toDouble(),ev.getY(ptrIndex).toDouble())) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)}?.let {
                     touchElementsOnPointer[ev.getPointerId(ptrIndex)] = it
                     ev.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
@@ -280,57 +285,9 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                 return false
             }
             else -> {
-                Log.i(TAG,"intercepting other event than action_down")
+                Log.i(TAG,"intercepting other event than action_down or action_pointer_down: ${ev.actionMasked}")
             }
-            /*
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP ->
-            {
-                val associatedTouchElement = touchElementsOnPointer[ev.getPointerId(ev.actionIndex)]
-                if (associatedTouchElement!=null)
-                {
-                    ev.offsetLocation(-(associatedTouchElement.layoutParams as LayoutParams).leftMargin.toFloat(),-(associatedTouchElement.layoutParams as LayoutParams).topMargin.toFloat())
-                    associatedTouchElement.dispatchTouchEvent(ev)
-                    touchElementsOnPointer.remove(ev.getPointerId(ev.actionIndex))
-                    return true
-                }
-                return false
-            }
-            MotionEvent.ACTION_MOVE -> {
-                val nPointers = ev.pointerCount
-                var c=0
-                var processedMoveEvent=false
-                while (c < nPointers)
-                {
-                    val associatedTouchElement = touchElementsOnPointer[ev.getPointerId(c)]
-                    if (associatedTouchElement!=null)
-                    {
-                        val copiedEvent = MotionEvent.obtain(ev)
-                        ev.offsetLocation(-(associatedTouchElement.layoutParams as LayoutParams).leftMargin.toFloat(),-(associatedTouchElement.layoutParams as LayoutParams).topMargin.toFloat())
-                        associatedTouchElement.dispatchTouchEvent(ev)
-                        processedMoveEvent = true
-                        if (!associatedTouchElement.isInside(Point(copiedEvent.x.toDouble(),copiedEvent.y.toDouble())))
-                        {
-                            touchElementsOnPointer.remove(copiedEvent.getPointerId(c))
-                            touchElements.find { te -> te.isInside(Point(copiedEvent.x.toDouble(),copiedEvent.y.toDouble())) && !te.isEditing()}?.let {
-                                touchElementsOnPointer[copiedEvent.getPointerId(c)] = it
-                                copiedEvent.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
-                                it.dispatchTouchEvent(copiedEvent)
-                            }
-                        }
-                    }
-                    else
-                    {
-                        touchElements.find { te -> te.isInside(Point(ev.x.toDouble(),ev.y.toDouble())) && !te.isEditing()}?.let {
-                            touchElementsOnPointer[ev.getPointerId(c)] = it
-                            ev.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
-                            it.dispatchTouchEvent(ev)
-                            processedMoveEvent = true
-                        }
-                    }
-                    c++
-                }
-                return processedMoveEvent
-            }*/
+
         }
         return false
     }
