@@ -2,7 +2,7 @@ package ch.sr35.touchsamplesynth.audio
 
 import android.graphics.drawable.Drawable
 
-open class Instrument(var name: String) {
+open class InstrumentI(var name: String) {
 
     open var voices=ArrayList<MusicalSoundGenerator>()
     var isMonophonic=true
@@ -64,7 +64,7 @@ open class Instrument(var name: String) {
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other is Instrument)
+        if (other is InstrumentI)
         {
             return this.name == other.name && this.getType() == other.getType()
         }

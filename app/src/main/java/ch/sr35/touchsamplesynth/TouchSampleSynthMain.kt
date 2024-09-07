@@ -24,7 +24,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.dialogs.DefaultScenesInstall
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment
@@ -47,7 +47,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     private lateinit var binding: ActivityMainBinding
     val audioEngine: AudioEngineK=AudioEngineK()
-    val soundGenerators=ArrayList<Instrument>()
+    val soundGenerators=ArrayList<InstrumentI>()
     val touchElements=ArrayList<TouchElement>()
     val allScenes = ArrayList<SceneP>()
     private val playPageFragment=PlayPageFragment()

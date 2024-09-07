@@ -18,7 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import ch.sr35.touchsamplesynth.graphics.Converter
@@ -77,7 +77,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private var oldLeftMargin: Int = 0
     private var oldTopMargin: Int = 0
     private var elementState: TouchElementState = defaultState
-    var soundGenerator: Instrument? = null
+    var soundGenerator: InstrumentI? = null
     private var currentVoice: MusicalSoundGenerator? = null
     var note: MusicalPitch? = null
     var midiChannel: Int=0

@@ -6,7 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.AudioTest
 import ch.sr35.touchsamplesynth.MusicalPitch
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.views.TouchElement
 import org.junit.Assert
@@ -19,7 +19,7 @@ class ScenePTest: AudioTest() {
     @Test
     fun toSceneAndBackTest()
     {
-        val instruments = ArrayList<Instrument>()
+        val instrumentIS = ArrayList<InstrumentI>()
         val touchelements = ArrayList<TouchElement>()
         val lp = ConstraintLayout.LayoutParams(Converter.toPx(134), Converter.toPx(166))
         lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
@@ -41,8 +41,8 @@ class ScenePTest: AudioTest() {
         i2.setDecay(0.4f)
         i2.setSustain(0.0f)
         i2.setRelease(0.56f)
-        instruments.add(i1)
-        instruments.add(i2)
+        instrumentIS.add(i1)
+        instrumentIS.add(i2)
 
         val te1 = TouchElement(themedContext,null)
         te1.soundGenerator = i1
@@ -87,17 +87,17 @@ class ScenePTest: AudioTest() {
         touchelements.add(te11)
 
         val scene = SceneP().also {
-            it.persist(instruments,touchelements)
+            it.persist(instrumentIS,touchelements)
         }
-        instruments.flatMap { instr -> instr.voices }.forEach { it.detachFromAudioEngine() }
-        val regeneratedInstruments = ArrayList<Instrument>()
+        instrumentIS.flatMap { instr -> instr.voices }.forEach { it.detachFromAudioEngine() }
+        val regeneratedInstrumentIS = ArrayList<InstrumentI>()
         val regeneratedTouchElements = ArrayList<TouchElement>()
-        scene.populate(regeneratedInstruments,regeneratedTouchElements,themedContext)
+        scene.populate(regeneratedInstrumentIS,regeneratedTouchElements,themedContext)
 
-        Assert.assertTrue(regeneratedInstruments.size == 2)
+        Assert.assertTrue(regeneratedInstrumentIS.size == 2)
         Assert.assertTrue(regeneratedTouchElements.size == 7)
-        instruments.forEach { i ->
-            Assert.assertTrue(regeneratedInstruments.filter { ri ->
+        instrumentIS.forEach { i ->
+            Assert.assertTrue(regeneratedInstrumentIS.filter { ri ->
                 ri.name == i.name && ri.isMonophonic == i.isMonophonic && ri.javaClass == i.javaClass
             }.size == 1)
         }

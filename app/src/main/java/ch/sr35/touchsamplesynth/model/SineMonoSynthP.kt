@@ -1,6 +1,6 @@
 package ch.sr35.touchsamplesynth.model
 
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import java.io.Serializable
 
@@ -12,7 +12,7 @@ class SineMonoSynthP(private var attack: Float,
                      isMono: Boolean,
                      name: String
 ): PersistableInstrument(actionAmountToVolume,isMono,name),Serializable, Cloneable {
-    override fun fromInstrument(i: Instrument) {
+    override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SineMonoSynthI)
         {
@@ -25,7 +25,7 @@ class SineMonoSynthP(private var attack: Float,
         }
     }
 
-    override fun toInstrument(i: Instrument) {
+    override fun toInstrument(i: InstrumentI) {
         super.toInstrument(i)
         if (i is SineMonoSynthI)
         {

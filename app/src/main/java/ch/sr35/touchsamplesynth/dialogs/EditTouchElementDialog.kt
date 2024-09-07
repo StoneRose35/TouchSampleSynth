@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.views.TouchElement
 import codes.side.andcolorpicker.converter.toColorInt
 import codes.side.andcolorpicker.group.PickerGroup
@@ -188,7 +188,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
     }
 }
 
-class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
+class SoundGeneratorListAdapter(private val instrumentIS: List<InstrumentI>,
                                 private val touchElement: TouchElement?): RecyclerView.Adapter<SoundGeneratorListAdapter.SoundGeneratorListViewHolder>(){
 
     var checkedPosition: Int=-1
@@ -196,11 +196,11 @@ class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
     init {
 
         checkedPosition = if (touchElement?.soundGenerator != null) {
-            IntStream.range(0, instruments.size)
-                .filter { i -> (instruments[i].name == touchElement.soundGenerator!!.name) && (instruments[i].getType() == touchElement.soundGenerator!!.getType()) }
+            IntStream.range(0, instrumentIS.size)
+                .filter { i -> (instrumentIS[i].name == touchElement.soundGenerator!!.name) && (instrumentIS[i].getType() == touchElement.soundGenerator!!.getType()) }
                 .findFirst()
                 .orElse(-1)
-        } else if (instruments.isNotEmpty()) {
+        } else if (instrumentIS.isNotEmpty()) {
             0
         } else {
             -1
@@ -225,7 +225,7 @@ class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
     }
 
     override fun getItemCount(): Int {
-        return instruments.size
+        return instrumentIS.size
     }
 
     override fun onCreateViewHolder(
@@ -237,14 +237,14 @@ class SoundGeneratorListAdapter(private val instruments: List<Instrument>,
     }
 
     override fun onBindViewHolder(holder: SoundGeneratorListViewHolder, position: Int) {
-        holder.iconView.setImageDrawable(instruments[position].getInstrumentIcon())
-        if (instruments[position].name.isNotEmpty()) {
+        holder.iconView.setImageDrawable(instrumentIS[position].getInstrumentIcon())
+        if (instrumentIS[position].name.isNotEmpty()) {
             holder.instrumentNameView.text =
-                "%s".format(instruments[position].name)
+                "%s".format(instrumentIS[position].name)
         }
         else
         {
-            holder.instrumentNameView.text = instruments[position].getType()
+            holder.instrumentNameView.text = instrumentIS[position].getType()
         }
         holder.polyphonyView.text = " "
         holder.checkedView.isChecked= checkedPosition==position

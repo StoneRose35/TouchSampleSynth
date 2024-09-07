@@ -7,7 +7,7 @@ import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import org.junit.Assert
 import org.junit.Test
 
-class PersistableInstrumentTest : AudioTest(){
+class PersistableInstrumentITest : AudioTest(){
 
 
     @Test

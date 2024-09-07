@@ -23,7 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet.WRAP_CONTENT
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_OFF
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_ON_POLY
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
@@ -122,7 +122,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             if ((it as CheckBox).isChecked)
             {
                 view.findViewById<TextView>(R.id.instruments_page_tv_monopoly).text = getString(R.string.polyphonic)
-                voicesToGenerate = Instrument.DEFAULT_POLYPHONY
+                voicesToGenerate = InstrumentI.DEFAULT_POLYPHONY
             }
             else
             {

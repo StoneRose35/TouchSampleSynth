@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 
 class SimpleSubtractiveSynthI(private val context: Context,
                               name: String
-) : Instrument(name) {
+) : InstrumentI(name) {
     val icon= AppCompatResources.getDrawable(context, R.drawable.simplesubtractivesynth)
 
     override fun getType(): String {

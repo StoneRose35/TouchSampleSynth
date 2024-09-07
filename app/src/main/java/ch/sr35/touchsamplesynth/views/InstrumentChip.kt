@@ -6,19 +6,19 @@ import android.util.AttributeSet
 import ch.sr35.touchsamplesynth.R
 import android.widget.LinearLayout
 import android.widget.TextView
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 
 class InstrumentChip(context: Context,attributeSet: AttributeSet?): LinearLayout(context,attributeSet) {
 
-    private var instrument: Instrument?=null
+    private var instrumentI: InstrumentI?=null
     init {
         inflate(context,R.layout.instrument_chip,this)
     }
 
-    fun setInstrument(i: Instrument)
+    fun setInstrument(i: InstrumentI)
     {
-        instrument = i
-        instrument?.let { it ->
+        instrumentI = i
+        instrumentI?.let { it ->
             val nameAndType = findViewById<TextView>(R.id.instrument_chip_name)
             nameAndType.text = it.name
             nameAndType.setCompoundDrawables(null, it.getInstrumentIcon().also { drawable ->
@@ -37,9 +37,9 @@ class InstrumentChip(context: Context,attributeSet: AttributeSet?): LinearLayout
 
     }
 
-    fun getInstrument(): Instrument?
+    fun getInstrument(): InstrumentI?
     {
-        return instrument
+        return instrumentI
     }
 
 }

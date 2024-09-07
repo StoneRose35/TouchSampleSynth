@@ -1,7 +1,7 @@
 package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
@@ -35,14 +35,14 @@ class PersistableInstrumentDeserializer: JsonDeserializer<PersistableInstrument>
 
 open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMonophonic: Boolean=true,var name: String="",var id: String=""): Serializable, Cloneable {
 
-    open fun fromInstrument(i: Instrument)
+    open fun fromInstrument(i: InstrumentI)
     {
         name = i.name
         isMonophonic = i.isMonophonic
         actionAmountToVolume = i.getVolumeModulation()
     }
 
-    open fun toInstrument(i: Instrument)
+    open fun toInstrument(i: InstrumentI)
     {
         i.name = name
         i.isMonophonic = isMonophonic
@@ -86,7 +86,7 @@ class PersistableInstrumentFactory
 {
     companion object
     {
-        fun fromInstrument(msg: Instrument?): PersistableInstrument?
+        fun fromInstrument(msg: InstrumentI?): PersistableInstrument?
         {
             val pi: PersistableInstrument = when (msg) {
                 is SimpleSubtractiveSynthI -> {
@@ -105,9 +105,9 @@ class PersistableInstrumentFactory
             pi.fromInstrument(msg)
             return pi
         }
-        fun toInstrument(pi: PersistableInstrument,context: Context): Instrument?
+        fun toInstrument(pi: PersistableInstrument,context: Context): InstrumentI?
         {
-            val instr: Instrument = when (pi) {
+            val instr: InstrumentI = when (pi) {
                 is SimpleSubtractiveSynthP -> {
                     SimpleSubtractiveSynthI(context,pi.name)
                 }
@@ -126,7 +126,7 @@ class PersistableInstrumentFactory
             }
             else
             {
-                instr.generateVoices(Instrument.DEFAULT_POLYPHONY)
+                instr.generateVoices(InstrumentI.DEFAULT_POLYPHONY)
             }
             pi.toInstrument(instr)
             return instr

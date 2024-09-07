@@ -3,7 +3,7 @@ package ch.sr35.touchsamplesynth.model
 import android.content.Context
 import android.util.Log
 import ch.sr35.touchsamplesynth.TAG
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.views.TouchElement
 import java.io.File
 import java.io.FileInputStream
@@ -21,7 +21,7 @@ class SceneP : Serializable, Cloneable {
 
 
     fun populate(
-        sg: ArrayList<Instrument>,
+        sg: ArrayList<InstrumentI>,
         tels: ArrayList<TouchElement>,
         context: Context
     ) {
@@ -57,18 +57,18 @@ class SceneP : Serializable, Cloneable {
         }
     }
 
-    fun persist(        soundGenerators: ArrayList<Instrument>,
-                        touchEls: ArrayList<TouchElement>)
+    fun persist(soundGenerators: ArrayList<InstrumentI>,
+                touchEls: ArrayList<TouchElement>)
     {
         instruments.clear()
         touchElements.clear()
         var uuid: String
-        val instrumentWithIds = HashMap<Instrument,String>()
+        val instrumentIWithIds = HashMap<InstrumentI,String>()
         for(sg in soundGenerators)
         {
             val pi = PersistableInstrumentFactory.fromInstrument(sg)
             uuid = UUID.randomUUID().toString()
-            instrumentWithIds[sg] = uuid
+            instrumentIWithIds[sg] = uuid
             pi!!.id = uuid
             instruments.add(pi)
         }
@@ -76,7 +76,7 @@ class SceneP : Serializable, Cloneable {
         {
             val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LEFT_RIGHT,0,null,0,3,"")
             pte.fromTouchElement(te)
-            pte.soundGeneratorId = instrumentWithIds[te.soundGenerator].toString()
+            pte.soundGeneratorId = instrumentIWithIds[te.soundGenerator].toString()
             touchElements.add(pte)
         }
     }

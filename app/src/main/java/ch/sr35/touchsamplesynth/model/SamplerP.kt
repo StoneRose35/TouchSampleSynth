@@ -1,7 +1,7 @@
 package ch.sr35.touchsamplesynth.model
 
 import androidx.core.net.toUri
-import ch.sr35.touchsamplesynth.audio.Instrument
+import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import java.io.File
 import java.io.Serializable
@@ -17,7 +17,7 @@ class SamplerP(private var sampleStart: Int,
                name: String
 ):PersistableInstrument(actionAmountToVolume, isMono,name), Serializable, Cloneable  {
 
-    override fun fromInstrument(i: Instrument) {
+    override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SamplerI)
         {
@@ -32,7 +32,7 @@ class SamplerP(private var sampleStart: Int,
         }
     }
 
-    override fun toInstrument(i: Instrument) {
+    override fun toInstrument(i: InstrumentI) {
         super.toInstrument(i)
         if (i is SamplerI)
         {
