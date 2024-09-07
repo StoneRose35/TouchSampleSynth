@@ -1,15 +1,22 @@
 package ch.sr35.touchsamplesynth.audio
 
 import android.content.Context
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
 
 const val MIDI_MODE_OFF=0
 const val MIDI_MODE_ON_POLY=4
 const val MIDI_MODE_ON_MONO=6
 open class MusicalSoundGenerator {
     var actionAmountToVolume: Float=0.0f
-
+    var switchOnTime: Long=-1
     open fun setNote(note: Float): Boolean {return false}
-    open fun switchOn(vel: Float): Boolean {return false}
+    open fun switchOn(vel: Float): Boolean {
+        val now = LocalDateTime.now()
+        switchOnTime = now.toEpochSecond(ZoneOffset.UTC)*1000 + now.nano/1000
+        return false
+    }
     open fun trigger(vel: Float): Boolean {return false}
     open fun switchOff(vel: Float): Boolean {return false}
     open fun setMidiVelocityScaling(mv: Float): Boolean {return false}

@@ -86,6 +86,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
 
     override fun switchOn(vel: Float): Boolean {
         engaged=true
+        super.switchOn(vel)
         return switchOnExt(vel)
     }
 

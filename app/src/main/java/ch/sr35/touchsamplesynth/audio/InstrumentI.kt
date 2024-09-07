@@ -2,10 +2,17 @@ package ch.sr35.touchsamplesynth.audio
 
 import android.graphics.drawable.Drawable
 
+enum class PolyphonyDefinition
+{
+    MONOPHONIC,
+    POLY_SATURATE,
+    POLY_NOTE_STEAL
+}
+
 open class InstrumentI(var name: String) {
 
     open var voices=ArrayList<MusicalSoundGenerator>()
-    var isMonophonic=true
+    var polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
 
     open fun getType(): String
     {
@@ -17,11 +24,19 @@ open class InstrumentI(var name: String) {
     }
     fun getNextFreeVoice(): MusicalSoundGenerator?
     {
-        return if (isMonophonic && voices.isNotEmpty()) {
+        return if (polyphonyDefinition.equals(PolyphonyDefinition.MONOPHONIC) && voices.isNotEmpty()) {
             voices[0]
-        } else {
+        } else if (polyphonyDefinition.equals(PolyphonyDefinition.POLY_SATURATE)) { // return a voice which isn't sounding
             voices.stream().map { a -> a as MusicalSoundGenerator }
-                ?.filter { v -> !(v.isSounding()) }?.findFirst()?.orElse(null)
+                ?.filter { v -> !(v.isSounding()) }
+                ?.findFirst()
+                ?.orElse(null)
+        }
+        else {
+            voices.stream().map { a -> a as MusicalSoundGenerator } // return the oldest voice
+                .sorted(Comparator.comparingLong { msg -> -msg.switchOnTime })
+                .findFirst()
+                .orElse(null)
         }
     }
 
