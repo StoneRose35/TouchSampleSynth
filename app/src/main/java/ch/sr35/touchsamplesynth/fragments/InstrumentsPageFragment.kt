@@ -118,7 +118,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         }
 
         view.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly).setOnClickListener { it ->
-            var voicesToGenerate: Int
+            val voicesToGenerate: Int
             if ((it as CheckBox).isChecked)
             {
                 view.findViewById<TextView>(R.id.instruments_page_tv_monopoly).text = getString(R.string.polyphonic)
