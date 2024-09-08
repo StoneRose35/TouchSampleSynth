@@ -26,6 +26,7 @@ import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_OFF
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_ON_POLY
+import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
@@ -131,11 +132,19 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             }
             if (selectedInstrument > -1)
             {
-                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].isMonophonic = !it.isChecked
-                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.forEach {
-                        v -> v.detachFromAudioEngine()
+                if (!it.isChecked) {
+                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition =
+                        PolyphonyDefinition.MONOPHONIC
+                }
+                else
+                {
+                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
+                }
+                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.forEach { v ->
+                    v.detachFromAudioEngine()
 
                 }
+
                 (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.clear()
                     (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(
                         voicesToGenerate
@@ -324,8 +333,8 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             }
             view?.findViewById<TextView>(R.id.instruments_page_instr_name)?.text =
                     (context as TouchSampleSynthMain).soundGenerators[p2].name
-            view?.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly)?.isChecked = !(context as TouchSampleSynthMain).soundGenerators[p2].isMonophonic
-            if ((context as TouchSampleSynthMain).soundGenerators[p2].isMonophonic)
+            view?.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly)?.isChecked = (context as TouchSampleSynthMain).soundGenerators[p2].polyphonyDefinition != PolyphonyDefinition.MONOPHONIC
+            if ((context as TouchSampleSynthMain).soundGenerators[p2].polyphonyDefinition == PolyphonyDefinition.MONOPHONIC)
             {
                 view?.findViewById<TextView>(R.id.instruments_page_tv_monopoly)?.text = getString(R.string.monophonic)
             }

@@ -98,7 +98,7 @@ class ScenePTest: AudioTest() {
         Assert.assertTrue(regeneratedTouchElements.size == 7)
         instrumentIS.forEach { i ->
             Assert.assertTrue(regeneratedInstrumentIS.filter { ri ->
-                ri.name == i.name && ri.isMonophonic == i.isMonophonic && ri.javaClass == i.javaClass
+                ri.name == i.name && ri.polyphonyDefinition == i.polyphonyDefinition && ri.javaClass == i.javaClass
             }.size == 1)
         }
 

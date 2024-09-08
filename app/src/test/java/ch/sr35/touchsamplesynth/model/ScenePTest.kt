@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.model
 
+import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.views.TouchElement
 import com.google.gson.Gson
 import org.junit.Assert
@@ -10,9 +11,9 @@ class ScenePTest {
     @Test
     fun toJsonTest()
     {
-        val synth1=SineMonoSynthP(0.684f,0.438f,0.1111f,0.93234f,0.1f,false,"HuntersMoon")
+        val synth1=SineMonoSynthP(0.684f,0.438f,0.1111f,0.93234f,0.1f,PolyphonyDefinition.POLY_SATURATE,"HuntersMoon")
         synth1.id = UUID.randomUUID().toString()
-        val synth2 = SamplerP(12532,5959594,13000,5700000,0,"/sdcard/searchlight.wav",0.25f,false,"WatcherInTheSky")
+        val synth2 = SamplerP(12532,5959594,13000,5700000,0,"/sdcard/searchlight.wav",0.25f,PolyphonyDefinition.POLY_SATURATE,"WatcherInTheSky")
         synth2.id = UUID.randomUUID().toString()
         val touchElement1 = TouchElementP(234,546,154,673,
             TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,45,null,0,3,synth1.id)

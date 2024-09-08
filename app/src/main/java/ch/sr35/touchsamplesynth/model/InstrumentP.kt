@@ -2,6 +2,7 @@ package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
@@ -11,12 +12,12 @@ import com.google.gson.JsonElement
 import java.io.Serializable
 import java.lang.reflect.Type
 
-class PersistableInstrumentDeserializer: JsonDeserializer<PersistableInstrument> {
+class PersistableInstrumentDeserializer: JsonDeserializer<InstrumentP> {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
         context: JsonDeserializationContext?
-    ): PersistableInstrument? {
+    ): InstrumentP? {
         if (json?.asJsonObject?.has("sampleStart")==true)
         {
             return context?.deserialize(json,SamplerP::class.java)
@@ -33,19 +34,19 @@ class PersistableInstrumentDeserializer: JsonDeserializer<PersistableInstrument>
     }
 }
 
-open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMonophonic: Boolean=true,var name: String="",var id: String=""): Serializable, Cloneable {
+open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefinition: PolyphonyDefinition=PolyphonyDefinition.MONOPHONIC, var name: String="", var id: String=""): Serializable, Cloneable {
 
     open fun fromInstrument(i: InstrumentI)
     {
         name = i.name
-        isMonophonic = i.isMonophonic
+        polyphonyDefinition = i.polyphonyDefinition
         actionAmountToVolume = i.getVolumeModulation()
     }
 
     open fun toInstrument(i: InstrumentI)
     {
         i.name = name
-        i.isMonophonic = isMonophonic
+        i.polyphonyDefinition = polyphonyDefinition
         i.setVolumeModulation(actionAmountToVolume)
     }
 
@@ -57,10 +58,10 @@ open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMono
     override fun equals(other: Any?):
             Boolean
     {
-        return if (other !is PersistableInstrument) {
+        return if (other !is InstrumentP) {
             false
         } else {
-            this.name == other.name && this.id == other.id && this.isMonophonic == other.isMonophonic
+            this.name == other.name && this.id == other.id && this.polyphonyDefinition == other.polyphonyDefinition
         }
     }
 
@@ -68,12 +69,12 @@ open class PersistableInstrument(var actionAmountToVolume: Float=0.0f,var isMono
 
     override fun toString(): String
     {
-        return "PersistableInstrument: %s, monophonic: %b".format(this.name, this.isMonophonic)
+        return "PersistableInstrument: %s, polyphonyDefinit: %b".format(this.name, this.polyphonyDefinition)
     }
 
     override fun hashCode(): Int {
         var result = actionAmountToVolume.hashCode()
-        result = 31 * result + isMonophonic.hashCode()
+        result = 31 * result + polyphonyDefinition.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + id.hashCode()
         return result
@@ -86,17 +87,17 @@ class PersistableInstrumentFactory
 {
     companion object
     {
-        fun fromInstrument(msg: InstrumentI?): PersistableInstrument?
+        fun fromInstrument(msg: InstrumentI?): InstrumentP?
         {
-            val pi: PersistableInstrument = when (msg) {
+            val pi: InstrumentP = when (msg) {
                 is SimpleSubtractiveSynthI -> {
-                    SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, true, "")
+                    SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, PolyphonyDefinition.MONOPHONIC, "")
                 }
                 is SineMonoSynthI -> {
-                    SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,true,"")
+                    SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,PolyphonyDefinition.MONOPHONIC,"")
                 }
                 is SamplerI -> {
-                    SamplerP(0,0,0,0,0,"",0.0f,true,"")
+                    SamplerP(0,0,0,0,0,"",0.0f,PolyphonyDefinition.MONOPHONIC,"")
                 }
                 else -> {
                     return null
@@ -105,7 +106,7 @@ class PersistableInstrumentFactory
             pi.fromInstrument(msg)
             return pi
         }
-        fun toInstrument(pi: PersistableInstrument,context: Context): InstrumentI?
+        fun toInstrument(pi: InstrumentP, context: Context): InstrumentI?
         {
             val instr: InstrumentI = when (pi) {
                 is SimpleSubtractiveSynthP -> {
@@ -121,7 +122,7 @@ class PersistableInstrumentFactory
                 }
                 else -> return null
             }
-            if (pi.isMonophonic) {
+            if (pi.polyphonyDefinition == PolyphonyDefinition.MONOPHONIC) {
                 instr.generateVoices(1)
             }
             else

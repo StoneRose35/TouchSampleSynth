@@ -108,7 +108,7 @@ class SceneListP {
         try {
             val mainDir = (context.filesDir.absolutePath)
             val gson = GsonBuilder().apply {
-                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+                registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
                 setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             }.create()
             val jsonOut = gson.toJson(this)
@@ -132,7 +132,7 @@ class SceneListP {
             try {
                 val mainDir = (context.filesDir.absolutePath)
                 val gson = GsonBuilder().apply {
-                    registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+                    registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
                     setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                 }.create()
                 val screenWidth: Int
@@ -168,7 +168,7 @@ class SceneListP {
         fun importFromJson(context: Context): SceneListP?
         {
             val gson=GsonBuilder().apply {
-                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+                registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
                 setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             }.create()
             val f = File((context as TouchSampleSynthMain).filesDir, SCENES_FILE_NAME)

@@ -1,6 +1,7 @@
 package ch.sr35.touchsamplesynth.model
 
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 
 class SimpleSubtractiveSynthP(
@@ -12,9 +13,9 @@ class SimpleSubtractiveSynthP(
     private var actionAmountToFilter: Float,
     actionAmountToVolume: Float,
     private var resonance: Float,
-    isMono: Boolean,
+    polyphonyDefinition: PolyphonyDefinition,
     name: String
-): PersistableInstrument(actionAmountToVolume,isMono,name) {
+): InstrumentP(actionAmountToVolume,polyphonyDefinition,name) {
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SimpleSubtractiveSynthI)
@@ -55,7 +56,7 @@ class SimpleSubtractiveSynthP(
 
     override fun toString(): String
     {
-        return "SimpleSubtractiveSynth: %s, monophonic: %b".format(this.name, this.isMonophonic)
+        return "SimpleSubtractiveSynth: %s, polyphonyDefinition: %b".format(this.name, this.polyphonyDefinition)
     }
 
     override fun hashCode(): Int {
@@ -69,7 +70,7 @@ class SimpleSubtractiveSynthP(
     }
 
     override fun clone(): Any {
-        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmountToFilter, this.actionAmountToVolume,this.resonance,this.isMonophonic,this.name)
+        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmountToFilter, this.actionAmountToVolume,this.resonance,this.polyphonyDefinition,this.name)
         return klon
     }
 }

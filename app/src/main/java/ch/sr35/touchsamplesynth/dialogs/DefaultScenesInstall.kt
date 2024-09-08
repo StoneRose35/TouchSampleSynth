@@ -23,7 +23,7 @@ import ch.sr35.touchsamplesynth.SCENES_FILE_NAME
 import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.model.DataUpdater
-import ch.sr35.touchsamplesynth.model.PersistableInstrument
+import ch.sr35.touchsamplesynth.model.InstrumentP
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SceneListP
 import ch.sr35.touchsamplesynth.model.importMode
@@ -226,7 +226,7 @@ class DefaultScenesInstall(private var context: Context) : Dialog(context) {
     private fun checkIfScenesAreAvailable(): DefaultScenesState
     {
         val gson= GsonBuilder().apply { registerTypeAdapter(
-            PersistableInstrument::class.java,
+            InstrumentP::class.java,
             PersistableInstrumentDeserializer()
         ) }.create()
         val f = File(context.filesDir, SCENES_FILE_NAME)

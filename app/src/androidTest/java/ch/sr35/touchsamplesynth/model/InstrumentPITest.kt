@@ -2,22 +2,23 @@ package ch.sr35.touchsamplesynth.model
 
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.AudioTest
+import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import org.junit.Assert
 import org.junit.Test
 
-class PersistableInstrumentITest : AudioTest(){
+class InstrumentPITest : AudioTest(){
 
 
     @Test
     fun equalityTest()
     {
-        val o1 = PersistableInstrument()
-        o1.isMonophonic = false
+        val o1 = InstrumentP()
+        o1.polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
         o1.name="poly"
-        val o2 = PersistableInstrument()
-        o2.isMonophonic = false
+        val o2 = InstrumentP()
+        o2.polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
         o2.name="poly"
         Assert.assertEquals(o1,o2)
     }
@@ -25,11 +26,11 @@ class PersistableInstrumentITest : AudioTest(){
     @Test
     fun unequalityTest()
     {
-        val o1 = PersistableInstrument()
-        o1.isMonophonic = false
+        val o1 = InstrumentP()
+        o1.polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
         o1.name="poly"
-        val o2 = PersistableInstrument()
-        o2.isMonophonic = false
+        val o2 = InstrumentP()
+        o2.polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
         o2.name="poly 2"
         Assert.assertNotEquals(o1,o2)
     }
@@ -37,11 +38,11 @@ class PersistableInstrumentITest : AudioTest(){
     @Test
     fun unequalityTest2()
     {
-        val o1 = PersistableInstrument()
-        o1.isMonophonic = true
+        val o1 = InstrumentP()
+        o1.polyphonyDefinition = PolyphonyDefinition.MONOPHONIC
         o1.name="poly"
-        val o2 = PersistableInstrument()
-        o2.isMonophonic = false
+        val o2 = InstrumentP()
+        o2.polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
         o2.name="polyphia"
         Assert.assertNotEquals(o1,o2)
     }

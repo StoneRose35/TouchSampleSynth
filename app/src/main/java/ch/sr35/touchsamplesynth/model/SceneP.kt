@@ -15,7 +15,7 @@ import java.util.UUID
 
 
 class SceneP : Serializable, Cloneable {
-    var instruments = ArrayList<PersistableInstrument>()
+    var instruments = ArrayList<InstrumentP>()
     var touchElements = ArrayList<TouchElementP>()
     var name = ""
 
@@ -98,7 +98,7 @@ class SceneP : Serializable, Cloneable {
         val klon=SceneP()
         for(instr in this.instruments)
         {
-            klon.instruments.add(instr.clone() as PersistableInstrument)
+            klon.instruments.add(instr.clone() as InstrumentP)
         }
         for (te in this.touchElements)
         {

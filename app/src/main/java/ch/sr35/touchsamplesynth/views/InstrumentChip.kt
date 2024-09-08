@@ -7,6 +7,7 @@ import ch.sr35.touchsamplesynth.R
 import android.widget.LinearLayout
 import android.widget.TextView
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
 
 class InstrumentChip(context: Context,attributeSet: AttributeSet?): LinearLayout(context,attributeSet) {
 
@@ -24,7 +25,7 @@ class InstrumentChip(context: Context,attributeSet: AttributeSet?): LinearLayout
             nameAndType.setCompoundDrawables(null, it.getInstrumentIcon().also { drawable ->
                 drawable?.setBounds(0,0,(drawable as VectorDrawable).minimumWidth,drawable.minimumHeight)
             },null,null)
-            if (it.isMonophonic) {
+            if (it.polyphonyDefinition == PolyphonyDefinition.MONOPHONIC) {
                 findViewById<TextView>(R.id.instrument_chip_monopoly).text =
                     context.getString(R.string.monophonic)
             }

@@ -2,7 +2,7 @@ package ch.sr35.touchsamplesynth
 
 import android.os.Handler
 import android.os.Looper
-import ch.sr35.touchsamplesynth.model.PersistableInstrument
+import ch.sr35.touchsamplesynth.model.InstrumentP
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SamplerP
 import ch.sr35.touchsamplesynth.model.SceneListP
@@ -156,7 +156,7 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
         // check is samplelibrary from https://wavbvkery.com/wp-content/uploads/WAVBVKERY-Acoustic-Drum-Samples.zip
         // is in DCIM folder and is unpacked
         val gson=GsonBuilder().apply {
-            registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+            registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
             setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         }.create()
         val presets = gson.fromJson(presetsFile,SceneListP::class.java)

@@ -2,6 +2,7 @@ package ch.sr35.touchsamplesynth.model
 
 import androidx.core.net.toUri
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import java.io.File
 import java.io.Serializable
@@ -13,9 +14,9 @@ class SamplerP(private var sampleStart: Int,
                private var mode: Byte,
                private var sampleFile: String,
                actionAmountToVolume: Float,
-               isMono: Boolean,
+               polyphonyDefinition: PolyphonyDefinition,
                name: String
-):PersistableInstrument(actionAmountToVolume, isMono,name), Serializable, Cloneable  {
+):InstrumentP(actionAmountToVolume, polyphonyDefinition,name), Serializable, Cloneable  {
 
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
@@ -64,9 +65,9 @@ class SamplerP(private var sampleStart: Int,
 
     override fun toString(): String
     {
-        return "Sampler: %s, monophonic: %b".format(this.name, this.isMonophonic)
+        return "Sampler: %s, polyphonyDefinition: %s".format(this.name, this.polyphonyDefinition)
     }
     override fun clone(): Any {
-        return SamplerP(this.sampleStart,this.sampleEnd,this.loopStart,this.loopEnd,this.mode,this.sampleFile,this.actionAmountToVolume,this.isMonophonic,this.name)
+        return SamplerP(this.sampleStart,this.sampleEnd,this.loopStart,this.loopEnd,this.mode,this.sampleFile,this.actionAmountToVolume,this.polyphonyDefinition,this.name)
     }
 }
