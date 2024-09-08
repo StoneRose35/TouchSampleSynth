@@ -48,10 +48,20 @@ open class InstrumentI(var name: String) {
 
     fun getPolyphonyDescription(): String
     {
-        return if (voicesCount()  < 2 ) {
-            "M"
-        } else {
-            "P " + voicesCount().toString()
+        return when (polyphonyDefinition)
+        {
+            PolyphonyDefinition.MONOPHONIC ->
+            {
+                "M"
+            }
+            PolyphonyDefinition.POLY_SATURATE ->
+            {
+                "PS " + voicesCount().toString()
+            }
+            PolyphonyDefinition.POLY_NOTE_STEAL ->
+            {
+                "PN " + voicesCount().toString()
+            }
         }
     }
 

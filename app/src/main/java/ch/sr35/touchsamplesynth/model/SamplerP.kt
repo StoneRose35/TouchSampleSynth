@@ -15,8 +15,9 @@ class SamplerP(private var sampleStart: Int,
                private var sampleFile: String,
                actionAmountToVolume: Float,
                polyphonyDefinition: PolyphonyDefinition,
+               nVoices: Int,
                name: String
-):InstrumentP(actionAmountToVolume, polyphonyDefinition,name), Serializable, Cloneable  {
+):InstrumentP(actionAmountToVolume, polyphonyDefinition,nVoices,name), Serializable, Cloneable  {
 
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
@@ -37,6 +38,7 @@ class SamplerP(private var sampleStart: Int,
         super.toInstrument(i)
         if (i is SamplerI)
         {
+            super.toInstrument(i)
             if (sampleFile.isNotEmpty() && File(sampleFile).exists()) {
                 i.setSampleFile(File(sampleFile).toUri())
             }
@@ -45,6 +47,7 @@ class SamplerP(private var sampleStart: Int,
             i.setSampleStartIndex(sampleStart)
             i.setSampleEndIndex(sampleEnd)
             i.setMode(mode)
+
         }
     }
 
@@ -68,6 +71,6 @@ class SamplerP(private var sampleStart: Int,
         return "Sampler: %s, polyphonyDefinition: %s".format(this.name, this.polyphonyDefinition)
     }
     override fun clone(): Any {
-        return SamplerP(this.sampleStart,this.sampleEnd,this.loopStart,this.loopEnd,this.mode,this.sampleFile,this.actionAmountToVolume,this.polyphonyDefinition,this.name)
+        return SamplerP(this.sampleStart,this.sampleEnd,this.loopStart,this.loopEnd,this.mode,this.sampleFile,this.actionAmountToVolume,this.polyphonyDefinition,this.nVoices,this.name)
     }
 }

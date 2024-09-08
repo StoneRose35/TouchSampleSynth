@@ -14,8 +14,9 @@ class SimpleSubtractiveSynthP(
     actionAmountToVolume: Float,
     private var resonance: Float,
     polyphonyDefinition: PolyphonyDefinition,
+    nVoices: Int,
     name: String
-): InstrumentP(actionAmountToVolume,polyphonyDefinition,name) {
+): InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name) {
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SimpleSubtractiveSynthI)
@@ -32,9 +33,10 @@ class SimpleSubtractiveSynthP(
     }
 
     override fun toInstrument(i: InstrumentI) {
-        super.toInstrument(i)
+
         if (i is SimpleSubtractiveSynthI)
         {
+            super.toInstrument(i)
             i.setAttack(attack)
             i.setDecay(decay)
             i.setSustain(sustain)
@@ -70,7 +72,7 @@ class SimpleSubtractiveSynthP(
     }
 
     override fun clone(): Any {
-        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmountToFilter, this.actionAmountToVolume,this.resonance,this.polyphonyDefinition,this.name)
+        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmountToFilter, this.actionAmountToVolume,this.resonance,this.polyphonyDefinition,this.nVoices,this.name)
         return klon
     }
 }

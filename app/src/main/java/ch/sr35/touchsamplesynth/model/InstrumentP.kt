@@ -34,13 +34,14 @@ class PersistableInstrumentDeserializer: JsonDeserializer<InstrumentP> {
     }
 }
 
-open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefinition: PolyphonyDefinition=PolyphonyDefinition.MONOPHONIC, var name: String="", var id: String=""): Serializable, Cloneable {
+open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefinition: PolyphonyDefinition=PolyphonyDefinition.MONOPHONIC,var nVoices:Int=0, var name: String="", var id: String=""): Serializable, Cloneable {
 
     open fun fromInstrument(i: InstrumentI)
     {
         name = i.name
         polyphonyDefinition = i.polyphonyDefinition
         actionAmountToVolume = i.getVolumeModulation()
+        nVoices = i.voicesCount()
     }
 
     open fun toInstrument(i: InstrumentI)
@@ -48,6 +49,7 @@ open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefini
         i.name = name
         i.polyphonyDefinition = polyphonyDefinition
         i.setVolumeModulation(actionAmountToVolume)
+        i.generateVoices(nVoices)
     }
 
 
@@ -69,7 +71,7 @@ open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefini
 
     override fun toString(): String
     {
-        return "PersistableInstrument: %s, polyphonyDefinit: %b".format(this.name, this.polyphonyDefinition)
+        return "PersistableInstrument: %s, polyphonyDefinition: %b".format(this.name, this.polyphonyDefinition)
     }
 
     override fun hashCode(): Int {
@@ -91,13 +93,13 @@ class PersistableInstrumentFactory
         {
             val pi: InstrumentP = when (msg) {
                 is SimpleSubtractiveSynthI -> {
-                    SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, PolyphonyDefinition.MONOPHONIC, "")
+                    SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, PolyphonyDefinition.MONOPHONIC,0, "")
                 }
                 is SineMonoSynthI -> {
-                    SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,PolyphonyDefinition.MONOPHONIC,"")
+                    SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,PolyphonyDefinition.MONOPHONIC,0,"")
                 }
                 is SamplerI -> {
-                    SamplerP(0,0,0,0,0,"",0.0f,PolyphonyDefinition.MONOPHONIC,"")
+                    SamplerP(0,0,0,0,0,"",0.0f,PolyphonyDefinition.MONOPHONIC,0,"")
                 }
                 else -> {
                     return null
@@ -121,13 +123,6 @@ class PersistableInstrumentFactory
                     SamplerI(context,pi.name)
                 }
                 else -> return null
-            }
-            if (pi.polyphonyDefinition == PolyphonyDefinition.MONOPHONIC) {
-                instr.generateVoices(1)
-            }
-            else
-            {
-                instr.generateVoices(InstrumentI.DEFAULT_POLYPHONY)
             }
             pi.toInstrument(instr)
             return instr

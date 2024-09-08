@@ -19,7 +19,8 @@
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
           "name": "Bassdrum",
-          "isMonophonic": true,
+          "polyphonyDefinition": "MONOPHONIC",
+          "nVoices": 1,
           "id": "08867b1b-c565-402a-b4bc-cc84b20af267"
         },
         {
@@ -31,7 +32,8 @@
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
           "name": "Snare",
-          "isMonophonic": true,
+          "polyphonyDefinition": "MONOPHONIC",
+          "nVoices": 1,
           "id": "5bf70365-81e5-442a-b4e2-b165818fdbeb"
         },
         {
@@ -43,7 +45,8 @@
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
           "name": "HiHat closed",
-          "isMonophonic": true,
+          "polyphonyDefinition": "MONOPHONIC",
+          "nVoices": 1,
           "id": "320a4209-a138-42e8-823c-91f187364a48"
         },
         {
@@ -55,7 +58,8 @@
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
           "name": "HiHat open",
-          "isMonophonic": true,
+          "polyphonyDefinition": "MONOPHONIC",
+          "nVoices": 1,
           "id": "57cef220-67e0-4492-9ead-0c3a035cc65c"
         },
         {
@@ -67,7 +71,8 @@
           "sampleStart": 0,
           "actionAmountToVolume": 0.0,
           "name": "Crash",
-          "isMonophonic": true,
+          "polyphonyDefinition": "MONOPHONIC",
+          "nVoices": 1,
           "id": "f8994699-0bfa-48f6-a086-9a4083619a2d"
         },
         {
@@ -80,7 +85,8 @@
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
           "name": "Bass",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "88faa4a0-ee91-47a6-aae8-0258233bf30a"
         }
       ],
@@ -241,7 +247,8 @@
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
           "name": "Soft Bell",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 8,
           "id": "029bd827-8b22-4b9c-8328-19c444219ace"
         }
       ],
@@ -453,7 +460,8 @@
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
           "name": "Pad ",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
@@ -466,7 +474,8 @@
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
           "name": "Hit",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         }
       ],
@@ -662,7 +671,8 @@
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
           "name": "Pad ",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
@@ -675,7 +685,8 @@
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
           "name": "Hit",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         }
       ],
@@ -871,7 +882,8 @@
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
           "name": "Pad ",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
@@ -884,7 +896,8 @@
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
           "name": "Hit",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         }
       ],
@@ -1080,7 +1093,8 @@
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
           "name": "Pad ",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
@@ -1093,7 +1107,8 @@
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
           "name": "Hit",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         }
       ],
@@ -1289,7 +1304,8 @@
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
           "name": "Pad ",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
@@ -1302,7 +1318,8 @@
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
           "name": "Hit",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "0956383c-1410-4336-a5a6-47c746eb5089"
         }
       ],
@@ -1498,7 +1515,8 @@
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
           "name": "Pad ",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
@@ -1511,7 +1529,8 @@
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
           "name": "Hit",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         }
       ],
@@ -1707,7 +1726,8 @@
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
           "name": "Pad ",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
@@ -1720,7 +1740,8 @@
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
           "name": "Hit",
-          "isMonophonic": false,
+          "polyphonyDefinition": "POLY_SATURATE",
+          "nVoices": 4,
           "id": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         }
       ],

@@ -11,8 +11,9 @@ class SineMonoSynthP(private var attack: Float,
                      private var release: Float,
                      actionAmountToVolume: Float,
                      polyphonyDefinition: PolyphonyDefinition,
+                     nVoices: Int,
                      name: String
-): InstrumentP(actionAmountToVolume,polyphonyDefinition,name),Serializable, Cloneable {
+): InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name),Serializable, Cloneable {
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SineMonoSynthI)
@@ -27,14 +28,16 @@ class SineMonoSynthP(private var attack: Float,
     }
 
     override fun toInstrument(i: InstrumentI) {
-        super.toInstrument(i)
+
         if (i is SineMonoSynthI)
         {
+            super.toInstrument(i)
             i.setAttack(attack)
             i.setDecay(decay)
             i.setSustain(sustain)
             i.setRelease(release)
             i.setVolumeModulation(actionAmountToVolume)
+
         }
     }
 
@@ -60,7 +63,7 @@ class SineMonoSynthP(private var attack: Float,
     }
 
     override fun clone(): Any {
-        return SineMonoSynthP(this.attack,this.decay,this.sustain,this.release,this.actionAmountToVolume,this.polyphonyDefinition,this.name)
+        return SineMonoSynthP(this.attack,this.decay,this.sustain,this.release,this.actionAmountToVolume,this.polyphonyDefinition,this.nVoices,this.name)
     }
 
 }

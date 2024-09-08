@@ -18,6 +18,8 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ListAdapter
 import android.widget.ListView
+import android.widget.RadioGroup
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet.WRAP_CONTENT
@@ -26,6 +28,7 @@ import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_OFF
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_ON_POLY
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
@@ -69,8 +72,8 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             }
         }
 
-        val addButtton = view.findViewById<Button>(R.id.instruments_page_add)
-        addButtton.setOnClickListener {
+        val addButton = view.findViewById<Button>(R.id.instruments_page_add)
+        addButton.setOnClickListener {
             val addInstrumentDlg = AddInstrumentFragmentDialog(instrumentsList)
 
             (context as TouchSampleSynthMain).supportFragmentManager
@@ -118,39 +121,42 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             return@setOnEditorActionListener false
         }
 
-        view.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly).setOnClickListener { it ->
-            val voicesToGenerate: Int
-            if ((it as CheckBox).isChecked)
-            {
-                view.findViewById<TextView>(R.id.instruments_page_tv_monopoly).text = getString(R.string.polyphonic)
-                voicesToGenerate = InstrumentI.DEFAULT_POLYPHONY
-            }
-            else
-            {
-                view.findViewById<TextView>(R.id.instruments_page_tv_monopoly).text = getString(R.string.monophonic)
-                voicesToGenerate = 1
-            }
-            if (selectedInstrument > -1)
-            {
-                if (!it.isChecked) {
-                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition =
-                        PolyphonyDefinition.MONOPHONIC
-                }
-                else
-                {
-                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
-                }
-                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.forEach { v ->
-                    v.detachFromAudioEngine()
 
-                }
+        view.findViewById<RadioGroup>(R.id.instrument_page_rg_polyphony).setOnCheckedChangeListener { _, checkedId ->
 
-                (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].voices.clear()
-                    (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].generateVoices(
-                        voicesToGenerate
-                    )
+            val voicesSpinner = view.findViewById<Spinner>(R.id.instrument_page_sp_voices)
+            when(checkedId)
+            {
+                R.id.instrument_page_rg_poly_sat -> {
+                    if (selectedInstrument > -1)
+                    {
+                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
+                    }
+                    voicesSpinner.isEnabled = true
+                }
+                R.id.instrument_page_rg_poly_ns -> {
+                    if (selectedInstrument > -1)
+                    {
+                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition = PolyphonyDefinition.POLY_NOTE_STEAL
+                    }
+                    voicesSpinner.isEnabled = true
+                }
+                R.id.instrument_page_rg_mono -> {
+                    if (selectedInstrument > -1)
+                    {
+                        (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition = PolyphonyDefinition.MONOPHONIC
+                    }
+                    voicesSpinner.apply {
+                        setSelection(0)
+                        isEnabled = false
+                    }
+                }
             }
+            view.findViewById<ListView>(R.id.instruments_page_instruments_list).invalidateViews()
         }
+
+        view.findViewById<Spinner>(R.id.instrument_page_sp_voices).onItemSelectedListener = VoicesChangedHandler(this)
+
     }
 
 
@@ -277,8 +283,8 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 it.commit()
             }
             view?.findViewById<EditText>(R.id.instruments_page_instr_name)?.text?.clear()
-            view?.findViewById<TextView>(R.id.instruments_page_tv_monopoly)?.text = ""
-            view?.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly)?.isChecked = false
+            view?.findViewById<RadioGroup>(R.id.instrument_page_rg_polyphony)?.clearCheck()
+            view?.findViewById<Spinner>(R.id.instrument_page_sp_voices)?.setSelection(0)
         }
     }
 
@@ -290,59 +296,72 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             (context as TouchSampleSynthMain).soundGenerators[p2].voices.forEach { v -> v.setMidiMode(
                 MIDI_MODE_ON_POLY) }
             selectedInstrument = p2
+            val frag: Fragment
             if (contentView != null) {
-                if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthI) {
-                    val frag =
-                        SineMonoSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SineMonoSynthI)
-                    if (p1 != null) {
-                        putFragment(
-                            frag,
-                            (p1 as ConstraintLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
-                        )
-                    } else {
-                        putFragment(frag, "thefirstitem")
-                    }
+                frag = if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthI) {
+                    SineMonoSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SineMonoSynthI)
+                } else if ((context as TouchSampleSynthMain).soundGenerators[p2] is SimpleSubtractiveSynthI) {
+                    SimpleSubtractiveSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SimpleSubtractiveSynthI)
+                } else {
+                    SamplerFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SamplerI)
                 }
-                else if ((context as TouchSampleSynthMain).soundGenerators[p2] is SimpleSubtractiveSynthI)
-                {
-                    val frag =
-                        SimpleSubtractiveSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SimpleSubtractiveSynthI)
-                    if (p1 != null) {
-                        putFragment(
-                            frag,
-                            (p1 as ConstraintLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
-                        )
-                    } else {
-                        putFragment(frag, "thefirstitem")
-                    }
-                }
-
-                else if  ((context as TouchSampleSynthMain).soundGenerators[p2] is SamplerI)
-                {
-                    val frag =
-                        SamplerFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SamplerI)
-                    if (p1 != null) {
-                        putFragment(
-                            frag,
-                            (p1 as ConstraintLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
-                        )
-                    } else {
-                        putFragment(frag, "thefirstitem")
-                    }
+                if (p1 != null) {
+                    putFragment(
+                        frag,
+                        (p1 as ConstraintLayout).findViewById<TextView>(R.id.instrument_entry_text).text.toString()
+                    )
+                } else {
+                    putFragment(frag, "thefirstitem")
                 }
             }
             view?.findViewById<TextView>(R.id.instruments_page_instr_name)?.text =
                     (context as TouchSampleSynthMain).soundGenerators[p2].name
-            view?.findViewById<CheckBox>(R.id.instruments_page_cb_monopoly)?.isChecked = (context as TouchSampleSynthMain).soundGenerators[p2].polyphonyDefinition != PolyphonyDefinition.MONOPHONIC
-            if ((context as TouchSampleSynthMain).soundGenerators[p2].polyphonyDefinition == PolyphonyDefinition.MONOPHONIC)
+            when ((context as TouchSampleSynthMain).soundGenerators[p2].polyphonyDefinition)
             {
-                view?.findViewById<TextView>(R.id.instruments_page_tv_monopoly)?.text = getString(R.string.monophonic)
+                PolyphonyDefinition.POLY_SATURATE -> {
+                    view?.findViewById<RadioGroup>(R.id.instrument_page_rg_polyphony)?.check(R.id.instrument_page_rg_poly_sat)
+                }
+                PolyphonyDefinition.POLY_NOTE_STEAL ->
+                {
+                    view?.findViewById<RadioGroup>(R.id.instrument_page_rg_polyphony)?.check(R.id.instrument_page_rg_poly_ns)
+                }
+                PolyphonyDefinition.MONOPHONIC -> {
+                    view?.findViewById<RadioGroup>(R.id.instrument_page_rg_polyphony)?.check(R.id.instrument_page_rg_mono)
+                }
             }
-            else
-            {
-                view?.findViewById<TextView>(R.id.instruments_page_tv_monopoly)?.text = getString(R.string.polyphonic)
+            val nVoices = (context as TouchSampleSynthMain).soundGenerators[p2].voices.size
+            val voicesIdx = resources.getStringArray(R.array.numberOfVoices).map { it -> it.toInt()}.indexOf(nVoices)
+            if (voicesIdx > -1) {
+                view?.findViewById<Spinner>(R.id.instrument_page_sp_voices)?.setSelection(voicesIdx)
             }
             (p0 as ListView).invalidateViews()
         }
     }
+}
+
+class VoicesChangedHandler(val instrumentsPageFragment: InstrumentsPageFragment): AdapterView.OnItemSelectedListener {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+        if (instrumentsPageFragment.selectedInstrument > -1)
+        {
+            val nVoicesOld = (instrumentsPageFragment.context as TouchSampleSynthMain).soundGenerators[instrumentsPageFragment.selectedInstrument].voices.size
+            val nVoicesNew = ((parent as Spinner).selectedItem as String).toInt()
+            if (nVoicesNew > nVoicesOld)
+            {
+                (instrumentsPageFragment.context as TouchSampleSynthMain).soundGenerators[instrumentsPageFragment.selectedInstrument].generateVoices(nVoicesNew-nVoicesOld)
+            }
+            else if (nVoicesOld > nVoicesNew)
+            {
+                (instrumentsPageFragment.context as TouchSampleSynthMain).soundGenerators[instrumentsPageFragment.selectedInstrument].voices.filterIndexed { index, _ -> index >= nVoicesNew }.forEach { it -> it.detachFromAudioEngine() }
+                (instrumentsPageFragment.context as TouchSampleSynthMain).soundGenerators[instrumentsPageFragment.selectedInstrument].voices=
+                    (instrumentsPageFragment.context as TouchSampleSynthMain).soundGenerators[instrumentsPageFragment.selectedInstrument].voices.filterIndexed { index, _ -> index < nVoicesNew } as ArrayList<MusicalSoundGenerator>
+            }
+            (instrumentsPageFragment.context as TouchSampleSynthMain).findViewById<ListView>(R.id.instruments_page_instruments_list).invalidateViews()
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
+    }
+
 }

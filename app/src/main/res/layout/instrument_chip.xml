@@ -34,7 +34,7 @@
         android:paddingTop="2dp"
         android:paddingRight="6dp"
         android:paddingBottom="2dp"
-        android:text="@string/polyphonic"
+        android:text="@android:string/ok"
         android:textAlignment="center"
         android:textColor="@color/light_grey"
         android:textStyle="normal"

@@ -238,8 +238,11 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
             rootObj.addProperty("touchSampleSynthVersion",versionTo.toString())
             return rootObj.toString()
         }
-
     }
+
+    //TODO write data migrator from 1.9.3 to 1.9.4
+    // replace occurences of "isMonophonic=true" with "polyphonyDefinition=MONOPHONIC" and "nVoices=1"
+    // and "isMonophonic=true" with "polyphonyDefinition=POLY_SATURATE" and "nVoices=4"
 
 }
 

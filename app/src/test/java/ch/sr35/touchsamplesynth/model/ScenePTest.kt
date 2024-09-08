@@ -11,9 +11,9 @@ class ScenePTest {
     @Test
     fun toJsonTest()
     {
-        val synth1=SineMonoSynthP(0.684f,0.438f,0.1111f,0.93234f,0.1f,PolyphonyDefinition.POLY_SATURATE,"HuntersMoon")
+        val synth1=SineMonoSynthP(0.684f,0.438f,0.1111f,0.93234f,0.1f,PolyphonyDefinition.POLY_SATURATE,4,"HuntersMoon")
         synth1.id = UUID.randomUUID().toString()
-        val synth2 = SamplerP(12532,5959594,13000,5700000,0,"/sdcard/searchlight.wav",0.25f,PolyphonyDefinition.POLY_SATURATE,"WatcherInTheSky")
+        val synth2 = SamplerP(12532,5959594,13000,5700000,0,"/sdcard/searchlight.wav",0.25f,PolyphonyDefinition.POLY_SATURATE,4,"WatcherInTheSky")
         synth2.id = UUID.randomUUID().toString()
         val touchElement1 = TouchElementP(234,546,154,673,
             TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,45,null,0,3,synth1.id)
