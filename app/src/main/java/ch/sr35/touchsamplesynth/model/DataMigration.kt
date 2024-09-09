@@ -243,6 +243,47 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     //TODO write data migrator from 1.9.3 to 1.9.4
     // replace occurences of "isMonophonic=true" with "polyphonyDefinition=MONOPHONIC" and "nVoices=1"
     // and "isMonophonic=true" with "polyphonyDefinition=POLY_SATURATE" and "nVoices=4"
+    private class Updater5: DataUpdater(versionFrom = Version(1,9,3),versionTo = Version(1,9,4)) {
+        override fun processData(jsonData: String): String? {
+            val rootElement = JsonParser.parseString(jsonData)
+            val rootObj = rootElement.asJsonObject
+            if (!rootObj.has("touchSampleSynthVersion")) {
+                return null
+            }
+            val srcVersion = rootObj.get("touchSampleSynthVersion").asString
+            val versionNumbers = srcVersion.split(".")
+            if (versionNumbers.size != 3)
+            {
+                return null
+            }
+            val versionFromFile = Version(versionNumbers[0].toInt(),versionNumbers[1].toInt(),versionNumbers[2].toInt())
+            if (versionFromFile != this.versionFrom)
+            {
+                return null
+            }
+            rootObj.remove("touchSampleSynthVersion")
+            rootObj.addProperty("touchSampleSynthVersion",versionTo.toString())
+
+
+            val scenes = rootObj.getAsJsonArray("scenes")
+            scenes.flatMap { scn -> (scn as JsonObject).getAsJsonArray("instruments") }.forEach {
+                val isMonophonic = (it as JsonObject)["isMonophonic"].asBoolean
+                it.remove("isMonophonic")
+                if (isMonophonic)
+                {
+                    it.addProperty("polyphonyDefinition","MONOPHONIC")
+                    it.addProperty("nVoices",1)
+                }
+                else
+                {
+                    it.addProperty("polyphonyDefinition","POLY_SATURATE")
+                    it.addProperty("nVoices",4)
+                }
+            }
+            return rootObj.toString()
+        }
+
+    }
 
 }
 
