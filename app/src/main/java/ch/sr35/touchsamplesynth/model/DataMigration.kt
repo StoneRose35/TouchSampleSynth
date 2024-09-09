@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.model
 
+import ch.sr35.touchsamplesynth.BuildConfig
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
@@ -28,6 +29,25 @@ class Version(val major: Int,val minor: Int,val revision: Int) {
 
     override fun toString(): String {
         return "${major}.${minor}.${revision}"
+    }
+
+    companion object
+    {
+        fun fromString(string: String): Version?
+        {
+            val substrings = string.split(".")
+            if (substrings.size==3)
+            {
+                return try {
+                    Version(substrings[0].toInt(),substrings[1].toInt(),substrings[2].toInt())
+                }
+                catch (e: NumberFormatException)
+                {
+                    null
+                }
+            }
+            return null
+        }
     }
 }
 abstract class DataUpdater protected constructor(val versionFrom: Version?=null, val versionTo: Version?=null)
@@ -62,20 +82,27 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
         fun upgradeToCurrent(jsonData: String): String?
         {
             var updatedData:String = jsonData
-            val startVersion = getVersion(jsonData) ?: return null
-            var currentVersion: Version? = startVersion
-            while (currentVersion != null) {
-                updatersList.firstOrNull { el -> el.versionFrom == currentVersion }.also {
+            var startVersion = getVersion(jsonData)
+            var currentVersion: Version?=null
+            val finalVersion: Version? = Version.fromString(BuildConfig.VERSION_NAME)
+            while (currentVersion != finalVersion) {
+                updatersList.firstOrNull { el -> el.versionFrom == startVersion }.also {
                     currentVersion = it?.versionTo
                     if (currentVersion != null) {
                         updatedData = it?.processData(updatedData).toString()
                     }
+                    startVersion = currentVersion
                 }
             }
             return updatedData
         }
 
-        val updatersList= listOf(Updater1() as DataUpdater, Updater2() as DataUpdater, Updater3() as DataUpdater, Updater4() as DataUpdater)
+        val updatersList= listOf(
+            Updater1() as DataUpdater,
+            Updater2() as DataUpdater,
+            Updater3() as DataUpdater,
+            Updater4() as DataUpdater,
+            Updater5() as DataUpdater)
     }
 
     /**
@@ -240,9 +267,6 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
         }
     }
 
-    //TODO write data migrator from 1.9.3 to 1.9.4
-    // replace occurences of "isMonophonic=true" with "polyphonyDefinition=MONOPHONIC" and "nVoices=1"
-    // and "isMonophonic=true" with "polyphonyDefinition=POLY_SATURATE" and "nVoices=4"
     private class Updater5: DataUpdater(versionFrom = Version(1,9,3),versionTo = Version(1,9,4)) {
         override fun processData(jsonData: String): String? {
             val rootElement = JsonParser.parseString(jsonData)
