@@ -29,6 +29,10 @@
         <item name="sceneEditBackgroundColor">@color/very_light_gray</item>
         <item name="touchElementLinkColor">@color/vu_meter_green</item>
         <item name="touchElementLinkSize">8.0</item>
+
+        <item name="pianoRollBigKeyColor">@color/darkeryellow</item>
+        <item name="pianoRollSmallKeyColor">@color/darker_grey</item>
+        <item name="pianoRollOutlineColor">@color/black</item>
     </style>
     <style name="Theme.Instrument" parent="Theme.TouchSampleSynth">
         <item name="android:textColor">@color/black</item>

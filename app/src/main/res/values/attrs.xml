@@ -19,4 +19,7 @@
 
     <attr name="touchElementLinkSize" format="float"/>
 
+    <attr name="pianoRollBigKeyColor" format="color"/>
+    <attr name="pianoRollSmallKeyColor" format="color"/>
+    <attr name="pianoRollOutlineColor" format="color"/>
 </resources>

@@ -26,12 +26,14 @@ import ch.sr35.touchsamplesynth.graphics.Point
 import ch.sr35.touchsamplesynth.graphics.Rectangle
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
+import kotlin.math.abs
 import kotlin.math.sqrt
 
 const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
 const val OUTLINE_STROKE_WIDTH_DEFAULT = 7.8f
 const val OUTLINE_STROKE_WIDTH_ENGAGED = 20.4f
+const val NO_DRAG_TOLERANCE = 20
 
 class TouchElement(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
@@ -46,7 +48,8 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     enum class TouchElementState {
         PLAYING,
         PLAYING_VERBOSE,
-        EDITING
+        EDITING,
+        EDITING_SELECTED
     }
 
     enum class TouchElementDragAnchor {
@@ -311,7 +314,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
         }
 
-        if (elementState == TouchElementState.EDITING) {
+        if (elementState == TouchElementState.EDITING || elementState == TouchElementState.EDITING_SELECTED) {
             canvas.drawCircle(
                 0.0f + EDIT_CIRCLE_OFFSET,
                 0.0f + EDIT_CIRCLE_OFFSET,
@@ -678,6 +681,23 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 MotionEvent.ACTION_UP -> {
                     if (dragStart != null)
                     {
+                        (this.layoutParams as ConstraintLayout.LayoutParams).let {
+                            if (abs(it.leftMargin - oldLeftMargin) + abs (it.topMargin - oldTopMargin) < NO_DRAG_TOLERANCE && it.height == oldHeight && it.width == oldWidth)
+                            {
+                                if (elementState == TouchElementState.EDITING)
+                                {
+                                    elementState = TouchElementState.EDITING_SELECTED
+                                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
+                                }
+                                else if (elementState == TouchElementState.EDITING_SELECTED)
+                                {
+                                    elementState = TouchElementState.EDITING
+                                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+                                }
+                                invalidate()
+                            }
+                        }
+
                         if (!validatePlacement())
                         {
                             val restoredlayoutParams: ConstraintLayout.LayoutParams? =
