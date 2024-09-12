@@ -101,56 +101,44 @@ class SceneListP {
         touchSampleSynthVersion = BuildConfig.VERSION_NAME
         exportDateTime = Date()
         appInstance.allScenes.addAll(this.scenes)
+
     }
 
-    fun exportAsJson(fileName: String, context: Context): Boolean
-    {
-        try {
-            val mainDir = (context.filesDir.absolutePath)
+
+    companion object {
+
+        fun scenesToJsonString(context: Context,installDone: Boolean = false): String
+        {
             val gson = GsonBuilder().apply {
                 registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
                 setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             }.create()
-            val jsonOut = gson.toJson(this)
-            Log.i(TAG, "exporting scenes as json")
-            val f = File(mainDir + File.separator + fileName)
-            if (f.exists()) {
-                f.delete()
+            val screenWidth: Int
+            val screenHeight: Int
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+                screenWidth =
+                    (context as Activity).windowManager.currentWindowMetrics.bounds.width()
+                screenHeight =
+                    context.windowManager.currentWindowMetrics.bounds.height()
+            } else {
+                screenWidth = (context as Activity).windowManager.defaultDisplay.width
+                screenHeight = context.windowManager.defaultDisplay.height
             }
-            f.writeText(jsonOut)
+            val sceneList = SceneListP()
+            sceneList.screenResolutionX = screenWidth
+            sceneList.screenResolutionY = screenHeight
+            sceneList.installDone = installDone
+            sceneList.scenes.addAll((context as TouchSampleSynthMain).getScenesList())
+            return gson.toJson(sceneList)
         }
-        catch (_: Exception)
-        {
-            return false
-        }
-        return true
-    }
 
-    companion object {
-        fun exportAsJson(fileName: String, context: Context): Boolean
+
+        fun exportAsJson(fileName: String, context: Context,installDone: Boolean=false): Boolean
         {
             try {
                 val mainDir = (context.filesDir.absolutePath)
-                val gson = GsonBuilder().apply {
-                    registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
-                    setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                }.create()
-                val screenWidth: Int
-                val screenHeight: Int
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-                    screenWidth =
-                        (context as Activity).windowManager.currentWindowMetrics.bounds.width()
-                    screenHeight =
-                        context.windowManager.currentWindowMetrics.bounds.height()
-                } else {
-                    screenWidth = (context as Activity).windowManager.defaultDisplay.width
-                    screenHeight = context.windowManager.defaultDisplay.height
-                }
-                val sceneList = SceneListP()
-                sceneList.screenResolutionX = screenWidth
-                sceneList.screenResolutionY = screenHeight
-                sceneList.scenes.addAll((context as TouchSampleSynthMain).getScenesList())
-                val jsonOut = gson.toJson(sceneList)
+
+                val jsonOut = scenesToJsonString(context,installDone)
                 Log.i(TAG, "exporting scenes as json")
                 val f = File(mainDir + File.separator + fileName)
                 if (f.exists()) {
