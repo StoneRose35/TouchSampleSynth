@@ -1,6 +1,7 @@
 package ch.sr35.touchsamplesynth.fragments
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -142,6 +143,12 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
             val jsonobj = SceneListP.importFromJson(context as TouchSampleSynthMain)
             jsonobj?.scenes?.clear()
             jsonobj?.scenes?.addAll((context as TouchSampleSynthMain).getScenesList())
+            val jsonStringScenes = SceneListP.scenesToJsonString(context as TouchSampleSynthMain)
+            val sendIntent = Intent()
+            sendIntent.setAction(Intent.ACTION_SEND)
+            sendIntent.setType("text/plain")
+            sendIntent.putExtra(Intent.EXTRA_TEXT, jsonStringScenes)
+            startActivity(Intent.createChooser(sendIntent,getString(R.string.shareScenes)))
             if (SceneListP.exportAsJson(SCENES_FILE_NAME,context as TouchSampleSynthMain)) {
                 val sb = Snackbar.make(it, resources.getText(R.string.exportSuccessful), 1000)
                 sb.show()
@@ -158,6 +165,8 @@ class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
                 }
                 return@setOnClickListener
             }
+            val sb = Snackbar.make(it, resources.getText(R.string.importSuccessful), 1000)
+            sb.show()
             jsonobj.importOntoDevice(context as TouchSampleSynthMain,importMode.REPLACE,importDoneFlag.DO_NOT_CHANGE)
             (context as TouchSampleSynthMain).scenesListDirty = true
         }
