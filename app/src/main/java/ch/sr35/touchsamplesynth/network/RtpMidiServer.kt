@@ -7,6 +7,7 @@ import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.SocketException
+import java.util.concurrent.ConcurrentLinkedDeque
 import kotlin.concurrent.thread
 import kotlin.random.Random
 import kotlin.random.nextUInt
@@ -23,7 +24,7 @@ class RtpMidiServer {
     var name: String="TSS Midi Server"
     var isEnabled:Boolean=false
     private var journal=RtpMidiJournal(128)
-    private val midiSendQueue =  ArrayDeque<ByteArray>()
+    private val midiSendQueue =  ConcurrentLinkedDeque<ByteArray>()
     fun startServer(): Boolean
     {
         var controlPort= 1024
