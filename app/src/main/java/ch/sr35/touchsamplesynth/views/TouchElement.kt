@@ -478,7 +478,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (elementState != TouchElementState.EDITING) {
+        if (elementState != TouchElementState.EDITING && elementState != TouchElementState.EDITING_SELECTED) {
             if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
                 var touchVal:Float=-2.0f
                 if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {

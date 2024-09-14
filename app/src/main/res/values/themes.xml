@@ -31,8 +31,13 @@
         <item name="touchElementLinkSize">8.0</item>
 
         <item name="pianoRollBigKeyColor">@color/darkeryellow</item>
+        <item name="pianoRollBigKeySelectionColor">@color/red_dark</item>
         <item name="pianoRollSmallKeyColor">@color/darker_grey</item>
+        <item name="pianoRollSmallKeySelectionColor">@color/light_grey</item>
         <item name="pianoRollOutlineColor">@color/black</item>
+        <item name="pianoRollOctaveNoSelectionColor">@color/red_dark</item>
+        <item name="pianoRollOctaveSelectionColor">@color/red_light</item>
+        <item name="pianoRollOctaveSelectionOutlineColor">@color/medium_green</item>
     </style>
     <style name="Theme.Instrument" parent="Theme.TouchSampleSynth">
         <item name="android:textColor">@color/black</item>

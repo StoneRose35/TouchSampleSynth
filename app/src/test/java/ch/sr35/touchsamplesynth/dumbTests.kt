@@ -23,5 +23,20 @@ class dumbTests {
         Assert.assertTrue(res==6)
     }
 
+    @Test
+    fun KeepOnlyFirstTest()
+    {
+        val arrList = ArrayList<Int>()
+        arrList.addAll(listOf(1,2,3,45,67,23,5,6))
+        arrList.apply {
+            val f = first()
+            clear()
+            add(f)
+        }
+
+
+        Assert.assertTrue(arrList.size == 1)
+    }
+
 
 }
