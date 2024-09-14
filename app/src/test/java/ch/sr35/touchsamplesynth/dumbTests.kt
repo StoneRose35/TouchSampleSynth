@@ -2,8 +2,7 @@ package ch.sr35.touchsamplesynth
 
 import org.junit.Assert
 import org.junit.Test
-import kotlin.math.ceil
-import kotlin.math.floor
+
 
 class dumbTests {
 

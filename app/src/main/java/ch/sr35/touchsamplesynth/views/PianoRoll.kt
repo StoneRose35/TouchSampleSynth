@@ -152,7 +152,7 @@ class PianoRoll(context: Context, attributes: AttributeSet): View(context,attrib
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val largeKeyWidth = width.toFloat()/7.0f
-        val smallKeyHeight = (height-octaveIndicatorSize).toFloat()*smallKeyLengthPercent
+        val smallKeyHeight = (height-octaveIndicatorSize)*smallKeyLengthPercent
 
         // draw large keys
         var keyCnt=0

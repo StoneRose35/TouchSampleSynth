@@ -36,7 +36,7 @@ class MusicalPitchTest {
     fun generateInvalidMusicalPitch()
     {
         try {
-            val note = MusicalPitch(5, 20)
+            MusicalPitch(5, 20)
             Assert.fail()
         }
         catch (_: MusicalPitchException)
