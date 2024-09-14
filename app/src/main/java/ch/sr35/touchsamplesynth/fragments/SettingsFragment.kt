@@ -2,6 +2,7 @@ package ch.sr35.touchsamplesynth.fragments
 
 import android.content.Context
 import android.database.DataSetObserver
+import android.hardware.usb.UsbManager
 import android.media.midi.MidiDeviceInfo
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,10 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.BaseAdapter
+import android.widget.CheckBox
 import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.ToggleButton
+
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.BuildConfig
@@ -117,15 +120,6 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         }
 
         val spinnerTouchElementStyle = view.findViewById<Spinner>(R.id.spinnerTouchElementsDisplay)
-        /*ArrayAdapter.createFromResource(view.context,
-            R.array.touchElementDisplayStyle,
-            android.R.layout.simple_spinner_item
-            ).also {
-                arrayAdapter -> arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinnerTouchElementStyle.adapter = arrayAdapter
-            spinnerTouchElementStyle.setSelection(0,false)
-
-        }*/
         spinnerTouchElementStyle.onItemSelectedListener = this
 
         listViewMidiDevicesIn=view.findViewById(R.id.settingListViewMidiInDevices)
@@ -144,6 +138,15 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         listViewMidiDevicesOut.onItemSelectedListener=this
         ((context as TouchSampleSynthMain).midiHostHandler)?.midiDeviceChangedHandler =this
 
+        if ((listViewMidiDevicesIn.adapter as MidiDevicesListAdapter).midiDevices.isNotEmpty() || (listViewMidiDevicesIn.adapter as MidiDevicesListAdapter).midiDevices.isNotEmpty()) {
+            val usbManager = (context?.getSystemService(Context.USB_SERVICE) as UsbManager)
+            val hasUsbAccessories = usbManager.accessoryList.isNotEmpty()
+            val hasUsbDevices = usbManager.deviceList.isNotEmpty()
+
+            view.findViewById<CheckBox>(R.id.settingCheckboxMidiHostMode)?.isChecked = hasUsbDevices
+            view.findViewById<CheckBox>(R.id.settingCheckboxMidiDeviceMode)?.isChecked = hasUsbAccessories
+
+        }
 
         val textViewAbout = view.findViewById<TextView>(R.id.settingTextViewAbout)
         val aboutString="Touch Sample Synth Version %s".format(BuildConfig.VERSION_NAME)
@@ -277,7 +280,7 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
 
     }
 
-    class MidiDevicesListAdapter(private val midiDevices: ArrayList<MidiDeviceInfo>,private val context: Context) : BaseAdapter() {
+    class MidiDevicesListAdapter(val midiDevices: ArrayList<MidiDeviceInfo>,private val context: Context) : BaseAdapter() {
         override fun registerDataSetObserver(observer: DataSetObserver?) {
         }
 
@@ -337,5 +340,15 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
 
     override fun onMidiDevicesChanged() {
         (listViewMidiDevicesIn.adapter as BaseAdapter).notifyDataSetChanged()
+        if ((listViewMidiDevicesIn.adapter as MidiDevicesListAdapter).midiDevices.isNotEmpty() || (listViewMidiDevicesIn.adapter as MidiDevicesListAdapter).midiDevices.isNotEmpty()) {
+            val usbManager = (context?.getSystemService(Context.USB_SERVICE) as UsbManager)
+            val hasUsbAccessories = usbManager.accessoryList.isNotEmpty()
+            val hasUsbDevices = usbManager.deviceList.isNotEmpty()
+
+            view?.findViewById<CheckBox>(R.id.settingCheckboxMidiHostMode)?.isChecked = hasUsbDevices
+            view?.findViewById<CheckBox>(R.id.settingCheckboxMidiDeviceMode)?.isChecked = hasUsbAccessories
+
+        }
+
     }
 }

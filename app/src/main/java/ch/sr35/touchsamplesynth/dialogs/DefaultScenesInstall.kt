@@ -253,7 +253,6 @@ class DefaultScenesInstall(private var context: Context) : Dialog(context) {
                         return DefaultScenesState(CurrentScenesCode.PRESETS_NEWER_THAN_BUNDLED,scenesEmpty)
                     }
                     (context as TouchSampleSynthMain).loadFromBinaryFiles()
-                    SceneListP.exportAsJson(SCENES_FILE_NAME,context)
                     scenesEmpty = (context as TouchSampleSynthMain).scenesArrayAdapter!!.isEmpty
                     val updatedJson = DataUpdater.upgradeToCurrent(jsondata)
 
@@ -302,7 +301,6 @@ class DefaultScenesInstall(private var context: Context) : Dialog(context) {
         else
         {
             (context as TouchSampleSynthMain).loadFromBinaryFiles()
-            SceneListP.exportAsJson(SCENES_FILE_NAME,context)
             scenesEmpty = (context as TouchSampleSynthMain).scenesArrayAdapter!!.isEmpty
             return DefaultScenesState(CurrentScenesCode.PRESET_AND_OUTDATED,scenesEmpty)
         }

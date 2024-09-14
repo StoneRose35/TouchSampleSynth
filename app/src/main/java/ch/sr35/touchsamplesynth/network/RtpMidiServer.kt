@@ -7,6 +7,7 @@ import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.SocketException
+import java.util.concurrent.ConcurrentLinkedDeque
 import kotlin.concurrent.thread
 import kotlin.random.Random
 import kotlin.random.nextUInt
@@ -23,7 +24,7 @@ class RtpMidiServer {
     var name: String="TSS Midi Server"
     var isEnabled:Boolean=false
     private var journal=RtpMidiJournal(128)
-    private val midiSendQueue =  ArrayDeque<ByteArray>()
+    private val midiSendQueue =  ConcurrentLinkedDeque<ByteArray>()
     fun startServer(): Boolean
     {
         var controlPort= 1024
@@ -332,8 +333,9 @@ class RtpMidiServer {
             dataSocket?.let {sendMidiCommand(midiData,it,conn)}
         }
     }
-    private fun sendMidiCommand(midiData: ByteArray,s:DatagramSocket, conn: ClientConnectionData)
+    private fun sendMidiCommand(midiData: ByteArray?,s:DatagramSocket, conn: ClientConnectionData)
     {
+
         val message=ByteArray(2048)
         message[0]=0x80.toByte()
         message[1]=0x61.toByte()//((0x61 shl 1) + 1).toByte()
@@ -351,19 +353,21 @@ class RtpMidiServer {
 
         // B=0, J=0, Z=0, P=0
         message[12]= ((0 shl 0).toByte() + (0 shl  1).toByte() + (0 shl 2).toByte() + (0 shl 3).toByte()).toByte()
-        message[12] =(midiData.size).toByte()
-        for (c in midiData.indices)
-        {
-            message[13+c]=midiData[c]
-        }
-        val messageLength = 13 + midiData.size
-        val p = DatagramPacket(message, messageLength, conn.address, conn.port+1)
-        s.send(p)
+        // is sometimes null because of some weird threading issues
+        if (midiData != null) {
+            message[12] = (midiData.size).toByte()
+            for (c in midiData.indices) {
+                message[13 + c] = midiData[c]
+            }
+            val messageLength = 13 + midiData.size
+            val p = DatagramPacket(message, messageLength, conn.address, conn.port + 1)
+            s.send(p)
 
-        journal.push(midiData,conn.sequenceNumber)
-        //Log.i(TAG,"Pushed ${conn.sequenceNumber} to Midi Journal")
-        conn.sequenceNumber += 1u
-        conn.sequenceNumber = conn.sequenceNumber and 0xFFFFu
+            journal.push(midiData, conn.sequenceNumber)
+            //Log.i(TAG,"Pushed ${conn.sequenceNumber} to Midi Journal")
+            conn.sequenceNumber += 1u
+            conn.sequenceNumber = conn.sequenceNumber and 0xFFFFu
+        }
     }
 }
 

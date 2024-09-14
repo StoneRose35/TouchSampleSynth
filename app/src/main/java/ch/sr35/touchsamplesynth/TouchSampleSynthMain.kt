@@ -422,6 +422,18 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
     }
 
+    fun reloadCurrentScene()
+    {
+        if (mainMenu != null) {
+            val scenePos =
+                (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
+            if (scenePos < allScenes.size && scenePos > -1) {
+                oldScenePosition=-1
+                loadSceneWithWaitIndicator(scenePos)
+            }
+        }
+    }
+
     fun persistCurrentScene()
     {
         if (mainMenu != null) {

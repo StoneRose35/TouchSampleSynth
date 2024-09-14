@@ -131,11 +131,11 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         })
 
         findViewById<EditText>(R.id.midiChannel).also {
-            (it as TextView).text = this.touchElement.midiChannel.toString()
+            (it as TextView).text = (this.touchElement.midiChannel+1).toString()
             it.setOnEditorActionListener { v, actionId, event ->
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         try {
-                            val midiChannelInt =  v.text.toString().toInt()
+                            val midiChannelInt =  v.text.toString().toInt() - 1
                             v.background=null
                             if (midiChannelInt < 0 || midiChannelInt > 15)
                             {

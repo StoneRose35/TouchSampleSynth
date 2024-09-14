@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.model
 
-import ch.sr35.touchsamplesynth.BuildConfig
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException

@@ -99,7 +99,9 @@
     <string name="availableMidiOutDevices">Midi Outputs</string>
     <string name="exportToJson">Export</string>
     <string name="importFromJson">Import</string>
+    <string name="shareScenes">share via</string>
     <string name="exportSuccessful">Export successful</string>
+    <string name="importSuccessful">Import successful</string>
     <string name="selectFolder">Select Folder to save Scenes</string>
     <string name="selectImportFile">Select File to Import</string>
     <string name="importErrorMessage">Error Importing Scenes</string>

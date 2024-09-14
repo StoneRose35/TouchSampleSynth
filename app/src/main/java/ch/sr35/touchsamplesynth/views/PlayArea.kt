@@ -112,30 +112,51 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                 for (pid in pointerIds) {
 
                     val pidx = event.findPointerIndex(pid)
-                    val associatedTouchElement = touchElementsOnPointer[pid]
-                    var copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
+                    if (pidx >= 0)
+                    {
+                        val associatedTouchElement = touchElementsOnPointer[pid]
+                        var copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
 
-                    if (associatedTouchElement != null) {
+                        if (associatedTouchElement != null) {
 
 
-                        copiedEvent.offsetLocation(
-                            -(associatedTouchElement.layoutParams as LayoutParams).leftMargin.toFloat(),
-                            -(associatedTouchElement.layoutParams as LayoutParams).topMargin.toFloat()
-                        )
-                        associatedTouchElement.dispatchTouchEvent(copiedEvent)
-                        //Log.i(TAG,"dispatched to $associatedTouchElement")
-                        copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
-
-                        processedMoveEvent = true
-                        if (!associatedTouchElement.isInside(
-                                Point(
-                                    copiedEvent.x.toDouble(),
-                                    copiedEvent.y.toDouble()
-                                )
+                            copiedEvent.offsetLocation(
+                                -(associatedTouchElement.layoutParams as LayoutParams).leftMargin.toFloat(),
+                                -(associatedTouchElement.layoutParams as LayoutParams).topMargin.toFloat()
                             )
-                        ) {
-                            Log.i(TAG,"Moved out of touchelement: $associatedTouchElement")
-                            touchElementsOnPointer.remove(pid)
+                            associatedTouchElement.dispatchTouchEvent(copiedEvent)
+                            //Log.i(TAG,"dispatched to $associatedTouchElement")
+                            copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
+
+                            processedMoveEvent = true
+                            if (!associatedTouchElement.isInside(
+                                    Point(
+                                        copiedEvent.x.toDouble(),
+                                        copiedEvent.y.toDouble()
+                                    )
+                                )
+                            ) {
+                                Log.i(TAG,"Moved out of touchelement: $associatedTouchElement")
+                                touchElementsOnPointer.remove(pid)
+                                touchElements.find { te ->
+                                    te.isInside(
+                                        Point(
+                                            copiedEvent.x.toDouble(),
+                                            copiedEvent.y.toDouble()
+                                        )
+                                    ) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)
+                                }?.let {
+                                    touchElementsOnPointer[pid] = it
+                                    copiedEvent.offsetLocation(
+                                        -(it.layoutParams as LayoutParams).leftMargin.toFloat(),
+                                        -(it.layoutParams as LayoutParams).topMargin.toFloat()
+                                    )
+                                    copiedEvent.action=MotionEvent.ACTION_DOWN
+                                    it.dispatchTouchEvent(copiedEvent)
+                                    Log.i(TAG,"found new touchelement: $it")
+                                }
+                            }
+                        } else {
                             touchElements.find { te ->
                                 te.isInside(
                                     Point(
@@ -144,100 +165,82 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                                     )
                                 ) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)
                             }?.let {
+                                Log.i(TAG,"slided into new touchelement: $it")
                                 touchElementsOnPointer[pid] = it
                                 copiedEvent.offsetLocation(
                                     -(it.layoutParams as LayoutParams).leftMargin.toFloat(),
                                     -(it.layoutParams as LayoutParams).topMargin.toFloat()
                                 )
-                                copiedEvent.action=MotionEvent.ACTION_DOWN
+                                copiedEvent.action = MotionEvent.ACTION_DOWN
                                 it.dispatchTouchEvent(copiedEvent)
-                                Log.i(TAG,"found new touchelement: $it")
+                                processedMoveEvent = true
                             }
                         }
-                    } else {
-                        touchElements.find { te ->
-                            te.isInside(
-                                Point(
-                                    copiedEvent.x.toDouble(),
-                                    copiedEvent.y.toDouble()
-                                )
-                            ) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)
-                        }?.let {
-                            Log.i(TAG,"slided into new touchelement: $it")
-                            touchElementsOnPointer[pid] = it
-                            copiedEvent.offsetLocation(
-                                -(it.layoutParams as LayoutParams).leftMargin.toFloat(),
-                                -(it.layoutParams as LayoutParams).topMargin.toFloat()
-                            )
-                            copiedEvent.action = MotionEvent.ACTION_DOWN
-                            it.dispatchTouchEvent(copiedEvent)
-                            processedMoveEvent = true
-                        }
-                    }
 
-                    copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
-                    if (currentPositions[pid] != null) {
-                        oldPositions[pid] = currentPositions[pid] as Point
-                        currentPositions[pid] =
-                            Point(copiedEvent.x.toDouble(), copiedEvent.y.toDouble())
-                    } else {
-                        currentPositions[pid] =
-                            Point(copiedEvent.x.toDouble(), copiedEvent.y.toDouble())
-                    }
-
-                    val touchElementsSlidedOver = touchElements.filter { slidingOVerCandidate ->
-                        if (oldPositions[pid] != null && currentPositions[pid] != null) {
-                            return@filter slidingOVerCandidate.asRectangle().getIntersectingSides(
-                                Line(
-                                    oldPositions[pid]!!,
-                                    currentPositions[pid]!!
-                                )
-                            ).size == 2
-                        }
-                        return@filter false
-                    }
-                    touchElementsSlidedOver.forEach {
-                        Log.i(TAG,"Slideover Event for $it")
-                        if (it.asRectangle().getIntersectingSides(
-                                Line(
-                                    oldPositions[pid]!!,
-                                    currentPositions[pid]!!
-                                )
-                            ).contains(Overlap.TOP)
-                        ) {
-                            it.slideOverEvent(
-                                MotionEvent.obtain(
-                                    event.downTime,
-                                    event.eventTime,
-                                    MotionEvent.ACTION_DOWN,
-                                    ((oldPositions[pid]!!.x + currentPositions[pid]!!.x) / 2).toFloat(),
-                                    ((it.asRectangle().topLeft.y + it.asRectangle().bottomRight.y) / 2).toFloat(),
-                                    event.pressure,
-                                    event.size,
-                                    event.metaState,
-                                    event.xPrecision,
-                                    event.yPrecision,
-                                    event.deviceId,
-                                    event.edgeFlags
-                                )
-                            )
+                        copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
+                        if (currentPositions[pid] != null) {
+                            oldPositions[pid] = currentPositions[pid] as Point
+                            currentPositions[pid] =
+                                Point(copiedEvent.x.toDouble(), copiedEvent.y.toDouble())
                         } else {
-                            it.slideOverEvent(
-                                MotionEvent.obtain(
-                                    event.downTime,
-                                    event.eventTime,
-                                    MotionEvent.ACTION_DOWN,
-                                    ((oldPositions[pid]!!.y + currentPositions[pid]!!.y) / 2).toFloat(),
-                                    ((it.asRectangle().topLeft.x + it.asRectangle().bottomRight.x) / 2).toFloat(),
-                                    event.pressure,
-                                    event.size,
-                                    event.metaState,
-                                    event.xPrecision,
-                                    event.yPrecision,
-                                    event.deviceId,
-                                    event.edgeFlags
+                            currentPositions[pid] =
+                                Point(copiedEvent.x.toDouble(), copiedEvent.y.toDouble())
+                        }
+
+                        val touchElementsSlidedOver = touchElements.filter { slidingOVerCandidate ->
+                            if (oldPositions[pid] != null && currentPositions[pid] != null) {
+                                return@filter slidingOVerCandidate.asRectangle().getIntersectingSides(
+                                    Line(
+                                        oldPositions[pid]!!,
+                                        currentPositions[pid]!!
+                                    )
+                                ).size == 2
+                            }
+                            return@filter false
+                        }
+                        touchElementsSlidedOver.forEach {
+                            Log.i(TAG, "Slideover Event for $it")
+                            if (it.asRectangle().getIntersectingSides(
+                                    Line(
+                                        oldPositions[pid]!!,
+                                        currentPositions[pid]!!
+                                    )
+                                ).contains(Overlap.TOP)
+                            ) {
+                                it.slideOverEvent(
+                                    MotionEvent.obtain(
+                                        event.downTime,
+                                        event.eventTime,
+                                        MotionEvent.ACTION_DOWN,
+                                        ((oldPositions[pid]!!.x + currentPositions[pid]!!.x) / 2).toFloat(),
+                                        ((it.asRectangle().topLeft.y + it.asRectangle().bottomRight.y) / 2).toFloat(),
+                                        event.pressure,
+                                        event.size,
+                                        event.metaState,
+                                        event.xPrecision,
+                                        event.yPrecision,
+                                        event.deviceId,
+                                        event.edgeFlags
+                                    )
                                 )
-                            )
+                            } else {
+                                it.slideOverEvent(
+                                    MotionEvent.obtain(
+                                        event.downTime,
+                                        event.eventTime,
+                                        MotionEvent.ACTION_DOWN,
+                                        ((oldPositions[pid]!!.y + currentPositions[pid]!!.y) / 2).toFloat(),
+                                        ((it.asRectangle().topLeft.x + it.asRectangle().bottomRight.x) / 2).toFloat(),
+                                        event.pressure,
+                                        event.size,
+                                        event.metaState,
+                                        event.xPrecision,
+                                        event.yPrecision,
+                                        event.deviceId,
+                                        event.edgeFlags
+                                    )
+                                )
+                            }
                         }
                     }
 
