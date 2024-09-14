@@ -79,7 +79,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
             return Version(versionNumbers[0].toInt(),versionNumbers[1].toInt(),versionNumbers[2].toInt())
         }
 
-        fun upgradeToCurrent(jsonData: String): String?
+        fun upgradeToCurrent(jsonData: String): String
         {
             var updatedData:String = jsonData
             var startVersion = getVersion(jsonData)
