@@ -101,36 +101,16 @@ class SceneListP {
         touchSampleSynthVersion = BuildConfig.VERSION_NAME
         exportDateTime = Date()
         appInstance.allScenes.addAll(this.scenes)
+
     }
 
-    fun exportAsJson(fileName: String, context: Context): Boolean
-    {
-        try {
-            val mainDir = (context.filesDir.absolutePath)
-            val gson = GsonBuilder().apply {
-                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
-                setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            }.create()
-            val jsonOut = gson.toJson(this)
-            Log.i(TAG, "exporting scenes as json")
-            val f = File(mainDir + File.separator + fileName)
-            if (f.exists()) {
-                f.delete()
-            }
-            f.writeText(jsonOut)
-        }
-        catch (_: Exception)
-        {
-            return false
-        }
-        return true
-    }
 
     companion object {
-        fun exportAsJson(fileName: String, context: Context): Boolean
+
+        fun scenesToJsonString(context: Context,installDone: Boolean = false): String
         {
             val gson = GsonBuilder().apply {
-                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+                registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
                 setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             }.create()
             val screenWidth: Int
@@ -176,7 +156,7 @@ class SceneListP {
         fun importFromJson(context: Context): SceneListP?
         {
             val gson=GsonBuilder().apply {
-                registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+                registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
                 setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             }.create()
             val f = File((context as TouchSampleSynthMain).filesDir, SCENES_FILE_NAME)

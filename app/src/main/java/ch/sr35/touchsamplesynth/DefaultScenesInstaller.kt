@@ -156,7 +156,7 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
         // check is samplelibrary from https://wavbvkery.com/wp-content/uploads/WAVBVKERY-Acoustic-Drum-Samples.zip
         // is in DCIM folder and is unpacked
         val gson=GsonBuilder().apply {
-            registerTypeAdapter(PersistableInstrument::class.java,PersistableInstrumentDeserializer())
+            registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
             setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         }.create()
         val presets = gson.fromJson(presetsFile,SceneListP::class.java)
@@ -174,7 +174,7 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
         }
         presets.importOntoDevice(appContext,importMode,importDoneFlag.SET)
         presets.touchSampleSynthVersion = BuildConfig.VERSION_NAME
-        presets.exportAsJson(SCENES_FILE_NAME,appContext)
+        SceneListP.exportAsJson(SCENES_FILE_NAME,appContext)
         return DefaultSceneInstallerCode.INSTALLED
 
     }
