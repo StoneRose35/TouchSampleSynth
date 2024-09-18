@@ -16,7 +16,6 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.blue
@@ -24,7 +23,6 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.InstrumentI
