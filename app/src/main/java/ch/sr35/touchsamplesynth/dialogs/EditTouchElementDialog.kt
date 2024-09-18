@@ -28,6 +28,7 @@ import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.views.PianoRoll
 import ch.sr35.touchsamplesynth.views.TouchElement
 import codes.side.andcolorpicker.converter.toColorInt
 import codes.side.andcolorpicker.group.PickerGroup
@@ -57,11 +58,20 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         val instrumentListAdapter = SoundGeneratorListAdapter(soundGenerators,touchElement)
         instrumentList.adapter = instrumentListAdapter
 
-        val numberPickerNotes = findViewById<NumberPicker>(R.id.numberPickerNote)
+        val pianoRollSelector = findViewById<PianoRoll>(R.id.edit_te_pianoroll)
+        pianoRollSelector.selectionMode = PianoRoll.SelectionMode.SINGLE
+        touchElement.note?.let {
+            pianoRollSelector.selectedKeys[0] = it
+            pianoRollSelector.octave = it.getOctave()
+        }
+
+
+        /*val numberPickerNotes = findViewById<NumberPicker>(R.id.numberPickerNote)
         numberPickerNotes?.minValue = 0
         numberPickerNotes?.maxValue = 87
         numberPickerNotes?.displayedValues = MusicalPitch.generateAllNotes().map { p -> p.name }.toTypedArray()
-        numberPickerNotes?.value = touchElement.note?.index ?: -1
+        numberPickerNotes?.value = touchElement.note?.index ?: -1*/
+
         val buttonOk=findViewById<Button>(R.id.edit_te_button_ok)
         buttonOk?.setOnClickListener {
 
@@ -71,8 +81,11 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                     touchElement.fillColor.color = it.toColorInt()
                 }
             }
+
+
             touchElement.invalidate()
-            touchElement.note = MusicalPitch.generateAllNotes()[numberPickerNotes?.value!!] //spinnerNotesAdapter.note
+            //touchElement.note = MusicalPitch.generateAllNotes()[numberPickerNotes?.value!!] //spinnerNotesAdapter.note
+            touchElement.note = pianoRollSelector.selectedKeys.first()
 
             this.dismiss()
         }

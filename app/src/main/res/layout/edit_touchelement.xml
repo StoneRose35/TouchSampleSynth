@@ -23,14 +23,21 @@
         android:layout_weight="1">
 
     </androidx.recyclerview.widget.RecyclerView>
-    <NumberPicker
+    <!--<NumberPicker
         android:id="@+id/numberPickerNote"
         android:layout_width="match_parent"
         android:descendantFocusability="blocksDescendants"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        />
+        />-->
+    <ch.sr35.touchsamplesynth.views.PianoRoll
+        android:id="@+id/edit_te_pianoroll"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        >
+
+    </ch.sr35.touchsamplesynth.views.PianoRoll>
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
