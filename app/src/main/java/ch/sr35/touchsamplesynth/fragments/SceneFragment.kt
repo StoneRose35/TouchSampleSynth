@@ -26,9 +26,9 @@ import com.google.android.material.snackbar.Snackbar
 /**
  * A fragment representing a list of Items.
  */
-class SceneFragment() : Fragment() {
+class SceneFragment(private var scenes: ArrayList<SceneP>) : Fragment() {
     private var scenesList: RecyclerView?=null
-    private var scenes: ArrayList<SceneP> = ArrayList<SceneP>()
+
 
 
     override fun onCreateView(

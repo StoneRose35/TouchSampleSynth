@@ -99,7 +99,7 @@ class PlayPageFragment : Fragment() {
                 }
 
                 instrumentChipsContainer.removeAllViewsInLayout()
-
+                (context as TouchSampleSynthMain).isInEditMode = true
                 (context as TouchSampleSynthMain).soundGenerators.forEach { it ->
                     val instrChip = InstrumentChip(context as TouchSampleSynthMain,null)
                     instrChip.setInstrument(it)
@@ -141,6 +141,7 @@ class PlayPageFragment : Fragment() {
             }
             else
             {
+                (context as TouchSampleSynthMain).isInEditMode = false
                 for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
                 {
                     touchel.setEditmode(false)
