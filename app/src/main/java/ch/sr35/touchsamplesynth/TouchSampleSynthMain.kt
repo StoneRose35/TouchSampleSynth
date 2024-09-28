@@ -428,6 +428,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                                     te.setEditmode(it)
                                 }
                             }
+                            te.setDefaultMode(touchElementsDisplayMode)
                             (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
                         }
                     } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
@@ -443,6 +444,18 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 waitAnimation.stopAnimation()
                 (mainLayout as ViewGroup).removeView(waitAnimation)
                 sceneIsLoading = false
+            }
+        }
+    }
+
+    fun reloadCurrentScene()
+    {
+        if (mainMenu != null) {
+            val scenePos =
+                (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
+            if (scenePos < allScenes.size && scenePos > -1) {
+                oldScenePosition=-1
+                loadSceneWithWaitIndicator(scenePos)
             }
         }
     }
