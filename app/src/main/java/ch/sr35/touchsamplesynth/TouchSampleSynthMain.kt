@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -22,6 +23,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.InstrumentI
@@ -43,6 +45,9 @@ import java.util.concurrent.Executors
 
 
 const val TAG="TouchSampleSynth"
+const val TSS_BUNDLE_LAST_PROGRAM = "TSS_BUNDLE_LAST_PROGRAM"
+const val TSS_BUNDLE_LAST_FRAGMENT = "TSS_BUNDLE_LAST_FRAGMENT"
+const val TSS_BUNDLE_EDIT_MODE = "TSS_BUNDLE_EDIT_MODE"
 class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
@@ -53,20 +58,22 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private val playPageFragment=PlayPageFragment()
     private val instrumentsPageFragment=InstrumentsPageFragment()
     private val settingsFrament= SettingsFragment()
-    private val scenesEditFragment = SceneFragment(allScenes)
+    private val scenesEditFragment = SceneFragment()
     var midiHostHandler :MidiHostHandler?= null
     var nsdHandler: NetworkDiscoveryHandler?=null
     var rtpMidiServer: RtpMidiServer?=null
     var mainMenu: Menu?=null
     private var oldScenePosition=-1
+    private var selectedMenuItemId = -1
     var scenesListDirty=false
+    private var sceneIsLoading=false
     var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
 
     // global settings
     var rtpMidiNotesRepeat=1 // defines how many times note on and note off commands are repeated over rtp midi
     var touchElementsDisplayMode: TouchElement.TouchElementState=TouchElement.TouchElementState.PLAYING
     var connectorDisplay = false
-    var isInEditMode = false
+    private var isInEditMode = false
 
     override fun onStart() {
         super.onStart()
@@ -74,6 +81,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         val playPage = PlayPageFragment()
         if (supportFragmentManager.fragments.isEmpty()) {
             putFragment(playPage, "PlayPage0")
+        }
+        mainMenu?.let {
+            selectedMenuItemId = it[0].itemId
         }
 
         val defaultScenesInstall=DefaultScenesInstall(this)
@@ -108,16 +118,16 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 it.connectMidiDeviceOut(it.midiDevicesOut[0])
             }
         }
+
+        if (mainMenu!=null) {
+            loadSceneWithWaitIndicator(oldScenePosition,true)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         audioEngine.startEngine()
-        if (mainMenu!=null) {
-            (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).adapter
-            oldScenePosition=-1
-            loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
-        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,10 +170,16 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 PackageManager.PERMISSION_GRANTED)
         }
 
-
         midiHostHandler =  MidiHostHandler(this)
         nsdHandler= NetworkDiscoveryHandler(this)
         rtpMidiServer=RtpMidiServer()
+
+        savedInstanceState?.let {
+            scenesListDirty = true
+            oldScenePosition = it.getInt(TSS_BUNDLE_LAST_PROGRAM)
+            selectedMenuItemId = it.getInt(TSS_BUNDLE_LAST_FRAGMENT)
+            isInEditMode = it.getBoolean(TSS_BUNDLE_EDIT_MODE)
+        }
 
     }
 
@@ -174,6 +190,17 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mainMenu?.let {
+            outState.putInt(TSS_BUNDLE_LAST_PROGRAM,(it.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
+            outState.putInt(TSS_BUNDLE_LAST_FRAGMENT, selectedMenuItemId)
+            outState.putBoolean(TSS_BUNDLE_EDIT_MODE,isInEditMode)
+        }
+
+    }
+
     private fun putFragment(frag: Fragment,tag: String?)
     {
         supportFragmentManager.beginTransaction().let {
@@ -191,13 +218,17 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onDestroy() {
         super.onDestroy()
-        val f = File("default.scn")
+        /*val f = File("default.scn")
         if (f.exists())
         {
             f.delete()
+        }*/
+        while (sceneIsLoading)
+        {
+            SystemClock.sleep(30)
         }
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
-        audioEngine.stopEngine()
+        //audioEngine.stopEngine()
 
     }
 
@@ -205,6 +236,14 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         super.onPause()
 
         persistCurrentScene()
+        //soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
+        audioEngine.stopEngine()
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+
         saveToBinaryFiles()
         midiHostHandler?.stopMidiDeviceListener()
 
@@ -215,13 +254,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 (supportFragmentManager.fragments[0].view as PlayArea).removeView(te)
             }
         }
-        soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
-        audioEngine.stopEngine()
-    }
-
-
-    override fun onStop() {
-        super.onStop()
 
 
     }
@@ -236,7 +268,11 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             spinnerScenes.adapter = it
         }
 
-        if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
+        mainMenu?.let {
+            selectedMenuItemId = it[0].itemId
+        }
+
+            if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
             spinnerScenes.setSelection(oldScenePosition, false)
         }
         else
@@ -244,12 +280,20 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             spinnerScenes.setSelection(0, false)
         }
         loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
+        (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).isEnabled = !isInEditMode
         spinnerScenes.onItemSelectedListener=this
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        loadMatchingFragment(item.itemId)
+        selectedMenuItemId = item.itemId
+        return true
+    }
+
+    private fun loadMatchingFragment(menuitemId: Int)
+    {
+        when(menuitemId) {
             R.id.menuitem_play -> {
 
                 putFragment(playPageFragment,"PlayPage0")
@@ -267,7 +311,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 putFragment(settingsFrament, "settingsPage0")
             }
         }
-        return true
     }
 
 
@@ -283,32 +326,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             allScenes[oldScenePosition].persist(soundGenerators, touchElements)
         }
         if ((position != oldScenePosition || scenesListDirty) && position > -1) {
-            loadSceneWithWaitIndicator(position)
-            scenesListDirty=false
+            loadSceneWithWaitIndicator(position,true)
         }
     }
 
-
-    fun getCurrentSceneName(): String?
-    {
-        if (mainMenu != null) {
-            val scenePos = (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
-            if (scenePos >= 0 && scenePos < allScenes.size) {
-                return allScenes[scenePos].name
-            }
-        }
-        return null
-    }
-
-    fun setCurrentSceneName(sceneName: String)
-    {
-        if (mainMenu != null) {
-            val scenePos = (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
-            if (scenePos >= 0 && scenePos < allScenes.size) {
-                allScenes[scenePos].name = sceneName
-            }
-        }
-    }
 
     fun saveToBinaryFiles()
     {
@@ -359,12 +380,14 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
     }
 
-    fun loadSceneWithWaitIndicator(position: Int)
+    private fun loadSceneWithWaitIndicator(position: Int,forceLoading: Boolean=false)
     {
-        if (allScenes.size==0 || position==oldScenePosition || position < 0 || position > allScenes.size-1)
+        if (!scenesListDirty && (allScenes.size==0 || position==oldScenePosition || position < 0 || position > allScenes.size-1 || sceneIsLoading))
         {
             return
         }
+        scenesListDirty = false
+        sceneIsLoading = true
         val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout)
         val waitAnimation= WaitAnimation(this,null)
         val constraintLayout = ConstraintLayout.LayoutParams(Converter.toPx(64),Converter.toPx(64))
@@ -383,6 +406,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             .forEach { el -> el.detachFromAudioEngine() }
 
         executor.execute {
+
             allScenes[position].populate(soundGenerators, touchElements, this)
 
             handler.post {
@@ -418,18 +442,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 }
                 waitAnimation.stopAnimation()
                 (mainLayout as ViewGroup).removeView(waitAnimation)
-            }
-        }
-    }
-
-    fun reloadCurrentScene()
-    {
-        if (mainMenu != null) {
-            val scenePos =
-                (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
-            if (scenePos < allScenes.size && scenePos > -1) {
-                oldScenePosition=-1
-                loadSceneWithWaitIndicator(scenePos)
+                sceneIsLoading = false
             }
         }
     }
@@ -444,15 +457,26 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             }
         }
     }
+
     fun lockSceneSelection()
     {
-        (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).isEnabled = false
+        isInEditMode = true
+        if (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView != null)
+        {
+            (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).isEnabled = false
+        }
+
     }
 
     fun unlockSceneSelection()
     {
-        (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).isEnabled = true
+        isInEditMode = false
+        if (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView != null) {
+            (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).isEnabled = true
+        }
     }
+
+
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
     }
