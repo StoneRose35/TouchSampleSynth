@@ -428,6 +428,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                                     te.setEditmode(it)
                                 }
                             }
+                            te.setDefaultMode(touchElementsDisplayMode)
                             (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
                         }
                     } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
