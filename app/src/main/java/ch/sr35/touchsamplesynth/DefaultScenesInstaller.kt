@@ -174,7 +174,7 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
         }
         presets.importOntoDevice(appContext,importMode,importDoneFlag.SET)
         presets.touchSampleSynthVersion = BuildConfig.VERSION_NAME
-        SceneListP.exportAsJson(SCENES_FILE_NAME,appContext)
+        SceneListP.exportAsJson(SCENES_FILE_NAME,appContext,true)
         return DefaultSceneInstallerCode.INSTALLED
 
     }
