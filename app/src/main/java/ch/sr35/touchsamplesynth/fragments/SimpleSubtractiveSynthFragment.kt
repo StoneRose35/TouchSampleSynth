@@ -15,9 +15,13 @@ import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class SimpleSubtractiveSynthFragment(private val synth: SimpleSubtractiveSynthI) : Fragment(), SeekBar.OnSeekBarChangeListener {
+class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeListener {
 
+    private var synth: SimpleSubtractiveSynthI? = null
 
+    constructor(s: SimpleSubtractiveSynthI) : this() {
+        synth = s
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -33,36 +37,39 @@ class SimpleSubtractiveSynthFragment(private val synth: SimpleSubtractiveSynthI)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val attack = view.findViewById<SeekBar>(R.id.seekBarAttack)
-        attack.progress =  (synth.getAttack()/2.0f*1000.0f).toInt()
-        attack.setOnSeekBarChangeListener(this)
+        synth?.let {
+            attack.progress = (it.getAttack() / 2.0f * 1000.0f).toInt()
+            attack.setOnSeekBarChangeListener(this)
 
-        val decay = view.findViewById<SeekBar>(R.id.seekBarDecay)
-        decay.progress = (synth.getDecay()/2.0f*1000.0f).toInt()
-        decay.setOnSeekBarChangeListener(this)
+            val decay = view.findViewById<SeekBar>(R.id.seekBarDecay)
+            decay.progress = (it.getDecay() / 2.0f * 1000.0f).toInt()
+            decay.setOnSeekBarChangeListener(this)
 
-        val sustain = view.findViewById<SeekBar>(R.id.seekBarSustain)
-        sustain.progress = (synth.getSustain()*1000.0f).toInt()
-        sustain.setOnSeekBarChangeListener(this)
+            val sustain = view.findViewById<SeekBar>(R.id.seekBarSustain)
+            sustain.progress = (it.getSustain() * 1000.0f).toInt()
+            sustain.setOnSeekBarChangeListener(this)
 
-        val release = view.findViewById<SeekBar>(R.id.seekBarRelease)
-        release.progress = (synth.getRelease()/2.0f*1000.0f).toInt()
-        release.setOnSeekBarChangeListener(this)
+            val release = view.findViewById<SeekBar>(R.id.seekBarRelease)
+            release.progress = (it.getRelease() / 2.0f * 1000.0f).toInt()
+            release.setOnSeekBarChangeListener(this)
 
-        val cutoff = view.findViewById<SeekBar>(R.id.seekBarCutoff)
-        cutoff.progress = ((AudioUtils.FreqToNote(synth.getInitialCutoff())+39.0f)*1000.0/105.0f).toInt()
-        cutoff.setOnSeekBarChangeListener(this)
+            val cutoff = view.findViewById<SeekBar>(R.id.seekBarCutoff)
+            cutoff.progress =
+                ((AudioUtils.FreqToNote(it.getInitialCutoff()) + 39.0f) * 1000.0 / 105.0f).toInt()
+            cutoff.setOnSeekBarChangeListener(this)
 
-        val resonance = view.findViewById<SeekBar>(R.id.seekBarResonance)
-        resonance.progress = (synth.getResonance()*1000.0f).toInt()
-        resonance.setOnSeekBarChangeListener(this)
+            val resonance = view.findViewById<SeekBar>(R.id.seekBarResonance)
+            resonance.progress = (it.getResonance() * 1000.0f).toInt()
+            resonance.setOnSeekBarChangeListener(this)
 
-        val actionAmount = view.findViewById<SeekBar>(R.id.seekBarCutoffModulation)
-        actionAmount.progress = (synth.getActionAmountToFilter()/50.0f*1000.0f).toInt()
-        actionAmount.setOnSeekBarChangeListener(this)
+            val actionAmount = view.findViewById<SeekBar>(R.id.seekBarCutoffModulation)
+            actionAmount.progress = (it.getActionAmountToFilter() / 50.0f * 1000.0f).toInt()
+            actionAmount.setOnSeekBarChangeListener(this)
 
-        val actionAmountToVolume = view.findViewById<SeekBar>(R.id.seekBarTouchToVolume)
-        actionAmountToVolume.progress = (synth.getVolumeModulation()*1000.0f).toInt()
-        actionAmountToVolume.setOnSeekBarChangeListener(this)
+            val actionAmountToVolume = view.findViewById<SeekBar>(R.id.seekBarTouchToVolume)
+            actionAmountToVolume.progress = (it.getVolumeModulation() * 1000.0f).toInt()
+            actionAmountToVolume.setOnSeekBarChangeListener(this)
+        }
     }
 
     companion object {
@@ -72,29 +79,29 @@ class SimpleSubtractiveSynthFragment(private val synth: SimpleSubtractiveSynthI)
     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
         when(p0?.id){
             R.id.seekBarAttack -> {
-                synth.setAttack(p0.progress.toFloat() / 1000.0f * 2.0f)
+                synth?.setAttack(p0.progress.toFloat() / 1000.0f * 2.0f)
             }
             R.id.seekBarDecay -> {
-                synth.setDecay(p0.progress.toFloat() / 1000.0f * 2.0f)
+                synth?.setDecay(p0.progress.toFloat() / 1000.0f * 2.0f)
             }
             R.id.seekBarSustain -> {
-                synth.setSustain(p0.progress.toFloat() / 1000.0f)
+                synth?.setSustain(p0.progress.toFloat() / 1000.0f)
             }
             R.id.seekBarRelease -> {
-                synth.setRelease(p0.progress.toFloat() / 1000.0f * 2.0f)
+                synth?.setRelease(p0.progress.toFloat() / 1000.0f * 2.0f)
             }
             R.id.seekBarCutoff -> {
-                synth.setInitialCutoff( AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f))
-                synth.setCutoff(AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f))
+                synth?.setInitialCutoff( AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f))
+                synth?.setCutoff(AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f))
             }
             R.id.seekBarResonance -> {
-                synth.setResonance(p0.progress.toFloat()/1000.0f)
+                synth?.setResonance(p0.progress.toFloat()/1000.0f)
             }
             R.id.seekBarCutoffModulation -> {
-                synth.setActionAmountToFilter(p0.progress.toFloat()/1000.0f*50.0f)
+                synth?.setActionAmountToFilter(p0.progress.toFloat()/1000.0f*50.0f)
             }
             R.id.seekBarTouchToVolume -> {
-                synth.setVolumeModulation(p0.progress.toFloat() / 1000.0f)
+                synth?.setVolumeModulation(p0.progress.toFloat() / 1000.0f)
             }
         }
     }

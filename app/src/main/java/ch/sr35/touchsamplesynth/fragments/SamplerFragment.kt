@@ -31,14 +31,19 @@ import kotlin.experimental.and
 import kotlin.experimental.or
 
 
-class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBarChangeListener {
-    private val synth=s
+class SamplerFragment() : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBarChangeListener {
+
+    constructor(s: SamplerI): this()
+    {
+        synth = s
+    }
+    private var synth: SamplerI?=null
     private var modeLoopedSwitch: SwitchCompat?=null
     private var modeTriggeredSwitch: SwitchCompat?=null
     private var waveViewer: WaveDisplay?=null
     private var buttonLoadSample: Button?=null
     private var sliderVolModulation: SeekBar?=null
-    //private lateinit var fileChooserResultLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -62,40 +67,40 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekB
         buttonLoadSample=view.findViewById(R.id.sampler_button_load_sample)
         sliderVolModulation=view.findViewById(R.id.seekBarTouchToVolume)
         waveViewer?.onChangeListener=this
-        waveViewer?.waveViewBuffer = synth.waveformImg
-        waveViewer?.startMarkerPosition = (synth.getSampleStartIndex().toFloat()/synth.sample.size.toFloat())
-        waveViewer?.endMarkerPosition = (synth.getSampleEndIndex().toFloat()/synth.sample.size.toFloat())
-        waveViewer?.loopStartMarkerPosition = (synth.getLoopStartIndex().toFloat()/synth.sample.size.toFloat())
-        waveViewer?.loopEndMarkerPosition = (synth.getLoopEndIndex().toFloat()/synth.sample.size.toFloat())
-        waveViewer?.invalidate()
-        modeLoopedSwitch?.isChecked = (synth.getMode().toInt() and 0x1) != 0
-        modeLoopedSwitch?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
-            {
-                var mode = synth.getMode()
-                mode = mode.or(1)
-                synth.setMode(mode)
+        synth?.let {
+            waveViewer?.waveViewBuffer = it.waveformImg
+            waveViewer?.startMarkerPosition =
+                (it.getSampleStartIndex().toFloat() / it.sample.size.toFloat())
+            waveViewer?.endMarkerPosition =
+                (it.getSampleEndIndex().toFloat() / it.sample.size.toFloat())
+            waveViewer?.loopStartMarkerPosition =
+                (it.getLoopStartIndex().toFloat() / it.sample.size.toFloat())
+            waveViewer?.loopEndMarkerPosition =
+                (it.getLoopEndIndex().toFloat() / it.sample.size.toFloat())
+            waveViewer?.invalidate()
+            modeLoopedSwitch?.isChecked = (it.getMode().toInt() and 0x1) != 0
+            modeLoopedSwitch?.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    var mode = it.getMode()
+                    mode = mode.or(1)
+                    it.setMode(mode)
+                } else {
+                    var mode = it.getMode()
+                    mode = mode.and(-2)
+                    it.setMode(mode)
+                }
             }
-            else
-            {
-                var mode = synth.getMode()
-                mode = mode.and(-2)
-                synth.setMode(mode)
-            }
-        }
-        modeTriggeredSwitch?.isChecked = (synth.getMode().toInt() and 0x2) != 0
-        modeTriggeredSwitch?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
-            {
-                var mode = synth.getMode()
-                mode = mode.or(2)
-                synth.setMode(mode)
-            }
-            else
-            {
-                var mode = synth.getMode()
-                mode = mode.and(-3)
-                synth.setMode(mode)
+            modeTriggeredSwitch?.isChecked = (it.getMode().toInt() and 0x2) != 0
+            modeTriggeredSwitch?.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    var mode = it.getMode()
+                    mode = mode.or(2)
+                    it.setMode(mode)
+                } else {
+                    var mode = it.getMode()
+                    mode = mode.and(-3)
+                    it.setMode(mode)
+                }
             }
         }
         sliderVolModulation?.setOnSeekBarChangeListener(this)
@@ -140,25 +145,30 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekB
                         val executor = Executors.newSingleThreadExecutor()
                         val handler = Handler(Looper.getMainLooper())
                         executor.execute {
-                            synth.setSampleFile(sampleUri)
-                            Log.i("TouchSampleSynth", "loading sample for %s".format(synth.name))
-                            handler.post {
-                                waveViewer?.waveViewBuffer = synth.waveformImg
-                                waveViewer?.startMarkerPosition =
-                                    (synth.getSampleStartIndex()
-                                        .toFloat() / synth.sample.size.toFloat())
-                                waveViewer?.endMarkerPosition =
-                                    (synth.getSampleEndIndex()
-                                        .toFloat() / synth.sample.size.toFloat())
-                                waveViewer?.loopStartMarkerPosition =
-                                    (synth.getLoopStartIndex()
-                                        .toFloat() / synth.sample.size.toFloat())
-                                waveViewer?.loopEndMarkerPosition =
-                                    (synth.getLoopEndIndex()
-                                        .toFloat() / synth.sample.size.toFloat())
-                                waveViewer?.invalidate()
-                                waitAnimation?.stopAnimation()
-                                (mainLayout as ViewGroup).removeView(waitAnimation)
+                            synth?.let {
+                                it.setSampleFile(sampleUri)
+                                Log.i(
+                                    "TouchSampleSynth",
+                                    "loading sample for %s".format(it.name)
+                                )
+                                handler.post {
+                                    waveViewer?.waveViewBuffer = it.waveformImg
+                                    waveViewer?.startMarkerPosition =
+                                        (it.getSampleStartIndex()
+                                            .toFloat() / it.sample.size.toFloat())
+                                    waveViewer?.endMarkerPosition =
+                                        (it.getSampleEndIndex()
+                                            .toFloat() / it.sample.size.toFloat())
+                                    waveViewer?.loopStartMarkerPosition =
+                                        (it.getLoopStartIndex()
+                                            .toFloat() / it.sample.size.toFloat())
+                                    waveViewer?.loopEndMarkerPosition =
+                                        (it.getLoopEndIndex()
+                                            .toFloat() / it.sample.size.toFloat())
+                                    waveViewer?.invalidate()
+                                    waitAnimation?.stopAnimation()
+                                    (mainLayout as ViewGroup).removeView(waitAnimation)
+                                }
                             }
                         }
 
@@ -169,8 +179,9 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekB
                 .show()
 
         }
-
-        sliderVolModulation?.progress = (synth.getVolumeModulation()*1000.0f).toInt()
+        synth?.let {
+            sliderVolModulation?.progress = (it.getVolumeModulation() * 1000.0f).toInt()
+        }
         sliderVolModulation?.setOnSeekBarChangeListener(this)
     }
 
@@ -179,19 +190,27 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekB
     }
 
     override fun sampleStartMarkerChanged(v: Float) {
-        synth.setSampleStartIndex((v*synth.sample.size).toInt())
+        synth?.let {
+            it.setSampleStartIndex((v*it.sample.size).toInt())
+        }
     }
 
     override fun sampleEndMarkerChanged(v: Float) {
-        synth.setSampleEndIndex((v*synth.sample.size).toInt())
+        synth?.let {
+            it.setSampleEndIndex((v * it.sample.size).toInt())
+        }
     }
 
     override fun loopStartMarkerChanged(v: Float) {
-        synth.setLoopStartIndex((v*synth.sample.size).toInt())
+        synth?.let {
+            it.setLoopStartIndex((v * it.sample.size).toInt())
+        }
     }
 
     override fun loopEndMarkerChanged(v: Float) {
-        synth.setLoopEndIndex((v*synth.sample.size).toInt())
+        synth?.let {
+            it.setLoopEndIndex((v * it.sample.size).toInt())
+        }
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -199,7 +218,7 @@ class SamplerFragment(s: SamplerI) : Fragment(), WaveDisplayChangeListener,SeekB
         {
             R.id.seekBarTouchToVolume ->
             {
-                synth.setVolumeModulation(seekBar.progress.toFloat() / 1000.0f)
+                synth?.setVolumeModulation(seekBar.progress.toFloat() / 1000.0f)
             }
         }
     }
