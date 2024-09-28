@@ -2,7 +2,6 @@ package ch.sr35.touchsamplesynth
 
 import android.os.Handler
 import android.os.Looper
-import android.text.method.Touch
 import ch.sr35.touchsamplesynth.model.PersistableInstrument
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SamplerP
