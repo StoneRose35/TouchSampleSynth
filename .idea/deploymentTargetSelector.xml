@@ -20,6 +20,9 @@
       <SelectionState runConfigName="browseThroughMenuTest() (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="Tests in 'ch.sr35.touchsamplesynth'">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
