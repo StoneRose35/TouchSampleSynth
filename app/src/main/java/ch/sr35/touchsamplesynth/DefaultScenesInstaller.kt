@@ -2,6 +2,7 @@ package ch.sr35.touchsamplesynth
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import ch.sr35.touchsamplesynth.model.InstrumentP
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentDeserializer
 import ch.sr35.touchsamplesynth.model.SamplerP
@@ -173,6 +174,8 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
             presets.scenes.removeIf { scn -> scn.instruments.any { i -> i is SamplerP } }
         }
         presets.importOntoDevice(appContext,importMode,importDoneFlag.SET)
+        appContext.scenesListDirty = true
+        appContext.loadSceneWithWaitIndicator(0)
         presets.touchSampleSynthVersion = BuildConfig.VERSION_NAME
         SceneListP.exportAsJson(SCENES_FILE_NAME,appContext,true)
         return DefaultSceneInstallerCode.INSTALLED

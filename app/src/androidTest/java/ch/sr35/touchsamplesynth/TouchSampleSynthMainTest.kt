@@ -1,6 +1,7 @@
 package ch.sr35.touchsamplesynth
 
 
+import android.content.pm.ActivityInfo
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -89,5 +90,103 @@ class TouchSampleSynthMainTest {
         activityScenario?.onActivity {
             Assert.assertTrue(it.supportFragmentManager.fragments[0] is SettingsFragment)
         }
+    }
+
+    @Test
+    fun rotatePlayPage()
+    {
+        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.sceneImport)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_play)).perform(ViewActions.click())
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+    }
+
+    @Test
+    fun rotateInstrumentPage()
+    {
+        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.sceneImport)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_instruments)).perform(ViewActions.click())
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+    }
+
+    @Test
+    fun rotateScenesPage()
+    {
+        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.sceneImport)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_scenes)).perform(ViewActions.click())
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+    }
+
+    @Test
+    fun rotateSettingsPage()
+    {
+        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.sceneImport)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_settings)).perform(ViewActions.click())
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        activityScenario?.onActivity {
+            it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+        }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
     }
 }

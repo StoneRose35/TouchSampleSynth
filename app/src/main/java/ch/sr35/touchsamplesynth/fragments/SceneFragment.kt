@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.SCENES_FILE_NAME
 import ch.sr35.touchsamplesynth.SceneRecyclerViewAdapter
+import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.model.SceneListP
 import ch.sr35.touchsamplesynth.model.SceneP
@@ -169,6 +171,8 @@ class SceneFragment() : Fragment() {
             sb.show()
             jsonobj.importOntoDevice(context as TouchSampleSynthMain,importMode.REPLACE,importDoneFlag.DO_NOT_CHANGE)
             (context as TouchSampleSynthMain).scenesListDirty = true
+            (context as TouchSampleSynthMain).loadSceneWithWaitIndicator(0)
+            scenesList?.adapter?.notifyDataSetChanged()
         }
 
         return view

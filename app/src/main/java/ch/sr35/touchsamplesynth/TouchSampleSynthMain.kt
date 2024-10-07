@@ -42,12 +42,15 @@ import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.WaitAnimation
 import java.io.File
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 
 
 const val TAG="TouchSampleSynth"
 const val TSS_BUNDLE_LAST_PROGRAM = "TSS_BUNDLE_LAST_PROGRAM"
 const val TSS_BUNDLE_LAST_FRAGMENT = "TSS_BUNDLE_LAST_FRAGMENT"
 const val TSS_BUNDLE_EDIT_MODE = "TSS_BUNDLE_EDIT_MODE"
+const val SCENE_SELECTION_NO_CHOICE = -1
+const val SCENE_SELECTION_CHOICE = 0
 class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
@@ -66,7 +69,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private var oldScenePosition=-1
     private var selectedMenuItemId = -1
     var scenesListDirty=false
-    private var sceneIsLoading=false
+    var sceneIsLoading= AtomicBoolean(false)
     var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
 
     // global settings
@@ -105,7 +108,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
         timer.schedule(timerTask,0,100)
         */
-
+        while(sceneIsLoading.get())
+        {
+            SystemClock.sleep(30)
+        }
         loadFromBinaryFiles()
         midiHostHandler?.startMidiDeviceListener()
         midiHostHandler?.let {
@@ -117,10 +123,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             {
                 it.connectMidiDeviceOut(it.midiDevicesOut[0])
             }
-        }
-
-        if (mainMenu!=null) {
-            loadSceneWithWaitIndicator(oldScenePosition,true)
         }
     }
 
@@ -223,7 +225,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         {
             f.delete()
         }*/
-        while (sceneIsLoading)
+        while (sceneIsLoading.get())
         {
             SystemClock.sleep(30)
         }
@@ -234,34 +236,22 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onPause() {
         super.onPause()
-
-        persistCurrentScene()
-        //soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
     }
 
 
     override fun onStop() {
-        super.onStop()
 
+        persistCurrentScene()
         saveToBinaryFiles()
         midiHostHandler?.stopMidiDeviceListener()
-
-        if (supportFragmentManager.fragments[0].tag!=null
-            && supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
-        {
-            for (te in touchElements) {
-                (supportFragmentManager.fragments[0].view as PlayArea).removeView(te)
-            }
-        }
-
-
+        super.onStop()
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
         mainMenu=menu
         val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
-
+        spinnerScenes.tag = SCENE_SELECTION_NO_CHOICE
         scenesArrayAdapter?.let {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             it.setNotifyOnChange(true)
@@ -272,16 +262,17 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             selectedMenuItemId = it[0].itemId
         }
 
-            if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
+        if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
             spinnerScenes.setSelection(oldScenePosition, false)
         }
         else
         {
             spinnerScenes.setSelection(0, false)
+            oldScenePosition = 0
         }
-        loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
         (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).isEnabled = !isInEditMode
         spinnerScenes.onItemSelectedListener=this
+        spinnerScenes.tag = SCENE_SELECTION_CHOICE
         return true
     }
 
@@ -322,11 +313,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        if (oldScenePosition >= 0) {
+        if ((position != oldScenePosition || scenesListDirty) && position > -1&& parent?.tag != SCENE_SELECTION_NO_CHOICE) {
             allScenes[oldScenePosition].persist(soundGenerators, touchElements)
-        }
-        if ((position != oldScenePosition || scenesListDirty) && position > -1) {
-            loadSceneWithWaitIndicator(position,true)
+            loadSceneWithWaitIndicator(position)
         }
     }
 
@@ -380,14 +369,19 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
     }
 
-    private fun loadSceneWithWaitIndicator(position: Int,forceLoading: Boolean=false)
+    fun loadSceneWithWaitIndicator(position: Int)
     {
-        if (!scenesListDirty && (allScenes.size==0 || position==oldScenePosition || position < 0 || position > allScenes.size-1 || sceneIsLoading))
+        val wasSceneLoading = sceneIsLoading.getAndSet(true)
+        if (wasSceneLoading)
         {
             return
         }
+        else if (allScenes.size == 0 || position < 0 || position > allScenes.size-1 || (position==oldScenePosition && !scenesListDirty))
+        {
+            sceneIsLoading.set(false)
+            return
+        }
         scenesListDirty = false
-        sceneIsLoading = true
         val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout)
         val waitAnimation= WaitAnimation(this,null)
         val constraintLayout = ConstraintLayout.LayoutParams(Converter.toPx(64),Converter.toPx(64))
@@ -443,7 +437,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 }
                 waitAnimation.stopAnimation()
                 (mainLayout as ViewGroup).removeView(waitAnimation)
-                sceneIsLoading = false
+                sceneIsLoading.set(false)
             }
         }
     }
