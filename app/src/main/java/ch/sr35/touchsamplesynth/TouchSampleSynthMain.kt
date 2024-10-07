@@ -37,7 +37,6 @@ import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
 import ch.sr35.touchsamplesynth.network.RtpMidiServer
-import ch.sr35.touchsamplesynth.views.PlayArea
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.WaitAnimation
 import java.io.File
