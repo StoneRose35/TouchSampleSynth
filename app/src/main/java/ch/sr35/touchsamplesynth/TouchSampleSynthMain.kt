@@ -219,11 +219,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onDestroy() {
         super.onDestroy()
-        /*val f = File("default.scn")
-        if (f.exists())
-        {
-            f.delete()
-        }*/
         while (sceneIsLoading.get())
         {
             SystemClock.sleep(30)
@@ -250,7 +245,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         menuInflater.inflate(R.menu.main_menu,menu)
         mainMenu=menu
         val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
-        spinnerScenes.tag = SCENE_SELECTION_NO_CHOICE
+        spinnerScenes.onItemSelectedListener=this
         scenesArrayAdapter?.let {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             it.setNotifyOnChange(true)
@@ -270,8 +265,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             oldScenePosition = 0
         }
         (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).isEnabled = !isInEditMode
-        spinnerScenes.onItemSelectedListener=this
-        spinnerScenes.tag = SCENE_SELECTION_CHOICE
         return true
     }
 
@@ -470,10 +463,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
     }
 
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-
-    }
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     fun getScenesList(): List<SceneP>
     {
