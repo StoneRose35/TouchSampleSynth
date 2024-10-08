@@ -265,6 +265,16 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             oldScenePosition = 0
         }
         (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).isEnabled = !isInEditMode
+        (mainMenu!!.findItem(R.id.menuitem_editscene)!!.actionView as SwitchCompat).isChecked = isInEditMode
+        (mainMenu!!.findItem(R.id.menuitem_editscene)!!.actionView as SwitchCompat).isEnabled = supportFragmentManager.fragments[0].tag == "PlayPage0"
+        (mainMenu!!.findItem(R.id.menuitem_editscene)!!.actionView as SwitchCompat).setOnCheckedChangeListener {
+           buttonView, isChecked ->
+           isInEditMode = isChecked
+           if (supportFragmentManager.fragments[0].tag == "PlayPage0")
+           {
+               (supportFragmentManager.fragments[0] as PlayPageFragment).setEditMode(isChecked)
+           }
+        }
         return true
     }
 
@@ -285,7 +295,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             {
                 putFragment(instrumentsPageFragment,"instrumentPage0")
             }
-            R.id.menuitem_sceneedit ->
+            R.id.menuitem_scenesedit ->
             {
                 putFragment(scenesEditFragment, "scenesEditPage0")
             }
@@ -409,10 +419,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                             rc -> (supportFragmentManager.fragments[0].view as ViewGroup).addView(rc)
                         }
                         for (te in touchElements) {
-                            supportFragmentManager.fragments[0].view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked.let {
-                                if (it != null) {
+                            (mainMenu?.findItem(R.id.menuitem_editscene)?.actionView as SwitchCompat).isChecked.let {
                                     te.setEditmode(it)
-                                }
                             }
                             te.setDefaultMode(touchElementsDisplayMode)
                             (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)

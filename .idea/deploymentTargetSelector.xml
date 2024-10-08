@@ -14,13 +14,13 @@
       <SelectionState runConfigName="rotatePlayPage()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="rotateInstrumentPage()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="rotateSettingsPage()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="rotateScenesPage()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Tests in 'ch.sr35.touchsamplesynth'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

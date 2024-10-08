@@ -77,7 +77,7 @@ class TouchSampleSynthMainTest {
     @Test
     fun checkScenesPage()
     {
-        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_scenesedit)).perform(ViewActions.click())
         activityScenario?.onActivity {
             Assert.assertTrue(it.supportFragmentManager.fragments[0] is SceneFragment)
         }
@@ -95,7 +95,7 @@ class TouchSampleSynthMainTest {
     @Test
     fun rotatePlayPage()
     {
-        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_scenesedit)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
         onView(withId(R.id.menuitem_play)).perform(ViewActions.click())
         activityScenario?.onActivity {
@@ -119,7 +119,7 @@ class TouchSampleSynthMainTest {
     @Test
     fun rotateInstrumentPage()
     {
-        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_scenesedit)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
         onView(withId(R.id.menuitem_instruments)).perform(ViewActions.click())
         activityScenario?.onActivity {
@@ -143,7 +143,7 @@ class TouchSampleSynthMainTest {
     @Test
     fun rotateScenesPage()
     {
-        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_scenesedit)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
         onView(withId(R.id.menuitem_scenes)).perform(ViewActions.click())
         activityScenario?.onActivity {
@@ -168,7 +168,7 @@ class TouchSampleSynthMainTest {
     @Test
     fun rotateSettingsPage()
     {
-        onView(withId(R.id.menuitem_sceneedit)).perform(ViewActions.click())
+        onView(withId(R.id.menuitem_scenesedit)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
         onView(withId(R.id.menuitem_settings)).perform(ViewActions.click())
         activityScenario?.onActivity {

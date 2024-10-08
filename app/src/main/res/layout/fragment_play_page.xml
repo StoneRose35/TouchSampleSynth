@@ -7,34 +7,6 @@
     android:id="@+id/playpage_layout"
     tools:context=".fragments.PlayPageFragment">
 
-    <!--
-    <ImageButton
-        android:id="@+id/buttonNew"
-        android:src="@drawable/addtouchelement"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginStart="11dp"
-        android:visibility="invisible"
-        android:contentDescription="@string/add_new_touchelement"
-        android:background="?attr/colorOnSecondary"
-        app:layout_constraintEnd_toStartOf="@id/toggleEdit"
-        app:layout_constraintTop_toTopOf="parent"
-        />-->
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/toggleEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="11dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="0dp"
-        android:text="@string/editToggleEdit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-         />
-
     <LinearLayout
         android:id="@+id/playpage_instrument_chips"
         android:layout_width="match_parent"
@@ -44,70 +16,4 @@
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal" />
 
-
-    <!--
-        <ch.sr35.touchsamplesynth.views.VuMeter
-            android:id="@+id/vuMeter"
-            android:layout_width="160dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="27dp"
-            android:layout_marginEnd="11dp"
-            app:layout_constraintEnd_toStartOf="@+id/buttonNew"
-            app:layout_constraintTop_toTopOf="parent" />-->
-<!--
-    <ImageView
-        android:id="@+id/imageSpeaker"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:src="@drawable/speaker"
-        android:background="@color/darkyellow"
-        android:contentDescription="@string/content_description_instrument_speaker"
-        android:padding="6dp"
-        android:layout_marginEnd="3dp"
-        app:layout_constraintEnd_toStartOf="@id/vuMeter"
-        app:layout_constraintTop_toTopOf="@id/vuMeter"
-        app:layout_constraintBottom_toBottomOf="@id/vuMeter"
-        />-->
-    <!--
-    <ch.sr35.touchsamplesynth.views.VuMeter
-        android:id="@+id/cpuMeter"
-        android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageSpeaker"
-        app:layout_constraintTop_toTopOf="parent" />-->
-    <!--
-    <ImageView
-        android:id="@+id/imageCpu"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:src="@drawable/processor"
-        android:background="@color/darkyellow"
-        android:contentDescription="@string/content_description_instrument_processor"
-        android:padding="6dp"
-        android:layout_marginEnd="3dp"
-        app:layout_constraintEnd_toStartOf="@id/cpuMeter"
-        app:layout_constraintTop_toTopOf="@id/cpuMeter"
-        app:layout_constraintBottom_toBottomOf="@id/vuMeter"
-        />-->
-
-    <!--
-    <EditText
-        android:id="@+id/editTextSceneName"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:background="?attr/instrumentBackgroundColor"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:visibility="invisible"
-        android:autofillHints="name"
-        android:hint="@string/scene_name"
-        app:layout_constraintBottom_toBottomOf="@id/toggleEdit"
-        app:layout_constraintEnd_toStartOf="@id/buttonNew"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/buttonNew" />
--->
 </ch.sr35.touchsamplesynth.views.PlayArea>

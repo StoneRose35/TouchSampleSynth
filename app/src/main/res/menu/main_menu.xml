@@ -3,6 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <item
+        android:id="@+id/menitem_label_editscene"
+        android:title="@string/editToggleEdit"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/menuitem_editscene"
+        android:title="@string/editToggleEdit"
+        app:actionViewClass="androidx.appcompat.widget.SwitchCompat"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/menuitem_scenes"
         android:title="@string/scenes"
         app:actionViewClass="android.widget.Spinner"
@@ -13,23 +24,23 @@
         android:id="@+id/menuitem_play"
         android:title="@string/menuitem_playpage"
         android:icon="@drawable/playpageicon"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
     <item
         android:id="@+id/menuitem_instruments"
         android:icon="@drawable/instrumenteditpage"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title="@string/menuitem_soundgenerator" />
     <item
-        android:id="@+id/menuitem_sceneedit"
+        android:id="@+id/menuitem_scenesedit"
         android:icon="@drawable/scene"
         android:title="@string/scenes"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         />
     <item
         android:id="@+id/menuitem_settings"
         android:icon="@drawable/settingspage"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title="@string/settings"
         >
 

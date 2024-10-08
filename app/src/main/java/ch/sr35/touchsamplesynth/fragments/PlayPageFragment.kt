@@ -54,7 +54,7 @@ class PlayPageFragment : Fragment() {
             {
                 MotionEvent.ACTION_DOWN-> {
                     v.performClick()
-                    view?.findViewById<SwitchCompat>(R.id.toggleEdit)?.isChecked=false
+                    ((context as TouchSampleSynthMain).mainMenu?.findItem(R.id.menuitem_editscene)?.actionView as SwitchCompat).isChecked = false
                     playPageView.invalidate()
                     return@setOnTouchListener true
                 }
@@ -71,7 +71,70 @@ class PlayPageFragment : Fragment() {
     }
 
 
+    fun setEditMode(toggleval: Boolean)
+    {
+        val playPageLayout = view?.findViewById<PlayArea>(R.id.playpage_layout)
+        val instrumentChipsContainer= view?.findViewById<LinearLayout>(R.id.playpage_instrument_chips)
+        if (toggleval)
+        {
+            for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
+            {
+                touchel.setEditmode(true)
+            }
 
+            instrumentChipsContainer?.removeAllViewsInLayout()
+
+            (context as TouchSampleSynthMain).soundGenerators.forEach { it ->
+                val instrChip = InstrumentChip(context as TouchSampleSynthMain,null)
+                instrChip.setInstrument(it)
+                instrChip.invalidate()
+                instrChip.setOnClickListener { ic ->
+                    val lp = ConstraintLayout.LayoutParams(Converter.toPx(134),Converter.toPx(166))
+                    lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                    lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                    lp.marginStart = Converter.toPx(60)
+                    lp.topMargin = Converter.toPx(10)
+                    val te = TouchElement(context as TouchSampleSynthMain,null)
+                    te.note = MusicalPitch.generateAllNotes()[63]
+                    te.soundGenerator = (ic as InstrumentChip).getInstrument()
+                    te.setDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
+                    te.setEditmode(true)
+                    te.layoutParams = lp
+
+
+                    val allrectrangles = (context as TouchSampleSynthMain).touchElements.map {
+                        it.asRectangle() }.toTypedArray()
+                    val neighbouringRectangles = (context as TouchSampleSynthMain).touchElements.filter {
+                            te1 ->
+                        te1.soundGenerator!! == te.soundGenerator
+                    }.map { it.asRectangle() }.toTypedArray()
+
+
+
+                    val finalLocation = TouchElementPlacementCalculator.calculateBestPlacement(te.asRectangle(),neighbouringRectangles,allrectrangles,playPageAreaRect)
+                    (te.layoutParams as ConstraintLayout.LayoutParams).topMargin= finalLocation.topLeft.y.toInt()
+                    (te.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
+                    (context as TouchSampleSynthMain).touchElements.add(te)
+                    playPageLayout?.addView(te)
+
+                }
+                instrumentChipsContainer?.addView(instrChip)
+            }
+
+            (context as TouchSampleSynthMain).lockSceneSelection()
+        }
+        else
+        {
+            for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
+            {
+                touchel.setEditmode(false)
+            }
+            playPageLayout?.invalidate()
+            instrumentChipsContainer?.removeAllViewsInLayout()
+            (context as TouchSampleSynthMain).persistCurrentScene()
+            (context as TouchSampleSynthMain).unlockSceneSelection()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -88,70 +151,6 @@ class PlayPageFragment : Fragment() {
         val globalLayoutListener =
             playPageAreaRect?.let { DeletableGlobalLayoutListener(this.requireView(), it) }
         view.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
-
-        val toggleSwitch = view.findViewById<SwitchCompat>(R.id.toggleEdit)
-        toggleSwitch.setOnCheckedChangeListener { _, toggleval ->
-            if (toggleval)
-            {
-                for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
-                {
-                    touchel.setEditmode(true)
-                }
-
-                instrumentChipsContainer.removeAllViewsInLayout()
-
-                (context as TouchSampleSynthMain).soundGenerators.forEach { it ->
-                    val instrChip = InstrumentChip(context as TouchSampleSynthMain,null)
-                    instrChip.setInstrument(it)
-                    instrChip.invalidate()
-                    instrChip.setOnClickListener { ic ->
-                        val lp = ConstraintLayout.LayoutParams(Converter.toPx(134),Converter.toPx(166))
-                        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                        lp.marginStart = Converter.toPx(60)
-                        lp.topMargin = Converter.toPx(10)
-                        val te = TouchElement(context as TouchSampleSynthMain,null)
-                        te.note = MusicalPitch.generateAllNotes()[63]
-                        te.soundGenerator = (ic as InstrumentChip).getInstrument()
-                        te.setDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
-                        te.setEditmode(true)
-                        te.layoutParams = lp
-
-
-                        val allrectrangles = (context as TouchSampleSynthMain).touchElements.map {
-                            it.asRectangle() }.toTypedArray()
-                        val neighbouringRectangles = (context as TouchSampleSynthMain).touchElements.filter {
-                            te1 ->
-                            te1.soundGenerator!! == te.soundGenerator
-                        }.map { it.asRectangle() }.toTypedArray()
-
-
-
-                        val finalLocation = TouchElementPlacementCalculator.calculateBestPlacement(te.asRectangle(),neighbouringRectangles,allrectrangles,playPageAreaRect)
-                        (te.layoutParams as ConstraintLayout.LayoutParams).topMargin= finalLocation.topLeft.y.toInt()
-                        (te.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
-                        (context as TouchSampleSynthMain).touchElements.add(te)
-                        playPageLayout.addView(te)
-
-                    }
-                    instrumentChipsContainer.addView(instrChip)
-                }
-
-                (context as TouchSampleSynthMain).lockSceneSelection()
-            }
-            else
-            {
-                for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
-                {
-                    touchel.setEditmode(false)
-                }
-                playPageLayout.invalidate()
-                instrumentChipsContainer.removeAllViewsInLayout()
-                (context as TouchSampleSynthMain).persistCurrentScene()
-                (context as TouchSampleSynthMain).unlockSceneSelection()
-            }
-        }
-
 
         view.post {
             val height = view.height
