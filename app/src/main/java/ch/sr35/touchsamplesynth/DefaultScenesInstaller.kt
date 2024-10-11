@@ -40,7 +40,7 @@ enum class CurrentScenesCode
     PRESET_INSTALL_DONE
 }
 const val SCENES_FILE_NAME="touchSampleSynth1.json"
-const val DRUMSAMPLES_FOLDER_NAME = "WAVBVKERY-AcousticDrumSamples"
+const val DRUMSAMPLES_FOLDER_NAME="tss_demoset"
 class NestedFolder(val name:String)
 {
 
@@ -83,70 +83,20 @@ abstract class ProgressRunnable(var progress: Double?,var message: String?): Run
 
 class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
 
-    val samplesFolderLvl1: NestedFolder
     private var percentageDownloaded: Double = 0.0
     val handler: Handler = Handler(Looper.getMainLooper())
 
     init {
 
-        val foldersInHiHat = arrayListOf(
-            NestedFolder("Bell"),
-            NestedFolder("Closed"),
-            NestedFolder("Crash"),
-            NestedFolder("Double"),
-            NestedFolder("ExtraHita"),
-            NestedFolder("Open"),
-            NestedFolder("Pedal")
-        )
-        val folderHiHat = NestedFolder("Hi-Hat")
-        folderHiHat.children = foldersInHiHat
-        val foldersInRide = arrayListOf(
-            NestedFolder("Damped"),
-            NestedFolder("Ride"),
-            NestedFolder("RideBell"),
-            NestedFolder("RideCrash"), NestedFolder("Short")
-        )
-        val folderRide = NestedFolder("Ride")
-        folderRide.children = foldersInRide
-        val foldersInCymbals = arrayListOf(
-            NestedFolder("Cowbell"),
-            NestedFolder("Crash"),
-            folderRide,
-            folderHiHat
-        )
-        val folderCymbal = NestedFolder("Cymbals")
-        folderCymbal.children = foldersInCymbals
-        val folderInToms = arrayListOf(
-            NestedFolder("TomHigh"),
-            NestedFolder("TomLow"),
-            NestedFolder("TomeMid")
-        )
-        val folderTom = NestedFolder("Tom")
-        folderTom.children = folderInToms
-        val SAMPLES_FOLDER_LVL1 = arrayListOf(
-            folderCymbal,
-            NestedFolder("Kick"),
-            NestedFolder("Snare"),
-            NestedFolder("Sticks"),
-            folderTom
-        )
-        samplesFolderLvl1 = NestedFolder(DRUMSAMPLES_FOLDER_NAME)
-        samplesFolderLvl1.children = SAMPLES_FOLDER_LVL1
+
 
 
     }
 
-    fun checkSampleLibrary(folderStructureToCheck: NestedFolder,directoryName: String): Boolean
+    fun checkSampleLibrary(directoryName: String): Boolean
     {
         val samplesFolder = appContext.filesDir
-        val samplesFound = arrayOf(false)
-        if (samplesFolder.listFiles()?.any { f -> f.isDirectory && f.name == directoryName } == true)
-        {
-            val sampleFolder = samplesFolder.listFiles { f -> f.name == directoryName && f.isDirectory }!!.first()
-            samplesFound[0]=true
-            folderStructureToCheck.checkFolderStructure(sampleFolder,samplesFound)
-        }
-        return samplesFound[0]
+        return samplesFolder.listFiles()?.any { f -> f.isDirectory && f.name == directoryName } == true
     }
 
     fun installDefaultScene(withExternalSamples: Boolean,importMode: importMode): DefaultSceneInstallerCode
@@ -160,21 +110,17 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
             setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         }.create()
         val presets = gson.fromJson(presetsFile,SceneListP::class.java)
-        if (withExternalSamples)
-        {
-            if (!checkSampleLibrary(samplesFolderLvl1, DRUMSAMPLES_FOLDER_NAME))
-            {
-                return DefaultSceneInstallerCode.INSTALL_FAILED
-            }
-        }
-        else
+        if (!withExternalSamples)
         {
             // parse default presets json and remove each scene that contains a sampler"
             presets.scenes.removeIf { scn -> scn.instruments.any { i -> i is SamplerP } }
         }
         presets.importOntoDevice(appContext,importMode,importDoneFlag.SET)
         appContext.scenesListDirty = true
-        appContext.loadSceneWithWaitIndicator(0)
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            appContext.loadSceneWithWaitIndicator(0)
+        }
         presets.touchSampleSynthVersion = BuildConfig.VERSION_NAME
         SceneListP.exportAsJson(SCENES_FILE_NAME,appContext,true)
         return DefaultSceneInstallerCode.INSTALLED
@@ -187,7 +133,7 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
         percentageDownloaded=0.0
         val okHttpClient=OkHttpClient()
         val dldFolder = appContext.filesDir
-        val samplesZipped = File(dldFolder.absolutePath + "/WAVBVKERY-Acoustic-Drum-Samples.zip")
+        val samplesZipped = File(dldFolder.absolutePath + "/tss_drumsamples.zip")
         val downloadBuffer = ByteArray(1024*1024*1) // 1 MB Buffer
         var bytesRead: Int
         var returnCode = DefaultSceneInstallerCode.SAMPLES_DOWNLOADED
@@ -198,7 +144,7 @@ class DefaultScenesInstaller(val appContext: TouchSampleSynthMain) {
             }
             val zippedFileStream = FileOutputStream(samplesZipped)
             val req = Request.Builder()
-                .url("https://wavbvkery.com/wp-content/uploads/WAVBVKERY-Acoustic-Drum-Samples.zip")
+                .url("https://www.stonerose35.ch/dungeon/tss_drumsamples.zip")
                 .build()
 
             val resp = okHttpClient.newCall(req).execute()

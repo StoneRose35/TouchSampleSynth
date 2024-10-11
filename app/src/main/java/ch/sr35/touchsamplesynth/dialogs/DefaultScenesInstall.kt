@@ -139,7 +139,7 @@ class DefaultScenesInstall(private var context: Context) : Dialog(context) {
                 }
                 State.ASKING_WHETHER_INSTALL -> {
 
-                    if (!installer.checkSampleLibrary(installer.samplesFolderLvl1, DRUMSAMPLES_FOLDER_NAME))
+                    if (!installer.checkSampleLibrary(DRUMSAMPLES_FOLDER_NAME))
                     {
                         setInstallerText(context.getString(R.string.installerAddDrumSamples))
                         state = State.ASKING_WHETHER_DOWNLOAD
