@@ -24,7 +24,6 @@ enum class DefaultSceneInstallerCode
     SAMPLES_DOWNLOADED,
     DOWNLOAD_FAILED,
     UNZIPPING_FAILED,
-    INSTALL_FAILED,
     INSTALLED
 }
 
@@ -41,29 +40,7 @@ enum class CurrentScenesCode
 }
 const val SCENES_FILE_NAME="touchSampleSynth1.json"
 const val DRUMSAMPLES_FOLDER_NAME="tss_demoset"
-class NestedFolder(val name:String)
-{
 
-    var children = ArrayList<NestedFolder>()
-
-    fun checkFolderStructure(rootFolder: File,result: Array<Boolean>)
-    {
-        if (rootFolder.exists() && rootFolder.isDirectory &&  rootFolder.name == name)
-        {
-            children.forEach {
-                rootFolder.listFiles { f -> it.name == f.name && f.isDirectory }?.let { cf ->
-                    if (cf.isNotEmpty()) {
-                        it.checkFolderStructure(cf.first(), result)
-                    }
-                }
-            }
-        }
-        else
-        {
-            result[0]=false
-        }
-    }
-}
 
 abstract class ProgressRunnable(var progress: Double?,var message: String?): Runnable
 {
