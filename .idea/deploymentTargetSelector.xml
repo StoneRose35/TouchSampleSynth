@@ -17,10 +17,10 @@
       <SelectionState runConfigName="rotateSettingsPage()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="rotateScenesPage()">
+      <SelectionState runConfigName="Tests in 'ch.sr35.touchsamplesynth'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Tests in 'ch.sr35.touchsamplesynth'">
+      <SelectionState runConfigName="All Tests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

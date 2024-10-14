@@ -48,7 +48,7 @@ class TouchSampleSynthMainTest {
         val fname =
             InstrumentationRegistry.getInstrumentation().targetContext.filesDir.absolutePath + File.separator + SCENES_FILE_NAME
         val testpresets =
-            InstrumentationRegistry.getInstrumentation().context.assets.open("defaultPresets.json")
+            InstrumentationRegistry.getInstrumentation().context.assets.open("defaultPresets_noSamples.json")
         val f = File(fname)
         val fos = FileOutputStream(f)
         fos.write(testpresets.readAllBytes())

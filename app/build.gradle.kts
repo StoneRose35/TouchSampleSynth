@@ -56,7 +56,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("com.google.code.gson:gson:2.10")
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation("io.github.tutorialsandroid:filepicker:9.2.5")
     implementation("codes.side:andcolorpicker:0.6.2")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")

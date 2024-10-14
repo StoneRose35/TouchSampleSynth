@@ -235,14 +235,15 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
 
     override fun onStop() {
-
+        super.onStop()
         persistCurrentScene()
         saveToBinaryFiles()
         midiHostHandler?.stopMidiDeviceListener()
-        super.onStop()
+
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
+        scenesListDirty = mainMenu == null
         mainMenu=menu
         val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
         spinnerScenes.onItemSelectedListener=this
@@ -262,7 +263,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         else
         {
             spinnerScenes.setSelection(0, false)
-            oldScenePosition = 0
+            oldScenePosition = -1
         }
         (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).isEnabled = !isInEditMode
         (mainMenu!!.findItem(R.id.menuitem_editscene)!!.actionView as SwitchCompat).isChecked = isInEditMode
@@ -316,7 +317,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if ((position != oldScenePosition || scenesListDirty) && position > -1&& parent?.tag != SCENE_SELECTION_NO_CHOICE) {
-            allScenes[oldScenePosition].persist(soundGenerators, touchElements)
+            if (oldScenePosition >= 0 && oldScenePosition < allScenes.size) {
+                allScenes[oldScenePosition].persist(soundGenerators, touchElements)
+            }
             loadSceneWithWaitIndicator(position)
         }
     }
