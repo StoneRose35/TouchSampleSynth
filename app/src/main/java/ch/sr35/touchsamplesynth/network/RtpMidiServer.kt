@@ -23,7 +23,7 @@ class RtpMidiServer {
     private var ssrc: UInt = Random.nextUInt(0xFFFFFFFFu)
     var name: String="TSS Midi Server"
     var isEnabled:Boolean=false
-    private var journal=RtpMidiJournal(128)
+    private var journal=RtpMidiJournal(1024)
     private val midiSendQueue =  ConcurrentLinkedDeque<ByteArray>()
     fun startServer(): Boolean
     {
@@ -112,7 +112,7 @@ class RtpMidiServer {
                                     )
                                 }
                                 var runningIdx=indexes[0]
-                                while(runningIdx!= indexes[1])
+                                while(runningIdx != indexes[1])
                                 {
                                     journal.get(runningIdx)?.let {
                                         Log.w(TAG,"Resending data at index ${it.timestamp}")
@@ -398,7 +398,7 @@ class ClientConnectionData
 class RtpMidiJournal(val size: Int)
 {
     private var internalArrayList=Array<RtpMidiJournalEntry?>(size){null}
-    private var idx=0
+    private var idx=size-1
     private var idxBottom=0
 
 
@@ -431,7 +431,7 @@ class RtpMidiJournal(val size: Int)
         var hasEnded=false
         while(!hasEnded) {
             if (internalArrayList[idxBottom] != null) {
-                if (internalArrayList[idxBottom]?.get32bitTimestamp()!! < timestamp) {
+                if (internalArrayList[idxBottom]?.get32bitTimestamp()!! <= timestamp) {
                     idxBottom += 1
                     if (idxBottom != idx) {
                         if (idxBottom == size) {
