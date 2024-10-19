@@ -532,7 +532,9 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 px = event.x
                 py = event.y
                 return true
-            } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP) {
+            } else if  (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP ||
+                        event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP ||
+                        event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_CANCEL) {
                 outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                 currentVoice?.switchOff(1.0f)
                 appContext?.rtpMidiServer?.let {

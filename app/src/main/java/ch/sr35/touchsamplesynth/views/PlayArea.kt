@@ -272,7 +272,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
 
         when (ev!!.action.and(MotionEvent.ACTION_MASK))
         {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 val ptrIndex = ev.actionIndex
                 pointerIds.add(ev.getPointerId(ev.actionIndex))
                 currentPositions[ev.getPointerId(ev.actionIndex)] = Point(ev.getX(ptrIndex).toDouble(),ev.getY(ptrIndex).toDouble())
@@ -288,7 +288,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                 return false
             }
             else -> {
-                Log.i(TAG,"intercepting other event than action_down or action_pointer_down: ${ev.actionMasked}")
+                Log.i(TAG,"intercepting other event than action_down, action_pointer_down, action_up, action_pointer_up or action_cancel: ${ev.actionMasked}")
             }
 
         }
