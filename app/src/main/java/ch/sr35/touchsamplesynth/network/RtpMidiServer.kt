@@ -12,6 +12,8 @@ import kotlin.concurrent.thread
 import kotlin.random.Random
 import kotlin.random.nextUInt
 // documentation used: https://developer.apple.com/library/archive/documentation/Audio/Conceptual/MIDINetworkDriverProtocol/MIDI/MIDI.html
+const val JOURNAL_SIZE=1024
+const val RESEND_THRESHHOLD = 16
 class RtpMidiServer {
     var port: Int=0
     private var controlSocket: DatagramSocket?=null
@@ -23,7 +25,7 @@ class RtpMidiServer {
     private var ssrc: UInt = Random.nextUInt(0xFFFFFFFFu)
     var name: String="TSS Midi Server"
     var isEnabled:Boolean=false
-    private var journal=RtpMidiJournal(1024)
+    private var journal=RtpMidiJournal(JOURNAL_SIZE)
     private val midiSendQueue =  ConcurrentLinkedDeque<ByteArray>()
     fun startServer(): Boolean
     {
@@ -105,24 +107,34 @@ class RtpMidiServer {
                                 val lastSeqReceived = (p.data[8].toUInt() and 0xFFu shl 8) or
                                                       (p.data[9].toUInt() and 0xFFu  shl 0)
                                 val indexes = journal.getIndexesOfNewerThan(lastSeqReceived)
+                                var NEntriesToResend = 0
                                 if (indexes[1] != indexes[0]) {
+
+                                    if (indexes[1] < indexes[0])
+                                    {
+                                        NEntriesToResend = JOURNAL_SIZE + indexes[1] - indexes[0]
+                                    }
+                                    else
+                                    {
+                                        NEntriesToResend = indexes[1] - indexes[0]
+                                    }
                                     Log.w(
                                         TAG,
                                         "got ${indexes[1] - indexes[0]} indexes newer than $lastSeqReceived"
                                     )
                                 }
-                                var runningIdx=indexes[0]
-                                while(runningIdx != indexes[1])
-                                {
-                                    journal.get(runningIdx)?.let {
-                                        Log.w(TAG,"Resending data at index ${it.timestamp}")
-                                        addToSendQueue(it.data)
-                                    }
+                                if (NEntriesToResend in 1..RESEND_THRESHHOLD) {
+                                    var runningIdx = indexes[0]
+                                    while (runningIdx != indexes[1]) {
+                                        journal.get(runningIdx)?.let {
+                                            Log.w(TAG, "Resending data at index ${it.timestamp}")
+                                            addToSendQueue(it.data)
+                                        }
 
-                                    runningIdx+=1
-                                    if (runningIdx==journal.size)
-                                    {
-                                        runningIdx=0
+                                        runningIdx += 1
+                                        if (runningIdx == journal.size) {
+                                            runningIdx = 0
+                                        }
                                     }
                                 }
                             }
