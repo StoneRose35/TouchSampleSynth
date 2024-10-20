@@ -44,10 +44,13 @@ import java.io.File
 import java.util.concurrent.Executors
 
 
-const val TAG="TouchSampleSynth"
+const val TAG="TouchSampleSynthApp"
 const val TSS_BUNDLE_LAST_PROGRAM = "TSS_BUNDLE_LAST_PROGRAM"
 const val TSS_BUNDLE_LAST_FRAGMENT = "TSS_BUNDLE_LAST_FRAGMENT"
 const val TSS_BUNDLE_EDIT_MODE = "TSS_BUNDLE_EDIT_MODE"
+const val TSS_BUNDLE_REACT_ON_SLIDE_IN = "TSS_BUNDLE_REACT_ON_SLIDE_IN"
+const val TSS_BUNDLE_USE_MULTI_GESTURES = "TSS_BUNDLE_USE_MULTI_GESTURES"
+const val TSS_TOGGLE_TOUCHELEMENTS = "TSS_TOGGLE_TOUCHELEMENTS"
 class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
@@ -68,18 +71,22 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     var scenesListDirty=false
     private var sceneIsLoading=false
     var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
-
+    private var isInEditMode = false
     // global settings
     var rtpMidiNotesRepeat=1 // defines how many times note on and note off commands are repeated over rtp midi
     var touchElementsDisplayMode: TouchElement.TouchElementState=TouchElement.TouchElementState.PLAYING
     var connectorDisplay = false
-    private var isInEditMode = false
+    var reactOnSlideIn=true
+    var useMultiGestures=true
+    var toggleTouchElements=false
 
     override fun onStart() {
         super.onStart()
 
         val playPage = PlayPageFragment()
         if (supportFragmentManager.fragments.isEmpty()) {
+            playPage.reactOnSlideIn = reactOnSlideIn
+            playPage.useMultiGestures = useMultiGestures
             putFragment(playPage, "PlayPage0")
         }
         mainMenu?.let {
@@ -120,7 +127,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
 
         if (mainMenu!=null) {
-            loadSceneWithWaitIndicator(oldScenePosition,true)
+            scenesListDirty = true
+            loadSceneWithWaitIndicator(oldScenePosition)
         }
     }
 
@@ -179,6 +187,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             oldScenePosition = it.getInt(TSS_BUNDLE_LAST_PROGRAM)
             selectedMenuItemId = it.getInt(TSS_BUNDLE_LAST_FRAGMENT)
             isInEditMode = it.getBoolean(TSS_BUNDLE_EDIT_MODE)
+            reactOnSlideIn = it.getBoolean(TSS_BUNDLE_REACT_ON_SLIDE_IN)
+            useMultiGestures = it.getBoolean(TSS_BUNDLE_USE_MULTI_GESTURES)
+            toggleTouchElements = it.getBoolean(TSS_TOGGLE_TOUCHELEMENTS)
         }
 
     }
@@ -197,6 +208,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             outState.putInt(TSS_BUNDLE_LAST_PROGRAM,(it.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
             outState.putInt(TSS_BUNDLE_LAST_FRAGMENT, selectedMenuItemId)
             outState.putBoolean(TSS_BUNDLE_EDIT_MODE,isInEditMode)
+            outState.putBoolean(TSS_BUNDLE_REACT_ON_SLIDE_IN,reactOnSlideIn)
+            outState.putBoolean(TSS_BUNDLE_USE_MULTI_GESTURES,useMultiGestures)
+            outState.putBoolean(TSS_TOGGLE_TOUCHELEMENTS,toggleTouchElements)
         }
 
     }
@@ -261,7 +275,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         menuInflater.inflate(R.menu.main_menu,menu)
         mainMenu=menu
         val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
-
+        spinnerScenes.onItemSelectedListener=this
         scenesArrayAdapter?.let {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             it.setNotifyOnChange(true)
@@ -278,10 +292,11 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         else
         {
             spinnerScenes.setSelection(0, false)
+            oldScenePosition = -1
         }
         loadSceneWithWaitIndicator((mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
         (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).isEnabled = !isInEditMode
-        spinnerScenes.onItemSelectedListener=this
+
         return true
     }
 
@@ -295,7 +310,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     {
         when(menuitemId) {
             R.id.menuitem_play -> {
-
+                playPageFragment.reactOnSlideIn = reactOnSlideIn
+                playPageFragment.useMultiGestures = useMultiGestures
                 putFragment(playPageFragment,"PlayPage0")
             }
             R.id.menuitem_instruments ->
@@ -326,7 +342,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             allScenes[oldScenePosition].persist(soundGenerators, touchElements)
         }
         if ((position != oldScenePosition || scenesListDirty) && position > -1) {
-            loadSceneWithWaitIndicator(position,true)
+            loadSceneWithWaitIndicator(position)
         }
     }
 
@@ -380,9 +396,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
     }
 
-    private fun loadSceneWithWaitIndicator(position: Int,forceLoading: Boolean=false)
+    private fun loadSceneWithWaitIndicator(position: Int)
     {
-        if (!scenesListDirty && (allScenes.size==0 || position==oldScenePosition || position < 0 || position > allScenes.size-1 || sceneIsLoading))
+        if (!scenesListDirty && (allScenes.size==0 || position==oldScenePosition || position < 0 || position > allScenes.size-1 || sceneIsLoading) )
         {
             return
         }
@@ -408,7 +424,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         executor.execute {
 
             allScenes[position].populate(soundGenerators, touchElements, this)
-
+            touchElements.forEach {
+                it.toggled = toggleTouchElements
+            }
             handler.post {
 
                 // load the new scene

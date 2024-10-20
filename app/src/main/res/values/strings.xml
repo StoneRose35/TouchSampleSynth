@@ -76,6 +76,9 @@
         <item>5</item>
         <item>10</item>
     </string-array>
+    <string name="settingsReactOnSlideIn">React On Slide In</string>
+    <string name="settingsUseMultiTouchGestures">Use Multitouch Gestures</string>
+    <string name="settingToggleTouchElements">Toggle Touch Elements</string>
     <string name="sampleLoadPath">Load Path</string>
     <string name="loadPathInternal">Internal/Bundled Samples</string>
     <string name="loadPathExternal">External</string>

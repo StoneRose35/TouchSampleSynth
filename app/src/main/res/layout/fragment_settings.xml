@@ -80,6 +80,57 @@
         </TableRow>
         <TableRow>
             <TextView
+                android:id="@+id/settingReactOnSlideIn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:labelFor="@id/switchReactOnSlideIn"
+                android:text="@string/settingsReactOnSlideIn"
+                />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchReactOnSlideIn"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:checked="true"
+                android:layout_gravity="start"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/settingAllowMultiGestures"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:labelFor="@id/spinnerBufferCapacityInFrames"
+                android:text="@string/settingsUseMultiTouchGestures"
+                />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchAllowMultiGestures"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:checked="true"
+                android:layout_gravity="start"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/settingToggleTouchelements"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minLines="2"
+                android:labelFor="@id/spinnerBufferCapacityInFrames"
+                android:text="@string/settingToggleTouchElements"
+                />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchToggleTouchElements"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:checked="true"
+                android:layout_gravity="start"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
                 android:id="@+id/settingsTextViewConnectors"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -87,10 +138,10 @@
                 android:labelFor="@id/toggleButtonShowConnectors"
                 android:text="@string/settings_connector_display"
                 />
-                <ToggleButton
-                    android:id="@+id/toggleButtonShowConnectors"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <ToggleButton
+                android:id="@+id/toggleButtonShowConnectors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 />
         </TableRow>
         <TableRow>

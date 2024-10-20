@@ -39,7 +39,9 @@ class PlayPageFragment : Fragment() {
         }
 
     }
-
+    var playPageArea: PlayArea?=null
+    var reactOnSlideIn=true
+    var useMultiGestures=true
     var playPageAreaRect: Rectangle?=null
 
     override fun onCreateView(
@@ -80,9 +82,11 @@ class PlayPageFragment : Fragment() {
             return
         }
         //val newButton = view.findViewById<ImageButton>(R.id.buttonNew)
-        val playPageLayout = view.findViewById<PlayArea>(R.id.playpage_layout)
+        playPageArea = view.findViewById<PlayArea>(R.id.playpage_layout)
+        playPageArea?.reactOnSlideIn = reactOnSlideIn
+        playPageArea?.useMultiGestures = useMultiGestures
         val instrumentChipsContainer= view.findViewById<LinearLayout>(R.id.playpage_instrument_chips)
-        playPageLayout.instrumentChipContainer = instrumentChipsContainer
+        playPageArea?.instrumentChipContainer = instrumentChipsContainer
         //val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
 
         val globalLayoutListener =
@@ -131,7 +135,7 @@ class PlayPageFragment : Fragment() {
                         (te.layoutParams as ConstraintLayout.LayoutParams).topMargin= finalLocation.topLeft.y.toInt()
                         (te.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
                         (context as TouchSampleSynthMain).touchElements.add(te)
-                        playPageLayout.addView(te)
+                        playPageArea?.addView(te)
 
                     }
                     instrumentChipsContainer.addView(instrChip)
@@ -145,7 +149,7 @@ class PlayPageFragment : Fragment() {
                 {
                     touchel.setEditmode(false)
                 }
-                playPageLayout.invalidate()
+                playPageArea?.invalidate()
                 instrumentChipsContainer.removeAllViewsInLayout()
                 (context as TouchSampleSynthMain).persistCurrentScene()
                 (context as TouchSampleSynthMain).unlockSceneSelection()

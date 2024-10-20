@@ -16,6 +16,7 @@ import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.appcompat.widget.SwitchCompat
 
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -23,6 +24,7 @@ import ch.sr35.touchsamplesynth.BuildConfig
 import ch.sr35.touchsamplesynth.MidiDevicesChanged
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.views.TouchElement
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.snackbar.Snackbar
 import java.net.NetworkInterface
 import java.net.SocketException
@@ -206,6 +208,31 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         catch (e: SocketException)
         {
             ipAdressTextView.text=getText(R.string.offline)
+        }
+
+        view.findViewById<SwitchCompat>(R.id.switchReactOnSlideIn).let {
+            it.isChecked = (context as TouchSampleSynthMain).reactOnSlideIn
+            it.setOnCheckedChangeListener { _, isChecked ->
+                (context as TouchSampleSynthMain).reactOnSlideIn = isChecked
+            }
+
+        }
+
+        view.findViewById<SwitchCompat>(R.id.switchAllowMultiGestures).let {
+            it.isChecked = (context as TouchSampleSynthMain).useMultiGestures
+            it.setOnCheckedChangeListener { _, isChecked ->
+                (context as TouchSampleSynthMain).useMultiGestures = isChecked
+            }
+        }
+
+        view.findViewById<SwitchCompat>(R.id.switchToggleTouchElements).let {
+            it.isChecked = (context as TouchSampleSynthMain).toggleTouchElements
+            it.setOnCheckedChangeListener { _, isChecked ->
+                (context as TouchSampleSynthMain).toggleTouchElements = isChecked
+                (context as TouchSampleSynthMain).touchElements.forEach { te->
+                    te.toggled = isChecked
+                }
+            }
         }
     }
 
