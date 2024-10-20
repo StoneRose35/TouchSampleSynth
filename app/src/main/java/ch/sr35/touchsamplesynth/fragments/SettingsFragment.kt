@@ -24,7 +24,6 @@ import ch.sr35.touchsamplesynth.BuildConfig
 import ch.sr35.touchsamplesynth.MidiDevicesChanged
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.views.TouchElement
-import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.snackbar.Snackbar
 import java.net.NetworkInterface
 import java.net.SocketException

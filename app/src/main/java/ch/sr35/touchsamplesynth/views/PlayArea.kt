@@ -331,7 +331,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
             }
             if (!useMultiGestures)
             {
-                when (ev!!.action.and(MotionEvent.ACTION_MASK)) {
+                when (ev.action.and(MotionEvent.ACTION_MASK)) {
                     MotionEvent.ACTION_POINTER_DOWN -> {
                         return true
                     }
