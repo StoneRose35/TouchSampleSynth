@@ -21,6 +21,7 @@
         tools:targetApi="s">
         <activity
             android:name=".TouchSampleSynthMain"
+            android:screenOrientation="landscape"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
