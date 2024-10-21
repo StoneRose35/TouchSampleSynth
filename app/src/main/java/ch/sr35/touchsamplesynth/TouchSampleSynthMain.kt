@@ -260,7 +260,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
         saveToBinaryFiles()
         midiHostHandler?.stopMidiDeviceListener()
-
+        if (nsdHandler?.hasStarted==true) {
+            nsdHandler?.tearDown()
+        }
+        rtpMidiServer?.stopServer()
         if (supportFragmentManager.fragments[0].tag!=null
             && supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
         {

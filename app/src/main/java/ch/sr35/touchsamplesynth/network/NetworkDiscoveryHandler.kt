@@ -16,6 +16,7 @@ class NetworkDiscoveryHandler(context: Context): NsdManager.RegistrationListener
     private val serviceType: String="_apple-midi._udp"
     private var discoveredServices: ArrayList<NsdServiceInfo>
     private var nsdManager:  NsdManager?=null
+    var hasStarted=false
 
     init {
         nsdManager = (context.getSystemService(Context.NSD_SERVICE) as NsdManager)
@@ -49,12 +50,14 @@ class NetworkDiscoveryHandler(context: Context): NsdManager.RegistrationListener
         }
 
         nsdManager?.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, this)
+        hasStarted = true
     }
 
     fun tearDown()
     {
         nsdManager?.unregisterService(this)
         nsdManager?.stopServiceDiscovery(this)
+        hasStarted = false
     }
 
 
