@@ -42,6 +42,7 @@ import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.WaitAnimation
 import java.io.File
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 
 
 const val TAG="TouchSampleSynthApp"
@@ -69,7 +70,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     private var oldScenePosition=-1
     private var selectedMenuItemId = -1
     var scenesListDirty=false
-    private var sceneIsLoading=false
+    var sceneIsLoading: AtomicBoolean=AtomicBoolean(false)
     var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
     private var isInEditMode = false
     // global settings
@@ -146,6 +147,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 .detectLeakedClosableObjects()
                 .build()
         )*/
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.mainToolBar))
@@ -232,46 +234,29 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onDestroy() {
         super.onDestroy()
-        /*val f = File("default.scn")
-        if (f.exists())
-        {
-            f.delete()
-        }*/
-        while (sceneIsLoading)
+        while (sceneIsLoading.get())
         {
             SystemClock.sleep(30)
         }
         soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
-        //audioEngine.stopEngine()
 
     }
 
     override fun onPause() {
         super.onPause()
-
-        persistCurrentScene()
-        //soundGenerators.flatMap { sg -> sg.voices }.forEach { el -> el.detachFromAudioEngine() }
         audioEngine.stopEngine()
     }
 
 
     override fun onStop() {
         super.onStop()
-
+        persistCurrentScene()
         saveToBinaryFiles()
         midiHostHandler?.stopMidiDeviceListener()
         if (nsdHandler?.hasStarted==true) {
             nsdHandler?.tearDown()
         }
         rtpMidiServer?.stopServer()
-        if (supportFragmentManager.fragments[0].tag!=null
-            && supportFragmentManager.fragments[0].tag.equals("PlayPage0"))
-        {
-            for (te in touchElements) {
-                (supportFragmentManager.fragments[0].view as PlayArea).removeView(te)
-            }
-        }
-
 
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -342,7 +327,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (oldScenePosition >= 0) {
-            allScenes[oldScenePosition].persist(soundGenerators, touchElements)
+            if (!sceneIsLoading.get()) {
+                allScenes[oldScenePosition].persist(soundGenerators, touchElements)
+            }
         }
         if ((position != oldScenePosition || scenesListDirty) && position > -1) {
             loadSceneWithWaitIndicator(position)
@@ -352,6 +339,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun saveToBinaryFiles()
     {
+        while (sceneIsLoading.get())
+        {
+            Thread.sleep(30)
+        }
         val mainDir = File(filesDir.absolutePath)
         mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
             it.delete()
@@ -373,6 +364,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun loadFromBinaryFiles()
     {
+        while (sceneIsLoading.get())
+        {
+            Thread.sleep(30)
+        }
         allScenes.clear()
         val fDir = this.filesDir
         val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }
@@ -401,12 +396,17 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     private fun loadSceneWithWaitIndicator(position: Int)
     {
-        if (!scenesListDirty && (allScenes.size==0 || position==oldScenePosition || position < 0 || position > allScenes.size-1 || sceneIsLoading) )
+        val wasSceneLoading = sceneIsLoading.getAndSet(true)
+        if (wasSceneLoading)
         {
             return
         }
+        else if (allScenes.size == 0 || position < 0 || position > allScenes.size-1 || (position==oldScenePosition && !scenesListDirty))
+        {
+            sceneIsLoading.set(false)
+            return
+        }
         scenesListDirty = false
-        sceneIsLoading = true
         val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout)
         val waitAnimation= WaitAnimation(this,null)
         val constraintLayout = ConstraintLayout.LayoutParams(Converter.toPx(64),Converter.toPx(64))
@@ -464,7 +464,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 }
                 waitAnimation.stopAnimation()
                 (mainLayout as ViewGroup).removeView(waitAnimation)
-                sceneIsLoading = false
+                sceneIsLoading.set(false)
             }
         }
     }
@@ -483,6 +483,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun persistCurrentScene()
     {
+        while (sceneIsLoading.get())
+        {
+            Thread.sleep(30)
+        }
         if (mainMenu != null) {
             val scenePos =
                 (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition

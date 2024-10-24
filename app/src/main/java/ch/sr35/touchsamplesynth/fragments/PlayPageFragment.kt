@@ -81,13 +81,11 @@ class PlayPageFragment : Fragment() {
         {
             return
         }
-        //val newButton = view.findViewById<ImageButton>(R.id.buttonNew)
         playPageArea = view.findViewById<PlayArea>(R.id.playpage_layout)
         playPageArea?.reactOnSlideIn = reactOnSlideIn
         playPageArea?.useMultiGestures = useMultiGestures
         val instrumentChipsContainer= view.findViewById<LinearLayout>(R.id.playpage_instrument_chips)
         playPageArea?.instrumentChipContainer = instrumentChipsContainer
-        //val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
 
         val globalLayoutListener =
             playPageAreaRect?.let { DeletableGlobalLayoutListener(this.requireView(), it) }
@@ -158,45 +156,46 @@ class PlayPageFragment : Fragment() {
 
 
         view.post {
-            val height = view.height
-            val width = view.width
-            var touchElementWidth = Converter.toPx(134)
-            var touchElementSpacingX = Converter.toPx(10)
-            var touchElementHeight = Converter.toPx(166)
-            var teCntr = 0
-            var hasDoneInitialLayout= false
-            for (te in (context as TouchSampleSynthMain).touchElements) {
+            if (!(context as TouchSampleSynthMain).sceneIsLoading.get()) {
 
-                Log.i("TouchSampleSynth","drawing %d TouchElements".format((context as TouchSampleSynthMain).touchElements.size))
-                if (te.layoutParams == null)
-                {
-                    if (Converter.toPx((134+10)*4) > width)
-                    {
-                        touchElementWidth = width / 4 *Converter.toPx(134/(134+10))
-                        touchElementSpacingX = width / 4 * Converter.toPx(134/(134+10))
-                    }
-                    if (Converter.toPx(166+10) > height)
-                    {
-                        touchElementHeight = height - Converter.toPx(10)
+                val height = view.height
+                val width = view.width
+                var touchElementWidth = Converter.toPx(134)
+                var touchElementSpacingX = Converter.toPx(10)
+                var touchElementHeight = Converter.toPx(166)
+                var teCntr = 0
+                for (te in (context as TouchSampleSynthMain).touchElements) {
+
+                    Log.i(
+                        "TouchSampleSynth",
+                        "drawing %d TouchElements".format((context as TouchSampleSynthMain).touchElements.size)
+                    )
+                    if (te.layoutParams == null) {
+                        if (Converter.toPx((134 + 10) * 4) > width) {
+                            touchElementWidth = width / 4 * Converter.toPx(134 / (134 + 10))
+                            touchElementSpacingX = width / 4 * Converter.toPx(134 / (134 + 10))
+                        }
+                        if (Converter.toPx(166 + 10) > height) {
+                            touchElementHeight = height - Converter.toPx(10)
+                        }
+
+                        val lp =
+                            ConstraintLayout.LayoutParams(touchElementWidth, touchElementHeight)
+                        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                        lp.marginStart =
+                            touchElementSpacingX + (touchElementWidth + touchElementSpacingX) * teCntr
+                        lp.topMargin = height - touchElementHeight - Converter.toPx(10)
+                        te.layoutParams = lp
+                        teCntr += 1
                     }
 
-                    val lp = ConstraintLayout.LayoutParams(touchElementWidth,touchElementHeight)
-                    lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                    lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                    lp.marginStart = touchElementSpacingX + (touchElementWidth + touchElementSpacingX)*teCntr
-                    lp.topMargin = height - touchElementHeight - Converter.toPx(10)
-                    te.layoutParams = lp
-                    teCntr += 1
-                    hasDoneInitialLayout = true
+                    view.findViewById<ConstraintLayout>(R.id.playpage_layout).addView(te)
                 }
 
-                view.findViewById<ConstraintLayout>(R.id.playpage_layout).addView(te)
+                view.invalidate()
+                (context as TouchSampleSynthMain).sceneIsLoading.set(false)
             }
-            if (hasDoneInitialLayout)
-            {
-                (context as TouchSampleSynthMain).persistCurrentScene()
-            }
-            view.invalidate()
         }
     }
 
