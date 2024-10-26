@@ -317,7 +317,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if ((position != oldScenePosition || scenesListDirty) && position > -1&& parent?.tag != SCENE_SELECTION_NO_CHOICE) {
-            if (oldScenePosition >= 0 && oldScenePosition < allScenes.size) {
+            if (oldScenePosition >= 0 && oldScenePosition < allScenes.size && !sceneIsLoading.get()) {
                 allScenes[oldScenePosition].persist(soundGenerators, touchElements)
             }
             loadSceneWithWaitIndicator(position)
@@ -327,6 +327,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun saveToBinaryFiles()
     {
+        while (sceneIsLoading.get())
+        {
+            Thread.sleep(30)
+        }
         val mainDir = File(filesDir.absolutePath)
         mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
             it.delete()
@@ -348,6 +352,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun loadFromBinaryFiles()
     {
+        while (sceneIsLoading.get())
+        {
+            Thread.sleep(30)
+        }
         allScenes.clear()
         val fDir = this.filesDir
         val sceneFiles = fDir.listFiles { fn -> fn.isFile && fn.name.endsWith("scn") }

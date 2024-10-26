@@ -153,45 +153,44 @@ class PlayPageFragment : Fragment() {
         view.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
 
         view.post {
-            val height = view.height
-            val width = view.width
-            var touchElementWidth = Converter.toPx(134)
-            var touchElementSpacingX = Converter.toPx(10)
-            var touchElementHeight = Converter.toPx(166)
-            var teCntr = 0
-            var hasDoneInitialLayout= false
-            for (te in (context as TouchSampleSynthMain).touchElements) {
+            if (!(context as TouchSampleSynthMain).sceneIsLoading.get()) {
+                val height = view.height
+                val width = view.width
+                var touchElementWidth = Converter.toPx(134)
+                var touchElementSpacingX = Converter.toPx(10)
+                var touchElementHeight = Converter.toPx(166)
+                var teCntr = 0
+                for (te in (context as TouchSampleSynthMain).touchElements) {
 
-                Log.i("TouchSampleSynth","drawing %d TouchElements".format((context as TouchSampleSynthMain).touchElements.size))
-                if (te.layoutParams == null)
-                {
-                    if (Converter.toPx((134+10)*4) > width)
-                    {
-                        touchElementWidth = width / 4 *Converter.toPx(134/(134+10))
-                        touchElementSpacingX = width / 4 * Converter.toPx(134/(134+10))
-                    }
-                    if (Converter.toPx(166+10) > height)
-                    {
-                        touchElementHeight = height - Converter.toPx(10)
+                    Log.i(
+                        "TouchSampleSynth",
+                        "drawing %d TouchElements".format((context as TouchSampleSynthMain).touchElements.size)
+                    )
+                    if (te.layoutParams == null) {
+                        if (Converter.toPx((134 + 10) * 4) > width) {
+                            touchElementWidth = width / 4 * Converter.toPx(134 / (134 + 10))
+                            touchElementSpacingX = width / 4 * Converter.toPx(134 / (134 + 10))
+                        }
+                        if (Converter.toPx(166 + 10) > height) {
+                            touchElementHeight = height - Converter.toPx(10)
+                        }
+
+                        val lp =
+                            ConstraintLayout.LayoutParams(touchElementWidth, touchElementHeight)
+                        lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                        lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                        lp.marginStart =
+                            touchElementSpacingX + (touchElementWidth + touchElementSpacingX) * teCntr
+                        lp.topMargin = height - touchElementHeight - Converter.toPx(10)
+                        te.layoutParams = lp
+                        teCntr += 1
                     }
 
-                    val lp = ConstraintLayout.LayoutParams(touchElementWidth,touchElementHeight)
-                    lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                    lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                    lp.marginStart = touchElementSpacingX + (touchElementWidth + touchElementSpacingX)*teCntr
-                    lp.topMargin = height - touchElementHeight - Converter.toPx(10)
-                    te.layoutParams = lp
-                    teCntr += 1
-                    hasDoneInitialLayout = true
+                    view.findViewById<ConstraintLayout>(R.id.playpage_layout).addView(te)
                 }
 
-                view.findViewById<ConstraintLayout>(R.id.playpage_layout).addView(te)
+                view.invalidate()
             }
-            if (hasDoneInitialLayout)
-            {
-                (context as TouchSampleSynthMain).persistCurrentScene()
-            }
-            view.invalidate()
         }
     }
 
