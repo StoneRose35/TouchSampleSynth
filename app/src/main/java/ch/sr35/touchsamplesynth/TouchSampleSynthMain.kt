@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -16,17 +15,14 @@ import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.Spinner
 import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.ActionBar.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
-import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
@@ -41,7 +37,6 @@ import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
 import ch.sr35.touchsamplesynth.network.RtpMidiServer
-import ch.sr35.touchsamplesynth.views.PianoRoll
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.WaitAnimation
 import java.io.File
@@ -54,7 +49,6 @@ const val TSS_BUNDLE_LAST_PROGRAM = "TSS_BUNDLE_LAST_PROGRAM"
 const val TSS_BUNDLE_LAST_FRAGMENT = "TSS_BUNDLE_LAST_FRAGMENT"
 const val TSS_BUNDLE_EDIT_MODE = "TSS_BUNDLE_EDIT_MODE"
 const val SCENE_SELECTION_NO_CHOICE = -1
-const val SCENE_SELECTION_CHOICE = 0
 class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding

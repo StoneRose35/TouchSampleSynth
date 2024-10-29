@@ -98,6 +98,7 @@ class TouchSampleSynthMainTest {
         onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
         onView(withId(R.id.toolbar_playpage)).perform(ViewActions.click())
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         activityScenario?.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
@@ -122,6 +123,7 @@ class TouchSampleSynthMainTest {
         onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
         onView(withId(R.id.toolbar_playpage)).perform(ViewActions.click())
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         activityScenario?.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
@@ -146,6 +148,7 @@ class TouchSampleSynthMainTest {
         onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
         onView(withId(R.id.toolbar_playpage)).perform(ViewActions.click())
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         activityScenario?.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
@@ -171,6 +174,7 @@ class TouchSampleSynthMainTest {
         onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
         onView(withId(R.id.toolbar_playpage)).perform(ViewActions.click())
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         activityScenario?.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
