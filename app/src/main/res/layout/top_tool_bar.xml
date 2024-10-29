@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/toolbar_edit" />
+    <Spinner
+        android:id="@+id/toolbar_scenes"
+        android:layout_width="202dp"
+        android:layout_height="match_parent"
+
+        />
+
+    <ImageButton
+        android:id="@+id/toolbar_playpage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:backgroundTint="#00FFFFFF"
+        android:src="@drawable/playpageicon"
+        app:layout_constraintEnd_toStartOf="@id/toolbar_instrumentspage"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        app:layout_constraintEnd_toStartOf="@id/toolbar_scenespage"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/instrumenteditpage"
+        android:id="@+id/toolbar_instrumentspage"
+        android:padding="4dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:backgroundTint="#00FFFFFF"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+    <ImageButton
+        android:id="@+id/toolbar_scenespage"
+        app:layout_constraintEnd_toStartOf="@id/toolbar_settingspage"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/scene"
+        android:padding="4dp"
+        android:adjustViewBounds="true"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+
+    <ImageButton
+        android:id="@+id/toolbar_settingspage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:backgroundTint="#00FFFFFF"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/settingspage" />
+</LinearLayout>

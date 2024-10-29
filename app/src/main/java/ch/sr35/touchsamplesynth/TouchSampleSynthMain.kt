@@ -6,17 +6,20 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.util.AttributeSet
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.Spinner
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.ActionBar.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
@@ -24,6 +27,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.children
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.InstrumentI
@@ -37,6 +41,7 @@ import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
 import ch.sr35.touchsamplesynth.network.RtpMidiServer
+import ch.sr35.touchsamplesynth.views.PianoRoll
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.WaitAnimation
 import java.io.File
@@ -57,16 +62,11 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     val soundGenerators=ArrayList<InstrumentI>()
     val touchElements=ArrayList<TouchElement>()
     val allScenes = ArrayList<SceneP>()
-    private val playPageFragment=PlayPageFragment()
-    private val instrumentsPageFragment=InstrumentsPageFragment()
-    private val settingsFrament= SettingsFragment()
-    private val scenesEditFragment = SceneFragment()
     var midiHostHandler :MidiHostHandler?= null
     var nsdHandler: NetworkDiscoveryHandler?=null
     var rtpMidiServer: RtpMidiServer?=null
-    var mainMenu: Menu?=null
     private var oldScenePosition=-1
-    private var selectedMenuItemId = -1
+    private var lastFragmentTag = ""
     var scenesListDirty=false
     var sceneIsLoading= AtomicBoolean(false)
     var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
@@ -80,13 +80,14 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     override fun onStart() {
         super.onStart()
 
-        val playPage = PlayPageFragment()
+        if (lastFragmentTag.isNotEmpty())
+        {
+            putFragment(lastFragmentTag)
+        }
         if (supportFragmentManager.fragments.isEmpty()) {
-            putFragment(playPage, "PlayPage0")
+            putFragment("PlayPage0")
         }
-        mainMenu?.let {
-            selectedMenuItemId = it[0].itemId
-        }
+
 
         val defaultScenesInstall=DefaultScenesInstall(this)
         if (defaultScenesInstall.currentScenesState.code != CurrentScenesCode.PRESET_INSTALL_DONE)
@@ -123,6 +124,24 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 it.connectMidiDeviceOut(it.midiDevicesOut[0])
             }
         }
+        val spinnerScenes = supportActionBar?.customView?.findViewById<Spinner>(R.id.toolbar_scenes)
+        scenesArrayAdapter = ArrayAdapter<SceneP>(this, android.R.layout.simple_spinner_item,allScenes)
+        scenesArrayAdapter?.let {
+            spinnerScenes?.adapter = it
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            it.setNotifyOnChange(true)
+
+        }
+        spinnerScenes?.onItemSelectedListener=this
+        spinnerScenes?.isEnabled = !isInEditMode
+        if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
+            spinnerScenes?.setSelection(oldScenePosition, false)
+        }
+        else
+        {
+            spinnerScenes?.setSelection(0, false)
+            oldScenePosition = -1
+        }
     }
 
     override fun onResume() {
@@ -141,13 +160,46 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         )*/
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(findViewById(R.id.mainToolBar))
+        supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar!!.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setCustomView( R.layout.top_tool_bar)
+
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_playpage)?.setOnClickListener {
+            putFragment("PlayPage0")
+            supportActionBar?.customView?.findViewById<SwitchCompat>(R.id.toolbar_edit)?.isVisible = true
+        }
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_instrumentspage)?.setOnClickListener {
+            putFragment("instrumentPage0")
+            supportActionBar?.customView?.findViewById<SwitchCompat>(R.id.toolbar_edit)?.isVisible = false
+        }
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_scenespage)?.setOnClickListener {
+            putFragment("scenesEditPage0")
+            supportActionBar?.customView?.findViewById<SwitchCompat>(R.id.toolbar_edit)?.isVisible = false
+        }
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_settingspage)?.setOnClickListener {
+            putFragment("settingsPage0")
+            supportActionBar?.customView?.findViewById<SwitchCompat>(R.id.toolbar_edit)?.isVisible = false
+        }
+        supportActionBar?.customView?.findViewById<SwitchCompat>(R.id.toolbar_edit)?.let {
+            it.setOnCheckedChangeListener { buttonView, isChecked ->
+                isInEditMode = isChecked
+                if (supportFragmentManager.fragments[0].tag == "PlayPage0") {
+                    (supportFragmentManager.fragments[0] as PlayPageFragment).setEditMode(isChecked)
+                }
+                supportActionBar?.customView?.findViewById<Spinner>(R.id.toolbar_scenes)?.isEnabled = !isInEditMode
+            }
+            it.isChecked = isInEditMode
+        }
+
+
+
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, findViewById(R.id.mainLayout)).let { controller ->
             controller.hide(WindowInsetsCompat.Type.systemBars())
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
-        scenesArrayAdapter = ArrayAdapter<SceneP>(this, android.R.layout.simple_spinner_item,allScenes)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         {
             ActivityCompat.requestPermissions(this,
@@ -178,7 +230,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         savedInstanceState?.let {
             scenesListDirty = true
             oldScenePosition = it.getInt(TSS_BUNDLE_LAST_PROGRAM)
-            selectedMenuItemId = it.getInt(TSS_BUNDLE_LAST_FRAGMENT)
+            lastFragmentTag = it.getString(TSS_BUNDLE_LAST_FRAGMENT).toString()
             isInEditMode = it.getBoolean(TSS_BUNDLE_EDIT_MODE)
         }
 
@@ -194,26 +246,50 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mainMenu?.let {
-            outState.putInt(TSS_BUNDLE_LAST_PROGRAM,(it.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition)
-            outState.putInt(TSS_BUNDLE_LAST_FRAGMENT, selectedMenuItemId)
-            outState.putBoolean(TSS_BUNDLE_EDIT_MODE,isInEditMode)
+
+        supportActionBar?.customView?.findViewById<Spinner>(R.id.toolbar_scenes)?.let {
+            outState.putInt(TSS_BUNDLE_LAST_PROGRAM,it.selectedItemPosition)
         }
+            outState.putString(TSS_BUNDLE_LAST_FRAGMENT, supportFragmentManager.fragments[0].tag)
+            outState.putBoolean(TSS_BUNDLE_EDIT_MODE,isInEditMode)
 
     }
 
-    private fun putFragment(frag: Fragment,tag: String?)
+    private fun putFragment(tag: String?)
     {
-        supportFragmentManager.beginTransaction().let {
-            if (supportFragmentManager.findFragmentById(R.id.mainLayout) != null)
+        var frag: Fragment? = null
+        when(tag)
+        {
+            "PlayPage0" ->
             {
-                it.replace(R.id.mainLayout,frag,tag)
+                frag = PlayPageFragment()
             }
-            else
+            "instrumentPage0" ->
             {
-                it.add(R.id.mainLayout,frag,tag)
+                frag = InstrumentsPageFragment()
             }
-            it.commit()
+            "scenesEditPage0" ->
+            {
+                frag = SceneFragment()
+            }
+            "settingsPage0"  -> {
+                frag = SettingsFragment()
+            }
+        }
+        if (supportFragmentManager.fragments.size > 0 && supportFragmentManager.fragments[0].tag == tag)
+        {
+            return
+        }
+
+        if (frag != null) {
+            supportFragmentManager.beginTransaction().let {
+                if (supportFragmentManager.findFragmentById(R.id.mainLayout) != null) {
+                    it.replace(R.id.mainLayout, frag, tag)
+                } else {
+                    it.add(R.id.mainLayout, frag, tag)
+                }
+                it.commit()
+            }
         }
     }
 
@@ -239,73 +315,16 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         persistCurrentScene()
         saveToBinaryFiles()
         midiHostHandler?.stopMidiDeviceListener()
+        if (nsdHandler?.hasStarted==true) {
+            nsdHandler?.tearDown()
+        }
+        rtpMidiServer?.stopServer()
 
     }
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu,menu)
-        scenesListDirty = mainMenu == null
-        mainMenu=menu
-        val spinnerScenes = menu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner
-        spinnerScenes.onItemSelectedListener=this
-        scenesArrayAdapter?.let {
-            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            it.setNotifyOnChange(true)
-            spinnerScenes.adapter = it
-        }
 
-        mainMenu?.let {
-            selectedMenuItemId = it[0].itemId
-        }
 
-        if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
-            spinnerScenes.setSelection(oldScenePosition, false)
-        }
-        else
-        {
-            spinnerScenes.setSelection(0, false)
-            oldScenePosition = -1
-        }
-        (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).isEnabled = !isInEditMode
-        (mainMenu!!.findItem(R.id.menuitem_editscene)!!.actionView as SwitchCompat).isChecked = isInEditMode
-        (mainMenu!!.findItem(R.id.menuitem_editscene)!!.actionView as SwitchCompat).isEnabled = supportFragmentManager.fragments[0].tag == "PlayPage0"
-        (mainMenu!!.findItem(R.id.menuitem_editscene)!!.actionView as SwitchCompat).setOnCheckedChangeListener {
-           buttonView, isChecked ->
-           isInEditMode = isChecked
-           if (supportFragmentManager.fragments[0].tag == "PlayPage0")
-           {
-               (supportFragmentManager.fragments[0] as PlayPageFragment).setEditMode(isChecked)
-           }
-        }
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        loadMatchingFragment(item.itemId)
-        selectedMenuItemId = item.itemId
-        return true
-    }
 
-    private fun loadMatchingFragment(menuitemId: Int)
-    {
-        when(menuitemId) {
-            R.id.menuitem_play -> {
-
-                putFragment(playPageFragment,"PlayPage0")
-            }
-            R.id.menuitem_instruments ->
-            {
-                putFragment(instrumentsPageFragment,"instrumentPage0")
-            }
-            R.id.menuitem_scenesedit ->
-            {
-                putFragment(scenesEditFragment, "scenesEditPage0")
-            }
-            R.id.menuitem_settings ->
-            {
-                putFragment(settingsFrament, "settingsPage0")
-            }
-        }
-    }
 
 
     companion object {
@@ -430,7 +449,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                             rc -> (supportFragmentManager.fragments[0].view as ViewGroup).addView(rc)
                         }
                         for (te in touchElements) {
-                            (mainMenu?.findItem(R.id.menuitem_editscene)?.actionView as SwitchCompat).isChecked.let {
+                            (supportActionBar!!.customView.findViewById<SwitchCompat>(R.id.toolbar_edit)).isChecked.let {
                                     te.setEditmode(it)
                             }
                             te.setDefaultMode(touchElementsDisplayMode)
@@ -455,9 +474,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun persistCurrentScene()
     {
-        if (mainMenu != null) {
+        if (supportActionBar?.customView != null) {
             val scenePos =
-                (mainMenu!!.findItem(R.id.menuitem_scenes)!!.actionView as Spinner).selectedItemPosition
+                (supportActionBar!!.customView.findViewById<Spinner>(R.id.toolbar_scenes) as Spinner).selectedItemPosition
             if (scenePos < allScenes.size && scenePos > -1) {
                 allScenes[scenePos].persist(soundGenerators, touchElements)
             }
@@ -467,9 +486,9 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     fun lockSceneSelection()
     {
         isInEditMode = true
-        if (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView != null)
+        if (supportActionBar!!.customView.findViewById<Spinner>(R.id.toolbar_scenes) != null)
         {
-            (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).isEnabled = false
+            (supportActionBar!!.customView.findViewById<Spinner>(R.id.toolbar_scenes) as Spinner).isEnabled = false
         }
 
     }
@@ -477,8 +496,8 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     fun unlockSceneSelection()
     {
         isInEditMode = false
-        if (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView != null) {
-            (mainMenu?.findItem(R.id.menuitem_scenes)?.actionView as Spinner).isEnabled = true
+        if (supportActionBar!!.customView.findViewById<Spinner>(R.id.toolbar_scenes) != null) {
+            (supportActionBar!!.customView.findViewById<Spinner>(R.id.toolbar_scenes) as Spinner).isEnabled = false
         }
     }
 

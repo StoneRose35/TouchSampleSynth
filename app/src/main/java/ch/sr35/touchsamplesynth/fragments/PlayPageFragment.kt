@@ -54,7 +54,7 @@ class PlayPageFragment : Fragment() {
             {
                 MotionEvent.ACTION_DOWN-> {
                     v.performClick()
-                    ((context as TouchSampleSynthMain).mainMenu?.findItem(R.id.menuitem_editscene)?.actionView as SwitchCompat).isChecked = false
+                    ((context as TouchSampleSynthMain).supportActionBar!!.customView.findViewById<SwitchCompat>(R.id.toolbar_edit)).isChecked = false
                     playPageView.invalidate()
                     return@setOnTouchListener true
                 }
