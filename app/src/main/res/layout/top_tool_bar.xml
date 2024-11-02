@@ -3,6 +3,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageButton
+        android:id="@+id/toolbar_alignleft"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:backgroundTint="#00FFFFFF"
+        android:contentDescription="@string/alignleft"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/alignleft"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent" />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:backgroundTint="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/aligntop"
+        android:contentDescription="@string/aligntop"
+        android:visibility="invisible"
+        android:id="@+id/toolbar_aligntop" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:backgroundTint="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/alignright"
+        android:contentDescription="@string/alignright"
+        android:visibility="invisible"
+        android:id="@+id/toolbar_alignright" />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:backgroundTint="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/alignbottom"
+        android:contentDescription="@string/alignbottom"
+        android:visibility="invisible"
+        android:id="@+id/toolbar_alignbottom" />
+
+
+
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"

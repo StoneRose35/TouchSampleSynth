@@ -8,11 +8,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TouchElementSelectedListener
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.graphics.Point
@@ -26,8 +28,9 @@ import ch.sr35.touchsamplesynth.views.TouchElement
 /**
  * A simple [Fragment] subclass.
  */
-class PlayPageFragment : Fragment() {
+class PlayPageFragment : Fragment(), TouchElementSelectedListener {
 
+    private var touchElementsSelection = ArrayList<TouchElement>()
     class DeletableGlobalLayoutListener(val view: View,var playPageAreaRect: Rectangle): ViewTreeObserver.OnGlobalLayoutListener
     {
         override fun onGlobalLayout() {
@@ -116,6 +119,7 @@ class PlayPageFragment : Fragment() {
                     (te.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
                     (context as TouchSampleSynthMain).touchElements.add(te)
                     playPageLayout?.addView(te)
+                    te.onSelectedListener = this
 
                 }
                 instrumentChipsContainer?.addView(instrChip)
@@ -185,8 +189,8 @@ class PlayPageFragment : Fragment() {
                         te.layoutParams = lp
                         teCntr += 1
                     }
-
                     view.findViewById<ConstraintLayout>(R.id.playpage_layout).addView(te)
+                    te.onSelectedListener = this
                 }
 
                 view.invalidate()
@@ -199,6 +203,32 @@ class PlayPageFragment : Fragment() {
             view?.findViewById<ConstraintLayout>(R.id.playpage_layout)?.removeView(te)
         }
         super.onDestroyView()
+    }
+
+    override fun onTouchElementSelected(touchElement: TouchElement) {
+        touchElementsSelection.add(touchElement)
+        if (touchElementsSelection.size > 1)
+        {
+            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignleft).visibility = ImageButton.VISIBLE
+            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignright).visibility = ImageButton.VISIBLE
+            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_aligntop).visibility = ImageButton.VISIBLE
+            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility = ImageButton.VISIBLE
+        }
+
+    }
+
+    override fun onTouchElementDeselected(touchElement: TouchElement) {
+        touchElementsSelection.remove(touchElement)
+        if (touchElementsSelection.size < 2) {
+            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignleft).visibility =
+                ImageButton.INVISIBLE
+            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignright).visibility =
+                ImageButton.INVISIBLE
+            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_aligntop).visibility =
+                ImageButton.INVISIBLE
+            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility =
+                ImageButton.INVISIBLE
+        }
     }
 
 

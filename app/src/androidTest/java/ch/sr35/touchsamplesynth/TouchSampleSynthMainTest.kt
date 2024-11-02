@@ -24,8 +24,6 @@ import java.io.File
 import java.io.FileOutputStream
 
 
-
-
 @RunWith(AndroidJUnit4::class)
 class TouchSampleSynthMainTest {
 
@@ -191,6 +189,5 @@ class TouchSampleSynthMainTest {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
         }
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
     }
 }

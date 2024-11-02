@@ -8,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Build
+import android.text.method.Touch
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
@@ -17,6 +18,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TouchElementSelectedListener
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
@@ -97,6 +99,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private val rotateSymbol = AppCompatResources.getDrawable(context,R.drawable.rotatesymbol)
     private val editSymbol = AppCompatResources.getDrawable(context,R.drawable.editsymbol)
     private val deleteSymbol = AppCompatResources.getDrawable(context,R.drawable.deletesymbol)
+    var onSelectedListener: TouchElementSelectedListener? = null
     init {
         outLine.color = MaterialColors.getColor(this,R.attr.touchElementLine)
         outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
@@ -688,11 +691,13 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                                 {
                                     elementState = TouchElementState.EDITING_SELECTED
                                     outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
+                                    onSelectedListener?.onTouchElementSelected(this)
                                 }
                                 else if (elementState == TouchElementState.EDITING_SELECTED)
                                 {
                                     elementState = TouchElementState.EDITING
                                     outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+                                    onSelectedListener?.onTouchElementDeselected(this)
                                 }
                                 invalidate()
                             }
@@ -837,11 +842,12 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     }
 
     fun setEditmode(mode: Boolean) {
-        if (mode && elementState!=TouchElementState.EDITING) {
+        if (mode && elementState!=TouchElementState.EDITING && elementState != TouchElementState.EDITING_SELECTED) {
             this.elementState = TouchElementState.EDITING
             invalidate()
-        } else if (!mode && elementState == TouchElementState.EDITING) {
+        } else if (!mode && (elementState == TouchElementState.EDITING || elementState == TouchElementState.EDITING_SELECTED)) {
             this.elementState = defaultState
+            this.outLine.strokeWidth= OUTLINE_STROKE_WIDTH_DEFAULT
             invalidate()
         }
     }
@@ -849,6 +855,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     fun isEditing(): Boolean
     {
         return this.elementState == TouchElementState.EDITING
+                || this.elementState == TouchElementState.EDITING_SELECTED
     }
 
     fun setDefaultMode(mode: TouchElementState)
@@ -878,6 +885,17 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 pt.y > (layoutParams as ConstraintLayout.LayoutParams).topMargin + PADDING &&
                 pt.y < (layoutParams as ConstraintLayout.LayoutParams).topMargin + (layoutParams as ConstraintLayout.LayoutParams).height - PADDING
 
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is TouchElement)
+        {
+            return this.asRectangle() == other.asRectangle() &&
+                    this.soundGenerator?.name == other.soundGenerator?.name &&
+                    this.soundGenerator?.getType() == other.soundGenerator?.getType() &&
+                    this.note?.index == other.note?.index
+        }
+        return false
     }
 }
 

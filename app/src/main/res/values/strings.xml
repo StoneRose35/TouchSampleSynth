@@ -125,4 +125,8 @@
     <string name="installerDownloadFailed">Download failed</string>
     <string name="monophonic">Mono</string>
     <string name="polyphonic">Poly</string>
+    <string name="alignleft">align left</string>
+    <string name="alignright">align right</string>
+    <string name="aligntop">align top</string>
+    <string name="alignbottom">align bottom</string>
 </resources>

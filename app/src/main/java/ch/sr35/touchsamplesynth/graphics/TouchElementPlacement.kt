@@ -29,6 +29,20 @@ class Point(var x: Double,var y: Double)
     override fun toString(): String {
         return "Point(x: %.3f, y: %.3f)".format(x,y)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Point)
+        {
+            return abs(other.x - x) < EPS && abs(other.y - y) < EPS
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
+        return result
+    }
 }
 
 class Line(var p1: Point,var p2: Point)
@@ -638,6 +652,21 @@ class Rectangle(p1: Point,p2: Point)
         }
         return res
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Rectangle)
+        {
+            return other.topLeft == topLeft && other.bottomRight == bottomRight
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        var result = topLeft.hashCode()
+        result = 31 * result + bottomRight.hashCode()
+        return result
+    }
+
 
 }
 

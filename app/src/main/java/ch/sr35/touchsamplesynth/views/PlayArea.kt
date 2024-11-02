@@ -94,6 +94,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                 val ptrIndex = event.actionIndex
                 pointerIds.add(event.getPointerId(event.actionIndex))
                 currentPositions[event.getPointerId(event.actionIndex)] = Point(event.getX(ptrIndex).toDouble(),event.getY(ptrIndex).toDouble())
+                // TODO handle selection of touchElements
                 touchElements.find { te -> te.isInside(Point(event.getX(ptrIndex).toDouble(),event.getY(ptrIndex).toDouble())) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)}?.let {
                     touchElementsOnPointer[event.getPointerId(ptrIndex)] = it
                     event.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
@@ -186,7 +187,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                             currentPositions[pid] =
                                 Point(copiedEvent.x.toDouble(), copiedEvent.y.toDouble())
                         }
-
+                        copiedEvent.recycle()
                         val touchElementsSlidedOver = touchElements.filter { slidingOVerCandidate ->
                             if (oldPositions[pid] != null && currentPositions[pid] != null) {
                                 return@filter slidingOVerCandidate.asRectangle().getIntersectingSides(
@@ -276,10 +277,12 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                 val ptrIndex = ev.actionIndex
                 pointerIds.add(ev.getPointerId(ev.actionIndex))
                 currentPositions[ev.getPointerId(ev.actionIndex)] = Point(ev.getX(ptrIndex).toDouble(),ev.getY(ptrIndex).toDouble())
-                touchElements.find { te -> te.isInside(Point(ev.getX(ptrIndex).toDouble(),ev.getY(ptrIndex).toDouble())) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)}?.let {
+                touchElements.find { te -> te.isInside(Point(ev.getX(ptrIndex).toDouble(),ev.getY(ptrIndex).toDouble()))
+                        && !te.isEditing()
+                        && !touchElementsOnPointer.containsValue(te)}?.let {
                     touchElementsOnPointer[ev.getPointerId(ptrIndex)] = it
                     ev.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
-                    Log.i(TAG,"Interceptor, got event ${motionEventTypeToString(ev)}")
+                    Log.i(TAG,"Interceptor on touchelement, got event ${motionEventTypeToString(ev)}")
                     //Log.i(TAG,"added Pointer $ev.getPointerId(ev.actionIndex)")
                     it.dispatchTouchEvent(ev)
                     return true

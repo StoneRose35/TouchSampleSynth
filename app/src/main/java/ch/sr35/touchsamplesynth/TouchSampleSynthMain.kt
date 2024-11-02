@@ -82,26 +82,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             putFragment("PlayPage0")
         }
 
-
-        val defaultScenesInstall=DefaultScenesInstall(this)
-        if (defaultScenesInstall.currentScenesState.code != CurrentScenesCode.PRESET_INSTALL_DONE)
-        {
-            defaultScenesInstall.show()
-        }
-
-        /*val timer=Timer()
-        val timerTask= object: TimerTask()
-        {
-            override fun run() {
-                val avgVol = audioEngine.getAverageVolume()
-                findViewById<VuMeter>(R.id.vuMeter)?.updateVuLevel(avgVol*2.0f)
-                val cpuLoad = audioEngine.getCpuLoad()
-                findViewById<VuMeter>(R.id.cpuMeter)?.updateVuLevel(cpuLoad)
-            }
-        }
-
-        timer.schedule(timerTask,0,100)
-        */
         while(sceneIsLoading.get())
         {
             SystemClock.sleep(30)
@@ -136,6 +116,27 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             spinnerScenes?.setSelection(0, false)
             oldScenePosition = -1
         }
+
+        val defaultScenesInstall=DefaultScenesInstall(this)
+        if (defaultScenesInstall.currentScenesState.code != CurrentScenesCode.PRESET_INSTALL_DONE)
+        {
+            defaultScenesInstall.show()
+        }
+
+        /*val timer=Timer()
+        val timerTask= object: TimerTask()
+        {
+            override fun run() {
+                val avgVol = audioEngine.getAverageVolume()
+                findViewById<VuMeter>(R.id.vuMeter)?.updateVuLevel(avgVol*2.0f)
+                val cpuLoad = audioEngine.getCpuLoad()
+                findViewById<VuMeter>(R.id.cpuMeter)?.updateVuLevel(cpuLoad)
+            }
+        }
+
+        timer.schedule(timerTask,0,100)
+        */
+
     }
 
     override fun onResume() {
@@ -448,6 +449,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                             }
                             te.setDefaultMode(touchElementsDisplayMode)
                             (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
+                            te.onSelectedListener = supportFragmentManager.fragments[0] as PlayPageFragment
                         }
                     } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
                         supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)
