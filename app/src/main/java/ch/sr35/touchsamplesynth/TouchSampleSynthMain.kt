@@ -49,7 +49,6 @@ const val TAG="TouchSampleSynth"
 const val TSS_BUNDLE_LAST_PROGRAM = "TSS_BUNDLE_LAST_PROGRAM"
 const val TSS_BUNDLE_LAST_FRAGMENT = "TSS_BUNDLE_LAST_FRAGMENT"
 const val TSS_BUNDLE_EDIT_MODE = "TSS_BUNDLE_EDIT_MODE"
-const val SCENE_SELECTION_NO_CHOICE = -1
 class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding

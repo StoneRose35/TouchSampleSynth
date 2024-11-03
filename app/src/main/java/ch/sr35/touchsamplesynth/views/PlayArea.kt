@@ -47,7 +47,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
 
     }
 
-    public fun clearTouchElementSelection()
+    fun clearTouchElementSelection()
     {
         touchElementsSelection.clear()
     }
