@@ -2,10 +2,13 @@ package ch.sr35.touchsamplesynth
 
 
 import android.content.pm.ActivityInfo
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +20,7 @@ import ch.sr35.touchsamplesynth.fragments.SettingsFragment
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,11 +42,7 @@ class TouchSampleSynthMainTest {
         android.Manifest.permission.INTERNET
     )
 
-
-    @Before
-    fun initTestWithDefaultPresets()
-    {
-
+    init {
         val fname =
             InstrumentationRegistry.getInstrumentation().targetContext.filesDir.absolutePath + File.separator + SCENES_FILE_NAME
         val testpresets =
@@ -52,42 +52,36 @@ class TouchSampleSynthMainTest {
         fos.write(testpresets.readAllBytes())
         fos.close()
         activityScenario = ActivityScenario.launch(TouchSampleSynthMain::class.java)
-        Intents.init()
-
     }
+
+
 
     @After
     fun teardownTest()
     {
-        Intents.release()
         activityScenario?.close()
     }
+
 
     @Test
     fun checkInstrumentsPage()
     {
         onView(withId(R.id.toolbar_instrumentspage)).perform(ViewActions.click())
-        activityScenario?.onActivity {
-            Assert.assertTrue(it.supportFragmentManager.fragments[0] is InstrumentsPageFragment)
-        }
+        onView(withId(R.id.instrument_page_layout)).check(matches(isDisplayed()))
     }
 
     @Test
     fun checkScenesPage()
     {
         onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
-        activityScenario?.onActivity {
-            Assert.assertTrue(it.supportFragmentManager.fragments[0] is SceneFragment)
-        }
+        onView(withId(R.id.sceneList)).check(matches(isDisplayed()))
     }
 
     @Test
     fun checkSettingsPage()
     {
         onView(withId(R.id.toolbar_settingspage)).perform(ViewActions.click())
-        activityScenario?.onActivity {
-            Assert.assertTrue(it.supportFragmentManager.fragments[0] is SettingsFragment)
-        }
+        onView(withId(R.id.settingParametersTable)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -120,7 +114,7 @@ class TouchSampleSynthMainTest {
     {
         onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
-        onView(withId(R.id.toolbar_playpage)).perform(ViewActions.click())
+        onView(withId(R.id.toolbar_instrumentspage)).perform(ViewActions.click())
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         activityScenario?.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -145,7 +139,7 @@ class TouchSampleSynthMainTest {
     {
         onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
-        onView(withId(R.id.toolbar_playpage)).perform(ViewActions.click())
+        onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         activityScenario?.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -171,7 +165,7 @@ class TouchSampleSynthMainTest {
     {
         onView(withId(R.id.toolbar_scenespage)).perform(ViewActions.click())
         onView(withId(R.id.sceneImport)).perform(ViewActions.click())
-        onView(withId(R.id.toolbar_playpage)).perform(ViewActions.click())
+        onView(withId(R.id.toolbar_settingspage)).perform(ViewActions.click())
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         activityScenario?.onActivity {
             it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE

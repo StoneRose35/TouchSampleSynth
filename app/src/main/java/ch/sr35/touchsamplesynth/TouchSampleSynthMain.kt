@@ -37,6 +37,7 @@ import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.model.SceneP
 import ch.sr35.touchsamplesynth.network.NetworkDiscoveryHandler
 import ch.sr35.touchsamplesynth.network.RtpMidiServer
+import ch.sr35.touchsamplesynth.views.PlayArea
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.WaitAnimation
 import java.io.File
@@ -330,8 +331,11 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        if ((position != oldScenePosition || scenesListDirty) && position > -1&& parent?.tag != SCENE_SELECTION_NO_CHOICE) {
-            if (oldScenePosition >= 0 && oldScenePosition < allScenes.size && !sceneIsLoading.get()) {
+        if ((position != oldScenePosition || scenesListDirty)
+            && position in 0 until allScenes.size
+            ) {
+            if (oldScenePosition in 0 until allScenes.size
+                && !sceneIsLoading.get() && touchElements.size > 0 ) {
                 allScenes[oldScenePosition].persist(soundGenerators, touchElements)
             }
             loadSceneWithWaitIndicator(position)
@@ -449,7 +453,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                             }
                             te.setDefaultMode(touchElementsDisplayMode)
                             (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
-                            te.onSelectedListener = supportFragmentManager.fragments[0] as PlayPageFragment
+                            te.onSelectedListener = (supportFragmentManager.fragments[0] as PlayPageFragment).view?.findViewById<PlayArea>(R.id.playpage_layout)
                         }
                     } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
                         supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)

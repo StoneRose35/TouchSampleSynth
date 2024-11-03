@@ -28,9 +28,9 @@ import ch.sr35.touchsamplesynth.views.TouchElement
 /**
  * A simple [Fragment] subclass.
  */
-class PlayPageFragment : Fragment(), TouchElementSelectedListener {
+class PlayPageFragment : Fragment() {
 
-    private var touchElementsSelection = ArrayList<TouchElement>()
+
     class DeletableGlobalLayoutListener(val view: View,var playPageAreaRect: Rectangle): ViewTreeObserver.OnGlobalLayoutListener
     {
         override fun onGlobalLayout() {
@@ -52,22 +52,6 @@ class PlayPageFragment : Fragment(), TouchElementSelectedListener {
 
         // Inflate the layout for this fragment
         val playPageView = inflater.inflate(R.layout.fragment_play_page, container, false)
-        playPageView.setOnTouchListener { v, event ->
-            when (event?.action)
-            {
-                MotionEvent.ACTION_DOWN-> {
-                    v.performClick()
-                    ((context as TouchSampleSynthMain).supportActionBar!!.customView.findViewById<SwitchCompat>(R.id.toolbar_edit)).isChecked = false
-                    playPageView.invalidate()
-                    return@setOnTouchListener true
-                }
-                else -> {
-                    return@setOnTouchListener false
-                }
-            }
-        }
-
-
         playPageAreaRect= Rectangle(Point(0.0,0.0), Point(1.0,1.0))
 
         return playPageView
@@ -119,7 +103,7 @@ class PlayPageFragment : Fragment(), TouchElementSelectedListener {
                     (te.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
                     (context as TouchSampleSynthMain).touchElements.add(te)
                     playPageLayout?.addView(te)
-                    te.onSelectedListener = this
+                    te.onSelectedListener = playPageLayout
 
                 }
                 instrumentChipsContainer?.addView(instrChip)
@@ -137,6 +121,7 @@ class PlayPageFragment : Fragment(), TouchElementSelectedListener {
             instrumentChipsContainer?.removeAllViewsInLayout()
             (context as TouchSampleSynthMain).persistCurrentScene()
             (context as TouchSampleSynthMain).unlockSceneSelection()
+            playPageLayout?.clearTouchElementSelection()
         }
     }
 
@@ -146,11 +131,9 @@ class PlayPageFragment : Fragment(), TouchElementSelectedListener {
         {
             return
         }
-        //val newButton = view.findViewById<ImageButton>(R.id.buttonNew)
         val playPageLayout = view.findViewById<PlayArea>(R.id.playpage_layout)
         val instrumentChipsContainer= view.findViewById<LinearLayout>(R.id.playpage_instrument_chips)
         playPageLayout.instrumentChipContainer = instrumentChipsContainer
-        //val sceneNameEditText = view.findViewById<EditText>(R.id.editTextSceneName)
 
         val globalLayoutListener =
             playPageAreaRect?.let { DeletableGlobalLayoutListener(this.requireView(), it) }
@@ -190,7 +173,7 @@ class PlayPageFragment : Fragment(), TouchElementSelectedListener {
                         teCntr += 1
                     }
                     view.findViewById<ConstraintLayout>(R.id.playpage_layout).addView(te)
-                    te.onSelectedListener = this
+                    te.onSelectedListener = playPageLayout
                 }
 
                 view.invalidate()
@@ -205,31 +188,6 @@ class PlayPageFragment : Fragment(), TouchElementSelectedListener {
         super.onDestroyView()
     }
 
-    override fun onTouchElementSelected(touchElement: TouchElement) {
-        touchElementsSelection.add(touchElement)
-        if (touchElementsSelection.size > 1)
-        {
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignleft).visibility = ImageButton.VISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignright).visibility = ImageButton.VISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_aligntop).visibility = ImageButton.VISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility = ImageButton.VISIBLE
-        }
-
-    }
-
-    override fun onTouchElementDeselected(touchElement: TouchElement) {
-        touchElementsSelection.remove(touchElement)
-        if (touchElementsSelection.size < 2) {
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignleft).visibility =
-                ImageButton.INVISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignright).visibility =
-                ImageButton.INVISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_aligntop).visibility =
-                ImageButton.INVISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility =
-                ImageButton.INVISIBLE
-        }
-    }
 
 
 }
