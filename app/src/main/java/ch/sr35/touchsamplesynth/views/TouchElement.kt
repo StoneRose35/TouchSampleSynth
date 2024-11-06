@@ -908,6 +908,10 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
         return false
     }
+
+    override fun hashCode(): Int {
+        return this.soundGenerator?.name.hashCode() + this.note?.index.hashCode() + this.soundGenerator?.getType().hashCode()
+    }
 }
 
 
