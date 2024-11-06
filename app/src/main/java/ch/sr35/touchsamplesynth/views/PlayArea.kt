@@ -25,7 +25,7 @@ import ch.sr35.touchsamplesynth.graphics.Overlap
 const val CONNECTOR_LINE_BENDING = 0.25
 class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(context,attributeSet),
     TouchElementSelectedListener {
-    private var touchElementsSelection = ArrayList<TouchElement>()
+    var touchElementsSelection = ArrayList<TouchElement>()
     private val pathPaint: Paint = Paint()
     var instrumentChipContainer: LinearLayout?=null
     var touchElementsOnPointer = HashMap<Int,TouchElement>()
@@ -101,13 +101,52 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 val ptrIndex = event.actionIndex
                 pointerIds.add(event.getPointerId(event.actionIndex))
-                currentPositions[event.getPointerId(event.actionIndex)] = Point(event.getX(ptrIndex).toDouble(),event.getY(ptrIndex).toDouble())
-                touchElements.find { te -> te.isInside(Point(event.getX(ptrIndex).toDouble(),event.getY(ptrIndex).toDouble())) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)}?.let {
+                currentPositions[event.getPointerId(event.actionIndex)] =
+                    Point(event.getX(ptrIndex).toDouble(), event.getY(ptrIndex).toDouble())
+                touchElements.find { te ->
+                    te.isInside(
+                        Point(
+                            event.getX(ptrIndex).toDouble(),
+                            event.getY(ptrIndex).toDouble()
+                        )
+                    ) && !te.isEditing() && !touchElementsOnPointer.containsValue(te)
+                }?.let {
                     touchElementsOnPointer[event.getPointerId(ptrIndex)] = it
-                    event.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
-                    Log.i(TAG,"onTouchEvent, got event ${motionEventTypeToString(event)}")
-                    Log.i(TAG,"added Pointer $event.getPointerId(event.actionIndex)")
+                    event.offsetLocation(
+                        -(it.layoutParams as LayoutParams).leftMargin.toFloat(),
+                        -(it.layoutParams as LayoutParams).topMargin.toFloat()
+                    )
+                    Log.i(TAG, "onTouchEvent, got event ${motionEventTypeToString(event)}")
+                    Log.i(TAG, "added Pointer $event.getPointerId(event.actionIndex)")
                     it.dispatchTouchEvent(event)
+                    return true
+                }
+                if (touchElementsSelection.size > 0 && touchElementsSelection.any { te ->
+                        te.isInside(
+                            Point(event.getX(ptrIndex).toDouble(), event.getY(ptrIndex).toDouble())
+                        )
+                    }) {
+                    dispatchMotionEventOverSelection(event)
+                    return true
+                }
+                touchElements.firstOrNull{ te -> te.isInside(Point(
+                    event.getX(ptrIndex).toDouble(),
+                    event.getY(ptrIndex).toDouble()
+                ))}?.let {
+                    event.offsetLocation(
+                        -(it.layoutParams as LayoutParams).leftMargin.toFloat(),
+                        -(it.layoutParams as LayoutParams).topMargin.toFloat()
+                    )
+                    it.dispatchTouchEvent(event)
+                    return true
+                }
+
+                if (touchElementsSelection.size > 0)
+                {
+                    touchElementsSelection.forEach {
+                        te -> te.setEditmode(TouchElement.TouchElementState.EDITING)
+                    }
+                    touchElementsSelection.clear()
                     return true
                 }
                 if (isEditing())
@@ -121,9 +160,11 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
             MotionEvent.ACTION_MOVE ->
             {
                 var processedMoveEvent=false
-                if (!isEditing()) {
-                    for (pid in pointerIds) {
-                        val pidx = event.findPointerIndex(pid)
+
+
+                for (pid in pointerIds) {
+                    val pidx = event.findPointerIndex(pid)
+                    if (!isEditing()) {
                         if (pidx >= 0) {
                             processedMoveEvent = if (touchElementsOnPointer[pid] != null) {
                                 handleMoveWithAssociatedTouchElement(
@@ -137,22 +178,45 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                             }
                             handleSlideOverEvents(event, pid, pidx)
                         }
+                    } else {
+                        touchElements.firstOrNull { te ->
+                            te.isInside(
+                                Point(
+                                    event.getX(pidx).toDouble(),
+                                    event.getY(pidx).toDouble()
+                                )
+                            )
+                        }?.let {
+
+                            if (touchElementsSelection.size > 0)
+                            {
+                                dispatchMotionEventOverSelection(event)
+                            }
+                            else
+                            {
+                                event.offsetLocation(
+                                    -(it.layoutParams as LayoutParams).leftMargin.toFloat(),
+                                    -(it.layoutParams as LayoutParams).topMargin.toFloat()
+                                )
+                                it.dispatchTouchEvent(event)
+                            }
+
+                            processedMoveEvent = true
+                        }
                     }
-                    return processedMoveEvent
                 }
-                if (touchElementsSelection.size > 1)
-                {
-                    dispatchMotionEventOverSelection(event)
-                    return true
-                }
-                return false
+                return processedMoveEvent
+                //if (touchElementsSelection.size > 1)
+                //{
+                //    dispatchMotionEventOverSelection(event)
+                //    return true
+                //}
+                //return false
             }
             MotionEvent.ACTION_UP,MotionEvent.ACTION_POINTER_UP ->
             {
                 val ptrId = event.getPointerId(event.actionIndex)
-                pointerIds.remove(ptrId)
-                oldPositions.remove(ptrId)
-                currentPositions.remove(ptrId)
+                val pidx = event.findPointerIndex(ptrId)
                 val associatedTouchElement = touchElementsOnPointer[event.getPointerId(event.actionIndex)]
                 if (associatedTouchElement!=null)
                 {
@@ -160,13 +224,31 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                     associatedTouchElement.dispatchTouchEvent(event)
                     touchElementsOnPointer.remove(event.getPointerId(event.actionIndex))
                     Log.i(TAG,"removed Pointer $event.getPointerId(event.actionIndex)")
+                }
+                touchElements.firstOrNull { te -> te.isInside(Point(event.getX(pidx).toDouble(),event.getY(pidx).toDouble())) }?.let {
+                    event.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
+                    it.dispatchTouchEvent(event)
                     return true
                 }
-                if (touchElementsSelection.size > 1)
+                if (touchElementsSelection.size > 0
+                    && Line(currentPositions[ptrId]!!,Point(event.getX(pidx).toDouble(),event.getY(pidx).toDouble())).length() < NO_DRAG_TOLERANCE
+                    )
+                {
+                    touchElementsSelection.firstOrNull {
+                        te -> te.isInside(Point(event.getX(pidx).toDouble(),event.getY(pidx).toDouble()))
+                    }?.let {
+                        event.offsetLocation(-(it.layoutParams as LayoutParams).leftMargin.toFloat(),-(it.layoutParams as LayoutParams).topMargin.toFloat())
+                        it.dispatchTouchEvent(event)
+                    }
+                }
+                else if (touchElementsSelection.size > 0)
                 {
                     dispatchMotionEventOverSelection(event)
-                    return true
                 }
+                pointerIds.remove(ptrId)
+                oldPositions.remove(ptrId)
+                currentPositions.remove(ptrId)
+                return true
             }
         }
         return super.onTouchEvent(event)
@@ -182,13 +264,8 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                     return true
                 }
                 Log.i(TAG,"Interceptor, got event ${motionEventTypeToString(ev)}")
-                if (touchElementsSelection.size > 1) {
-                    dispatchMotionEventOverSelection(ev)
-                    return true
-                }
-                return false
+                return true//return  touchElementsSelection.size > 1
             }
-
         }
         return false
     }

@@ -246,11 +246,11 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
             (context as TouchSampleSynthMain).touchElements.forEach {
                 if (p2 == 0)
                 {
-                    it.setDefaultMode(TouchElement.TouchElementState.PLAYING)
+                    it.defineDefaultMode(TouchElement.TouchElementState.PLAYING)
                 }
                 else
                 {
-                    it.setDefaultMode(TouchElement.TouchElementState.PLAYING_VERBOSE)
+                    it.defineDefaultMode(TouchElement.TouchElementState.PLAYING_VERBOSE)
                 }
             }
             if (p2 == 0)

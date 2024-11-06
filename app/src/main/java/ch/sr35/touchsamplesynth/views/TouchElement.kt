@@ -8,7 +8,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Build
-import android.text.method.Touch
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
@@ -35,7 +34,7 @@ const val PADDING: Float = 32.0f
 const val EDIT_CIRCLE_OFFSET = 24.0f
 const val OUTLINE_STROKE_WIDTH_DEFAULT = 7.8f
 const val OUTLINE_STROKE_WIDTH_ENGAGED = 20.4f
-const val NO_DRAG_TOLERANCE = 20
+const val NO_DRAG_TOLERANCE = 5
 
 class TouchElement(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
@@ -841,15 +840,27 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         return false
     }
 
-    fun setEditmode(mode: Boolean) {
-        if (mode && elementState!=TouchElementState.EDITING && elementState != TouchElementState.EDITING_SELECTED) {
-            this.elementState = TouchElementState.EDITING
-            invalidate()
-        } else if (!mode && (elementState == TouchElementState.EDITING || elementState == TouchElementState.EDITING_SELECTED)) {
+    fun setEditmode(mode: TouchElementState) {
+        if (mode == TouchElementState.EDITING ) {
+            this.elementState = mode
+            this.outLine.strokeWidth= OUTLINE_STROKE_WIDTH_DEFAULT
+        }
+        else if (mode == TouchElementState.EDITING_SELECTED){
+            this.elementState = mode
+            this.outLine.strokeWidth= OUTLINE_STROKE_WIDTH_ENGAGED
+        }
+        else if (elementState == TouchElementState.EDITING || elementState == TouchElementState.EDITING_SELECTED) {
             this.elementState = defaultState
             this.outLine.strokeWidth= OUTLINE_STROKE_WIDTH_DEFAULT
-            invalidate()
         }
+        invalidate()
+    }
+
+    fun setDefaultmode()
+    {
+        this.elementState = defaultState
+        this.outLine.strokeWidth= OUTLINE_STROKE_WIDTH_DEFAULT
+        invalidate()
     }
 
     fun isEditing(): Boolean
@@ -858,7 +869,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 || this.elementState == TouchElementState.EDITING_SELECTED
     }
 
-    fun setDefaultMode(mode: TouchElementState)
+    fun defineDefaultMode(mode: TouchElementState)
     {
         this.defaultState = mode
         if (this.elementState != TouchElementState.EDITING)

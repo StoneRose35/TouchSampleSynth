@@ -43,7 +43,7 @@ class TouchElementTest {
             setPointer( 0.1f,0.1f)
         }.build()
 
-        te.setEditmode(false)
+        te.setEditmode(TouchElement.TouchElementState.PLAYING)
         // virtually click
         te.onTouchEvent(evnt)
 

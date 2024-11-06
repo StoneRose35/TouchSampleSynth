@@ -182,8 +182,69 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                     (supportFragmentManager.fragments[0] as PlayPageFragment).setEditMode(isChecked)
                 }
                 supportActionBar?.customView?.findViewById<Spinner>(R.id.toolbar_scenes)?.isEnabled = !isInEditMode
+                if (!isChecked)
+                {
+                    findViewById<ImageButton>(R.id.toolbar_alignleft).visibility = ImageButton.INVISIBLE
+                    findViewById<ImageButton>(R.id.toolbar_alignright).visibility = ImageButton.INVISIBLE
+                    findViewById<ImageButton>(R.id.toolbar_aligntop).visibility = ImageButton.INVISIBLE
+                    findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility = ImageButton.INVISIBLE
+                }
             }
-            it.isChecked = isInEditMode
+        }
+
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_alignleft)?.setOnClickListener {
+            val playArea = supportFragmentManager.fragments[0].view?.findViewById<PlayArea>(R.id.playpage_layout)
+            playArea?.touchElementsSelection?.let {
+                val leftmostmargin = it.stream().mapToInt { te -> (te.layoutParams as ConstraintLayout.LayoutParams).leftMargin }.min().asInt
+                it.forEach {
+                    te ->
+                    val layoutparams = te.layoutParams as ConstraintLayout.LayoutParams
+                    layoutparams.leftMargin -= layoutparams.leftMargin - leftmostmargin
+                    te.layoutParams = layoutparams
+                }
+            }
+            playArea?.invalidate()
+        }
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_alignright)?.setOnClickListener {
+            val playArea = supportFragmentManager.fragments[0].view?.findViewById<PlayArea>(R.id.playpage_layout)
+            playArea?.touchElementsSelection?.let {
+                val rightmostmargin = it.stream().mapToInt { te -> (te.layoutParams as ConstraintLayout.LayoutParams).leftMargin +  (te.layoutParams as ConstraintLayout.LayoutParams).width}.max().asInt
+                it.forEach {
+                        te ->
+                    val layoutparams = te.layoutParams as ConstraintLayout.LayoutParams
+                    layoutparams.leftMargin -= layoutparams.leftMargin  + layoutparams.width - rightmostmargin
+                    te.layoutParams = layoutparams
+                }
+            }
+            playArea?.invalidate()
+        }
+
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_aligntop)?.setOnClickListener {
+            val playArea = supportFragmentManager.fragments[0].view?.findViewById<PlayArea>(R.id.playpage_layout)
+            playArea?.touchElementsSelection?.let {
+                val topmostmargin = it.stream().mapToInt { te -> (te.layoutParams as ConstraintLayout.LayoutParams).topMargin }.min().asInt
+                it.forEach {
+                        te ->
+                    val layoutparams = te.layoutParams as ConstraintLayout.LayoutParams
+                    layoutparams.topMargin -= layoutparams.topMargin - topmostmargin
+                    te.layoutParams = layoutparams
+                }
+            }
+            playArea?.invalidate()
+        }
+
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_alignbottom)?.setOnClickListener {
+            val playArea = supportFragmentManager.fragments[0].view?.findViewById<PlayArea>(R.id.playpage_layout)
+            playArea?.touchElementsSelection?.let {
+                val bottommostmargin = it.stream().mapToInt { te -> (te.layoutParams as ConstraintLayout.LayoutParams).topMargin +  (te.layoutParams as ConstraintLayout.LayoutParams).height }.max().asInt
+                it.forEach {
+                        te ->
+                    val layoutparams = te.layoutParams as ConstraintLayout.LayoutParams
+                    layoutparams.topMargin -= layoutparams.topMargin  + layoutparams.height - bottommostmargin
+                    te.layoutParams = layoutparams
+                }
+            }
+            playArea?.invalidate()
         }
 
 
@@ -448,9 +509,15 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                         }
                         for (te in touchElements) {
                             (supportActionBar!!.customView.findViewById<SwitchCompat>(R.id.toolbar_edit)).isChecked.let {
-                                    te.setEditmode(it)
+                                    if (it) {
+                                        te.setEditmode(TouchElement.TouchElementState.EDITING)
+                                    }
+                                    else
+                                    {
+                                        te.setDefaultmode()
+                                    }
                             }
-                            te.setDefaultMode(touchElementsDisplayMode)
+                            te.defineDefaultMode(touchElementsDisplayMode)
                             (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
                             te.onSelectedListener = (supportFragmentManager.fragments[0] as PlayPageFragment).view?.findViewById<PlayArea>(R.id.playpage_layout)
                         }

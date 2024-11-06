@@ -25,10 +25,10 @@
       <SelectionState runConfigName="checkInstrumentsPage()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="TouchSampleSynthMainTest">
+      <SelectionState runConfigName="rotateSettingsPage()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="rotateSettingsPage()">
+      <SelectionState runConfigName="checkSettingsPage()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

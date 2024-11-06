@@ -62,7 +62,7 @@ class PlayPageFragment : Fragment() {
         {
             for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
             {
-                touchel.setEditmode(true)
+                touchel.setEditmode(TouchElement.TouchElementState.EDITING)
             }
 
             instrumentChipsContainer?.removeAllViewsInLayout()
@@ -80,8 +80,8 @@ class PlayPageFragment : Fragment() {
                     val te = TouchElement(context as TouchSampleSynthMain,null)
                     te.note = MusicalPitch.generateAllNotes()[63]
                     te.soundGenerator = (ic as InstrumentChip).getInstrument()
-                    te.setDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
-                    te.setEditmode(true)
+                    te.defineDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
+                    te.setEditmode(TouchElement.TouchElementState.EDITING)
                     te.layoutParams = lp
 
 
@@ -111,7 +111,7 @@ class PlayPageFragment : Fragment() {
         {
             for (touchel: TouchElement in (context as TouchSampleSynthMain).touchElements)
             {
-                touchel.setEditmode(false)
+                touchel.setDefaultmode()
             }
             playPageLayout?.invalidate()
             instrumentChipsContainer?.removeAllViewsInLayout()
