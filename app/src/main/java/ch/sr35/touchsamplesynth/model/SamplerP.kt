@@ -35,7 +35,6 @@ class SamplerP(private var sampleStart: Int,
     }
 
     override fun toInstrument(i: InstrumentI) {
-        super.toInstrument(i)
         if (i is SamplerI)
         {
             super.toInstrument(i)
@@ -47,7 +46,6 @@ class SamplerP(private var sampleStart: Int,
             i.setSampleStartIndex(sampleStart)
             i.setSampleEndIndex(sampleEnd)
             i.setMode(mode)
-
         }
     }
 
