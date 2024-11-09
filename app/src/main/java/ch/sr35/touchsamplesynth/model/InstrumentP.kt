@@ -48,8 +48,8 @@ open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefini
     {
         i.name = name
         i.polyphonyDefinition = polyphonyDefinition
-        i.setVolumeModulation(actionAmountToVolume)
         i.generateVoices(nVoices)
+        i.setVolumeModulation(actionAmountToVolume)
     }
 
 
