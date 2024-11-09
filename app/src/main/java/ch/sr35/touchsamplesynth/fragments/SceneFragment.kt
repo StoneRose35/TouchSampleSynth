@@ -71,9 +71,15 @@ class SceneFragment() : Fragment() {
                     val alertDlgBuilder = AlertDialog.Builder(context as TouchSampleSynthMain)
                         .setMessage((context as TouchSampleSynthMain).getString(R.string.alert_dialog_really_delete))
                         .setPositiveButton((context as TouchSampleSynthMain).getString(R.string.yes)) { _, _ ->
+
+                            val currentlyLoadedSceneDeleting = (scenes[viewHolder.absoluteAdapterPosition] == (context as TouchSampleSynthMain).getCurrentScene())
                             scenes.removeAt(viewHolder.absoluteAdapterPosition)
                             scenesList?.adapter?.notifyItemRemoved(viewHolder.absoluteAdapterPosition)
                             (context as TouchSampleSynthMain).scenesArrayAdapter?.notifyDataSetChanged()
+                            if ( currentlyLoadedSceneDeleting && scenes.size > 0)
+                            {
+                                (context as TouchSampleSynthMain).reloadCurrentScene()
+                            }
                         }
                         .setNegativeButton((context as TouchSampleSynthMain).getString(R.string.no)) { _, _ -> }
                     val alertDlg = alertDlgBuilder.create()
