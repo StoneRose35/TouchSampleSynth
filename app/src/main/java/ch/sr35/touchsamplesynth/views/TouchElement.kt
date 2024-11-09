@@ -482,278 +482,22 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (elementState != TouchElementState.EDITING && elementState != TouchElementState.EDITING_SELECTED) {
             if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
-                var touchVal:Float=-2.0f
-                if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-                    touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
-                }
-                else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-                    touchVal = ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
-                }
-                else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-                    touchVal = (event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)
-                }
-                else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-                    touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
-                }
-                currentVoice = soundGenerator?.getNextFreeVoice()
-                currentVoice?.setMidiChannel(midiChannel)
-                if (touchVal>=-1.0f)
-                {
-                    currentVoice?.applyTouchAction(touchVal)
-
-                    val midiData=ByteArray(3)
-                    midiData[0] = (0xB0 + midiChannel).toByte()
-                    midiData[1] = midiCC.toByte()
-                    midiData[2] = (touchVal*127.0f).toInt().toByte()
-                    if (midiData[2]!=midiCCOld) {
-                        appContext?.rtpMidiServer?.let {
-                            if (it.isEnabled)
-                            {
-                                var sentNotes=0
-                                while(sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
-                                    appContext.rtpMidiServer?.addToSendQueue(midiData)
-                                    sentNotes += 1
-                                }
-                            }
-                        }
-                        currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
-                        midiCCOld=midiData[2]
-                    }
-                }
-                performClick()
-                appContext?.rtpMidiServer?.let {
-                    if (it.isEnabled && this.note != null)
-                    {
-                        val midiData=ByteArray(3)
-                        setMidiNoteOn(midiData)
-                        var sentNotes=0
-                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
-                        {
-                            appContext.rtpMidiServer?.addToSendQueue(midiData)
-                            sentNotes += 1
-                        }
-                    }
-                }
-                px = event.x
-                py = event.y
-                return true
+                handleActionDownInPlayMode(event)
             } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP) {
-                outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-                currentVoice?.switchOff(1.0f)
-                appContext?.rtpMidiServer?.let {
-                    if (it.isEnabled && this.note != null)
-                    {
-                        val midiData=ByteArray(3)
-                        setMidiNoteOff(midiData)
-                        var sentNotes=0
-                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
-                            appContext.rtpMidiServer?.addToSendQueue(midiData)
-                            sentNotes += 1
-                        }
-
-                    }
-                }
-                currentVoice = null
-                invalidate()
-                return true
+                handleActionUpInPlayMode()
             } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
-                var touchVal:Float=-2.0f
-                if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
-                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-                    currentVoice?.let {
-                        if (it.isEngaged())
-                        {
-                            it.switchOff(1.0f)
-                            appContext?.rtpMidiServer?.let {midiserver->
-                                if (midiserver.isEnabled)
-                                {
-                                    val midiData=ByteArray(3)
-                                    setMidiNoteOff(midiData)
-                                    var sentNotes = 0
-                                    while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
-                                    {
-                                        midiserver.addToSendQueue(midiData)
-                                        sentNotes +=  1
-                                    }
-                                }
-                            }
-                            invalidate()
-                        }
-                    }
-                    currentVoice=null
-                    return true
-                } else if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-                    touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
-                }
-                else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-                    touchVal = ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
-                }
-                else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-                    touchVal = (event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)
-                }
-                else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-                    touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
-                }
-
-                if (touchVal>=-1.0f)
-                {
-                    currentVoice?.applyTouchAction(touchVal)
-
-                    val midiData=ByteArray(3)
-                    midiData[0] = (0xB0 + midiChannel).toByte()
-                    midiData[1] = midiCC.toByte()
-                    midiData[2] = (touchVal*127.0f).toInt().toByte()
-                    if (midiData[2]!=midiCCOld) {
-                        appContext?.rtpMidiServer?.let {
-                            if (it.isEnabled)
-                            {
-                                appContext.rtpMidiServer?.addToSendQueue(
-                                    midiData
-                                )
-                            }
-                        }
-                        currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
-                        midiCCOld=midiData[2]
-                    }
-                    return true
-                }
+                handleActionMoveInPlayMode(event)
             }
         } else {
             when (event?.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    // start a corner drag if a corner has been hit, else move the whole element
-                    px = event.x
-                    py = event.y
-                    if (rotateRect.contains(px.toInt(), py.toInt())) {
-                        when(this.actionDir) {
-                            ActionDir.HORIZONTAL_LEFT_RIGHT -> {
-                                this.actionDir=ActionDir.HORIZONTAL_RIGHT_LEFT
-                            }
-                            ActionDir.HORIZONTAL_RIGHT_LEFT -> {
-                                this.actionDir=ActionDir.VERTICAL_DOWN_UP
-                            }
-                            ActionDir.VERTICAL_DOWN_UP -> {
-                                this.actionDir=ActionDir.VERTICAL_UP_DOWN
-                            }
-                            ActionDir.VERTICAL_UP_DOWN -> {
-                                this.actionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
-                            }
-                        }
-                        dragStart = null
-                        invalidate()
-                        return true
-                    } else if (setSoundgenRect.contains(px.toInt(), py.toInt())) {
-                        val editSoundgenerator = EditTouchElementFragmentDialog(
-                            this,
-                            context
-                        )
-                        dragStart = null
-                        editSoundgenerator.show()
-                        this.invalidate()
-                        return true
-                    } else if (deleteRect.contains(px.toInt(), py.toInt())) {
-
-                        appContext?.let {
-                        AlertDialog.Builder(appContext)
-                            .setMessage(context.getString(R.string.alert_dialog_really_delete))
-                            .setPositiveButton(context.getString(R.string.yes)) { _, _ ->
-                                appContext.touchElements.remove(this)
-                                (parent as ViewGroup).removeView(this)
-                            }
-                            .setNegativeButton(context.getString(R.string.no)) { _, _ -> }.create().also {
-                                dragStart = null
-                                it.show()
-                            }
-                        }
-                        return true
-                    } else {
-                        val layoutParams: ConstraintLayout.LayoutParams? =
-                            this.layoutParams as ConstraintLayout.LayoutParams?
-                        if (layoutParams != null) {
-                            oldHeight = layoutParams.height
-                            oldWidth = layoutParams.width
-                            oldTopMargin = layoutParams.topMargin
-                            oldLeftMargin = layoutParams.leftMargin
-                        }
-                        dragStart = isInCorner(event.x, event.y)
-                        return true
-                    }
+                    handleActionDownInEditMode(event)
                 }
-
                 MotionEvent.ACTION_UP -> {
-                    if (dragStart != null)
-                    {
-                        (this.layoutParams as ConstraintLayout.LayoutParams).let {
-                            if (abs(it.leftMargin - oldLeftMargin) + abs (it.topMargin - oldTopMargin) < NO_DRAG_TOLERANCE && it.height == oldHeight && it.width == oldWidth)
-                            {
-                                if (elementState == TouchElementState.EDITING)
-                                {
-                                    elementState = TouchElementState.EDITING_SELECTED
-                                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
-                                    onSelectedListener?.onTouchElementSelected(this)
-                                }
-                                else if (elementState == TouchElementState.EDITING_SELECTED)
-                                {
-                                    elementState = TouchElementState.EDITING
-                                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-                                    onSelectedListener?.onTouchElementDeselected(this)
-                                }
-                                invalidate()
-                            }
-                        }
-
-                        if (!validatePlacement())
-                        {
-                            val restoredlayoutParams: ConstraintLayout.LayoutParams? =
-                                this.layoutParams as ConstraintLayout.LayoutParams?
-                            restoredlayoutParams?.height = oldHeight
-                            restoredlayoutParams?.width = oldWidth
-                            restoredlayoutParams?.leftMargin = oldLeftMargin
-                            restoredlayoutParams?.topMargin = oldTopMargin
-                            layoutParams = restoredlayoutParams
-                            invalidate()
-                        }
-                    }
+                    handleActionUpInEditMode()
                 }
-
                 MotionEvent.ACTION_MOVE -> {
-                    val layoutParams: ConstraintLayout.LayoutParams? =
-                        this.layoutParams as ConstraintLayout.LayoutParams?
-                    if (dragStart != null) {
-                        when (dragStart) {
-                            TouchElementDragAnchor.TOP_LEFT -> {
-                                layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                                layoutParams!!.width += px.minus(event.x).toInt()
-                                layoutParams!!.topMargin += event.y.minus(py).toInt()
-                                layoutParams!!.height += py.minus(event.y).toInt()
-
-                            }
-
-                            TouchElementDragAnchor.TOP_RIGHT -> {
-                                layoutParams!!.width = oldWidth + event.x.minus(px).toInt()
-                                layoutParams.topMargin += event.y.minus(py).toInt()
-                                layoutParams.height += py.minus(event.y).toInt()
-                            }
-
-                            TouchElementDragAnchor.BOTTOM_RIGHT -> {
-                                layoutParams!!.width = oldWidth + event.x.minus(px).toInt()
-                                layoutParams.height = oldHeight + event.y.minus(py).toInt()
-                            }
-
-                            TouchElementDragAnchor.BOTTOM_LEFT -> {
-                                layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                                layoutParams!!.width += px.minus(event.x).toInt()
-                                layoutParams!!.height = oldHeight + event.y.minus(py).toInt()
-                            }
-
-                            else -> {
-                                layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                                layoutParams!!.topMargin += event.y.minus(py).toInt()
-                            }
-                        }
-                        this.layoutParams = layoutParams
-                    }
-                    return true
+                    handleActionMoveInEditMode(event)
                 }
             }
             return true
@@ -775,6 +519,9 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private fun isInCorner(x: Float, y: Float): TouchElementDragAnchor {
         val w = width.toFloat()
         val h = height.toFloat()
+        if (elementState == TouchElementState.EDITING_SELECTED) {
+            return TouchElementDragAnchor.BODY
+        }
         if (((x - (0.0f + EDIT_CIRCLE_OFFSET)) * (x - (0.0f + EDIT_CIRCLE_OFFSET))
                     + (y - (0.0f + EDIT_CIRCLE_OFFSET)) * (y - (0.0f + EDIT_CIRCLE_OFFSET)))
             < EDIT_CIRCLE_OFFSET * EDIT_CIRCLE_OFFSET
@@ -800,6 +547,288 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
+    private fun handleActionDownInPlayMode(event: MotionEvent): Boolean
+    {
+        var touchVal:Float=-2.0f
+        if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+            touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+        }
+        else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+            touchVal = ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+        }
+        else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+            touchVal = (event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)
+        }
+        else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+            touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
+        }
+        currentVoice = soundGenerator?.getNextFreeVoice()
+        currentVoice?.setMidiChannel(midiChannel)
+        if (touchVal>=-1.0f)
+        {
+            currentVoice?.applyTouchAction(touchVal)
+
+            val midiData=ByteArray(3)
+            midiData[0] = (0xB0 + midiChannel).toByte()
+            midiData[1] = midiCC.toByte()
+            midiData[2] = (touchVal*127.0f).toInt().toByte()
+            if (midiData[2]!=midiCCOld) {
+                appContext?.rtpMidiServer?.let {
+                    if (it.isEnabled)
+                    {
+                        var sentNotes=0
+                        while(sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                            appContext.rtpMidiServer?.addToSendQueue(midiData)
+                            sentNotes += 1
+                        }
+                    }
+                }
+                currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
+                midiCCOld=midiData[2]
+            }
+        }
+        performClick()
+        appContext?.rtpMidiServer?.let {
+            if (it.isEnabled && this.note != null)
+            {
+                val midiData=ByteArray(3)
+                setMidiNoteOn(midiData)
+                var sentNotes=0
+                while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
+                {
+                    appContext.rtpMidiServer?.addToSendQueue(midiData)
+                    sentNotes += 1
+                }
+            }
+        }
+        px = event.x
+        py = event.y
+        return true
+    }
+
+    private fun handleActionUpInPlayMode(): Boolean
+    {
+        outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+        currentVoice?.switchOff(1.0f)
+        appContext?.rtpMidiServer?.let {
+            if (it.isEnabled && this.note != null)
+            {
+                val midiData=ByteArray(3)
+                setMidiNoteOff(midiData)
+                var sentNotes=0
+                while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                    appContext.rtpMidiServer?.addToSendQueue(midiData)
+                    sentNotes += 1
+                }
+
+            }
+        }
+        currentVoice = null
+        invalidate()
+        return true
+    }
+
+    private fun handleActionMoveInPlayMode(event: MotionEvent): Boolean
+    {
+        var touchVal:Float=-2.0f
+        if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
+            outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+            currentVoice?.let {
+                if (it.isEngaged())
+                {
+                    it.switchOff(1.0f)
+                    appContext?.rtpMidiServer?.let {midiserver->
+                        if (midiserver.isEnabled)
+                        {
+                            val midiData=ByteArray(3)
+                            setMidiNoteOff(midiData)
+                            var sentNotes = 0
+                            while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
+                            {
+                                midiserver.addToSendQueue(midiData)
+                                sentNotes +=  1
+                            }
+                        }
+                    }
+                    invalidate()
+                }
+            }
+            currentVoice=null
+            return true
+        } else if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+            touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+        }
+        else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+            touchVal = ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+        }
+        else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+            touchVal = (event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)
+        }
+        else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+            touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
+        }
+
+        if (touchVal>=-1.0f)
+        {
+            currentVoice?.applyTouchAction(touchVal)
+
+            val midiData=ByteArray(3)
+            midiData[0] = (0xB0 + midiChannel).toByte()
+            midiData[1] = midiCC.toByte()
+            midiData[2] = (touchVal*127.0f).toInt().toByte()
+            if (midiData[2]!=midiCCOld) {
+                appContext?.rtpMidiServer?.let {
+                    if (it.isEnabled)
+                    {
+                        appContext.rtpMidiServer?.addToSendQueue(
+                            midiData
+                        )
+                    }
+                }
+                currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
+                midiCCOld=midiData[2]
+            }
+            return true
+        }
+        return false
+    }
+
+        private fun handleActionDownInEditMode(event: MotionEvent)
+        {
+            // start a corner drag if a corner has been hit, else move the whole element
+            px = event.x
+            py = event.y
+            if (rotateRect.contains(px.toInt(), py.toInt()) && elementState != TouchElementState.EDITING_SELECTED) {
+                when(this.actionDir) {
+                    ActionDir.HORIZONTAL_LEFT_RIGHT -> {
+                        this.actionDir=ActionDir.HORIZONTAL_RIGHT_LEFT
+                    }
+                    ActionDir.HORIZONTAL_RIGHT_LEFT -> {
+                        this.actionDir=ActionDir.VERTICAL_DOWN_UP
+                    }
+                    ActionDir.VERTICAL_DOWN_UP -> {
+                        this.actionDir=ActionDir.VERTICAL_UP_DOWN
+                    }
+                    ActionDir.VERTICAL_UP_DOWN -> {
+                        this.actionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
+                    }
+                }
+                dragStart = null
+                invalidate()
+            } else if (setSoundgenRect.contains(px.toInt(), py.toInt())  && elementState != TouchElementState.EDITING_SELECTED) {
+                val editSoundgenerator = EditTouchElementFragmentDialog(
+                    this,
+                    context
+                )
+                dragStart = null
+                editSoundgenerator.show()
+                this.invalidate()
+
+            } else if (deleteRect.contains(px.toInt(), py.toInt()) && elementState != TouchElementState.EDITING_SELECTED) {
+
+                appContext?.let {
+                    AlertDialog.Builder(appContext)
+                        .setMessage(context.getString(R.string.alert_dialog_really_delete))
+                        .setPositiveButton(context.getString(R.string.yes)) { _, _ ->
+                            appContext.touchElements.remove(this)
+                            (parent as ViewGroup).removeView(this)
+                        }
+                        .setNegativeButton(context.getString(R.string.no)) { _, _ -> }.create().also {
+                            dragStart = null
+                            it.show()
+                        }
+                }
+            } else {
+                val layoutParams: ConstraintLayout.LayoutParams? =
+                    this.layoutParams as ConstraintLayout.LayoutParams?
+                if (layoutParams != null) {
+                    oldHeight = layoutParams.height
+                    oldWidth = layoutParams.width
+                    oldTopMargin = layoutParams.topMargin
+                    oldLeftMargin = layoutParams.leftMargin
+                }
+                dragStart = isInCorner(event.x, event.y)
+            }
+        }
+
+    private fun handleActionUpInEditMode(): Boolean
+    {
+        if (dragStart != null)
+        {
+            (this.layoutParams as ConstraintLayout.LayoutParams).let {
+                if (abs(it.leftMargin - oldLeftMargin) + abs (it.topMargin - oldTopMargin) < NO_DRAG_TOLERANCE && it.height == oldHeight && it.width == oldWidth)
+                {
+                    if (elementState == TouchElementState.EDITING)
+                    {
+                        elementState = TouchElementState.EDITING_SELECTED
+                        outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
+                        onSelectedListener?.onTouchElementSelected(this)
+                    }
+                    else if (elementState == TouchElementState.EDITING_SELECTED)
+                    {
+                        elementState = TouchElementState.EDITING
+                        outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+                        onSelectedListener?.onTouchElementDeselected(this)
+                    }
+                    invalidate()
+                }
+            }
+
+            if (!validatePlacement())
+            {
+                val restoredlayoutParams: ConstraintLayout.LayoutParams? =
+                    this.layoutParams as ConstraintLayout.LayoutParams?
+                restoredlayoutParams?.height = oldHeight
+                restoredlayoutParams?.width = oldWidth
+                restoredlayoutParams?.leftMargin = oldLeftMargin
+                restoredlayoutParams?.topMargin = oldTopMargin
+                layoutParams = restoredlayoutParams
+                invalidate()
+            }
+        }
+        return true
+    }
+
+    private fun handleActionMoveInEditMode(event: MotionEvent): Boolean
+    {
+        val layoutParams: ConstraintLayout.LayoutParams? =
+            this.layoutParams as ConstraintLayout.LayoutParams?
+        if (dragStart != null) {
+            when (dragStart) {
+                TouchElementDragAnchor.TOP_LEFT -> {
+                    layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                    layoutParams!!.width += px.minus(event.x).toInt()
+                    layoutParams!!.topMargin += event.y.minus(py).toInt()
+                    layoutParams!!.height += py.minus(event.y).toInt()
+
+                }
+
+                TouchElementDragAnchor.TOP_RIGHT -> {
+                    layoutParams!!.width = oldWidth + event.x.minus(px).toInt()
+                    layoutParams.topMargin += event.y.minus(py).toInt()
+                    layoutParams.height += py.minus(event.y).toInt()
+                }
+
+                TouchElementDragAnchor.BOTTOM_RIGHT -> {
+                    layoutParams!!.width = oldWidth + event.x.minus(px).toInt()
+                    layoutParams.height = oldHeight + event.y.minus(py).toInt()
+                }
+
+                TouchElementDragAnchor.BOTTOM_LEFT -> {
+                    layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                    layoutParams!!.width += px.minus(event.x).toInt()
+                    layoutParams!!.height = oldHeight + event.y.minus(py).toInt()
+                }
+
+                else -> {
+                    layoutParams!!.leftMargin += event.x.minus(px).toInt()
+                    layoutParams!!.topMargin += event.y.minus(py).toInt()
+                }
+            }
+            this.layoutParams = layoutParams
+        }
+        return true
+    }
 
     private fun setMidiNoteOn(midiData: ByteArray)
     {
@@ -815,7 +844,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         midiData[2] = 0x7F.toByte()
     }
 
-    fun validatePlacement(): Boolean
+    private fun validatePlacement(): Boolean
     {
         val screenWidth: Int
         val screenHeight: Int
@@ -889,13 +918,12 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         )
     }
 
-    fun isInside(pt: Point): Boolean
+    fun isInside(pt: Point, padding: Float = PADDING): Boolean
     {
-        return pt.x >  (layoutParams as ConstraintLayout.LayoutParams).leftMargin + PADDING &&
-                pt.x < (layoutParams as ConstraintLayout.LayoutParams).leftMargin + (layoutParams as ConstraintLayout.LayoutParams).width - PADDING &&
-                pt.y > (layoutParams as ConstraintLayout.LayoutParams).topMargin + PADDING &&
-                pt.y < (layoutParams as ConstraintLayout.LayoutParams).topMargin + (layoutParams as ConstraintLayout.LayoutParams).height - PADDING
-
+        return pt.x >  (layoutParams as ConstraintLayout.LayoutParams).leftMargin + padding &&
+                pt.x < (layoutParams as ConstraintLayout.LayoutParams).leftMargin + (layoutParams as ConstraintLayout.LayoutParams).width - padding &&
+                pt.y > (layoutParams as ConstraintLayout.LayoutParams).topMargin + padding &&
+                pt.y < (layoutParams as ConstraintLayout.LayoutParams).topMargin + (layoutParams as ConstraintLayout.LayoutParams).height - padding
     }
 
     override fun equals(other: Any?): Boolean {
