@@ -106,6 +106,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             it.setNotifyOnChange(true)
 
         }
+
         spinnerScenes?.onItemSelectedListener=this
         spinnerScenes?.isEnabled = !isInEditMode
         if (oldScenePosition >=0 && oldScenePosition < allScenes.size) {
@@ -536,6 +537,20 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 sceneIsLoading.set(false)
             }
         }
+    }
+
+    fun reloadCurrentScene()
+    {
+        scenesListDirty = true
+        loadSceneWithWaitIndicator(oldScenePosition)
+    }
+
+    fun getCurrentScene(): SceneP?
+    {
+        if (oldScenePosition in 0 until allScenes.size) {
+            return allScenes[oldScenePosition]
+        }
+        return null
     }
 
     fun persistCurrentScene()

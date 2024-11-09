@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
+import androidx.core.view.size
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import com.google.android.material.color.MaterialColors
 import ch.sr35.touchsamplesynth.R
@@ -132,11 +133,12 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                 touchElements.firstOrNull{ te -> te.isInside(Point(
                     event.getX(ptrIndex).toDouble(),
                     event.getY(ptrIndex).toDouble()
-                ))}?.let {
+                ),0.0f)}?.let {
                     event.offsetLocation(
                         -(it.layoutParams as LayoutParams).leftMargin.toFloat(),
                         -(it.layoutParams as LayoutParams).topMargin.toFloat()
                     )
+                    touchElementsOnPointer[event.getPointerId(ptrIndex)]=it
                     it.dispatchTouchEvent(event)
                     return true
                 }
@@ -160,8 +162,6 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
             MotionEvent.ACTION_MOVE ->
             {
                 var processedMoveEvent=false
-
-
                 for (pid in pointerIds) {
                     val pidx = event.findPointerIndex(pid)
                     if (!isEditing()) {
@@ -179,12 +179,22 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                             handleSlideOverEvents(event, pid, pidx)
                         }
                     } else {
+                        if (touchElementsOnPointer[pid] != null)
+                        {
+                            val copiedEvent = MotionEvent.obtain(event.downTime,event.eventTime,event.action,event.getX(pidx),event.getY(pidx),event.metaState)
+                            copiedEvent.offsetLocation(
+                                -(touchElementsOnPointer[pid]?.layoutParams as LayoutParams).leftMargin.toFloat(),
+                                -(touchElementsOnPointer[pid]?.layoutParams as LayoutParams).topMargin.toFloat()
+                            )
+                            touchElementsOnPointer[pid]?.dispatchTouchEvent(copiedEvent)
+                            return true
+                        }
                         touchElements.firstOrNull { te ->
                             te.isInside(
                                 Point(
                                     event.getX(pidx).toDouble(),
                                     event.getY(pidx).toDouble()
-                                )
+                                ),0.0f
                             )
                         }?.let {
 
@@ -260,11 +270,8 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
         when (ev!!.action.and(MotionEvent.ACTION_MASK))
         {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
-                if (!isEditing()) {
-                    return true
-                }
-                Log.i(TAG,"Interceptor, got event ${motionEventTypeToString(ev)}")
-                return true//return  touchElementsSelection.size > 1
+                return !(isEditing() && (context as TouchSampleSynthMain).findViewById<LinearLayout>(R.id.playpage_instrument_chips).size > 0
+                        && ev.y < (context as TouchSampleSynthMain).findViewById<LinearLayout>(R.id.playpage_instrument_chips).height)
             }
         }
         return false
