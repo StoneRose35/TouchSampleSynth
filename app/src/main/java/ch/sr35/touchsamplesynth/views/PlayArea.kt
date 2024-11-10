@@ -149,6 +149,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                         te -> te.setEditmode(TouchElement.TouchElementState.EDITING)
                     }
                     touchElementsSelection.clear()
+                    (context as TouchSampleSynthMain).setGraphicsToolbarItemsVisibility(false)
                     return true
                 }
                 if (isEditing())
@@ -281,10 +282,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
         touchElementsSelection.add(touchElement)
         if (touchElementsSelection.size > 1)
         {
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignleft).visibility = ImageButton.VISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignright).visibility = ImageButton.VISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_aligntop).visibility = ImageButton.VISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility = ImageButton.VISIBLE
+            (context as TouchSampleSynthMain).setGraphicsToolbarItemsVisibility(true)
         }
 
     }
@@ -292,20 +290,13 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
     override fun onTouchElementDeselected(touchElement: TouchElement) {
         touchElementsSelection.remove(touchElement)
         if (touchElementsSelection.size < 2) {
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignleft).visibility =
-                ImageButton.INVISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignright).visibility =
-                ImageButton.INVISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_aligntop).visibility =
-                ImageButton.INVISIBLE
-            (context as TouchSampleSynthMain).findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility =
-                ImageButton.INVISIBLE
+            (context as TouchSampleSynthMain).setGraphicsToolbarItemsVisibility(false)
         }
     }
 
     private fun isEditing(): Boolean
     {
-        return touchElements.any { te -> te.isEditing() }
+        return (context as TouchSampleSynthMain).findViewById<SwitchCompat>(R.id.toolbar_edit).isChecked
     }
 
     private fun handleMoveWithAssociatedTouchElement(touchElement: TouchElement,event: MotionEvent, pointerId: Int, pointerIndex: Int): Boolean

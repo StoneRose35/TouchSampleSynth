@@ -55,7 +55,31 @@
         android:visibility="invisible"
         android:id="@+id/toolbar_alignbottom" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:backgroundTint="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/distributehorizontal"
+        android:contentDescription="@string/distributehorizontal"
+        android:visibility="invisible"
+        android:id="@+id/toolbar_distribute_horizontal" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        android:backgroundTint="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/distributevertical"
+        android:contentDescription="@string/distributevertical"
+        android:visibility="invisible"
+        android:id="@+id/toolbar_distribute_vertical" />
 
     <Space
         android:layout_width="0dp"

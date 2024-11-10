@@ -183,12 +183,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                     (supportFragmentManager.fragments[0] as PlayPageFragment).setEditMode(isChecked)
                 }
                 supportActionBar?.customView?.findViewById<Spinner>(R.id.toolbar_scenes)?.isEnabled = !isInEditMode
+
                 if (!isChecked)
                 {
-                    findViewById<ImageButton>(R.id.toolbar_alignleft).visibility = ImageButton.INVISIBLE
-                    findViewById<ImageButton>(R.id.toolbar_alignright).visibility = ImageButton.INVISIBLE
-                    findViewById<ImageButton>(R.id.toolbar_aligntop).visibility = ImageButton.INVISIBLE
-                    findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility = ImageButton.INVISIBLE
+                    setGraphicsToolbarItemsVisibility(false)
                 }
             }
         }
@@ -248,7 +246,45 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             playArea?.invalidate()
         }
 
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_distribute_horizontal)?.setOnClickListener {
+            val playArea = supportFragmentManager.fragments[0].view?.findViewById<PlayArea>(R.id.playpage_layout)
+            playArea?.touchElementsSelection?.let { tes ->
+                val leftmostpoint = tes.stream().mapToInt { te -> (te.layoutParams as ConstraintLayout.LayoutParams).leftMargin + (te.layoutParams as ConstraintLayout.LayoutParams).width/2}.min().asInt
+                val rightmostpoint = tes.stream().mapToInt { te -> (te.layoutParams as ConstraintLayout.LayoutParams).leftMargin + (te.layoutParams as ConstraintLayout.LayoutParams).width/2}.max().asInt
+                val horizontalspace = (rightmostpoint - leftmostpoint) / (tes.size - 1)
+                var cnt = 0
+                tes.sortedBy { (it.layoutParams as ConstraintLayout.LayoutParams).leftMargin }
+                .forEach { te ->
+                    if (cnt > 0 && cnt < tes.size-1) {
+                        val layoutparams = te.layoutParams as ConstraintLayout.LayoutParams
+                        layoutparams.leftMargin = leftmostpoint + horizontalspace*cnt  - layoutparams.width/2
+                        te.layoutParams = layoutparams
+                    }
+                    cnt++
+                }
+            }
+            playArea?.invalidate()
+        }
 
+        supportActionBar?.customView?.findViewById<ImageButton>(R.id.toolbar_distribute_vertical)?.setOnClickListener {
+            val playArea = supportFragmentManager.fragments[0].view?.findViewById<PlayArea>(R.id.playpage_layout)
+            playArea?.touchElementsSelection?.let { tes ->
+                val topmostpoint = tes.stream().mapToInt { te -> (te.layoutParams as ConstraintLayout.LayoutParams).topMargin + (te.layoutParams as ConstraintLayout.LayoutParams).height/2}.min().asInt
+                val bottommostpoint = tes.stream().mapToInt { te -> (te.layoutParams as ConstraintLayout.LayoutParams).topMargin +  (te.layoutParams as ConstraintLayout.LayoutParams).height/2}.max().asInt
+                val verticalspace = (bottommostpoint - topmostpoint) / (tes.size - 1)
+                var cnt = 0
+                tes.sortedBy { (it.layoutParams as ConstraintLayout.LayoutParams).topMargin }
+                    .forEach { te ->
+                        if (cnt > 0 && cnt < tes.size-1) {
+                            val layoutparams = te.layoutParams as ConstraintLayout.LayoutParams
+                            layoutparams.topMargin = topmostpoint + verticalspace*cnt  - layoutparams.height/2
+                            te.layoutParams = layoutparams
+                        }
+                        cnt++
+                    }
+            }
+            playArea?.invalidate()
+        }
 
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -291,6 +327,23 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             isInEditMode = it.getBoolean(TSS_BUNDLE_EDIT_MODE)
         }
 
+    }
+
+    fun setGraphicsToolbarItemsVisibility(isVisible: Boolean)
+    {
+        val visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
+        findViewById<ImageButton>(R.id.toolbar_alignleft).visibility =
+            visibility
+        findViewById<ImageButton>(R.id.toolbar_alignright).visibility =
+            visibility
+        findViewById<ImageButton>(R.id.toolbar_aligntop).visibility =
+            visibility
+        findViewById<ImageButton>(R.id.toolbar_alignbottom).visibility =
+            visibility
+        findViewById<ImageButton>(R.id.toolbar_distribute_horizontal).visibility =
+            visibility
+        findViewById<ImageButton>(R.id.toolbar_distribute_vertical).visibility =
+            visibility
     }
 
     override fun onRequestPermissionsResult(

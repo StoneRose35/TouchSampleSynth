@@ -28,6 +28,7 @@ import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.views.PianoRoll
 import ch.sr35.touchsamplesynth.views.TouchElement
+import ch.sr35.touchsamplesynth.views.TouchElement.ActionDir
 import codes.side.andcolorpicker.converter.toColorInt
 import codes.side.andcolorpicker.group.PickerGroup
 import codes.side.andcolorpicker.group.registerPickers
@@ -63,12 +64,24 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
             pianoRollSelector.octave = it.getOctave()
         }
 
-
-        /*val numberPickerNotes = findViewById<NumberPicker>(R.id.numberPickerNote)
-        numberPickerNotes?.minValue = 0
-        numberPickerNotes?.maxValue = 87
-        numberPickerNotes?.displayedValues = MusicalPitch.generateAllNotes().map { p -> p.name }.toTypedArray()
-        numberPickerNotes?.value = touchElement.note?.index ?: -1*/
+        val rotationChangeTouchElement = findViewById<TouchElement>(R.id.edit_te_touchElement)
+        rotationChangeTouchElement.actionDir = touchElement.actionDir
+        rotationChangeTouchElement.setOnClickListener { it ->
+            when(rotationChangeTouchElement.actionDir) {
+                ActionDir.HORIZONTAL_LEFT_RIGHT -> {
+                    rotationChangeTouchElement.actionDir= ActionDir.HORIZONTAL_RIGHT_LEFT
+                }
+                ActionDir.HORIZONTAL_RIGHT_LEFT -> {
+                    rotationChangeTouchElement.actionDir= ActionDir.VERTICAL_DOWN_UP
+                }
+                ActionDir.VERTICAL_DOWN_UP -> {
+                    rotationChangeTouchElement.actionDir= ActionDir.VERTICAL_UP_DOWN
+                }
+                ActionDir.VERTICAL_UP_DOWN -> {
+                    rotationChangeTouchElement.actionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
+                }
+            }
+        }
 
         val buttonOk=findViewById<Button>(R.id.edit_te_button_ok)
         buttonOk?.setOnClickListener {
@@ -78,11 +91,11 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                 pickedColor?.let {
                     touchElement.fillColor.color = it.toColorInt()
                 }
+                touchElement.actionDir = rotationChangeTouchElement.actionDir
             }
 
 
             touchElement.invalidate()
-            //touchElement.note = MusicalPitch.generateAllNotes()[numberPickerNotes?.value!!] //spinnerNotesAdapter.note
             touchElement.note = pianoRollSelector.selectedKeys.first()
 
             this.dismiss()
@@ -107,8 +120,8 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
             it.floatL=hsl[2]
 
         })
-        findViewById<ImageView>(R.id.touchElementColor).let {
-            it.background=PaintDrawable(touchElement.fillColor.color)
+        findViewById<TouchElement>(R.id.edit_te_touchElement).let {
+            it.fillColor.color=touchElement.fillColor.color
             it.invalidate()
         }
         pickerGroup.addListener(object : ColorSeekBar.OnColorPickListener<ColorSeekBar<IntegerHSLColor>,IntegerHSLColor> {
@@ -117,9 +130,9 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                 color: IntegerHSLColor,
                 value: Int
             ) {
-                val touchElementColorDisplay = findViewById<ImageView>(R.id.touchElementColor)
-                touchElementColorDisplay.background=PaintDrawable(color.toColorInt())
-
+                val exampleTouchElement = findViewById<TouchElement>(R.id.edit_te_touchElement)
+                exampleTouchElement.fillColor.color=color.toColorInt()
+                exampleTouchElement.invalidate()
             }
 
             override fun onColorPicked(

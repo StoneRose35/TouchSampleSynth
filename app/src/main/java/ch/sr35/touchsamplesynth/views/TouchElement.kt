@@ -87,7 +87,6 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     var midiChannel: Int=0
     var midiCC: Int=3
     private var midiCCOld: Byte=0
-    private var rotateRect: Rect = Rect()
     private var setSoundgenRect: Rect = Rect()
     private var deleteRect: Rect = Rect()
     private val boundsRotate = Rect()
@@ -348,12 +347,6 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             editText.getTextBounds("Delete",0,"Delete".length,boundsDelete)
             val editRectangleWidth = 70//IntStream.of(boundsRotate.width(),boundsSetSoundgen.width(),boundsDelete.width()).max().orElse(1)
 
-            rotateRect.left = 40
-            rotateRect.right = rotateRect.left + editRectangleWidth + Converter.toPx(3)
-            rotateRect.top = EDIT_CIRCLE_OFFSET.toInt() + 50
-            rotateRect.bottom = (editText.textSize.toInt() + 8 + rotateRect.top)
-
-            canvas.drawRect(rotateRect, editBoxBackground)
             rotateSymbol?.let {
                 it.setBounds(
                     40,
@@ -366,7 +359,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
             setSoundgenRect.left = 40
             setSoundgenRect.right = setSoundgenRect.left + editRectangleWidth + Converter.toPx(3)
-            setSoundgenRect.top = rotateRect.bottom + 10
+            setSoundgenRect.top = EDIT_CIRCLE_OFFSET.toInt() + 50
             setSoundgenRect.bottom = setSoundgenRect.top + editText.textSize.toInt() + 8
 
             canvas.drawRect(setSoundgenRect, editBoxBackground)
@@ -374,9 +367,9 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             editSymbol?.let {
                 it.setBounds(
                     40,
-                    rotateRect.bottom + 10,
+                    EDIT_CIRCLE_OFFSET.toInt() + 50,
                     (40 +50/it.intrinsicHeight.toFloat()*it.intrinsicWidth.toFloat()).toInt(),
-                    rotateRect.bottom + 10 + 50
+                    EDIT_CIRCLE_OFFSET.toInt() + 50 + 50
                 )
                 it.draw(canvas)
             }
@@ -698,24 +691,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             // start a corner drag if a corner has been hit, else move the whole element
             px = event.x
             py = event.y
-            if (rotateRect.contains(px.toInt(), py.toInt()) && elementState != TouchElementState.EDITING_SELECTED) {
-                when(this.actionDir) {
-                    ActionDir.HORIZONTAL_LEFT_RIGHT -> {
-                        this.actionDir=ActionDir.HORIZONTAL_RIGHT_LEFT
-                    }
-                    ActionDir.HORIZONTAL_RIGHT_LEFT -> {
-                        this.actionDir=ActionDir.VERTICAL_DOWN_UP
-                    }
-                    ActionDir.VERTICAL_DOWN_UP -> {
-                        this.actionDir=ActionDir.VERTICAL_UP_DOWN
-                    }
-                    ActionDir.VERTICAL_UP_DOWN -> {
-                        this.actionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
-                    }
-                }
-                dragStart = null
-                invalidate()
-            } else if (setSoundgenRect.contains(px.toInt(), py.toInt())  && elementState != TouchElementState.EDITING_SELECTED) {
+            if (setSoundgenRect.contains(px.toInt(), py.toInt())  && elementState != TouchElementState.EDITING_SELECTED) {
                 val editSoundgenerator = EditTouchElementFragmentDialog(
                     this,
                     context
