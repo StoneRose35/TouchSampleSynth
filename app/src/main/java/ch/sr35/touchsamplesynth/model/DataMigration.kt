@@ -265,6 +265,10 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
 
     }
 
+
+    // TODO Data migration to 1.10.0
+    // touchelement.note to touchelement.notes (single value to array
+
 }
 
 class JsonComparator

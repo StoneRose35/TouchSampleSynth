@@ -46,43 +46,43 @@ class ScenePTest: AudioTest() {
 
         val te1 = TouchElement(themedContext,null)
         te1.soundGenerator = i1
-        te1.note= notes[5]
+        te1.notes.add(notes[5])
         te1.layoutParams = lp
         touchelements.add(te1)
 
         val te2 = TouchElement(themedContext,null)
         te2.soundGenerator = i1
-        te2.note= notes[7]
+        te2.notes.add(notes[7])
         te2.layoutParams = lp
         touchelements.add(te2)
 
         val te3 = TouchElement(themedContext,null)
         te3.soundGenerator = i1
-        te3.note= notes[9]
+        te3.notes.add(notes[9])
         te3.layoutParams = lp
         touchelements.add(te3)
 
         val te4 = TouchElement(themedContext,null)
         te4.soundGenerator = i1
-        te4.note= notes[11]
+        te4.notes.add(notes[11])
         te4.layoutParams = lp
         touchelements.add(te4)
 
         val te5 = TouchElement(themedContext,null)
         te5.soundGenerator = i1
-        te5.note= notes[13]
+        te5.notes.add(notes[13])
         te5.layoutParams = lp
         touchelements.add(te5)
 
         val te10 = TouchElement(themedContext, null)
         te10.soundGenerator = i2
-        te10.note = notes[45]
+        te10.notes.add(notes[45])
         te10.layoutParams = lp
         touchelements.add(te10)
 
         val te11 = TouchElement(themedContext, null)
         te11.soundGenerator = i2
-        te11.note = notes[57]
+        te11.notes.add(notes[57])
         te11.layoutParams = lp
         touchelements.add(te11)
 
@@ -107,7 +107,7 @@ class ScenePTest: AudioTest() {
             Assert.assertTrue(
             regeneratedTouchElements.filter {
                 rt ->
-                rt.note == t.note && rt.soundGenerator!!.javaClass == t.soundGenerator!!.javaClass
+                rt.notes.all { t.notes.contains(it) }  && rt.soundGenerator!!.javaClass == t.soundGenerator!!.javaClass
             }.size==1)
         }
     }

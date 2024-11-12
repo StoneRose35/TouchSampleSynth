@@ -78,7 +78,7 @@ class PlayPageFragment : Fragment() {
                     lp.marginStart = Converter.toPx(60)
                     lp.topMargin = Converter.toPx(10)
                     val te = TouchElement(context as TouchSampleSynthMain,null)
-                    te.note = MusicalPitch.generateAllNotes()[63]
+                    te.notes.add(MusicalPitch.generateAllNotes()[63])
                     te.soundGenerator = (ic as InstrumentChip).getInstrument()
                     te.defineDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
                     te.setEditmode(TouchElement.TouchElementState.EDITING)

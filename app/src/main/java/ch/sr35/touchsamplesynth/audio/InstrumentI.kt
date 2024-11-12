@@ -33,10 +33,15 @@ open class InstrumentI(var name: String) {
                 ?.orElse(null)
         }
         else {
-            voices.stream().map { a -> a as MusicalSoundGenerator } // return the oldest voice
-                .sorted(Comparator.comparingLong { msg -> -msg.switchOnTime })
+            voices.stream().map { a -> a as MusicalSoundGenerator } // return a voice which isn't sounding, if this doesnt exist the oldest
+                .filter { v -> !(v.isSounding()) }
                 .findFirst()
-                .orElse(null)
+                .orElse(
+                    voices.stream()
+                        .map { a -> a as MusicalSoundGenerator }
+                        .sorted(Comparator.comparingLong { msg -> -msg.switchOnTime })
+                        .findFirst()
+                        .orElse(voices[0]) )
         }
     }
 

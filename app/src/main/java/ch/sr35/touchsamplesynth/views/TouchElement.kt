@@ -82,8 +82,8 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private var oldTopMargin: Int = 0
     private var elementState: TouchElementState = defaultState
     var soundGenerator: InstrumentI? = null
-    private var currentVoice: MusicalSoundGenerator? = null
-    var note: MusicalPitch? = null
+    private var currentVoices = ArrayList<MusicalSoundGenerator>()
+    var notes = ArrayList<MusicalPitch>()
     var midiChannel: Int=0
     var midiCC: Int=3
     private var midiCCOld: Byte=0
@@ -302,14 +302,18 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                         smallText
                     )
                 }
-                note.let {
-                    canvas.drawText(
-                        it.toString(),
-                        descriptionOffset.toFloat(),
-                        descriptionOffset + (iconHeight * 0.7).toInt()+ smallText.textSize * 2 + 10,
-                        smallText
-                    )
+                var notetext = ""
+                notes.forEach {
+                    notetext += ",$it "
                 }
+                notetext = notetext.substring(1)
+                canvas.drawText(
+                    notetext,
+                    descriptionOffset.toFloat(),
+                    descriptionOffset + (iconHeight * 0.7).toInt()+ smallText.textSize * 2 + 10,
+                    smallText
+                )
+
             }
 
 
@@ -423,50 +427,60 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
             touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
         }
-        currentVoice = soundGenerator?.getNextFreeVoice()
-        currentVoice?.setMidiChannel(midiChannel)
-        if (touchVal>=-1.0f)
-        {
-            currentVoice?.applyTouchAction(touchVal)
 
-            val midiData=ByteArray(3)
-            midiData[0] = (0xB0 + midiChannel).toByte()
-            midiData[1] = midiCC.toByte()
-            midiData[2] = (touchVal*127.0f).toInt().toByte()
-            if (midiData[2]!=midiCCOld) {
-                appContext?.rtpMidiServer?.let {
-                    if (it.isEnabled)
+        currentVoices.clear()
+        var firstnote = true
+        notes.forEach { currentNote ->
+            soundGenerator?.getNextFreeVoice()?.let {
+                currentVoices.add(it)
+
+                if (firstnote)
+                {
+                    firstnote=false
+                    it.setMidiChannel(midiChannel)
+
+                    if (touchVal>=-1.0f)
                     {
-                        var sentNotes=0
-                        while(sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                        it.applyTouchAction(touchVal)
+
+                        val midiData=ByteArray(3)
+                        midiData[0] = (0xB0 + midiChannel).toByte()
+                        midiData[1] = midiCC.toByte()
+                        midiData[2] = (touchVal*127.0f).toInt().toByte()
+                        if (midiData[2]!=midiCCOld) {
+                            appContext?.rtpMidiServer?.let {
+                                if (it.isEnabled)
+                                {
+                                    var sentNotes=0
+                                    while(sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                                        appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                        sentNotes += 1
+                                    }
+                                }
+                            }
+                            it.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
+                            midiCCOld=midiData[2]
+                        }
+                    }
+                }
+                it.setNote(currentNote.value)
+                it.trigger(1.0f)
+                appContext?.rtpMidiServer?.let {
+                    if (it.isEnabled) {
+                        val midiData = ByteArray(3)
+                        setMidiNoteOn(midiData,currentNote)
+                        var sentNotes = 0
+                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                            appContext.rtpMidiServer?.addToSendQueue(midiData)
+                            sentNotes += 1
+                        }
+                        setMidiNoteOff(midiData,currentNote)
+                        sentNotes = 0
+                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
                             appContext.rtpMidiServer?.addToSendQueue(midiData)
                             sentNotes += 1
                         }
                     }
-                }
-                currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
-                midiCCOld=midiData[2]
-            }
-        }
-        note?.value?.let { currentVoice?.setNote(it) }
-        currentVoice?.trigger(1.0f)
-        appContext?.rtpMidiServer?.let {
-            if (it.isEnabled && this.note != null)
-            {
-                val midiData=ByteArray(3)
-                setMidiNoteOn(midiData)
-                var sentNotes=0
-                while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
-                {
-                    appContext.rtpMidiServer?.addToSendQueue(midiData)
-                    sentNotes += 1
-                }
-                setMidiNoteOff(midiData)
-                sentNotes=0
-                while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
-                {
-                    appContext.rtpMidiServer?.addToSendQueue(midiData)
-                    sentNotes += 1
                 }
             }
         }
@@ -500,10 +514,15 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
 
     override fun performClick(): Boolean {
-        note?.value?.let { currentVoice?.setNote(it) }
-        if (currentVoice?.switchOn(1.0f)==true)
-        {
-            outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
+        currentVoices.clear()
+        notes.forEach { currentNote ->
+            soundGenerator?.getNextFreeVoice()?.let {
+                it.setNote(currentNote.value)
+                if (it.switchOn(1.0f)) {
+                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
+                }
+                currentVoices.add(it)
+            }
         }
         invalidate()
         return super.performClick()
@@ -555,45 +574,56 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
             touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
         }
-        currentVoice = soundGenerator?.getNextFreeVoice()
-        currentVoice?.setMidiChannel(midiChannel)
-        if (touchVal>=-1.0f)
-        {
-            currentVoice?.applyTouchAction(touchVal)
+        var firstnote = true
+        notes.forEach { currentNote ->
+            soundGenerator?.getNextFreeVoice()?.let {
+                currentVoices.add(it)
+                it.setMidiChannel(midiChannel)
 
-            val midiData=ByteArray(3)
-            midiData[0] = (0xB0 + midiChannel).toByte()
-            midiData[1] = midiCC.toByte()
-            midiData[2] = (touchVal*127.0f).toInt().toByte()
-            if (midiData[2]!=midiCCOld) {
-                appContext?.rtpMidiServer?.let {
-                    if (it.isEnabled)
-                    {
+                if (touchVal >= -1.0f) {
+                    it.applyTouchAction(touchVal)
+                    if (firstnote) {
+                        val midiData = ByteArray(3)
+                        midiData[0] = (0xB0 + midiChannel).toByte()
+                        midiData[1] = midiCC.toByte()
+                        midiData[2] = (touchVal * 127.0f).toInt().toByte()
+                        if (midiData[2] != midiCCOld) {
+                            appContext?.rtpMidiServer?.let {
+                                if (it.isEnabled) {
+                                    var sentNotes = 0
+                                    while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                                        appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                        sentNotes += 1
+                                    }
+                                }
+                            }
+                            it.sendMidiCC(midiCC, (touchVal * 127.0f).toInt())
+                            midiCCOld = midiData[2]
+                        }
+                        firstnote = false
+                    }
+                }
+
+                appContext?.rtpMidiServer?.let { rtpMidiServer ->
+                    if (rtpMidiServer.isEnabled) {
+                        val midiData=ByteArray(3)
+                        setMidiNoteOn(midiData,currentNote)
                         var sentNotes=0
-                        while(sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
+                        {
                             appContext.rtpMidiServer?.addToSendQueue(midiData)
                             sentNotes += 1
                         }
                     }
                 }
-                currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
-                midiCCOld=midiData[2]
-            }
-        }
-        performClick()
-        appContext?.rtpMidiServer?.let {
-            if (it.isEnabled && this.note != null)
-            {
-                val midiData=ByteArray(3)
-                setMidiNoteOn(midiData)
-                var sentNotes=0
-                while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
-                {
-                    appContext.rtpMidiServer?.addToSendQueue(midiData)
-                    sentNotes += 1
+
+                it.setNote(currentNote.value)
+                if (it.switchOn(1.0f)) {
+                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
                 }
             }
         }
+
         px = event.x
         py = event.y
         return true
@@ -602,21 +632,22 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private fun handleActionUpInPlayMode(): Boolean
     {
         outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-        currentVoice?.switchOff(1.0f)
+        currentVoices.forEach { it.switchOff(1.0f) }
         appContext?.rtpMidiServer?.let {
-            if (it.isEnabled && this.note != null)
+            if (it.isEnabled )
             {
-                val midiData=ByteArray(3)
-                setMidiNoteOff(midiData)
-                var sentNotes=0
-                while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
-                    appContext.rtpMidiServer?.addToSendQueue(midiData)
-                    sentNotes += 1
+                notes.forEach { currentNote ->
+                    val midiData = ByteArray(3)
+                    setMidiNoteOff(midiData,currentNote)
+                    var sentNotes = 0
+                    while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                        appContext.rtpMidiServer?.addToSendQueue(midiData)
+                        sentNotes += 1
+                    }
                 }
-
             }
         }
-        currentVoice = null
+        currentVoices.clear()
         invalidate()
         return true
     }
@@ -626,27 +657,28 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         var touchVal:Float=-2.0f
         if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
             outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-            currentVoice?.let {
+            currentVoices.forEach  {
                 if (it.isEngaged())
                 {
                     it.switchOff(1.0f)
-                    appContext?.rtpMidiServer?.let {midiserver->
-                        if (midiserver.isEnabled)
-                        {
-                            val midiData=ByteArray(3)
-                            setMidiNoteOff(midiData)
-                            var sentNotes = 0
-                            while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
-                            {
-                                midiserver.addToSendQueue(midiData)
-                                sentNotes +=  1
-                            }
-                        }
-                    }
+
                     invalidate()
                 }
             }
-            currentVoice=null
+            appContext?.rtpMidiServer?.let {midiserver->
+                if (midiserver.isEnabled) {
+                    notes.forEach { currentNote ->
+                        val midiData = ByteArray(3)
+                        setMidiNoteOff(midiData,currentNote)
+                        var sentNotes = 0
+                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
+                            midiserver.addToSendQueue(midiData)
+                            sentNotes += 1
+                        }
+                    }
+                }
+            }
+            currentVoices.clear()
             return true
         } else if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
             touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
@@ -660,26 +692,30 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
             touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
         }
-
+        var firstnote = true
         if (touchVal>=-1.0f)
         {
-            currentVoice?.applyTouchAction(touchVal)
+            currentVoices.forEach {
+                it.applyTouchAction(touchVal)
 
-            val midiData=ByteArray(3)
-            midiData[0] = (0xB0 + midiChannel).toByte()
-            midiData[1] = midiCC.toByte()
-            midiData[2] = (touchVal*127.0f).toInt().toByte()
-            if (midiData[2]!=midiCCOld) {
-                appContext?.rtpMidiServer?.let {
-                    if (it.isEnabled)
-                    {
-                        appContext.rtpMidiServer?.addToSendQueue(
-                            midiData
-                        )
+                if (firstnote) {
+                    val midiData = ByteArray(3)
+                    midiData[0] = (0xB0 + midiChannel).toByte()
+                    midiData[1] = midiCC.toByte()
+                    midiData[2] = (touchVal * 127.0f).toInt().toByte()
+                    if (midiData[2] != midiCCOld) {
+                        appContext?.rtpMidiServer?.let {
+                            if (it.isEnabled) {
+                                appContext.rtpMidiServer?.addToSendQueue(
+                                    midiData
+                                )
+                            }
+                        }
+                        it.sendMidiCC(midiCC, (touchVal * 127.0f).toInt())
+                        midiCCOld = midiData[2]
                     }
+                    firstnote = false
                 }
-                currentVoice?.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
-                midiCCOld=midiData[2]
             }
             return true
         }
@@ -806,17 +842,17 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         return true
     }
 
-    private fun setMidiNoteOn(midiData: ByteArray)
+    private fun setMidiNoteOn(midiData: ByteArray,note: MusicalPitch)
     {
         midiData[0] = (0x90 + midiChannel).toByte()
-        midiData[1] = (this.note!!.value+69).toInt().toByte()
+        midiData[1] = (note.value+69).toInt().toByte()
         midiData[2] = 0x7F.toByte()
     }
 
-    private fun setMidiNoteOff(midiData: ByteArray)
+    private fun setMidiNoteOff(midiData: ByteArray,note: MusicalPitch)
     {
         midiData[0] = (0x80 + midiChannel).toByte()
-        midiData[1] = (this.note!!.value+69).toInt().toByte()
+        midiData[1] = (note.value+69).toInt().toByte()
         midiData[2] = 0x7F.toByte()
     }
 
@@ -908,13 +944,13 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             return this.asRectangle() == other.asRectangle() &&
                     this.soundGenerator?.name == other.soundGenerator?.name &&
                     this.soundGenerator?.getType() == other.soundGenerator?.getType() &&
-                    this.note?.index == other.note?.index
+                    this.notes.all { other.notes.contains(it) }
         }
         return false
     }
 
     override fun hashCode(): Int {
-        return this.soundGenerator?.name.hashCode() + this.note?.index.hashCode() + this.soundGenerator?.getType().hashCode()
+        return this.soundGenerator?.name.hashCode() + this.notes.hashCode() + this.soundGenerator?.getType().hashCode()
     }
 }
 

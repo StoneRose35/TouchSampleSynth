@@ -74,7 +74,7 @@ class SceneP : Serializable, Cloneable {
         }
         for (te in touchEls)
         {
-            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LEFT_RIGHT,0,null,0,3,"")
+            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LEFT_RIGHT,ArrayList<Int>(),null,0,3,"")
             pte.fromTouchElement(te)
             pte.soundGeneratorId = instrumentIWithIds[te.soundGenerator].toString()
             touchElements.add(pte)

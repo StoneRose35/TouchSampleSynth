@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import androidx.test.core.view.MotionEventBuilder
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.R
@@ -35,6 +36,7 @@ class TouchElementTest {
         val i1 = SineMonoSynthI(context,"Basic")
         i1.generateVoices(3)
         te.soundGenerator=i1
+        te.notes.add(MusicalPitch(2,5))
 
 
         //touch

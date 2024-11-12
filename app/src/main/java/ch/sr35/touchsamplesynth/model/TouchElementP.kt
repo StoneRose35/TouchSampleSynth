@@ -8,13 +8,14 @@ import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.graphics.RgbColor
 import ch.sr35.touchsamplesynth.views.TouchElement
 import java.io.Serializable
+import java.util.stream.Collectors
 
 class TouchElementP(var width: Int,
                     var height: Int,
                     var posX:Int,
                     var posY: Int,
                     var actionDir: TouchElement.ActionDir,
-                    var note: Int,
+                    var notes: ArrayList<Int>,
                     var color: RgbColor?,
                     var midiChannel: Int,
                     var midiCC: Int,
@@ -28,7 +29,7 @@ class TouchElementP(var width: Int,
         posX = (touchElement.layoutParams as ConstraintLayout.LayoutParams).leftMargin
         posY = (touchElement.layoutParams as ConstraintLayout.LayoutParams).topMargin
         actionDir = touchElement.actionDir
-        note = touchElement.note?.index ?: -1
+        notes.addAll(touchElement.notes.stream().map { it.index }.collect(Collectors.toList()))
         midiChannel = touchElement.midiChannel
         midiCC = touchElement.midiCC
         color = RgbColor(touchElement.fillColor.color.red,touchElement.fillColor.color.green,touchElement.fillColor.color.blue )
@@ -43,8 +44,12 @@ class TouchElementP(var width: Int,
         lp.leftMargin = posX
         lp.topMargin = posY
         te.layoutParams = lp
-        if (note >= 0 && note < allNotes.size) {
-            te.note = allNotes[note]
+        te.notes.clear()
+        notes.forEach {
+            note ->
+            if (note >= 0 && note < allNotes.size) {
+                te.notes.add(allNotes[note])
+            }
         }
         color?.let {
             te.fillColor.color = it.toColorInt()
@@ -56,8 +61,8 @@ class TouchElementP(var width: Int,
 
     override fun toString(): String
     {
-        return "TouchElement, w: %d, h: %d, x: %d, y: %d, actionDir: %s, note: %s, soundGen: %s"
-            .format(this.width,this.height,this.posX,this.posY,this.actionDir,this.note, this.soundGeneratorId)
+        return "TouchElement, w: %d, h: %d, x: %d, y: %d, actionDir: %s, notes: %s, soundGen: %s"
+            .format(this.width,this.height,this.posX,this.posY,this.actionDir,this.notes, this.soundGeneratorId)
     }
 
     public override fun clone(): Any {
@@ -66,7 +71,7 @@ class TouchElementP(var width: Int,
             this.posX,
             this.posY,
             this.actionDir,
-            this.note,
+            this.notes,
             this.color?.clone(),
             this.midiChannel,
             this.midiCC,
