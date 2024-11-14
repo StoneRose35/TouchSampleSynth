@@ -514,7 +514,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
 
     override fun performClick(): Boolean {
-        currentVoices.clear()
+        /*currentVoices.clear()
         notes.forEach { currentNote ->
             soundGenerator?.getNextFreeVoice()?.let {
                 it.setNote(currentNote.value)
@@ -524,7 +524,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 currentVoices.add(it)
             }
         }
-        invalidate()
+        invalidate()*/
         return super.performClick()
     }
 
@@ -623,9 +623,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 }
             }
         }
-
+        performClick()
+        invalidate()
         px = event.x
         py = event.y
+
         return true
     }
 

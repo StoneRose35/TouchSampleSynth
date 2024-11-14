@@ -11,12 +11,14 @@ import java.io.FileOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.io.Serializable
+import java.util.Collections
 import java.util.UUID
+import kotlin.contracts.contract
 
 
 class SceneP : Serializable, Cloneable {
     var instruments = ArrayList<InstrumentP>()
-    var touchElements = ArrayList<TouchElementP>()
+    var touchElements = Collections.synchronizedList( ArrayList<TouchElementP>())
     var name = ""
 
 
@@ -35,11 +37,15 @@ class SceneP : Serializable, Cloneable {
             if (instr != null) {
                 sg.add(instr)
                 // generate all touchElements which use the current instrument
-                touchElements.stream().filter { te -> te.soundGeneratorId == pi.id }.forEach {
-                    val touchElement = TouchElement(context, null)
-                    it.toTouchElement(touchElement)
-                    touchElement.soundGenerator = instr
-                    tels.add(touchElement)
+                for (c in 0 until touchElements.size)
+                {
+                    val te = touchElements[c]
+                    if (te.soundGeneratorId == pi.id) {
+                        val touchElement = TouchElement(context, null)
+                        te.toTouchElement(touchElement)
+                        touchElement.soundGenerator = instr
+                        tels.add(touchElement)
+                    }
                 }
                 remainingTouchElements.removeIf { te -> te.soundGeneratorId == pi.id }
             }
@@ -60,6 +66,7 @@ class SceneP : Serializable, Cloneable {
     fun persist(soundGenerators: ArrayList<InstrumentI>,
                 touchEls: ArrayList<TouchElement>)
     {
+
         instruments.clear()
         touchElements.clear()
         var uuid: String

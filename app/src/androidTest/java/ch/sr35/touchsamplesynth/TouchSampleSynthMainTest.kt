@@ -2,6 +2,7 @@ package ch.sr35.touchsamplesynth
 
 
 import android.content.pm.ActivityInfo
+import android.os.Build
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -28,14 +29,27 @@ class TouchSampleSynthMainTest {
 
     @JvmField
     @Rule
-    val permissionRule: GrantPermissionRule = grant(
-        android.Manifest.permission.READ_MEDIA_AUDIO,
-        android.Manifest.permission.READ_MEDIA_IMAGES,
-        android.Manifest.permission.READ_MEDIA_VIDEO,
-        android.Manifest.permission.INTERNET
-    )
+    val permissionRule: GrantPermissionRule
+
 
     init {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU)
+            permissionRule = grant(
+                    android.Manifest.permission.READ_MEDIA_AUDIO,
+            android.Manifest.permission.READ_MEDIA_IMAGES,
+            android.Manifest.permission.READ_MEDIA_VIDEO,
+            android.Manifest.permission.INTERNET
+            )
+        else
+        {
+            permissionRule = grant(
+                android.Manifest.permission.READ_MEDIA_AUDIO,
+                android.Manifest.permission.READ_MEDIA_IMAGES,
+                android.Manifest.permission.READ_MEDIA_VIDEO,
+                android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED,
+                android.Manifest.permission.INTERNET
+            )
+        }
         val fname =
             InstrumentationRegistry.getInstrumentation().targetContext.filesDir.absolutePath + File.separator + SCENES_FILE_NAME
         val testpresets =
@@ -45,6 +59,7 @@ class TouchSampleSynthMainTest {
         fos.write(testpresets.readAllBytes())
         fos.close()
         activityScenario = ActivityScenario.launch(TouchSampleSynthMain::class.java)
+
     }
 
 

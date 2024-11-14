@@ -40,10 +40,6 @@ class PianoRoll(context: Context, attributes: AttributeSet): View(context,attrib
                         add(f)
                     }
                 }
-                else if (selectedKeys.isEmpty())
-                {
-                    selectedKeys.add(MusicalPitch(0,0))
-                }
             }
         }
 

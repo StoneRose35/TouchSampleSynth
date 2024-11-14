@@ -58,6 +58,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
 
         val pianoRollSelector = findViewById<PianoRoll>(R.id.edit_te_pianoroll)
         pianoRollSelector.selectionMode = PianoRoll.SelectionMode.MULTIPLE
+        pianoRollSelector.selectedKeys.clear()
         pianoRollSelector.selectedKeys.addAll(touchElement.notes)
         pianoRollSelector.octave = touchElement.notes.minByOrNull { it.index }!!.getOctave()
 

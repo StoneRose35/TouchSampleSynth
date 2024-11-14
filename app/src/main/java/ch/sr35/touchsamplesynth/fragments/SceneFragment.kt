@@ -62,6 +62,9 @@ class SceneFragment() : Fragment() {
                     scenes[p1] = swap
                 recyclerView.adapter?.notifyItemMoved(p1,p2)
                 (context as TouchSampleSynthMain).scenesArrayAdapter?.notifyDataSetChanged()
+                if (p1 == (context as TouchSampleSynthMain).getCurrentSceneIndex() || p2 == (context as TouchSampleSynthMain).getCurrentSceneIndex()) {
+                    (context as TouchSampleSynthMain).reloadCurrentScene()
+                }
                 return true
             }
 

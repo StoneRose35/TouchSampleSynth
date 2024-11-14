@@ -1,6 +1,7 @@
 package ch.sr35.touchsamplesynth
 
 import android.content.pm.PackageManager
+import android.database.DataSetObserver
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -449,8 +450,18 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             && position in 0 until allScenes.size
             ) {
             if (oldScenePosition in 0 until allScenes.size
-                && !sceneIsLoading.get() && touchElements.size > 0 ) {
-                allScenes[oldScenePosition].persist(soundGenerators, touchElements)
+                 && touchElements.size > 0 ) {
+                var wasLoading = sceneIsLoading.get()
+                while(wasLoading)
+                {
+                    Thread.sleep(20)
+                    wasLoading = sceneIsLoading.get()
+                }
+                if (!wasLoading) {
+                    sceneIsLoading.set(true)
+                    allScenes[oldScenePosition].persist(soundGenerators, touchElements)
+                }
+                sceneIsLoading.set(false)
             }
             loadSceneWithWaitIndicator(position)
         }
@@ -459,10 +470,6 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun saveToBinaryFiles()
     {
-        while (sceneIsLoading.get())
-        {
-            Thread.sleep(30)
-        }
         val mainDir = File(filesDir.absolutePath)
         mainDir.listFiles { f -> f.isFile && f.name.endsWith(".scn") }?.forEach {
             it.delete()
@@ -516,7 +523,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun loadSceneWithWaitIndicator(position: Int)
     {
-        val wasSceneLoading = sceneIsLoading.getAndSet(true)
+        var wasSceneLoading = sceneIsLoading.getAndSet(true)
         if (wasSceneLoading)
         {
             return
@@ -537,14 +544,15 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         waitAnimation.layoutParams = constraintLayout
         (mainLayout as ViewGroup).addView(waitAnimation)
         waitAnimation.startAnimation()
+
         oldScenePosition = position
         val executor=Executors.newSingleThreadExecutor()
         val handler = Handler(Looper.getMainLooper())
-        //unload the current scene
-        soundGenerators.flatMap { sg -> sg.voices }
-            .forEach { el -> el.detachFromAudioEngine() }
 
         executor.execute {
+            //unload the current scene
+            soundGenerators.flatMap { sg -> sg.voices }
+                .forEach { el -> el.detachFromAudioEngine() }
 
             allScenes[position].populate(soundGenerators, touchElements, this)
 
@@ -554,26 +562,28 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
                 if (supportFragmentManager.fragments[0].tag != null) {
                     if (supportFragmentManager.fragments[0].tag.equals("PlayPage0")) {
                         val remainingChildren = ArrayList<View>()
-                        (supportFragmentManager.fragments[0].view as ViewGroup).children.filter { v  -> v !is TouchElement }.forEach {
-                            el -> remainingChildren.add(el)
-                        }
+                        (supportFragmentManager.fragments[0].view as ViewGroup).children.filter { v -> v !is TouchElement }
+                            .forEach { el ->
+                                remainingChildren.add(el)
+                            }
                         (supportFragmentManager.fragments[0].view as ViewGroup).removeAllViews()
-                        remainingChildren.asIterable().forEach {
-                            rc -> (supportFragmentManager.fragments[0].view as ViewGroup).addView(rc)
+                        remainingChildren.asIterable().forEach { rc ->
+                            (supportFragmentManager.fragments[0].view as ViewGroup).addView(rc)
                         }
                         for (te in touchElements) {
                             (supportActionBar!!.customView.findViewById<SwitchCompat>(R.id.toolbar_edit)).isChecked.let {
-                                    if (it) {
-                                        te.setEditmode(TouchElement.TouchElementState.EDITING)
-                                    }
-                                    else
-                                    {
-                                        te.setDefaultmode()
-                                    }
+                                if (it) {
+                                    te.setEditmode(TouchElement.TouchElementState.EDITING)
+                                } else {
+                                    te.setDefaultmode()
+                                }
                             }
                             te.defineDefaultMode(touchElementsDisplayMode)
                             (supportFragmentManager.fragments[0].view as ViewGroup).addView(te)
-                            te.onSelectedListener = (supportFragmentManager.fragments[0] as PlayPageFragment).view?.findViewById<PlayArea>(R.id.playpage_layout)
+                            te.onSelectedListener =
+                                (supportFragmentManager.fragments[0] as PlayPageFragment).view?.findViewById<PlayArea>(
+                                    R.id.playpage_layout
+                                )
                         }
                     } else if (supportFragmentManager.fragments[0].tag.equals("instrumentPage0")) {
                         supportFragmentManager.fragments[0].view?.findViewById<ListView>(R.id.instruments_page_instruments_list)
@@ -592,6 +602,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
     }
 
+
     fun reloadCurrentScene()
     {
         scenesListDirty = true
@@ -604,6 +615,10 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
             return allScenes[oldScenePosition]
         }
         return null
+    }
+
+    fun getCurrentSceneIndex(): Int{
+        return oldScenePosition
     }
 
     fun persistCurrentScene()
