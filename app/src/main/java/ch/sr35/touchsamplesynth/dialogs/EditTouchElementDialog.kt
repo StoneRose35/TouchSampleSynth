@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.graphics.RgbColor
 import ch.sr35.touchsamplesynth.views.PianoRoll
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.TouchElement.ActionDir
@@ -87,7 +88,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
             if (instrumentListAdapter.checkedPosition > -1) {
                 touchElement.soundGenerator = soundGenerators[instrumentListAdapter.checkedPosition]
                 pickedColor?.let {
-                    touchElement.fillColor.color = it.toColorInt()
+                    touchElement.setColor(RgbColor.fromColorInt( it.toColorInt()))
                 }
                 touchElement.actionDir = rotationChangeTouchElement.actionDir
             }
@@ -112,7 +113,8 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         }
         pickerGroup.setColor(IntegerHSLColor().also {
             val hsl= floatArrayOf(0.0f,0.0f,0.0f)
-            ColorUtils.RGBToHSL(touchElement.fillColor.color.red,touchElement.fillColor.color.green,touchElement.fillColor.color.blue,hsl)
+            val touchElementMainColor = touchElement.getMainColor()
+            ColorUtils.RGBToHSL(touchElementMainColor.r,touchElementMainColor.g,touchElementMainColor.b,hsl)
             it.intA=0xff
             it.floatH=hsl[0]
             it.floatS=hsl[1]
@@ -120,7 +122,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
 
         })
         findViewById<TouchElement>(R.id.edit_te_touchElement).let {
-            it.fillColor.color=touchElement.fillColor.color
+            it.setColor(touchElement.getMainColor())
             it.invalidate()
         }
         pickerGroup.addListener(object : ColorSeekBar.OnColorPickListener<ColorSeekBar<IntegerHSLColor>,IntegerHSLColor> {
@@ -130,7 +132,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                 value: Int
             ) {
                 val exampleTouchElement = findViewById<TouchElement>(R.id.edit_te_touchElement)
-                exampleTouchElement.fillColor.color=color.toColorInt()
+                exampleTouchElement.setColor(RgbColor.fromColorInt( color.toColorInt()))
                 exampleTouchElement.invalidate()
             }
 

@@ -22,8 +22,7 @@ class TouchElementP(var width: Int,
                     var soundGeneratorId: String
 ): Serializable, Cloneable {
 
-    fun fromTouchElement(touchElement: TouchElement)
-    {
+    fun fromTouchElement(touchElement: TouchElement) {
         width = touchElement.layoutParams.width
         height = touchElement.layoutParams.height
         posX = (touchElement.layoutParams as ConstraintLayout.LayoutParams).leftMargin
@@ -32,7 +31,7 @@ class TouchElementP(var width: Int,
         notes.addAll(touchElement.notes.stream().map { it.index }.collect(Collectors.toList()))
         midiChannel = touchElement.midiChannel
         midiCC = touchElement.midiCC
-        color = RgbColor(touchElement.fillColor.color.red,touchElement.fillColor.color.green,touchElement.fillColor.color.blue )
+        color = touchElement.getMainColor()
     }
 
     fun toTouchElement(te: TouchElement)
@@ -52,7 +51,7 @@ class TouchElementP(var width: Int,
             }
         }
         color?.let {
-            te.fillColor.color = it.toColorInt()
+            te.setColor(it)
         }
         te.midiChannel = midiChannel
         te.midiCC = midiCC
