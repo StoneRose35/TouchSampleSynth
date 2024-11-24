@@ -166,7 +166,6 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
         val w = layoutParams.width.toFloat()
         val h = layoutParams.height.toFloat()
-        val arrowSize: Float
 
         // draw oval
         canvas.drawRoundRect(
