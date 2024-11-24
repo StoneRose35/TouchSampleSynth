@@ -36,81 +36,88 @@
         app:layout_constraintStart_toEndOf="@id/instruments_page_add"
         app:layout_constraintTop_toTopOf="@id/instruments_page_add" />
 
-    <EditText
-        android:id="@+id/instruments_page_instr_name"
-        android:layout_width="310dp"
-        android:layout_height="48dp"
-        android:autofillHints="name"
-        android:hint="@string/instrument_name"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:padding="6dp"
-        android:theme="@style/Theme.Instrument"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="92dp"
-        android:orientation="horizontal"
-        android:id="@+id/instrument_page_voicedef"
-        app:layout_constraintStart_toStartOf="@id/instruments_page_instr_name"
-        app:layout_constraintEnd_toEndOf="@id/instruments_page_instr_name"
-        app:layout_constraintTop_toBottomOf="@id/instruments_page_instr_name">
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/instrument_page_rg_polyphony"
-            >
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/instrument_page_rg_poly_sat"
-                android:text="@string/instrument_poly_sat"
-                />
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/instrument_page_rg_poly_ns"
-                android:text="@string/instrument_poly_ns"
-                />
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/instrument_page_rg_mono"
-                android:text="@string/instrument_mono"
-                />
-        </RadioGroup>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-        <Spinner
-            android:minWidth="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:entries="@array/numberOfVoices"
-            android:id="@+id/instrument_page_sp_voices"
-             />
-    </LinearLayout>
-
-
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/instrument_page_voicedef">
+        app:layout_constraintEnd_toStartOf="@id/instruments_page_instruments_list"
+        >
+        <EditText
+            android:id="@+id/instruments_page_instr_name"
+            android:layout_height="48dp"
+            android:layout_width="310dp"
+            android:autofillHints="name"
+            android:hint="@string/instrument_name"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:padding="6dp"
+            android:theme="@style/Theme.Instrument"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"  />
 
-        <FrameLayout
-            android:id="@+id/instruments_page_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="92dp"
+            android:orientation="horizontal"
+            android:id="@+id/instrument_page_voicedef"
+            app:layout_constraintStart_toStartOf="@id/instruments_page_instr_name"
+            app:layout_constraintEnd_toEndOf="@id/instruments_page_instr_name"
+            app:layout_constraintTop_toBottomOf="@id/instruments_page_instr_name">
 
-        </FrameLayout>
-    </ScrollView>
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/instrument_page_rg_polyphony"
+                >
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/instrument_page_rg_poly_sat"
+                    android:text="@string/instrument_poly_sat"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/instrument_page_rg_poly_ns"
+                    android:text="@string/instrument_poly_ns"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/instrument_page_rg_mono"
+                    android:text="@string/instrument_mono"
+                    />
+            </RadioGroup>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+            <Spinner
+                android:minWidth="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:entries="@array/numberOfVoices"
+                android:id="@+id/instrument_page_sp_voices"
+                 />
+        </LinearLayout>
+
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instrument_page_voicedef">
+
+            <FrameLayout
+                android:id="@+id/instruments_page_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </FrameLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
