@@ -28,7 +28,6 @@ import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.graphics.Point
 import ch.sr35.touchsamplesynth.graphics.Rectangle
 import ch.sr35.touchsamplesynth.graphics.RgbColor
-import ch.sr35.touchsamplesynth.model.importDoneFlag
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
 import kotlin.math.abs
