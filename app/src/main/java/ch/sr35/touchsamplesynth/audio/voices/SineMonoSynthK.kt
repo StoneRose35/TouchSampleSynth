@@ -5,9 +5,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK.Companion
-import kotlin.math.log10
-import kotlin.math.pow
+
 
 class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
     override fun bindToAudioEngine()
