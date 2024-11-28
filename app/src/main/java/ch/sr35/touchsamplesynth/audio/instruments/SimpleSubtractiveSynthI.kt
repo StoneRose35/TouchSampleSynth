@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.voices.SimpleSubtractiveSynthK
 
 class SimpleSubtractiveSynthI(private val context: Context,
@@ -24,7 +25,7 @@ class SimpleSubtractiveSynthI(private val context: Context,
 
         val doCopy = voices.isNotEmpty()
         for (i in 0 until cnt) {
-            voices.add(SimpleSubtractiveSynthK(context).generateAttachedInstance(context))
+            voices.add(MusicalSoundGenerator.generateAttachedInstance<SimpleSubtractiveSynthK>(context))
             if (doCopy) {
                 voices[0].copyParamsTo(voices[voices.size-1])
             }

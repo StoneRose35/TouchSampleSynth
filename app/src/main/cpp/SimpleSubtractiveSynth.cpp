@@ -13,15 +13,25 @@ float SimpleSubtractiveSynth::getNextSample() {
         nsample = nsample * (envelopeVals[0] +
                              (envelopeVals[1] - envelopeVals[0]) / (float) envelopeUpdateInterval *
                              (float) currentSample);
-        if (currentFilterUpdateSample < filterUpdateInSamples)
+        if (currentFilterUpdateSamples < modulatorsUpdateInSamples)
         {
-            im = (newFilterCutoff - currentFilterCutoff)*((float)currentFilterUpdateSample/(float)(filterUpdateInSamples)) + currentFilterCutoff;
+            im = (newFilterCutoff - currentFilterCutoff)*((float)currentFilterUpdateSamples / (float)(modulatorsUpdateInSamples)) + currentFilterCutoff;
             filter->SetCutoff(im);
             filter->SetResonance(currentResonance);
-            currentFilterUpdateSample++;
-            if (currentFilterUpdateSample == filterUpdateInSamples)
+            currentFilterUpdateSamples++;
+            if (currentFilterUpdateSamples == modulatorsUpdateInSamples)
             {
                 currentFilterCutoff = newFilterCutoff;
+            }
+        }
+        if (currentPitchUpdateInSamples < modulatorsUpdateInSamples)
+        {
+            im = (newPitchBend - currentPitchBend)*((float)currentPitchUpdateInSamples / (float)(modulatorsUpdateInSamples)) + currentPitchBend;
+            osc->setNote(note + im);
+            currentPitchUpdateInSamples++;
+            if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
+            {
+                currentPitchBend = newPitchBend;
             }
         }
         currentSample++;
@@ -42,9 +52,11 @@ float SimpleSubtractiveSynth::getNextSample() {
     return 0.0f;
 }
 
-void SimpleSubtractiveSynth::setNote(float note) {
-    osc->setNote(note);
-    MusicalSoundGenerator::setNote(note);
+void SimpleSubtractiveSynth::setNote(float n) {
+    osc->setNote(n);
+    currentPitchBend=0;
+    currentPitchUpdateInSamples=modulatorsUpdateInSamples;
+    MusicalSoundGenerator::setNote(n);
 }
 
 void SimpleSubtractiveSynth::setAttack(float a) {
@@ -82,12 +94,19 @@ float SimpleSubtractiveSynth::getRelease() {
 void SimpleSubtractiveSynth::setCutoff(float co) {
     if (env->isSounding()) {
         newFilterCutoff = co;
-        currentFilterUpdateSample = 0;
+        currentFilterUpdateSamples = 0;
     }
     else
     {
         filter->SetCutoff(co);
         filter->SetResonance(currentResonance);
+    }
+}
+
+void SimpleSubtractiveSynth::setPitchBend(float pb) {
+    if (env->isSounding()) {
+        newPitchBend = pb;
+        currentPitchUpdateInSamples = 0;
     }
 }
 
@@ -135,8 +154,11 @@ SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) : MusicalSoundGenerator
     currentFilterCutoff=0.0f;
     currentResonance=0.0f;
     newFilterCutoff=0.0f;
-    currentFilterUpdateSample=0;
-    filterUpdateInSamples = floor(sr/100);
+    modulatorsUpdateInSamples = floor(sr / 100);
+    currentFilterUpdateSamples=modulatorsUpdateInSamples;
+    currentPitchUpdateInSamples=modulatorsUpdateInSamples;
+    currentPitchBend = 0.0f;
+    newPitchBend = 0.0f;
     env=new AdsrEnvelope();
     filter=new StilsonMoogFilter();
     osc=new SawOscillator(sr);

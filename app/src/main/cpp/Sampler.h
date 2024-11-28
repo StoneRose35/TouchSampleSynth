@@ -35,7 +35,7 @@ public:
     uint32_t getSampleStartIndex() const;
     void setSampleEndIndex(uint32_t);
     uint32_t getSampleEndIndex() const;
-    void loadSample(const float*,uint32_t);
+    void setSample(const float*, uint32_t);
     uint32_t getSample(float**);
     float getNextSample() override;
     void setNote(float note) override;
@@ -43,7 +43,7 @@ public:
     void switchOff(uint8_t) override;
     void trigger(uint8_t) override;
     int getType() override;
-    bool isSounding() const;
+    bool isSounding() override;
     explicit Sampler(float sr);
     ~Sampler();
 };

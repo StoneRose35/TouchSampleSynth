@@ -11,6 +11,7 @@ import androidx.core.net.toFile
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.WavReader
 import ch.sr35.touchsamplesynth.audio.WaveFileChannel
 import ch.sr35.touchsamplesynth.audio.voices.SamplerK
@@ -58,7 +59,7 @@ class SamplerI(private val context: Context,
         createBufferBitmap()
         for (vc in voices)
         {
-            if (vc.getInstance()==(-1).toByte())
+            if (vc.instanceNr()==(-1).toByte())
             {
                 vc.bindToAudioEngine()
             }
@@ -67,7 +68,7 @@ class SamplerI(private val context: Context,
             (vc).setLoopEndIndex(sample.size-1)
             (vc).setSampleEndIndex(sample.size-1)
         }
-        loadSample(floatSamples)
+        setSample(floatSamples)
     }
 
     fun setSampleFile(fileName: Uri)
@@ -82,7 +83,7 @@ class SamplerI(private val context: Context,
     override fun generateVoices(cnt: Int) {
         val doCopy = voices.isNotEmpty()
         for (i in 0 until cnt) {
-            voices.add(SamplerK(context).generateAttachedInstance(context))
+            voices.add(MusicalSoundGenerator.generateAttachedInstance<SamplerK>(context))
             if (doCopy) {
                 voices[0].copyParamsTo(voices[voices.size - 1])
             }
@@ -165,11 +166,11 @@ class SamplerI(private val context: Context,
         return -1
     }
 
-    private fun loadSample(sample: FloatArray)
+    private fun setSample(sample: FloatArray)
     {
         for (vc in voices)
         {
-            (vc as SamplerK).loadSample(sample)
+            (vc as SamplerK).setSample(sample)
         }
     }
 

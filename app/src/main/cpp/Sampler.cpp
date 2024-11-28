@@ -36,7 +36,7 @@ uint8_t Sampler::getMode() const {
     return loopMode;
 }
 
-void Sampler::loadSample(const float * inputData, uint32_t size) {
+void Sampler::setSample(const float * inputData, uint32_t size) {
     if (size < DEFAULT_SAMPLE_SIZE)
     {
         for(uint32_t c=0;c<size;c++)
@@ -97,7 +97,7 @@ void Sampler::switchOff(uint8_t vel) {
     }
 }
 
-bool Sampler::isSounding() const {
+bool Sampler::isSounding() {
     return currentIndex != 0xFFFFFFFF;
 }
 

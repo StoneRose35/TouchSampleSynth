@@ -89,5 +89,10 @@ class SimpleSubtractiveSynthTest : AudioTest() {
         }
 
 
+    companion object {
+        init {
+            System.loadLibrary("touchsamplesynth")
+        }
+    }
 
 }

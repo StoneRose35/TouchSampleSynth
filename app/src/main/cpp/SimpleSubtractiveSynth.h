@@ -21,8 +21,10 @@ private:
     float sampleRate;
     int8_t envelopeUpdateInterval;
     int8_t currentSample;
-    float currentFilterCutoff{}, currentResonance{}, newFilterCutoff{};
-    int filterUpdateInSamples{}, currentFilterUpdateSample;
+    float currentFilterCutoff, currentResonance, newFilterCutoff;
+    float currentPitchBend,newPitchBend;
+    float note;
+    int modulatorsUpdateInSamples, currentFilterUpdateSamples, currentPitchUpdateInSamples;
 
 
 public:
@@ -34,6 +36,7 @@ public:
     void switchOff(uint8_t) override;
     void trigger(uint8_t) override;
     int getType() override;
+    bool isSounding() override;
 
     void setAttack(float);
     float getAttack();
@@ -48,7 +51,8 @@ public:
     float getCutoff();
     void setResonance(float);
     float getResonance();
-    bool isSounding();
+    void setPitchBend(float);
+
 };
 
 

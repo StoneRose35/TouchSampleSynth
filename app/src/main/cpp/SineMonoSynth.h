@@ -28,7 +28,7 @@ public:
     void switchOff(uint8_t) override;
     void trigger(uint8_t) override;
     int getType() override;
-    bool isSounding();
+    bool isSounding() override;
 
     // specific interface
     void setAttack(float);

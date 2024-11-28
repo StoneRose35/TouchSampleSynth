@@ -19,6 +19,8 @@ public:
 
     virtual void trigger(uint8_t);
 
+    virtual bool isSounding();
+
     void setVolume(float);
     void setVolumeImmediate(float);
     float getVolume();

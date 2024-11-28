@@ -5,15 +5,24 @@ import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import kotlin.math.log10
-import kotlin.math.pow
+
 
 class SamplerK(context: Context): MusicalSoundGenerator() {
-    private var instance: Byte=-1
-    private var engaged: Boolean=false
+
+    override fun bindToAudioEngine() {
+        val audioEngine= AudioEngineK()
+        if (instance == (-1).toByte()) {
+            instance = audioEngine.addSoundGenerator(MAGIC_NR)
+        }
+    }
+
+    override fun hashCode(): Int {
+        return (MAGIC_NR*1000) + instance
+    }
+
     val icon= AppCompatResources.getDrawable(context, R.drawable.sampler)
     external fun getLoopStartIndex(): Int
-    external fun setLoopStartIndex(ls: Int): Boolean
+    external fun setLoopStartIndex(v: Int): Boolean
     external fun getLoopEndIndex(): Int
     external fun setLoopEndIndex(le: Int): Boolean
     external fun getSampleStartIndex(): Int
@@ -22,66 +31,18 @@ class SamplerK(context: Context): MusicalSoundGenerator() {
     external fun setSampleEndIndex(se: Int): Boolean
     external fun setMode(mode: Byte): Boolean
     external fun getMode(): Byte
-    external fun getVolume(): Float
-    external fun setVolume(v: Float): Boolean
-    external fun loadSample(sampleData: FloatArray): Boolean
-    external fun switchOnExt(vel: Float): Boolean
-    external fun switchOffExt(vel: Float):Boolean
-    external fun triggerExt(vel: Float): Boolean
-    override fun setNote(note: Float): Boolean {
-        return true
-    }
+    external fun setSample(sampleData: FloatArray): Boolean
+    external fun getSample(): FloatArray
 
-    override fun switchOn(vel: Float): Boolean {
-        engaged=true
-        super.switchOn(vel)
-        return switchOnExt(vel)
-    }
-
-    override fun switchOff(vel: Float): Boolean {
-        engaged=false
-        return switchOffExt(vel)
-    }
-
-    external override fun setMidiVelocityScaling(mv: Float): Boolean
-
-    override fun isEngaged(): Boolean {
-        return engaged
-    }
-
-    override fun getInstance(): Byte {
-        return instance
-    }
-
-    override fun generateAttachedInstance(context: Context): MusicalSoundGenerator {
-        val instance = SamplerK(context)
-        instance.bindToAudioEngine()
-        return instance
-    }
-
-    override fun bindToAudioEngine() {
-        val audioEngine= AudioEngineK()
-        if (instance == (-1).toByte()) {
-            instance = audioEngine.addSoundGenerator(3)
-        }
-    }
-
-    override fun detachFromAudioEngine() {
-        val audioEngine = AudioEngineK()
-        if (instance > -1)
-        {
-            audioEngine.removeSoundGenerator(instance)
-            instance=(-1).toByte()
-        }
-    }
-
-    override fun applyTouchAction(a: Float) {
-        if (a > 0.0f) {
-            setVolume(10.0f.pow(log10(a) * actionAmountToVolume))
-        }
-    }
-    override fun hashCode(): Int {
-        return 3000 + instance
+    override fun copyParamsTo(other: MusicalSoundGenerator) {
+        super.copyParamsTo(other)
+        (other as SamplerK).setSample(this.getSample())
+        other.setMidiMode(this.getMidiMode())
+        other.setMode(this.getMode())
+        other.setSampleStartIndex(this.getSampleStartIndex())
+        other.setSampleEndIndex(this.getSampleEndIndex())
+        other.setLoopStartIndex(this.getLoopStartIndex())
+        other.setLoopEndIndex(this.getLoopEndIndex())
     }
 
     override fun equals(other: Any?): Boolean {
@@ -91,24 +52,10 @@ class SamplerK(context: Context): MusicalSoundGenerator() {
         }
         return false
     }
-    external override fun isSounding(): Boolean
 
-    override fun copyParamsTo(other: MusicalSoundGenerator) {
-        val samples = this.copySample()
-        (other as SamplerK).loadSample(samples)
-        other.setMidiMode(this.getMidiMode())
-        other.setMode(this.getMode())
-        other.setSampleStartIndex(this.getSampleStartIndex())
-        other.setSampleEndIndex(this.getSampleEndIndex())
-        other.setLoopStartIndex(this.getLoopStartIndex())
-        other.setLoopEndIndex(this.getLoopEndIndex())
-
-
+    companion object
+    {
+        const val MAGIC_NR = 3
     }
 
-    external fun copySample(): FloatArray
-
-    external override fun setMidiMode(midiMode: Int)
-
-    external override fun getMidiMode(): Int
 }

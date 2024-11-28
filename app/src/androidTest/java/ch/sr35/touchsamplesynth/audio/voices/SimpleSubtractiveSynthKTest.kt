@@ -17,7 +17,7 @@ class SimpleSubtractiveSynthKTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val synth=SimpleSubtractiveSynthK(context)
         synth.bindToAudioEngine()
-        Assert.assertTrue(synth.getInstance() > -1)
+        Assert.assertTrue(synth.instanceNr() > -1)
     }
 
     @Test

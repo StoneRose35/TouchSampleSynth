@@ -87,6 +87,10 @@ float MusicalSoundGenerator::getVolume() {
     return currentVolume;
 }
 
+bool MusicalSoundGenerator::isSounding() {
+    return false;
+}
+
 
 
 

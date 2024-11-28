@@ -11,9 +11,18 @@ import kotlin.math.pow
 
 class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
 
-    private var instance: Byte=-1
-    var actionAmountToFilter: Float=0.0f
-    var engaged: Boolean=false
+    override fun bindToAudioEngine()
+    {
+        val audioEngine= AudioEngineK()
+        if (instance == (-1).toByte()) {
+            instance = audioEngine.addSoundGenerator(MAGIC_NR)
+        }
+    }
+
+    override fun hashCode(): Int {
+        return MAGIC_NR + instance
+    }
+
     val icon=AppCompatResources.getDrawable(context,R.drawable.simplesubtractivesynth)
     external fun setAttack(a: Float): Boolean
     external fun getAttack(): Float
@@ -29,75 +38,19 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
     external fun getResonance():Float
     external fun setInitialCutoff(ic: Float): Boolean
     external fun getInitialCutoff(): Float
-    external fun getVolume(): Float
-    external fun setVolume(v: Float): Boolean
-    private external fun switchOnExt(vel: Float): Boolean
-    private external fun switchOffExt(vel: Float):Boolean
-    external fun triggerExt(vel: Float): Boolean
-    external override fun isSounding(): Boolean
-    external override fun setMidiMode(midiMode: Int)
-    external override fun getMidiMode(): Int
-    external override fun setMidiVelocityScaling(mv: Float): Boolean
+    var actionAmountToFilter: Float=0.0f
+
     override fun copyParamsTo(other: MusicalSoundGenerator) {
+        super.copyParamsTo(other)
         (other as SimpleSubtractiveSynthK).setDecay(getDecay())
-        other.setMidiMode(this.getMidiMode())
         other.setAttack(getAttack())
         other.setSustain(getSustain())
         other.setRelease(getRelease())
         other.setInitialCutoff(getInitialCutoff())
         other.setResonance(getResonance())
         other.actionAmountToFilter = actionAmountToFilter
-        other.actionAmountToVolume = actionAmountToVolume
     }
 
-
-
-    external override fun setNote(note: Float): Boolean
-
-
-
-    override fun getInstance(): Byte {
-        return instance
-    }
-
-    override fun generateAttachedInstance(context: Context): MusicalSoundGenerator {
-        val instance = SimpleSubtractiveSynthK(context)
-        instance.bindToAudioEngine()
-        return instance
-    }
-
-    override fun bindToAudioEngine()
-    {
-        val audioEngine= AudioEngineK()
-        if (instance == (-1).toByte()) {
-            instance = audioEngine.addSoundGenerator(1)
-        }
-    }
-
-    override fun detachFromAudioEngine()
-    {
-        val audioEngine = AudioEngineK()
-        if (instance > -1)
-        {
-            audioEngine.removeSoundGenerator(instance)
-            instance=(-1).toByte()
-        }
-    }
-
-    override fun switchOn(vel: Float): Boolean {
-        engaged=true
-        super.switchOn(vel)
-        return switchOnExt(vel)
-    }
-
-    override fun switchOff(vel: Float): Boolean{
-        engaged=false
-        return switchOffExt(vel)
-    }
-
-    override fun isEngaged(): Boolean {
-        return engaged
-    }
 
     override fun applyTouchAction(a: Float) {
         if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmountToFilter) > 20.0f &&
@@ -118,13 +71,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
         return false
     }
 
-    override fun hashCode(): Int {
-        return 2000 + instance
-    }
     companion object {
-        // Used to load the 'touchsamplesynth' library on application startup.
-        init {
-            System.loadLibrary("touchsamplesynth")
-        }
+        const val MAGIC_NR = 1
     }
 }

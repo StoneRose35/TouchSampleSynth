@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.voices.SineMonoSynthK
 
 class SineMonoSynthI(private val context: Context,
@@ -26,7 +27,7 @@ class SineMonoSynthI(private val context: Context,
     override fun generateVoices(cnt: Int) {
         val doCopy = voices.isNotEmpty()
         for (i in 0 until cnt) {
-            voices.add(SineMonoSynthK(context).generateAttachedInstance(context))
+            voices.add(MusicalSoundGenerator.generateAttachedInstance<SineMonoSynthK>(context))
             if (doCopy)
             {
                 voices[0].copyParamsTo(voices[voices.size-1])
