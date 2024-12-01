@@ -1,24 +1,28 @@
 package ch.sr35.touchsamplesynth.model
 
-import ch.sr35.touchsamplesynth.audio.InstrumentI
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import java.io.Serializable
 
-class SineMonoSynthP(private var attack: Float,
-                     private var decay: Float,
-                     private var sustain: Float,
-                     private var release: Float,
-                     actionAmountToVolume: Float,
-                     polyphonyDefinition: PolyphonyDefinition,
-                     nVoices: Int,
-                     name: String
+class SineMonoSynthP(
+    private var attack: Float=0.0f,
+    private var decay: Float=0.0f,
+    private var sustain: Float=0.0f,
+    private var release: Float=0.0f,
+    actionAmountToVolume: Float=0.0f,
+    polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC,
+    nVoices: Int=0,
+    name: String=""
 ): InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name),Serializable, Cloneable {
+    private var className: String=""
+    init {
+        className = this.javaClass.name
+    }
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SineMonoSynthI)
         {
-
             attack = i.getAttack()
             decay = i.getDecay()
             sustain = i.getSustain()
@@ -37,7 +41,6 @@ class SineMonoSynthP(private var attack: Float,
             i.setSustain(sustain)
             i.setRelease(release)
             i.setVolumeModulation(actionAmountToVolume)
-
         }
     }
 
@@ -50,11 +53,11 @@ class SineMonoSynthP(private var attack: Float,
     }
 
     override fun hashCode(): Int {
-        return this.attack.toRawBits() +
-                this.decay.toRawBits() +
-                this.sustain.toRawBits() +
-                this.release.toRawBits() + super.hashCode()
-
+        return super.hashCode() +
+                 this.attack.toRawBits() +
+                 this.decay.toRawBits() +
+                 this.sustain.toRawBits() +
+                 this.release.toRawBits()
     }
 
     override fun toString(): String
@@ -63,7 +66,8 @@ class SineMonoSynthP(private var attack: Float,
     }
 
     override fun clone(): Any {
-        return SineMonoSynthP(this.attack,this.decay,this.sustain,this.release,this.actionAmountToVolume,this.polyphonyDefinition,this.nVoices,this.name)
+        return SineMonoSynthP(
+            this.attack,this.decay,this.sustain,this.release,this.actionAmountToVolume,this.polyphonyDefinition,this.nVoices,this.name)
     }
 
 }

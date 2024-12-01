@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth
 
 import android.content.pm.PackageManager
-import android.database.DataSetObserver
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -27,7 +26,7 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
-import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.databinding.ActivityMainBinding
 import ch.sr35.touchsamplesynth.dialogs.DefaultScenesInstall
 import ch.sr35.touchsamplesynth.fragments.InstrumentsPageFragment

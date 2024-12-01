@@ -1,3 +1,6 @@
+import ch.sr35.touchsamplesynth.build.InstrumentBuilderTask
+import com.android.build.gradle.internal.tasks.factory.dependsOn
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -66,3 +69,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
     implementation(kotlin("reflect"))
 }
+
+tasks.register<InstrumentBuilderTask>("instrumentBuilder") {
+
+}
+
+tasks.preBuild.dependsOn(tasks.named("instrumentBuilder"))

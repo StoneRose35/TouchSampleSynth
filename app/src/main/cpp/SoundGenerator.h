@@ -12,8 +12,7 @@ public:
     virtual int getType();
 };
 
-enum SoundGeneratorType
-{
+enum SoundGeneratorType{
     SINE_MONO_SYNTH = 0,
     SIMPLE_SUBTRACTIVE_SYNTH = 1,
     FM_SYNTH = 2,

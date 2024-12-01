@@ -1,6 +1,6 @@
 package ch.sr35.touchsamplesynth.model
 
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.views.TouchElement
 import com.google.gson.Gson
 import org.junit.Assert

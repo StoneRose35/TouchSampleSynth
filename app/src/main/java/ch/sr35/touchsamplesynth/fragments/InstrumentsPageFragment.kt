@@ -25,11 +25,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet.WRAP_CONTENT
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.InstrumentI
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_OFF
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_ON_POLY
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
@@ -298,13 +297,14 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
             selectedInstrument = p2
             val frag: Fragment
             if (contentView != null) {
-                frag = if ((context as TouchSampleSynthMain).soundGenerators[p2] is SineMonoSynthI) {
-                    SineMonoSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SineMonoSynthI)
-                } else if ((context as TouchSampleSynthMain).soundGenerators[p2] is SimpleSubtractiveSynthI) {
-                    SimpleSubtractiveSynthFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SimpleSubtractiveSynthI)
-                } else {
-                    SamplerFragment((context as TouchSampleSynthMain).soundGenerators[p2] as SamplerI)
+                val framentName = (context as TouchSampleSynthMain).soundGenerators[p2]::class.java.name.split(".").last().let {
+                    cn ->
+                    cn.substring(0,cn.length-1) + "Fragment"
                 }
+                frag = Class.forName("ch.sr35.touchsamplesynth.fragments.$framentName").constructors
+                    .first { cstr -> cstr.parameterCount == 1 }
+                    .newInstance((context as TouchSampleSynthMain)
+                    .soundGenerators[p2]) as Fragment
                 if (p1 != null) {
                     putFragment(
                         frag,
@@ -321,8 +321,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                 PolyphonyDefinition.POLY_SATURATE -> {
                     view?.findViewById<RadioGroup>(R.id.instrument_page_rg_polyphony)?.check(R.id.instrument_page_rg_poly_sat)
                 }
-                PolyphonyDefinition.POLY_NOTE_STEAL ->
-                {
+                PolyphonyDefinition.POLY_NOTE_STEAL -> {
                     view?.findViewById<RadioGroup>(R.id.instrument_page_rg_polyphony)?.check(R.id.instrument_page_rg_poly_ns)
                 }
                 PolyphonyDefinition.MONOPHONIC -> {

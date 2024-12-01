@@ -1,6 +1,7 @@
-package ch.sr35.touchsamplesynth.audio
+package ch.sr35.touchsamplesynth.audio.instruments
 
 import android.graphics.drawable.Drawable
+import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
 enum class PolyphonyDefinition
 {
@@ -9,7 +10,7 @@ enum class PolyphonyDefinition
     POLY_NOTE_STEAL
 }
 
-open class InstrumentI(var name: String) {
+sealed class InstrumentI(var name: String) {
 
     open var voices=ArrayList<MusicalSoundGenerator>()
     var polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
@@ -105,7 +106,4 @@ open class InstrumentI(var name: String) {
         return this.name.hashCode() + this.getType().hashCode()
     }
 
-    companion object {
-        val DEFAULT_POLYPHONY = 4
-    }
 }

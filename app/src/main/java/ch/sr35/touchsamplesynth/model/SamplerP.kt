@@ -1,24 +1,27 @@
 package ch.sr35.touchsamplesynth.model
 
 import androidx.core.net.toUri
-import ch.sr35.touchsamplesynth.audio.InstrumentI
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import java.io.File
 import java.io.Serializable
 
-class SamplerP(private var sampleStart: Int,
-               private var sampleEnd: Int,
-               private var loopStart: Int,
-               private var loopEnd: Int,
-               private var mode: Byte,
-               private var sampleFile: String,
-               actionAmountToVolume: Float,
-               polyphonyDefinition: PolyphonyDefinition,
-               nVoices: Int,
-               name: String
-):InstrumentP(actionAmountToVolume, polyphonyDefinition,nVoices,name), Serializable, Cloneable  {
-
+class SamplerP(private var sampleStart: Int=0,
+               private var sampleEnd: Int=0,
+               private var loopStart: Int=0,
+               private var loopEnd: Int=0,
+               private var mode: Byte=0,
+               private var sampleFile: String="",
+               actionAmountToVolume: Float=0.0f,
+               polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC,
+               nVoices: Int=0,
+               name: String=""
+):InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name), Serializable, Cloneable  {
+    private var className: String=""
+    init {
+        className = this.javaClass.name
+    }
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SamplerI)

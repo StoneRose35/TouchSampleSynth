@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.graphics.RgbColor
 import ch.sr35.touchsamplesynth.views.PianoRoll
 import ch.sr35.touchsamplesynth.views.TouchElement

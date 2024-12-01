@@ -3,7 +3,7 @@ package ch.sr35.touchsamplesynth.model
 import android.content.Context
 import android.util.Log
 import ch.sr35.touchsamplesynth.TAG
-import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.views.TouchElement
 import java.io.File
 import java.io.FileInputStream
@@ -13,7 +13,6 @@ import java.io.ObjectOutputStream
 import java.io.Serializable
 import java.util.Collections
 import java.util.UUID
-import kotlin.contracts.contract
 
 
 class SceneP : Serializable, Cloneable {

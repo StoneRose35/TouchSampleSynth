@@ -2,7 +2,7 @@ package ch.sr35.touchsamplesynth.model
 
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.AudioTest
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import org.junit.Assert

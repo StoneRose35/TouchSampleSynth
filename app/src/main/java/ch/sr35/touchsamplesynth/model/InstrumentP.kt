@@ -1,8 +1,8 @@
 package ch.sr35.touchsamplesynth.model
 
 import android.content.Context
-import ch.sr35.touchsamplesynth.audio.InstrumentI
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
@@ -18,24 +18,16 @@ class PersistableInstrumentDeserializer: JsonDeserializer<InstrumentP> {
         typeOfT: Type?,
         context: JsonDeserializationContext?
     ): InstrumentP? {
-        if (json?.asJsonObject?.has("sampleStart")==true)
-        {
-            return context?.deserialize(json,SamplerP::class.java)
-        }
-        else if (json?.asJsonObject?.has("resonance")==true)
-        {
-            return context?.deserialize(json,SimpleSubtractiveSynthP::class.java)
-        }
-        else if (json?.asJsonObject?.has("attack")==true)
-        {
-            return context?.deserialize(json,SineMonoSynthP::class.java)
-        }
-        return null
+        val className = json?.asJsonObject?.get("className")?.asString
+        return context?.deserialize(json,Class.forName(className!!))
     }
 }
 
-open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefinition: PolyphonyDefinition=PolyphonyDefinition.MONOPHONIC,var nVoices:Int=0, var name: String="", var id: String=""): Serializable, Cloneable {
+open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC, var nVoices:Int=0, var name: String="", var id: String=""): Serializable, Cloneable {
 
+    init {
+        val className = this.javaClass.name
+    }
     open fun fromInstrument(i: InstrumentI)
     {
         name = i.name
@@ -89,41 +81,17 @@ class PersistableInstrumentFactory
 {
     companion object
     {
-        fun fromInstrument(msg: InstrumentI?): InstrumentP?
+        fun fromInstrument(msg: InstrumentI?): InstrumentP
         {
-            val pi: InstrumentP = when (msg) {
-                is SimpleSubtractiveSynthI -> {
-                    SimpleSubtractiveSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f, PolyphonyDefinition.MONOPHONIC,0, "")
-                }
-                is SineMonoSynthI -> {
-                    SineMonoSynthP(0.0f,0.0f,0.0f,0.0f,0.0f,PolyphonyDefinition.MONOPHONIC,0,"")
-                }
-                is SamplerI -> {
-                    SamplerP(0,0,0,0,0,"",0.0f,PolyphonyDefinition.MONOPHONIC,0,"")
-                }
-                else -> {
-                    return null
-                }
-            }
+            val className = msg?.javaClass?.name!!.split(".").last()
+            val pi = Class.forName("ch.sr35.touchsamplesynth.model.${className.substring(0,className.length-1)+"P"}").constructors[0].newInstance() as InstrumentP
             pi.fromInstrument(msg)
             return pi
         }
-        fun toInstrument(pi: InstrumentP, context: Context): InstrumentI?
+        fun toInstrument(pi: InstrumentP, context: Context): InstrumentI
         {
-            val instr: InstrumentI = when (pi) {
-                is SimpleSubtractiveSynthP -> {
-                    SimpleSubtractiveSynthI(context,pi.name)
-                }
-
-                is SineMonoSynthP -> {
-                    SineMonoSynthI(context,pi.name)
-                }
-
-                is SamplerP -> {
-                    SamplerI(context,pi.name)
-                }
-                else -> return null
-            }
+            val className = pi.javaClass.name.split(".").last()
+            val instr = Class.forName("ch.sr35.touchsamplesynth.audio.instruments.${className.substring(0,className.length-1)+"I"}").constructors[0].newInstance(context,pi.name) as InstrumentI
             pi.toInstrument(instr)
             return instr
         }

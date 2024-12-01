@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
@@ -44,9 +44,10 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
 
         if (soundGenerators.isEmpty()) {
             this.context?.let {
-                soundGenerators.add(SimpleSubtractiveSynthI(it,""))
-                soundGenerators.add(SineMonoSynthI(it, ""))
-                soundGenerators.add(SamplerI(it, ""))
+                val instrumentSubClasses = InstrumentI::class.sealedSubclasses
+                instrumentSubClasses.forEach { instr ->
+                    soundGenerators.add(instr.constructors.first().call(it, ""))
+                }
             }
         }
 
@@ -57,22 +58,10 @@ class AddInstrumentFragmentDialog(private val generatorsList: ListView) : Dialog
         buttonOk.setOnClickListener {
             if ((instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition > -1) {
                 context?.let { it1 ->
-                    var newInstrumentI: InstrumentI?=null
-                    if (soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition] is SineMonoSynthI)
-                    {
-                        newInstrumentI = SineMonoSynthI(requireContext(),"basic")
-                    }
-                    else if (soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition] is SimpleSubtractiveSynthI)
-                    {
-                        newInstrumentI = SimpleSubtractiveSynthI(requireContext(),"basic")
-                    }
-                    else if (soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition] is SamplerI)
-                    {
-                        newInstrumentI = SamplerI(requireContext(),"basic")
-                    }
+                    val newInstrumentI: InstrumentI? = soundGenerators[(instrumentsList?.adapter as SoundGeneratorListAdapter).checkedPosition].javaClass.constructors[0].newInstance(requireContext(),"basic") as InstrumentI?
                     newInstrumentI?.let {
                         newInstrumentI.generateVoices(1)
-                        (context as TouchSampleSynthMain).soundGenerators.add(it)
+                        (it1 as TouchSampleSynthMain).soundGenerators.add(it)
                     }
                     generatorsList.invalidateViews()
                 }

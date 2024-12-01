@@ -112,7 +112,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_setSample(JNIEnv *env, jobje
     if (msg != nullptr) {
         jsize sample_data_length = env->GetArrayLength(sample_data);
         jfloat *sampleArrayPtr = env->GetFloatArrayElements(sample_data, nullptr);
-        ((Sampler *) msg)->setSample(sampleArrayPtr, sample_data_length);
+        msg->setSample(sampleArrayPtr, sample_data_length);
         return true;
     }
     return false;
@@ -124,7 +124,7 @@ Java_ch_sr35_touchsamplesynth_audio_voices_SamplerK_getSample(JNIEnv *env, jobje
     jfloatArray sampleData;
     auto msg = getAudioEngine()->getSoundGeneratorFromJni<Sampler>(env, me);
     if (msg != nullptr) {
-        uint32_t sampleLength = ((Sampler *) msg)->getSample(&samplePtr);
+        uint32_t sampleLength = msg->getSample(&samplePtr);
         sampleData = env->NewFloatArray(sampleLength);
         jfloat *fltArrayPtr = env->GetFloatArrayElements(sampleData, nullptr);
         for (uint32_t c = 0; c < sampleLength; c++) {

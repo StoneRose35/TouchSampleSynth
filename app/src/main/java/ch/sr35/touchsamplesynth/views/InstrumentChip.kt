@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import ch.sr35.touchsamplesynth.R
 import android.widget.LinearLayout
 import android.widget.TextView
-import ch.sr35.touchsamplesynth.audio.InstrumentI
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 
 class InstrumentChip(context: Context,attributeSet: AttributeSet?): LinearLayout(context,attributeSet) {
 

@@ -1,22 +1,26 @@
 package ch.sr35.touchsamplesynth.model
 
-import ch.sr35.touchsamplesynth.audio.InstrumentI
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 
 class SimpleSubtractiveSynthP(
-    private var attack: Float,
-    private var decay: Float,
-    private var sustain: Float,
-    private var release: Float,
-    private var initialCutoff: Float,
-    private var actionAmountToFilter: Float,
-    actionAmountToVolume: Float,
-    private var resonance: Float,
-    polyphonyDefinition: PolyphonyDefinition,
-    nVoices: Int,
-    name: String
+    private var attack: Float=0.0f,
+    private var decay: Float=0.0f,
+    private var sustain: Float=0.0f,
+    private var release: Float=0.0f,
+    private var initialCutoff: Float=0.0f,
+    private var resonance: Float=0.0f,
+    private var actionAmountToFilter: Float=0.0f,
+    actionAmountToVolume: Float=0.0f,
+    polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC,
+    nVoices: Int=0,
+    name: String=""
 ): InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name) {
+    private var className: String=""
+    init {
+        className = this.javaClass.name
+    }
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SimpleSubtractiveSynthI)
@@ -72,7 +76,19 @@ class SimpleSubtractiveSynthP(
     }
 
     override fun clone(): Any {
-        val klon=SimpleSubtractiveSynthP(this.attack,this.decay,this.sustain,this.release,this.initialCutoff,this.actionAmountToFilter, this.actionAmountToVolume,this.resonance,this.polyphonyDefinition,this.nVoices,this.name)
+        val klon=SimpleSubtractiveSynthP(
+            this.attack,
+            this.decay,
+            this.sustain,
+            this.release,
+            this.initialCutoff,
+            this.resonance,
+            this.actionAmountToFilter,
+            this.actionAmountToVolume,
+            this.polyphonyDefinition,
+            this.nVoices,
+            this.name
+        )
         return klon
     }
 }
