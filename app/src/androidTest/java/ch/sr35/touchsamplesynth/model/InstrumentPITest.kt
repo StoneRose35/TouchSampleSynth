@@ -62,22 +62,17 @@ class InstrumentPITest : AudioTest(){
         i1.setResonance(0.7f)
         val pi1 = PersistableInstrumentFactory.fromInstrument(i1)
         Assert.assertTrue(pi1 is SimpleSubtractiveSynthP)
-        if (pi1 != null)
-        {
-            val ii1 = PersistableInstrumentFactory.toInstrument(pi1, context)
-            Assert.assertTrue(inRange((ii1 as SimpleSubtractiveSynthI).getAttack(),i1.getAttack()))
-            Assert.assertTrue(inRange(ii1.getAttack(),i1.getAttack()))
-            Assert.assertTrue(inRange(ii1.getDecay(),i1.getDecay()))
-            Assert.assertTrue(inRange(ii1.getSustain(),i1.getSustain()))
-            Assert.assertTrue(inRange(ii1.getRelease(),i1.getRelease()))
-            Assert.assertTrue(inRange(ii1.getInitialCutoff(),i1.getInitialCutoff()))
-            Assert.assertTrue(inRange(ii1.getActionAmountToFilter(),i1.getActionAmountToFilter()))
-            Assert.assertTrue(inRange(ii1.getResonance(), i1.getResonance()))
-        }
-        else
-        {
-            Assert.fail()
-        }
+
+        val ii1 = PersistableInstrumentFactory.toInstrument(pi1, context)
+        Assert.assertTrue(inRange((ii1 as SimpleSubtractiveSynthI).getAttack(),i1.getAttack()))
+        Assert.assertTrue(inRange(ii1.getAttack(),i1.getAttack()))
+        Assert.assertTrue(inRange(ii1.getDecay(),i1.getDecay()))
+        Assert.assertTrue(inRange(ii1.getSustain(),i1.getSustain()))
+        Assert.assertTrue(inRange(ii1.getRelease(),i1.getRelease()))
+        Assert.assertTrue(inRange(ii1.getInitialCutoff(),i1.getInitialCutoff()))
+        Assert.assertTrue(inRange(ii1.getActionAmountToFilter(),i1.getActionAmountToFilter()))
+        Assert.assertTrue(inRange(ii1.getResonance(), i1.getResonance()))
+
     }
 
     @Test
