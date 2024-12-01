@@ -92,18 +92,14 @@ class InstrumentPITest : AudioTest(){
         i1.setRelease(0.4f)
         val pi1 = PersistableInstrumentFactory.fromInstrument(i1)
         Assert.assertTrue(pi1 is SineMonoSynthP)
-        if (pi1 != null) {
-            val ii1 = PersistableInstrumentFactory.toInstrument(pi1, context)
-            Assert.assertTrue(inRange((ii1 as SineMonoSynthI).getAttack(),i1.getAttack()))
-            Assert.assertTrue(inRange(ii1.getAttack(),i1.getAttack()))
-            Assert.assertTrue(inRange(ii1.getDecay(),i1.getDecay()))
-            Assert.assertTrue(inRange(ii1.getSustain(),i1.getSustain()))
-            Assert.assertTrue(inRange(ii1.getRelease(),i1.getRelease()))
-        }
-        else
-        {
-            Assert.fail()
-        }
+
+        val ii1 = PersistableInstrumentFactory.toInstrument(pi1, context)
+        Assert.assertTrue(inRange((ii1 as SineMonoSynthI).getAttack(),i1.getAttack()))
+        Assert.assertTrue(inRange(ii1.getAttack(),i1.getAttack()))
+        Assert.assertTrue(inRange(ii1.getDecay(),i1.getDecay()))
+        Assert.assertTrue(inRange(ii1.getSustain(),i1.getSustain()))
+        Assert.assertTrue(inRange(ii1.getRelease(),i1.getRelease()))
+
     }
 
 

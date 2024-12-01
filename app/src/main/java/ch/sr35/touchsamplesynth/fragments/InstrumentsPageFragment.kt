@@ -29,9 +29,6 @@ import ch.sr35.touchsamplesynth.audio.MIDI_MODE_OFF
 import ch.sr35.touchsamplesynth.audio.MIDI_MODE_ON_POLY
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
-import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
-import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
-import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 
 
 /**

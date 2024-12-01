@@ -3,9 +3,6 @@ package ch.sr35.touchsamplesynth.model
 import android.content.Context
 import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
-import ch.sr35.touchsamplesynth.audio.instruments.SamplerI
-import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
-import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement

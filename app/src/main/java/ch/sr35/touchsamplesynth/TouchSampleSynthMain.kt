@@ -522,7 +522,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     fun loadSceneWithWaitIndicator(position: Int)
     {
-        var wasSceneLoading = sceneIsLoading.getAndSet(true)
+        val wasSceneLoading = sceneIsLoading.getAndSet(true)
         if (wasSceneLoading)
         {
             return

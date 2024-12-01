@@ -2,8 +2,7 @@ package ch.sr35.touchsamplesynth.audio.instruments
 
 import androidx.fragment.app.Fragment
 import androidx.test.platform.app.InstrumentationRegistry
-import ch.sr35.touchsamplesynth.TouchSampleSynthMain
-import ch.sr35.touchsamplesynth.model.InstrumentP
+
 import ch.sr35.touchsamplesynth.model.PersistableInstrumentFactory
 import ch.sr35.touchsamplesynth.model.SineMonoSynthP
 import org.hamcrest.MatcherAssert.assertThat
@@ -44,7 +43,6 @@ class InstrumentITest {
     @Test
     fun getAllInstrumentsTest()
     {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val subclasses = InstrumentI::class.sealedSubclasses
         assertThat(subclasses.size,greaterThan(2))
         assertThat(subclasses,hasItem(SineMonoSynthI::class))
@@ -56,7 +54,7 @@ class InstrumentITest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val subclasses = InstrumentI::class.sealedSubclasses
         var i=0
-        var instruments = ArrayList<InstrumentI>()
+        val instruments = ArrayList<InstrumentI>()
         subclasses.forEach {
             subClass ->
             instruments.add(subClass.constructors.first().call(context,"Instrument ${i++}"))

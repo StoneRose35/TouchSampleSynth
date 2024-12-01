@@ -33,25 +33,19 @@ class SceneP : Serializable, Cloneable {
         remainingTouchElements.addAll(touchElements)
         for (pi in instruments) {
             val instr = PersistableInstrumentFactory.toInstrument(pi, context)
-            if (instr != null) {
-                sg.add(instr)
-                // generate all touchElements which use the current instrument
-                for (c in 0 until touchElements.size)
-                {
-                    val te = touchElements[c]
-                    if (te.soundGeneratorId == pi.id) {
-                        val touchElement = TouchElement(context, null)
-                        te.toTouchElement(touchElement)
-                        touchElement.soundGenerator = instr
-                        tels.add(touchElement)
-                    }
-                }
-                remainingTouchElements.removeIf { te -> te.soundGeneratorId == pi.id }
-            }
-            else
+            sg.add(instr)
+            // generate all touchElements which use the current instrument
+            for (c in 0 until touchElements.size)
             {
-                Log.e(TAG,"failed to instantiate ${pi}")
+                val te = touchElements[c]
+                if (te.soundGeneratorId == pi.id) {
+                    val touchElement = TouchElement(context, null)
+                    te.toTouchElement(touchElement)
+                    touchElement.soundGenerator = instr
+                    tels.add(touchElement)
+                }
             }
+            remainingTouchElements.removeIf { te -> te.soundGeneratorId == pi.id }
         }
 
         // only touchElements with no soundGenerator should be created at this point
@@ -75,7 +69,7 @@ class SceneP : Serializable, Cloneable {
             val pi = PersistableInstrumentFactory.fromInstrument(sg)
             uuid = UUID.randomUUID().toString()
             instrumentIWithIds[sg] = uuid
-            pi!!.id = uuid
+            pi.id = uuid
             instruments.add(pi)
         }
         for (te in touchEls)
