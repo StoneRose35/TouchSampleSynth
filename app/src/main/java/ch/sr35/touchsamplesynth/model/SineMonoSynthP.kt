@@ -15,10 +15,7 @@ class SineMonoSynthP(
     nVoices: Int=0,
     name: String=""
 ): InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name),Serializable, Cloneable {
-    private var className: String=""
-    init {
-        className = this.javaClass.name
-    }
+    private val className: String=this.javaClass.name
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
         if (i is SineMonoSynthI)
