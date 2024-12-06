@@ -50,6 +50,9 @@ SineMonoSynth::SineMonoSynth(float sr): MusicalSoundGenerator(sr) {
     currentSample = 0;
     modulatorsUpdateInSamples = floor(sr / 100);
     currentPitchUpdateInSamples=modulatorsUpdateInSamples;
+    currentPitchBend=0;
+    newPitchBend=0;
+
 }
 
 void SineMonoSynth::setNote(float n) {

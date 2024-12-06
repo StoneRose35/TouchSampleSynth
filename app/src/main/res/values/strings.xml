@@ -131,4 +131,8 @@
     <string name="alignbottom">align bottom</string>
     <string name="distributevertical">distribute vertical</string>
     <string name="distributehorizontal">distribute horizontal</string>
+    <string name="pitchBendAmount">PB Amt.</string>
+    <string name="pitchBendOrientation">Pitchbend Orientation</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertical</string>
 </resources>

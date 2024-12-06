@@ -11,6 +11,7 @@ MusicalSoundGenerator::MusicalSoundGenerator(float sr) {
     currentVolume = 1.0f;
     newVolume = 1.0f;
     midiVelocityScaling = 0.0f;
+    note = 0;
 }
 
 void MusicalSoundGenerator::setNote(float n) {

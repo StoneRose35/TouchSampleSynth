@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.model
 
-import androidx.core.graphics.rotationMatrix
 import ch.sr35.touchsamplesynth.BuildConfig
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
@@ -328,7 +327,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
                     if ((i as JsonObject).has("loopStart")){
                         i.addProperty("className","ch.sr35.touchsamplesynth.model.SamplerP")
                     }
-                    else if ((i as JsonObject).has("resonance")) {
+                    else if (i.has("resonance")) {
                         i.addProperty("className","ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP")
                     }
                     else {
