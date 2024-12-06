@@ -14,6 +14,7 @@ sealed class InstrumentI(var name: String) {
 
     open var voices=ArrayList<MusicalSoundGenerator>()
     var polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
+    var horizontalToActionB = false
 
     open fun getType(): String
     {
@@ -92,6 +93,23 @@ sealed class InstrumentI(var name: String) {
             return voices[0].actionAmountToVolume
         }
         return 0.0f
+    }
+
+    open fun getPitchBendAmount(): Float
+    {
+        if (voices.isNotEmpty())
+        {
+            return voices[0].actionAmountToPitchBend
+        }
+        return 0.0f
+    }
+
+    open fun setPitchBendAmount(amount: Float)
+    {
+        for (voice in voices)
+        {
+            voice.actionAmountToPitchBend = amount
+        }
     }
 
     override fun equals(other: Any?): Boolean {

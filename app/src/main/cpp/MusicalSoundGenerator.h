@@ -21,9 +21,11 @@ public:
 
     virtual bool isSounding();
 
+    virtual void setPitchBend(float);
+
     void setVolume(float);
     void setVolumeImmediate(float);
-    float getVolume();
+    float getVolume() const;
 
     float getNextSampleVolume();
 
@@ -39,6 +41,7 @@ public:
     float newVolume =1.0f;
     float alphaVolumeChange;
     float midiVelocityScaling;
+    float note;
     AMidiInputPort * midiInputPort= nullptr;
     explicit MusicalSoundGenerator(float sr);
 };

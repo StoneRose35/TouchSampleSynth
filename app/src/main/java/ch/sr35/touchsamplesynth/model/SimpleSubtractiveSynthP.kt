@@ -13,10 +13,12 @@ class SimpleSubtractiveSynthP(
     private var resonance: Float=0.0f,
     private var actionAmountToFilter: Float=0.0f,
     actionAmountToVolume: Float=0.0f,
+    actionAmountToPitchBend: Float=0.0f,
     polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC,
+    horizontalToActionB: Boolean=false,
     nVoices: Int=0,
     name: String=""
-): InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name) {
+): InstrumentP(actionAmountToVolume,actionAmountToPitchBend, polyphonyDefinition,horizontalToActionB,nVoices,name) {
     private val className: String=this.javaClass.name
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
@@ -82,7 +84,9 @@ class SimpleSubtractiveSynthP(
             this.resonance,
             this.actionAmountToFilter,
             this.actionAmountToVolume,
+            this.actionAmountToPitchBend,
             this.polyphonyDefinition,
+            this.horizontalToActionB,
             this.nVoices,
             this.name
         )

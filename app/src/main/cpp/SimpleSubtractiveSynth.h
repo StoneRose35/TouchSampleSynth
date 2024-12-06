@@ -23,7 +23,6 @@ private:
     int8_t currentSample;
     float currentFilterCutoff, currentResonance, newFilterCutoff;
     float currentPitchBend,newPitchBend;
-    float note;
     int modulatorsUpdateInSamples, currentFilterUpdateSamples, currentPitchUpdateInSamples;
 
 
@@ -51,7 +50,7 @@ public:
     float getCutoff();
     void setResonance(float);
     float getResonance();
-    void setPitchBend(float);
+    void setPitchBend(float) override;
 
 };
 

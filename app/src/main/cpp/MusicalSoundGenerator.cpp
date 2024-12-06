@@ -13,7 +13,8 @@ MusicalSoundGenerator::MusicalSoundGenerator(float sr) {
     midiVelocityScaling = 0.0f;
 }
 
-void MusicalSoundGenerator::setNote(float note) {
+void MusicalSoundGenerator::setNote(float n) {
+    note = n;
     midiNote = (uint8_t)((int8_t)note + 69);
 }
 
@@ -83,12 +84,16 @@ float MusicalSoundGenerator::getNextSampleVolume() {
     return currentVolume;
 }
 
-float MusicalSoundGenerator::getVolume() {
+float MusicalSoundGenerator::getVolume() const {
     return currentVolume;
 }
 
 bool MusicalSoundGenerator::isSounding() {
     return false;
+}
+
+void MusicalSoundGenerator::setPitchBend(float) {
+
 }
 
 

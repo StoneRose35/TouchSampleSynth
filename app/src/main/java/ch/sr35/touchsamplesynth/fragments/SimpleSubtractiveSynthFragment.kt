@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.SeekBar
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioUtils
@@ -36,8 +38,9 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val attack = view.findViewById<SeekBar>(R.id.seekBarAttack)
+
         synth?.let {
+            val attack = view.findViewById<SeekBar>(R.id.seekBarAttack)
             attack.progress = (it.getAttack() / 2.0f * 1000.0f).toInt()
             attack.setOnSeekBarChangeListener(this)
 
@@ -69,6 +72,31 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
             val actionAmountToVolume = view.findViewById<SeekBar>(R.id.seekBarTouchToVolume)
             actionAmountToVolume.progress = (it.getVolumeModulation() * 1000.0f).toInt()
             actionAmountToVolume.setOnSeekBarChangeListener(this)
+
+            view.findViewById<SeekBar>(R.id.seekBarTouchToPitchBend).let {  sb ->
+                sb.progress = (it.getPitchBendAmount() * 100.0f).toInt()
+                sb.setOnSeekBarChangeListener(this)
+            }
+
+            view.findViewById<RadioGroup>(R.id.radioGroupPitchBendOrientation).let { rg ->
+                if (it.horizontalToActionB) {
+                    rg.check(R.id.radioButtonHorizontalToActionB)
+                } else {
+                    rg.check(R.id.radioButtonHorizontalToActionA)
+                }
+                rg.setOnCheckedChangeListener {
+                        _, checkedId ->
+                    when (checkedId) {
+                        R.id.radioButtonHorizontalToActionB -> {
+                            it.horizontalToActionB = true
+                        }
+
+                        R.id.radioButtonHorizontalToActionA -> {
+                            it.horizontalToActionB = false
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -102,6 +130,9 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
             }
             R.id.seekBarTouchToVolume -> {
                 synth?.setVolumeModulation(p0.progress.toFloat() / 1000.0f)
+            }
+            R.id.seekBarTouchToPitchBend -> {
+                synth?.setPitchBendAmount(p0.progress.toFloat() / 100.0f)
             }
         }
     }

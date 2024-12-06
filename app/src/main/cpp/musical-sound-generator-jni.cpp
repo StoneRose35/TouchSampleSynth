@@ -119,4 +119,15 @@ Java_ch_sr35_touchsamplesynth_audio_MusicalSoundGenerator_setNote(JNIEnv* env,
     return false;
 }
 
+JNIEXPORT jboolean JNICALL
+Java_ch_sr35_touchsamplesynth_audio_MusicalSoundGenerator_setPitchBend(JNIEnv* env,jobject /* this */me,jfloat pb)
+{
+    auto msg = getAudioEngine()->getSoundGeneratorFromJni<MusicalSoundGenerator>(env, me);
+    if (msg != nullptr) {
+        msg->setPitchBend(pb);
+        return true;
+    }
+    return false;
+}
+
 }

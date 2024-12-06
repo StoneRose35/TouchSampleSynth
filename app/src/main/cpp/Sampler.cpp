@@ -52,18 +52,18 @@ float Sampler::getNextSample() {
     {
         if ((loopMode & (1 << SAMPLER_MODE_LOOP))== (1 << SAMPLER_MODE_LOOP))
         {
-            if (currentIndex == loopEndIndex)
+            if (currentIndex >= loopEndIndex)
             {
-                currentIndex = loopStartIndex;
+                currentIndex = loopStartIndex + (currentIndex - loopEndIndex);
             }
         }
-        if (currentIndex==sampleEndIndex)
+        if (currentIndex>=sampleEndIndex)
         {
             currentIndex=0xFFFFFFFF;
         }
         else
         {
-            currentIndex++;
+            currentIndex = (uint32_t)((float)currentIndex + phaseIncrement);
         }
     }
     if (currentIndex != 0xFFFFFFFF)
@@ -119,6 +119,7 @@ Sampler::Sampler(float sr): MusicalSoundGenerator(sr) {
     loopMode=0;
     dataSize = DEFAULT_SAMPLE_SIZE;
     sampleData = (float*)malloc(DEFAULT_SAMPLE_SIZE*sizeof(float));
+    phaseIncrement = 1.0f;
     for(uint32_t c=0;c<DEFAULT_SAMPLE_SIZE;c++)
     {
         *(sampleData + c) = 0.f;
@@ -148,4 +149,15 @@ void Sampler::setSampleEndIndex(uint32_t sampleEndIdx) {
 
 uint32_t Sampler::getSampleEndIndex() const {
     return sampleEndIndex;
+}
+
+void Sampler::setPitchBend(float pb) {
+    if (pb < 0.0f)
+    {
+        phaseIncrement = 1.0f + pb/4.0f;
+    }
+    else
+    {
+        phaseIncrement = 1.0f + pb*4;
+    }
 }

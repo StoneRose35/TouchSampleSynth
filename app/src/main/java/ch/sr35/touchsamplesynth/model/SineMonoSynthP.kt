@@ -11,10 +11,12 @@ class SineMonoSynthP(
     private var sustain: Float=0.0f,
     private var release: Float=0.0f,
     actionAmountToVolume: Float=0.0f,
+    actionAmountToPitchBend: Float=0.0f,
     polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC,
+    horizontalToActionB: Boolean=false,
     nVoices: Int=0,
     name: String=""
-): InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name),Serializable, Cloneable {
+): InstrumentP(actionAmountToVolume, actionAmountToPitchBend,polyphonyDefinition,horizontalToActionB, nVoices,name),Serializable, Cloneable {
     private val className: String=this.javaClass.name
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
@@ -64,7 +66,16 @@ class SineMonoSynthP(
 
     override fun clone(): Any {
         return SineMonoSynthP(
-            this.attack,this.decay,this.sustain,this.release,this.actionAmountToVolume,this.polyphonyDefinition,this.nVoices,this.name)
+            this.attack,
+            this.decay,
+            this.sustain,
+            this.release,
+            this.actionAmountToVolume,
+            this.actionAmountToPitchBend,
+            this.polyphonyDefinition,
+            this.horizontalToActionB,
+            this.nVoices,
+            this.name)
     }
 
 }

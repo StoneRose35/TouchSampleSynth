@@ -15,7 +15,8 @@ class TouchElementP(var width: Int,
                     var notes: ArrayList<Int>,
                     var color: RgbColor?,
                     var midiChannel: Int,
-                    var midiCC: Int,
+                    var midiCCA: Int,
+                    var midiCCB: Int,
                     var soundGeneratorId: String
 ): Serializable, Cloneable {
 
@@ -27,7 +28,7 @@ class TouchElementP(var width: Int,
         actionDir = touchElement.actionDir
         notes.addAll(touchElement.notes.stream().map { it.index }.collect(Collectors.toList()))
         midiChannel = touchElement.midiChannel
-        midiCC = touchElement.midiCC
+        midiCCA = touchElement.midiCCA
         color = touchElement.getMainColor()
     }
 
@@ -51,7 +52,8 @@ class TouchElementP(var width: Int,
             te.setColor(it)
         }
         te.midiChannel = midiChannel
-        te.midiCC = midiCC
+        te.midiCCA = midiCCA
+        te.midiCCB = midiCCB
         te.actionDir = actionDir
     }
 
@@ -70,7 +72,8 @@ class TouchElementP(var width: Int,
             this.notes,
             this.color?.clone(),
             this.midiChannel,
-            this.midiCC,
+            this.midiCCA,
+            this.midiCCB,
             this.soundGeneratorId)
     }
 }

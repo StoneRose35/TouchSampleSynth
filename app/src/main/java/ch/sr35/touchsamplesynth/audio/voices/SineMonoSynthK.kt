@@ -12,7 +12,7 @@ class SineMonoSynthK(context: Context): MusicalSoundGenerator() {
     {
         val audioEngine= AudioEngineK()
         if (instance == (-1).toByte()) {
-            instance = audioEngine.addSoundGenerator(SimpleSubtractiveSynthK.MAGIC_NR)
+            instance = audioEngine.addSoundGenerator(MAGIC_NR)
         }
     }
 

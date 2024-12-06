@@ -17,6 +17,8 @@
           "release": 1.14,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
+          "actionAmountToFilter": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SineMonoSynthP",
           "name": "Soft Bell",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -27,14 +29,15 @@
       "name": "Chromatic Scale",
       "touchElements": [
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 179,
             "g": 179,
             "r": 179
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes": [39],
           "posX": 0,
@@ -43,14 +46,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 31,
             "g": 31,
             "r": 31
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes": [40],
           "posX": 127,
@@ -59,14 +63,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 179,
             "g": 179,
             "r": 179
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes": [41],
           "posX": 234,
@@ -75,14 +80,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 41,
             "g": 41,
             "r": 41
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes": [42],
           "posX": 359,
@@ -91,14 +97,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 181,
             "g": 181,
             "r": 181
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [43],
           "posX": 461,
@@ -107,14 +114,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 181,
             "g": 181,
             "r": 181
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [44],
           "posX": 680,
@@ -123,14 +131,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 41,
             "g": 41,
             "r": 41
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [45],
           "posX": 792,
@@ -139,14 +148,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 207,
             "g": 207,
             "r": 207
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [46],
           "posX": 915,
@@ -155,14 +165,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 33,
             "g": 33,
             "r": 33
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [47],
           "posX": 1038,
@@ -171,14 +182,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 191,
             "g": 191,
             "r": 191
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [48],
           "posX": 1150,
@@ -187,14 +199,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 31,
             "g": 31,
             "r": 31
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [49],
           "posX": 1286,
@@ -203,14 +216,15 @@
           "soundGeneratorId": "029bd827-8b22-4b9c-8328-19c444219ace"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 196,
             "g": 196,
             "r": 196
           },
           "height": 290,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [50],
           "posX": 1394,
@@ -231,6 +245,7 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Pad ",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -246,6 +261,7 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Hit",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -256,14 +272,15 @@
       "name": "Chords C",
       "touchElements": [
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 0,
             "g": 78,
             "r": 194
           },
           "height": 910,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [15],
           "posX": 11,
@@ -272,14 +289,15 @@
           "soundGeneratorId": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 46,
             "g": 147,
             "r": 255
           },
           "height": 916,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [19],
           "posX": 276,
@@ -288,14 +306,15 @@
           "soundGeneratorId": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 66,
             "g": 195,
             "r": 255
           },
           "height": 918,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [20],
           "posX": 516,
@@ -304,14 +323,15 @@
           "soundGeneratorId": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 133,
             "g": 222,
             "r": 255
           },
           "height": 915,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [22],
           "posX": 740,
@@ -320,14 +340,15 @@
           "soundGeneratorId": "70a0fb9c-d72e-4fb4-b533-8a103dbf0c21"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 165,
             "r": 158
           },
           "height": 263,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [44],
           "posX": 1153,
@@ -336,14 +357,15 @@
           "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 204,
             "r": 206
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [46],
           "posX": 1416,
@@ -352,14 +374,15 @@
           "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 220,
             "r": 219
           },
           "height": 253,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [48],
           "posX": 1649,
@@ -368,14 +391,15 @@
           "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 204,
             "g": 34,
             "r": 0
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [39],
           "posX": 1165,
@@ -384,14 +408,15 @@
           "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 56,
             "r": 26
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [41],
           "posX": 1413,
@@ -400,14 +425,15 @@
           "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 159,
             "r": 138
           },
           "height": 259,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [43],
           "posX": 1648,
@@ -416,14 +442,15 @@
           "soundGeneratorId": "65ee0ecb-61fc-40a4-8fe6-a7a488dcc60a"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 117,
             "g": 16,
             "r": 0
           },
           "height": 254,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [38],
           "posX": 1165,
@@ -444,6 +471,7 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Pad ",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -459,6 +487,7 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Hit",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -469,14 +498,15 @@
       "name": "Chords D",
       "touchElements": [
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 0,
             "g": 78,
             "r": 194
           },
           "height": 910,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [17],
           "posX": 11,
@@ -485,14 +515,15 @@
           "soundGeneratorId": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 46,
             "g": 147,
             "r": 255
           },
           "height": 916,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [21],
           "posX": 276,
@@ -501,14 +532,15 @@
           "soundGeneratorId": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 66,
             "g": 195,
             "r": 255
           },
           "height": 918,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [22],
           "posX": 516,
@@ -517,14 +549,15 @@
           "soundGeneratorId": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 133,
             "g": 222,
             "r": 255
           },
           "height": 915,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [24],
           "posX": 740,
@@ -533,14 +566,15 @@
           "soundGeneratorId": "c658c211-e2e9-4a4b-8924-ef5d524c1454"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 165,
             "r": 158
           },
           "height": 263,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [46],
           "posX": 1153,
@@ -549,14 +583,15 @@
           "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 204,
             "r": 206
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [48],
           "posX": 1416,
@@ -565,14 +600,15 @@
           "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 220,
             "r": 219
           },
           "height": 253,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [50],
           "posX": 1649,
@@ -581,14 +617,15 @@
           "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 204,
             "g": 34,
             "r": 0
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [41],
           "posX": 1165,
@@ -597,14 +634,15 @@
           "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 56,
             "r": 26
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [43],
           "posX": 1413,
@@ -613,14 +651,15 @@
           "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 159,
             "r": 138
           },
           "height": 259,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [45],
           "posX": 1648,
@@ -629,14 +668,15 @@
           "soundGeneratorId": "473381b8-a451-4aa3-bdbb-e7b341ef6dce"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 117,
             "g": 16,
             "r": 0
           },
           "height": 254,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [40],
           "posX": 1165,
@@ -657,6 +697,7 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Pad ",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -672,6 +713,7 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Hit",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -682,14 +724,15 @@
       "name": "Chords E",
       "touchElements": [
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 0,
             "g": 78,
             "r": 194
           },
           "height": 910,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [19],
           "posX": 11,
@@ -698,14 +741,15 @@
           "soundGeneratorId": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 46,
             "g": 147,
             "r": 255
           },
           "height": 916,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [23],
           "posX": 276,
@@ -714,14 +758,15 @@
           "soundGeneratorId": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 66,
             "g": 195,
             "r": 255
           },
           "height": 918,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [24],
           "posX": 516,
@@ -730,14 +775,15 @@
           "soundGeneratorId": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 133,
             "g": 222,
             "r": 255
           },
           "height": 915,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [26],
           "posX": 740,
@@ -746,14 +792,15 @@
           "soundGeneratorId": "6e7c0fab-53aa-44ad-a187-fe75bf829529"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 165,
             "r": 158
           },
           "height": 263,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [48],
           "posX": 1153,
@@ -762,14 +809,15 @@
           "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 204,
             "r": 206
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [50],
           "posX": 1416,
@@ -778,14 +826,15 @@
           "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 220,
             "r": 219
           },
           "height": 253,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [52],
           "posX": 1649,
@@ -794,14 +843,15 @@
           "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 204,
             "g": 34,
             "r": 0
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [43],
           "posX": 1165,
@@ -810,14 +860,15 @@
           "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 56,
             "r": 26
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [45],
           "posX": 1413,
@@ -826,14 +877,15 @@
           "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 159,
             "r": 138
           },
           "height": 259,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [47],
           "posX": 1648,
@@ -842,14 +894,15 @@
           "soundGeneratorId": "d6cf6055-d03a-4ebb-80aa-640681bc852e"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 117,
             "g": 16,
             "r": 0
           },
           "height": 254,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [43],
           "posX": 1165,
@@ -870,6 +923,7 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Pad ",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -885,6 +939,7 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Hit",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -895,14 +950,15 @@
       "name": "Chords F",
       "touchElements": [
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 0,
             "g": 78,
             "r": 194
           },
           "height": 910,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [20],
           "posX": 11,
@@ -911,14 +967,15 @@
           "soundGeneratorId": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 46,
             "g": 147,
             "r": 255
           },
           "height": 916,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [24],
           "posX": 276,
@@ -927,14 +984,15 @@
           "soundGeneratorId": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 66,
             "g": 195,
             "r": 255
           },
           "height": 918,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [25],
           "posX": 516,
@@ -943,14 +1001,15 @@
           "soundGeneratorId": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 133,
             "g": 222,
             "r": 255
           },
           "height": 915,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [27],
           "posX": 740,
@@ -959,14 +1018,15 @@
           "soundGeneratorId": "5c14c2c1-4027-4715-bf95-bd54fe7c6d76"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 165,
             "r": 158
           },
           "height": 263,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [49],
           "posX": 1153,
@@ -975,14 +1035,15 @@
           "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 204,
             "r": 206
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [51],
           "posX": 1416,
@@ -991,14 +1052,15 @@
           "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 220,
             "r": 219
           },
           "height": 253,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [53],
           "posX": 1649,
@@ -1007,14 +1069,15 @@
           "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 204,
             "g": 34,
             "r": 0
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [44],
           "posX": 1165,
@@ -1023,14 +1086,15 @@
           "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 56,
             "r": 26
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [46],
           "posX": 1413,
@@ -1039,14 +1103,15 @@
           "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 159,
             "r": 138
           },
           "height": 259,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [48],
           "posX": 1648,
@@ -1055,14 +1120,15 @@
           "soundGeneratorId": "01d66bf1-22d1-4174-92ef-6a0d3259e683"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 117,
             "g": 16,
             "r": 0
           },
           "height": 254,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [41],
           "posX": 1165,
@@ -1083,6 +1149,7 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Pad ",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -1098,6 +1165,7 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Hit",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -1108,14 +1176,15 @@
       "name": "Chords G",
       "touchElements": [
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 0,
             "g": 78,
             "r": 194
           },
           "height": 910,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [22],
           "posX": 11,
@@ -1124,14 +1193,15 @@
           "soundGeneratorId": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 46,
             "g": 147,
             "r": 255
           },
           "height": 916,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [26],
           "posX": 276,
@@ -1140,14 +1210,15 @@
           "soundGeneratorId": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 66,
             "g": 195,
             "r": 255
           },
           "height": 918,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [27],
           "posX": 516,
@@ -1156,14 +1227,15 @@
           "soundGeneratorId": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 133,
             "g": 222,
             "r": 255
           },
           "height": 915,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [29],
           "posX": 740,
@@ -1172,14 +1244,15 @@
           "soundGeneratorId": "f331f1de-1eaa-45d9-95a1-10e2274edb69"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 165,
             "r": 158
           },
           "height": 263,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [51],
           "posX": 1153,
@@ -1188,14 +1261,15 @@
           "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 204,
             "r": 206
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [53],
           "posX": 1416,
@@ -1204,14 +1278,15 @@
           "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 220,
             "r": 219
           },
           "height": 253,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [55],
           "posX": 1649,
@@ -1220,14 +1295,15 @@
           "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 204,
             "g": 34,
             "r": 0
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [46],
           "posX": 1165,
@@ -1236,14 +1312,15 @@
           "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 56,
             "r": 26
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [48],
           "posX": 1413,
@@ -1252,14 +1329,15 @@
           "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 159,
             "r": 138
           },
           "height": 259,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [50],
           "posX": 1648,
@@ -1268,14 +1346,15 @@
           "soundGeneratorId": "0956383c-1410-4336-a5a6-47c746eb5089"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 117,
             "g": 16,
             "r": 0
           },
           "height": 254,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [43],
           "posX": 1165,
@@ -1296,6 +1375,7 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Pad ",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -1311,6 +1391,7 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Hit",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -1321,14 +1402,15 @@
       "name": "Chords A",
       "touchElements": [
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 0,
             "g": 78,
             "r": 194
           },
           "height": 910,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [24],
           "posX": 11,
@@ -1337,14 +1419,15 @@
           "soundGeneratorId": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 46,
             "g": 147,
             "r": 255
           },
           "height": 916,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [28],
           "posX": 276,
@@ -1353,14 +1436,15 @@
           "soundGeneratorId": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 66,
             "g": 195,
             "r": 255
           },
           "height": 918,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [29],
           "posX": 516,
@@ -1369,14 +1453,15 @@
           "soundGeneratorId": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 133,
             "g": 222,
             "r": 255
           },
           "height": 915,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [31],
           "posX": 740,
@@ -1385,14 +1470,15 @@
           "soundGeneratorId": "9f9b29bd-b433-47a9-8cd2-8f59d9faf8e3"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 165,
             "r": 158
           },
           "height": 263,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [53],
           "posX": 1153,
@@ -1401,14 +1487,15 @@
           "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 204,
             "r": 206
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [55],
           "posX": 1416,
@@ -1417,14 +1504,15 @@
           "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 220,
             "r": 219
           },
           "height": 253,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [57],
           "posX": 1649,
@@ -1433,14 +1521,15 @@
           "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 204,
             "g": 34,
             "r": 0
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [48],
           "posX": 1165,
@@ -1449,14 +1538,15 @@
           "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 56,
             "r": 26
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [50],
           "posX": 1413,
@@ -1465,14 +1555,15 @@
           "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 159,
             "r": 138
           },
           "height": 259,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [52],
           "posX": 1648,
@@ -1481,14 +1572,15 @@
           "soundGeneratorId": "6eb9eb09-25ff-4e7c-a951-74d3eed95b23"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 117,
             "g": 16,
             "r": 0
           },
           "height": 254,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [45],
           "posX": 1165,
@@ -1509,6 +1601,7 @@
           "resonance": 0.345,
           "sustain": 1.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Pad ",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -1524,6 +1617,7 @@
           "resonance": 0.0,
           "sustain": 0.0,
           "actionAmountToVolume": 0.0,
+          "actionAmountToPitchBend": 0.0,
           "className": "ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP",
           "name": "Hit",
           "polyphonyDefinition": "POLY_SATURATE",
@@ -1534,14 +1628,15 @@
       "name": "Chords B",
       "touchElements": [
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 0,
             "g": 78,
             "r": 194
           },
           "height": 910,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [26],
           "posX": 11,
@@ -1550,14 +1645,15 @@
           "soundGeneratorId": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 46,
             "g": 147,
             "r": 255
           },
           "height": 916,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [30],
           "posX": 276,
@@ -1566,14 +1662,15 @@
           "soundGeneratorId": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 66,
             "g": 195,
             "r": 255
           },
           "height": 918,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [31],
           "posX": 516,
@@ -1582,14 +1679,15 @@
           "soundGeneratorId": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
-          "actionDir": "VERTICAL_DOWN_UP",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 133,
             "g": 222,
             "r": 255
           },
           "height": 915,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [33],
           "posX": 740,
@@ -1598,14 +1696,15 @@
           "soundGeneratorId": "10119625-6e8c-4ddd-a1e5-31c88415ec81"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 165,
             "r": 158
           },
           "height": 263,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [55],
           "posX": 1153,
@@ -1614,14 +1713,15 @@
           "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 204,
             "r": 206
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [57],
           "posX": 1416,
@@ -1630,14 +1730,15 @@
           "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 220,
             "r": 219
           },
           "height": 253,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [59],
           "posX": 1649,
@@ -1646,14 +1747,15 @@
           "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 204,
             "g": 34,
             "r": 0
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [61],
           "posX": 1165,
@@ -1662,14 +1764,15 @@
           "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 56,
             "r": 26
           },
           "height": 255,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [52],
           "posX": 1413,
@@ -1678,14 +1781,15 @@
           "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 255,
             "g": 159,
             "r": 138
           },
           "height": 259,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [54],
           "posX": 1648,
@@ -1694,14 +1798,15 @@
           "soundGeneratorId": "9dca7914-2f9d-4e7c-bcbc-8f9b2f555138"
         },
         {
-          "actionDir": "HORIZONTAL_LEFT_RIGHT",
+          "actionDir": "HORIZONTAL_LR_VERTICAL_DU",
           "color": {
             "b": 117,
             "g": 16,
             "r": 0
           },
           "height": 254,
-          "midiCC": 3,
+          "midiCCA": 3,
+          "midiCCB": 4,
           "midiChannel": 0,
           "notes":  [47],
           "posX": 1165,

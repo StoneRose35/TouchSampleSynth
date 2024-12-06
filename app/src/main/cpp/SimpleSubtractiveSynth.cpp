@@ -104,7 +104,7 @@ void SimpleSubtractiveSynth::setCutoff(float co) {
 }
 
 void SimpleSubtractiveSynth::setPitchBend(float pb) {
-    if (env->isSounding()) {
+    if (env->isSounding() && fabs(pb) > 0.0001f) {
         newPitchBend = pb;
         currentPitchUpdateInSamples = 0;
     }
@@ -125,14 +125,12 @@ float SimpleSubtractiveSynth::getResonance() {
 
 void SimpleSubtractiveSynth::trigger(uint8_t vel) {
     MusicalSoundGenerator::trigger(vel);
-    setCutoff(initialCutoff);
     env->trigger();
 }
 
 void SimpleSubtractiveSynth::switchOn(uint8_t vel) {
-    setCutoff(initialCutoff);
-    env->switchOn();
     MusicalSoundGenerator::switchOn(vel);
+    env->switchOn();
 }
 
 void SimpleSubtractiveSynth::switchOff(uint8_t vel) {

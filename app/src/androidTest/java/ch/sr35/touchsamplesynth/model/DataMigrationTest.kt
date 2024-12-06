@@ -45,5 +45,17 @@ class DataMigrationTest {
     }
 
 
+    @Test
+    fun upgradeTo110Test()
+    {
+        val currentJson = InstrumentationRegistry.getInstrumentation().context.assets.open("defaultPresets_1_9_4.json").reader().readText()
+        val newJson = DataUpdater.upgradeToCurrent(currentJson)
+        val newScenes = Gson().fromJson(newJson,SceneListP::class.java)
+        Assert.assertTrue(newScenes.screenResolutionX >= 0)
+        Assert.assertTrue(newScenes.screenResolutionY >= 0)
+        Assert.assertTrue(newScenes.scenes.size==9)
+    }
+
+
 
 }

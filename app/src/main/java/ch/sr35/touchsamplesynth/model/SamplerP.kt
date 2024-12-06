@@ -14,10 +14,12 @@ class SamplerP(private var sampleStart: Int=0,
                private var mode: Byte=0,
                private var sampleFile: String="",
                actionAmountToVolume: Float=0.0f,
+               actionAmountToPitchBend: Float=0.0f,
                polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC,
+               horizontalToActionB: Boolean=false,
                nVoices: Int=0,
                name: String=""
-):InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name), Serializable, Cloneable  {
+):InstrumentP(actionAmountToVolume,actionAmountToPitchBend,polyphonyDefinition,horizontalToActionB,nVoices,name), Serializable, Cloneable  {
     private val className: String=this.javaClass.name
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
@@ -69,6 +71,17 @@ class SamplerP(private var sampleStart: Int=0,
         return "Sampler: %s, polyphonyDefinition: %s".format(this.name, this.polyphonyDefinition)
     }
     override fun clone(): Any {
-        return SamplerP(this.sampleStart,this.sampleEnd,this.loopStart,this.loopEnd,this.mode,this.sampleFile,this.actionAmountToVolume,this.polyphonyDefinition,this.nVoices,this.name)
+        return SamplerP(this.sampleStart,
+            this.sampleEnd,
+            this.loopStart,
+            this.loopEnd,
+            this.mode,
+            this.sampleFile,
+            this.actionAmountToVolume,
+            this.actionAmountToPitchBend,
+            this.polyphonyDefinition,
+            this.horizontalToActionB,
+            this.nVoices,
+            this.name)
     }
 }

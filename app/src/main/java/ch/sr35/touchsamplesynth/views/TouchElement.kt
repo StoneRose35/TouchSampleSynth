@@ -1,7 +1,6 @@
 package ch.sr35.touchsamplesynth.views
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
@@ -13,7 +12,6 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.MusicalPitch
@@ -22,15 +20,15 @@ import ch.sr35.touchsamplesynth.TouchElementSelectedListener
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
-import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import ch.sr35.touchsamplesynth.graphics.AutoContraster
 import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.graphics.Point
 import ch.sr35.touchsamplesynth.graphics.Rectangle
 import ch.sr35.touchsamplesynth.graphics.RgbColor
+import ch.sr35.touchsamplesynth.handlers.TouchAction
+import ch.sr35.touchsamplesynth.handlers.TouchElementHandler
 import com.google.android.material.color.MaterialColors
 import java.io.Serializable
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -48,10 +46,10 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
 
     enum class ActionDir: Serializable {
-        HORIZONTAL_LEFT_RIGHT,
-        HORIZONTAL_RIGHT_LEFT,
-        VERTICAL_UP_DOWN,
-        VERTICAL_DOWN_UP
+        HORIZONTAL_LR_VERTICAL_UD,
+        HORIZONTAL_LR_VERTICAL_DU,
+        HORIZONTAL_RL_VERTICAL_UD,
+        HORIZONTAL_RL_VERTICAL_DU
     }
 
     enum class TouchElementState {
@@ -71,11 +69,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     private class ArrowDefinition(val arrowB: Int, val arrowDr: Int, val onlyTriangle: Boolean)
 
-    var actionDir: ActionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
-    private val outLine: Paint = Paint()
+    var actionDir: ActionDir = ActionDir.HORIZONTAL_LR_VERTICAL_DU
+    val outLine: Paint = Paint()
     private val fillColor: Paint = Paint()
-    private var px: Float = 0.0f
-    private var py: Float = 0.0f
+    var px: Float = 0.0f
+    var py: Float = 0.0f
     private var defaultState = TouchElementState.PLAYING
 
     private val arrowPath = Path()
@@ -85,25 +83,28 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private val editText: Paint = Paint()
     private val smallText: Paint = Paint()
     private var cornerRadius = 0.0f
-    private var dragStart: TouchElementDragAnchor? = null
+    var dragStart: TouchElementDragAnchor? = null
 
-    private var oldWidth: Int = 0
-    private var oldHeight: Int = 0
-    private var oldLeftMargin: Int = 0
-    private var oldTopMargin: Int = 0
-    private var elementState: TouchElementState = defaultState
+    var oldWidth: Int = 0
+    var oldHeight: Int = 0
+    var oldLeftMargin: Int = 0
+    var oldTopMargin: Int = 0
+    var elementState: TouchElementState = defaultState
     var soundGenerator: InstrumentI? = null
-    private var currentVoices = ArrayList<MusicalSoundGenerator>()
+    var currentVoices = ArrayList<MusicalSoundGenerator>()
     var notes = ArrayList<MusicalPitch>()
     var midiChannel: Int=0
-    var midiCC: Int=3
-    private var midiCCOld: Byte=0
-    private var setSoundgenRect: Rect = Rect()
-    private var deleteRect: Rect = Rect()
+    var midiCCA: Int=3
+    var midiCCAOld: Byte=0
+    var midiCCB: Int=4
+    var midiCCBOld: Byte=0
+    var setSoundgenRect: Rect = Rect()
+    var deleteRect: Rect = Rect()
     private val boundsRotate = Rect()
     private val boundsSetSoundgen = Rect()
     private val boundsDelete = Rect()
-    private val appContext: TouchSampleSynthMain?
+    val appContext: TouchSampleSynthMain?
+    private val touchElementHandler: TouchElementHandler
 
     private val rotateSymbol = AppCompatResources.getDrawable(context,R.drawable.rotatesymbol)
     private val editSymbol = AppCompatResources.getDrawable(context,R.drawable.editsymbol)
@@ -146,6 +147,8 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
         outLine.style = Paint.Style.STROKE
         outLine.isAntiAlias = true
+
+        touchElementHandler = TouchElementHandler(this)
     }
 
     fun getMainColor(): RgbColor
@@ -188,58 +191,21 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
         // draw action arrow
         when(actionDir) {
-            ActionDir.HORIZONTAL_LEFT_RIGHT -> {
-
-                val arrowDef = computeArrowDefinition(h.toInt(),w.toInt())
-                arrowPath.reset()
-                arrowPath.moveTo(w - PADDING - arrowDef.arrowDr - arrowDef.arrowB,h/2 - arrowDef.arrowB )
-                arrowPath.lineTo(w - PADDING - arrowDef.arrowDr,h/2)
-                arrowPath.lineTo(w - PADDING - arrowDef.arrowDr - arrowDef.arrowB,h/2 + arrowDef.arrowB )
-                if (!arrowDef.onlyTriangle) {
-                    arrowPath.lineTo(PADDING + arrowDef.arrowDr,h / 2 + arrowDef.arrowB )
-                    arrowPath.lineTo(PADDING + arrowDef.arrowDr,h / 2 - arrowDef.arrowB )
-                }
-                arrowPath.close()
-                canvas.drawPath(arrowPath,arrowLine)
+            ActionDir.HORIZONTAL_LR_VERTICAL_DU -> {
+                drawArrowLeftRight(canvas)
+                drawArrowDownUp(canvas)
             }
-            ActionDir.HORIZONTAL_RIGHT_LEFT -> {
-                val arrowDef = computeArrowDefinition(h.toInt(),w.toInt())
-                arrowPath.reset()
-                arrowPath.moveTo(PADDING + arrowDef.arrowDr + arrowDef.arrowB,h/2 + arrowDef.arrowB)
-                arrowPath.lineTo(PADDING + arrowDef.arrowDr, h/2 )
-                arrowPath.lineTo(PADDING + arrowDef.arrowDr + arrowDef.arrowB,h/2 - arrowDef.arrowB)
-                if (!arrowDef.onlyTriangle) {
-                    arrowPath.lineTo(w - PADDING - arrowDef.arrowDr,h / 2 - arrowDef.arrowB)
-                    arrowPath.lineTo( w - PADDING - arrowDef.arrowDr,h / 2 + arrowDef.arrowB)
-                }
-                arrowPath.close()
-                canvas.drawPath(arrowPath,arrowLine)
+            ActionDir.HORIZONTAL_RL_VERTICAL_DU -> {
+                drawArrowRightLeft(canvas)
+                drawArrowDownUp(canvas)
             }
-            ActionDir.VERTICAL_DOWN_UP -> {
-                val arrowDef = computeArrowDefinition(w.toInt(),h.toInt())
-                arrowPath.reset()
-                arrowPath.moveTo(w/2 - arrowDef.arrowB, PADDING + arrowDef.arrowDr + arrowDef.arrowB)
-                arrowPath.lineTo(w/2, PADDING + arrowDef.arrowDr)
-                arrowPath.lineTo(w/2 + arrowDef.arrowB, PADDING + arrowDef.arrowDr + arrowDef.arrowB)
-                if (!arrowDef.onlyTriangle) {
-                    arrowPath.lineTo(w / 2 + arrowDef.arrowB, h - PADDING - arrowDef.arrowDr)
-                    arrowPath.lineTo(w / 2 - arrowDef.arrowB, h - PADDING - arrowDef.arrowDr)
-                }
-                arrowPath.close()
-                canvas.drawPath(arrowPath,arrowLine)
+            ActionDir.HORIZONTAL_LR_VERTICAL_UD -> {
+                drawArrowLeftRight(canvas)
+                drawArrowUpDown(canvas)
             }
-            ActionDir.VERTICAL_UP_DOWN -> {
-                val arrowDef = computeArrowDefinition(w.toInt(),h.toInt())
-                arrowPath.reset()
-                arrowPath.moveTo(w/2 + arrowDef.arrowB, h - PADDING - arrowDef.arrowDr - arrowDef.arrowB)
-                arrowPath.lineTo(w/2, h - PADDING - arrowDef.arrowDr )
-                arrowPath.lineTo(w/2 - arrowDef.arrowB, h - PADDING - arrowDef.arrowDr - arrowDef.arrowB)
-                if (!arrowDef.onlyTriangle) {
-                    arrowPath.lineTo(w / 2 - arrowDef.arrowB, PADDING + arrowDef.arrowDr)
-                    arrowPath.lineTo(w / 2 + arrowDef.arrowB, PADDING + arrowDef.arrowDr)
-                }
-                arrowPath.close()
-                canvas.drawPath(arrowPath,arrowLine)
+            ActionDir.HORIZONTAL_RL_VERTICAL_UD -> {
+                drawArrowRightLeft(canvas)
+                drawArrowUpDown(canvas)
             }
         }
 
@@ -411,19 +377,24 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     fun slideOverEvent(event: MotionEvent)
     {
+        val touchActionHorizontal = TouchAction(Point(event.x.toDouble(),event.y.toDouble()))
+        val touchActionVertical = TouchAction(Point(event.x.toDouble(),event.y.toDouble()))
 
-        var touchVal:Float=-2.0f
-        if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-            touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+        if ((actionDir == ActionDir.HORIZONTAL_LR_VERTICAL_DU || actionDir == ActionDir.HORIZONTAL_RL_VERTICAL_DU) && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+            touchActionVertical.absoluteValue = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2* PADDING))
+            touchActionVertical.relativeValue = ((touchActionVertical.startPoint.y.toFloat() - event.y) / (measuredHeight.toFloat()- 2* PADDING))
         }
-        else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-            touchVal = ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+        else if (event.y >= PADDING && event.y <= measuredHeight - PADDING) {
+            touchActionVertical.absoluteValue = ((event.y- PADDING) / (measuredHeight.toFloat()- 2* PADDING))
+            touchActionVertical.relativeValue = ((event.y-touchActionVertical.startPoint.y.toFloat()) / (measuredHeight.toFloat()- 2* PADDING))
         }
-        else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-            touchVal = (event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)
+        if ((actionDir == ActionDir.HORIZONTAL_LR_VERTICAL_DU || actionDir == ActionDir.HORIZONTAL_LR_VERTICAL_UD) && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+            touchActionHorizontal.absoluteValue = (event.x- PADDING) / (measuredWidth.toFloat()- 2* PADDING)
+            touchActionHorizontal.relativeValue = (event.x-touchActionHorizontal.startPoint.x.toFloat()) / (measuredWidth.toFloat()- 2* PADDING)
         }
-        else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-            touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
+        else if (event.x >= PADDING && event.x <= measuredWidth - PADDING) {
+            touchActionHorizontal.absoluteValue = 1.0f - (event.x- PADDING) / (measuredWidth.toFloat()- 2* PADDING)
+            touchActionHorizontal.relativeValue = (touchActionHorizontal.startPoint.x.toFloat() - event.x) / (measuredWidth.toFloat()- 2* PADDING)
         }
 
         currentVoices.clear()
@@ -432,34 +403,54 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             soundGenerator?.getNextFreeVoice()?.let {
                 currentVoices.add(it)
 
+                if (soundGenerator!!.horizontalToActionB)
+                {
+                    it.applyTouchActionB(touchActionHorizontal.relativeValue)
+                    it.applyTouchActionA(touchActionHorizontal.absoluteValue)
+                }
+                else
+                {
+                    it.applyTouchActionB(touchActionVertical.relativeValue)
+                    it.applyTouchActionA(touchActionVertical.absoluteValue)
+                }
+
                 if (firstnote)
                 {
-                    firstnote=false
                     it.setMidiChannel(midiChannel)
-
-                    if (touchVal>=-1.0f)
-                    {
-                        it.applyTouchAction(touchVal)
-
-                        val midiData=ByteArray(3)
-                        midiData[0] = (0xB0 + midiChannel).toByte()
-                        midiData[1] = midiCC.toByte()
-                        midiData[2] = (touchVal*127.0f).toInt().toByte()
-                        if (midiData[2]!=midiCCOld) {
-                            appContext?.rtpMidiServer?.let {
-                                if (it.isEnabled)
-                                {
-                                    var sentNotes=0
-                                    while(sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
-                                        appContext.rtpMidiServer?.addToSendQueue(midiData)
-                                        sentNotes += 1
-                                    }
+                    it.setMidiChannel(midiChannel)
+                    val midiData = ByteArray(3)
+                    midiData[0] = (0xB0 + midiChannel).toByte()
+                    midiData[1] = midiCCA.toByte()
+                    midiData[2] = (touchActionHorizontal.absoluteValue * 127.0f).toInt().toByte()
+                    if (midiData[2] != midiCCAOld) {
+                        appContext?.rtpMidiServer?.let {
+                            if (it.isEnabled) {
+                                var sentNotes = 0
+                                while (sentNotes < (appContext).rtpMidiNotesRepeat) {
+                                    appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                    sentNotes += 1
                                 }
                             }
-                            it.sendMidiCC(midiCC,(touchVal*127.0f).toInt())
-                            midiCCOld=midiData[2]
                         }
+                        it.sendMidiCC(midiCCA, (touchActionHorizontal.absoluteValue * 127.0f).toInt())
+                        midiCCAOld = midiData[2]
                     }
+                    midiData[1] = midiCCB.toByte()
+                    midiData[2] = (touchActionVertical.absoluteValue * 127.0f).toInt().toByte()
+                    if (midiData[2] != midiCCBOld) {
+                        appContext?.rtpMidiServer?.let {
+                            if (it.isEnabled) {
+                                var sentNotes = 0
+                                while (sentNotes < (appContext).rtpMidiNotesRepeat) {
+                                    appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                    sentNotes += 1
+                                }
+                            }
+                        }
+                        it.sendMidiCC(midiCCB, (touchActionVertical.absoluteValue * 127.0f).toInt())
+                        midiCCAOld = midiData[2]
+                    }
+                    firstnote = false
                 }
                 it.setNote(currentNote.value)
                 it.trigger(1.0f)
@@ -485,29 +476,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (elementState != TouchElementState.EDITING && elementState != TouchElementState.EDITING_SELECTED) {
-            if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
-                handleActionDownInPlayMode(event)
-            } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP) {
-                handleActionUpInPlayMode()
-            } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
-                handleActionMoveInPlayMode(event)
-            }
-        } else {
-            when (event?.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    handleActionDownInEditMode(event)
-                }
-                MotionEvent.ACTION_UP -> {
-                    handleActionUpInEditMode()
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    handleActionMoveInEditMode(event)
-                }
-            }
-            return true
-        }
-        return false
+        return touchElementHandler.handleTouchEvent(event)
     }
 
 
@@ -526,7 +495,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         return super.performClick()
     }
 
-    private fun isInCorner(x: Float, y: Float): TouchElementDragAnchor {
+    fun isInCorner(x: Float, y: Float): TouchElementDragAnchor {
         val w = width.toFloat()
         val h = height.toFloat()
         if (elementState == TouchElementState.EDITING_SELECTED) {
@@ -557,306 +526,89 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
-    private fun handleActionDownInPlayMode(event: MotionEvent): Boolean
+    private fun drawArrowLeftRight(canvas: Canvas)
     {
-        var touchVal:Float=-2.0f
-        if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-            touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+        val w = layoutParams.width.toFloat()
+        val h = layoutParams.height.toFloat()
+        val arrowDef = computeArrowDefinition(h.toInt(),w.toInt())
+        arrowPath.reset()
+        arrowPath.moveTo(w - PADDING - arrowDef.arrowDr - arrowDef.arrowB,h/2 - arrowDef.arrowB )
+        arrowPath.lineTo(w - PADDING - arrowDef.arrowDr,h/2)
+        arrowPath.lineTo(w - PADDING - arrowDef.arrowDr - arrowDef.arrowB,h/2 + arrowDef.arrowB )
+        if (!arrowDef.onlyTriangle) {
+            arrowPath.lineTo(PADDING + arrowDef.arrowDr,h / 2 + arrowDef.arrowB )
+            arrowPath.lineTo(PADDING + arrowDef.arrowDr,h / 2 - arrowDef.arrowB )
         }
-        else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-            touchVal = ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
-        }
-        else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-            touchVal = (event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)
-        }
-        else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-            touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
-        }
-        var firstnote = true
-        notes.forEach { currentNote ->
-            soundGenerator?.getNextFreeVoice()?.let {
-                currentVoices.add(it)
-                it.setMidiChannel(midiChannel)
-
-                if (touchVal >= -1.0f) {
-                    it.applyTouchAction(touchVal)
-                    if (firstnote) {
-                        val midiData = ByteArray(3)
-                        midiData[0] = (0xB0 + midiChannel).toByte()
-                        midiData[1] = midiCC.toByte()
-                        midiData[2] = (touchVal * 127.0f).toInt().toByte()
-                        if (midiData[2] != midiCCOld) {
-                            appContext?.rtpMidiServer?.let {
-                                if (it.isEnabled) {
-                                    var sentNotes = 0
-                                    while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
-                                        appContext.rtpMidiServer?.addToSendQueue(midiData)
-                                        sentNotes += 1
-                                    }
-                                }
-                            }
-                            it.sendMidiCC(midiCC, (touchVal * 127.0f).toInt())
-                            midiCCOld = midiData[2]
-                        }
-                        firstnote = false
-                    }
-                }
-
-                appContext?.rtpMidiServer?.let { rtpMidiServer ->
-                    if (rtpMidiServer.isEnabled) {
-                        val midiData=ByteArray(3)
-                        setMidiNoteOn(midiData,currentNote)
-                        var sentNotes=0
-                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat)
-                        {
-                            appContext.rtpMidiServer?.addToSendQueue(midiData)
-                            sentNotes += 1
-                        }
-                    }
-                }
-
-                it.setNote(currentNote.value)
-                if (it.switchOn(1.0f)) {
-                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
-                }
-            }
-        }
-        performClick()
-        invalidate()
-        px = event.x
-        py = event.y
-
-        return true
+        arrowPath.close()
+        canvas.drawPath(arrowPath,arrowLine)
     }
 
-    private fun handleActionUpInPlayMode(): Boolean
+    private fun drawArrowRightLeft(canvas: Canvas)
     {
-        outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-        currentVoices.forEach { it.switchOff(1.0f) }
-        appContext?.rtpMidiServer?.let {
-            if (it.isEnabled )
-            {
-                notes.forEach { currentNote ->
-                    val midiData = ByteArray(3)
-                    setMidiNoteOff(midiData,currentNote)
-                    var sentNotes = 0
-                    while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
-                        appContext.rtpMidiServer?.addToSendQueue(midiData)
-                        sentNotes += 1
-                    }
-                }
-            }
+        val w = layoutParams.width.toFloat()
+        val h = layoutParams.height.toFloat()
+        val arrowDef = computeArrowDefinition(h.toInt(),w.toInt())
+        arrowPath.reset()
+        arrowPath.moveTo(PADDING + arrowDef.arrowDr + arrowDef.arrowB,h/2 + arrowDef.arrowB)
+        arrowPath.lineTo(PADDING + arrowDef.arrowDr, h/2 )
+        arrowPath.lineTo(PADDING + arrowDef.arrowDr + arrowDef.arrowB,h/2 - arrowDef.arrowB)
+        if (!arrowDef.onlyTriangle) {
+            arrowPath.lineTo(w - PADDING - arrowDef.arrowDr,h / 2 - arrowDef.arrowB)
+            arrowPath.lineTo( w - PADDING - arrowDef.arrowDr,h / 2 + arrowDef.arrowB)
         }
-        currentVoices.clear()
-        invalidate()
-        return true
+        arrowPath.close()
+        canvas.drawPath(arrowPath,arrowLine)
     }
 
-    private fun handleActionMoveInPlayMode(event: MotionEvent): Boolean
+    private fun drawArrowDownUp(canvas: Canvas)
     {
-        var touchVal:Float=-2.0f
-        if (event.y <= PADDING || event.y >= measuredHeight - PADDING || event.x < PADDING || event.x >= measuredWidth - PADDING) {
-            outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-            currentVoices.forEach  {
-                if (it.isEngaged())
-                {
-                    it.switchOff(1.0f)
-
-                    invalidate()
-                }
-            }
-            appContext?.rtpMidiServer?.let {midiserver->
-                if (midiserver.isEnabled) {
-                    notes.forEach { currentNote ->
-                        val midiData = ByteArray(3)
-                        setMidiNoteOff(midiData,currentNote)
-                        var sentNotes = 0
-                        while (sentNotes < (context as TouchSampleSynthMain).rtpMidiNotesRepeat) {
-                            midiserver.addToSendQueue(midiData)
-                            sentNotes += 1
-                        }
-                    }
-                }
-            }
-            currentVoices.clear()
-            return true
-        } else if (actionDir == ActionDir.VERTICAL_DOWN_UP && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-            touchVal = 1.0f - ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
+        val w = layoutParams.width.toFloat()
+        val h = layoutParams.height.toFloat()
+        val arrowDef = computeArrowDefinition(w.toInt(),h.toInt())
+        arrowPath.reset()
+        arrowPath.moveTo(w/2 - arrowDef.arrowB, PADDING + arrowDef.arrowDr + arrowDef.arrowB)
+        arrowPath.lineTo(w/2, PADDING + arrowDef.arrowDr)
+        arrowPath.lineTo(w/2 + arrowDef.arrowB, PADDING + arrowDef.arrowDr + arrowDef.arrowB)
+        if (!arrowDef.onlyTriangle) {
+            arrowPath.lineTo(w / 2 + arrowDef.arrowB, h - PADDING - arrowDef.arrowDr)
+            arrowPath.lineTo(w / 2 - arrowDef.arrowB, h - PADDING - arrowDef.arrowDr)
         }
-        else if (actionDir == ActionDir.VERTICAL_UP_DOWN && event.y >= PADDING && event.y <= measuredHeight - PADDING) {
-            touchVal = ((event.y- PADDING) / (measuredHeight.toFloat()- 2*PADDING))
-        }
-        else if (actionDir == ActionDir.HORIZONTAL_LEFT_RIGHT && event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-            touchVal = (event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING)
-        }
-        else if (actionDir == ActionDir.HORIZONTAL_RIGHT_LEFT&& event.x >= PADDING && event.x <= measuredWidth - PADDING) {
-            touchVal = 1.0f - ((event.x- PADDING) / (measuredWidth.toFloat()- 2*PADDING))
-        }
-        var firstnote = true
-        if (touchVal>=-1.0f)
-        {
-            currentVoices.forEach {
-                it.applyTouchAction(touchVal)
-
-                if (firstnote) {
-                    val midiData = ByteArray(3)
-                    midiData[0] = (0xB0 + midiChannel).toByte()
-                    midiData[1] = midiCC.toByte()
-                    midiData[2] = (touchVal * 127.0f).toInt().toByte()
-                    if (midiData[2] != midiCCOld) {
-                        appContext?.rtpMidiServer?.let {
-                            if (it.isEnabled) {
-                                appContext.rtpMidiServer?.addToSendQueue(
-                                    midiData
-                                )
-                            }
-                        }
-                        it.sendMidiCC(midiCC, (touchVal * 127.0f).toInt())
-                        midiCCOld = midiData[2]
-                    }
-                    firstnote = false
-                }
-            }
-            return true
-        }
-        return false
+        arrowPath.close()
+        canvas.drawPath(arrowPath,arrowLine)
     }
 
-        private fun handleActionDownInEditMode(event: MotionEvent)
-        {
-            // start a corner drag if a corner has been hit, else move the whole element
-            px = event.x
-            py = event.y
-            if (setSoundgenRect.contains(px.toInt(), py.toInt())  && elementState != TouchElementState.EDITING_SELECTED) {
-                val editSoundgenerator = EditTouchElementFragmentDialog(
-                    this,
-                    context
-                )
-                dragStart = null
-                editSoundgenerator.show()
-                this.invalidate()
-
-            } else if (deleteRect.contains(px.toInt(), py.toInt()) && elementState != TouchElementState.EDITING_SELECTED) {
-
-                appContext?.let {
-                    AlertDialog.Builder(appContext)
-                        .setMessage(context.getString(R.string.alert_dialog_really_delete))
-                        .setPositiveButton(context.getString(R.string.yes)) { _, _ ->
-                            appContext.touchElements.remove(this)
-                            (parent as ViewGroup).removeView(this)
-                        }
-                        .setNegativeButton(context.getString(R.string.no)) { _, _ -> }.create().also {
-                            dragStart = null
-                            it.show()
-                        }
-                }
-            } else {
-                val layoutParams: ConstraintLayout.LayoutParams? =
-                    this.layoutParams as ConstraintLayout.LayoutParams?
-                if (layoutParams != null) {
-                    oldHeight = layoutParams.height
-                    oldWidth = layoutParams.width
-                    oldTopMargin = layoutParams.topMargin
-                    oldLeftMargin = layoutParams.leftMargin
-                }
-                dragStart = isInCorner(event.x, event.y)
-            }
-        }
-
-    private fun handleActionUpInEditMode(): Boolean
+    private fun drawArrowUpDown(canvas: Canvas)
     {
-        if (dragStart != null)
-        {
-            (this.layoutParams as ConstraintLayout.LayoutParams).let {
-                if (abs(it.leftMargin - oldLeftMargin) + abs (it.topMargin - oldTopMargin) < NO_DRAG_TOLERANCE && it.height == oldHeight && it.width == oldWidth)
-                {
-                    if (elementState == TouchElementState.EDITING)
-                    {
-                        elementState = TouchElementState.EDITING_SELECTED
-                        outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
-                        onSelectedListener?.onTouchElementSelected(this)
-                    }
-                    else if (elementState == TouchElementState.EDITING_SELECTED)
-                    {
-                        elementState = TouchElementState.EDITING
-                        outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-                        onSelectedListener?.onTouchElementDeselected(this)
-                    }
-                    invalidate()
-                }
-            }
-
-            if (!validatePlacement())
-            {
-                val restoredlayoutParams: ConstraintLayout.LayoutParams? =
-                    this.layoutParams as ConstraintLayout.LayoutParams?
-                restoredlayoutParams?.height = oldHeight
-                restoredlayoutParams?.width = oldWidth
-                restoredlayoutParams?.leftMargin = oldLeftMargin
-                restoredlayoutParams?.topMargin = oldTopMargin
-                layoutParams = restoredlayoutParams
-                invalidate()
-            }
+        val w = layoutParams.width.toFloat()
+        val h = layoutParams.height.toFloat()
+        val arrowDef = computeArrowDefinition(w.toInt(),h.toInt())
+        arrowPath.reset()
+        arrowPath.moveTo(w/2 + arrowDef.arrowB, h - PADDING - arrowDef.arrowDr - arrowDef.arrowB)
+        arrowPath.lineTo(w/2, h - PADDING - arrowDef.arrowDr )
+        arrowPath.lineTo(w/2 - arrowDef.arrowB, h - PADDING - arrowDef.arrowDr - arrowDef.arrowB)
+        if (!arrowDef.onlyTriangle) {
+            arrowPath.lineTo(w / 2 - arrowDef.arrowB, PADDING + arrowDef.arrowDr)
+            arrowPath.lineTo(w / 2 + arrowDef.arrowB, PADDING + arrowDef.arrowDr)
         }
-        return true
+        arrowPath.close()
+        canvas.drawPath(arrowPath,arrowLine)
     }
 
-    private fun handleActionMoveInEditMode(event: MotionEvent): Boolean
-    {
-        val layoutParams: ConstraintLayout.LayoutParams? =
-            this.layoutParams as ConstraintLayout.LayoutParams?
-        if (dragStart != null) {
-            when (dragStart) {
-                TouchElementDragAnchor.TOP_LEFT -> {
-                    layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                    layoutParams!!.width += px.minus(event.x).toInt()
-                    layoutParams!!.topMargin += event.y.minus(py).toInt()
-                    layoutParams!!.height += py.minus(event.y).toInt()
-
-                }
-
-                TouchElementDragAnchor.TOP_RIGHT -> {
-                    layoutParams!!.width = oldWidth + event.x.minus(px).toInt()
-                    layoutParams.topMargin += event.y.minus(py).toInt()
-                    layoutParams.height += py.minus(event.y).toInt()
-                }
-
-                TouchElementDragAnchor.BOTTOM_RIGHT -> {
-                    layoutParams!!.width = oldWidth + event.x.minus(px).toInt()
-                    layoutParams.height = oldHeight + event.y.minus(py).toInt()
-                }
-
-                TouchElementDragAnchor.BOTTOM_LEFT -> {
-                    layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                    layoutParams!!.width += px.minus(event.x).toInt()
-                    layoutParams!!.height = oldHeight + event.y.minus(py).toInt()
-                }
-
-                else -> {
-                    layoutParams!!.leftMargin += event.x.minus(px).toInt()
-                    layoutParams!!.topMargin += event.y.minus(py).toInt()
-                }
-            }
-            this.layoutParams = layoutParams
-        }
-        return true
-    }
-
-    private fun setMidiNoteOn(midiData: ByteArray,note: MusicalPitch)
+    fun setMidiNoteOn(midiData: ByteArray,note: MusicalPitch)
     {
         midiData[0] = (0x90 + midiChannel).toByte()
         midiData[1] = (note.value+69).toInt().toByte()
         midiData[2] = 0x7F.toByte()
     }
 
-    private fun setMidiNoteOff(midiData: ByteArray,note: MusicalPitch)
+    fun setMidiNoteOff(midiData: ByteArray,note: MusicalPitch)
     {
         midiData[0] = (0x80 + midiChannel).toByte()
         midiData[1] = (note.value+69).toInt().toByte()
         midiData[2] = 0x7F.toByte()
     }
 
-    private fun validatePlacement(): Boolean
+    fun validatePlacement(): Boolean
     {
         val screenWidth: Int
         val screenHeight: Int

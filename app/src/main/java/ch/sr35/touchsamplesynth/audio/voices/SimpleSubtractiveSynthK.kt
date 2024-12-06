@@ -52,7 +52,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
     }
 
 
-    override fun applyTouchAction(a: Float) {
+    override fun applyTouchActionA(a: Float) {
         if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmountToFilter) > 20.0f &&
             AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmountToFilter) < 20000.0f)
         {

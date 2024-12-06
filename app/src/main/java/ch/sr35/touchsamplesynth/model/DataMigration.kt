@@ -1,6 +1,8 @@
 package ch.sr35.touchsamplesynth.model
 
+import androidx.core.graphics.rotationMatrix
 import ch.sr35.touchsamplesynth.BuildConfig
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
@@ -107,7 +109,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
             TrivialUpdater(Version(1,9,1),Version(1,9,2)),
             TrivialUpdater(Version(1,9,2),Version(1,9,3)),
             Updater5() as DataUpdater,
-            TrivialUpdater(Version(1,9,4),Version(1,10,0))
+            Updater6() as DataUpdater
             )
     }
 
@@ -269,6 +271,115 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     // TODO Data migration to 1.10.0
     // touchelement.note to touchelement.notes (single value to array)
     // add className to all instruments
+    // add actionAmountToPitchBend with value 0
+    // change actiondirs: HORIZONTAL_LEFT_RIGHT to: horizontalToActionB=false and HORIZONTAL_LR_VERTICAL_UD
+    // HORIZONTAL_RIGHT_LEFT to: horizontalToActionB=false and HORIZONTAL_RL_VERTICAL_UD
+    // VERTICAL_UP_DOWN to horizontalToActionB=true and VERTICAL_UD_HORIZONTAL_LR
+    // VERTICAL_DOWN_UP to horizontalToActionB=true and VERTICAL_DU_HORIZONTAL_LR
+    // change midiCC to midiCCA, add midiCCB (! critical change regarding functionality!)
+    private class Updater6: DataUpdater(versionFrom = Version(1,9,4),versionTo = Version(1,10,0)) {
+        override fun processData(jsonData: String): String? {
+            val rootElement = JsonParser.parseString(jsonData)
+            val rootObj = rootElement.asJsonObject
+            if (!rootObj.has("touchSampleSynthVersion")) {
+                return null
+            }
+            val srcVersion = rootObj.get("touchSampleSynthVersion").asString
+            val versionNumbers = srcVersion.split(".")
+            if (versionNumbers.size != 3)
+            {
+                return null
+            }
+            val versionFromFile = Version(versionNumbers[0].toInt(),versionNumbers[1].toInt(),versionNumbers[2].toInt())
+            if (versionFromFile != this.versionFrom)
+            {
+                return null
+            }
+            rootObj.remove("touchSampleSynthVersion")
+            rootObj.addProperty("touchSampleSynthVersion",versionTo.toString())
+
+            rootObj.getAsJsonArray("scenes")
+                .flatMap { scn -> (scn as JsonObject).getAsJsonArray("touchElements") }
+                .forEach { te ->
+                    val n = (te as JsonObject).get("note")
+                    te.remove("note")
+                    val notes = JsonArray()
+                    notes.add(n.asNumber)
+                    te.add("notes",notes)
+
+                    val midiCC = te["midiCC"].asNumber.toInt()
+                    val midiCCB: Int
+                    if (midiCC >= 0 && midiCC < 127)
+                    {
+                        midiCCB = midiCC + 1
+                    }
+                    else
+                    {
+                        midiCCB = midiCC - 1
+                    }
+                    te.addProperty("midiCCA",midiCC)
+                    te.addProperty("midiCCB",midiCCB)
+                    te.remove("midiCC")
+            }
+
+            rootObj.getAsJsonArray("scenes")
+                .flatMap { scn -> (scn as JsonObject).getAsJsonArray("instruments") }
+                .forEach {  i ->
+                    if ((i as JsonObject).has("loopStart")){
+                        i.addProperty("className","ch.sr35.touchsamplesynth.model.SamplerP")
+                    }
+                    else if ((i as JsonObject).has("resonance")) {
+                        i.addProperty("className","ch.sr35.touchsamplesynth.model.SimpleSubtractiveSynthP")
+                    }
+                    else {
+                        i.addProperty("className","ch.sr35.touchsamplesynth.model.SineMonoSynthP")
+                    }
+                    i.addProperty("actionAmountToPitchBend", "0.0f")
+                }
+
+            val allInstruments = rootObj.getAsJsonArray("scenes").flatMap { scn -> (scn as JsonObject).getAsJsonArray("instruments") }
+            rootObj.getAsJsonArray("scenes")
+                .flatMap { scn -> (scn as JsonObject).getAsJsonArray("touchElements") }
+                .forEach {  te ->
+                    val matchingInstrument = allInstruments.first { i ->
+                        (i as JsonObject).get("id").asString == (te as JsonObject).get("soundGeneratorId").asString
+                    }
+                    val currentOrientation = (te as JsonObject).get("actionDir").asString
+                    when (currentOrientation)
+                    {
+                        "HORIZONTAL_LEFT_RIGHT" ->
+                        {
+                            (matchingInstrument as JsonObject).addProperty("horizontalToActionB",false)
+                            te.remove("actionDir")
+                            te.addProperty("actionDir","HORIZONTAL_LR_VERTICAL_UD")
+                        }
+                        "HORIZONTAL_RIGHT_LEFT" ->
+                        {
+                            (matchingInstrument as JsonObject).addProperty("horizontalToActionB",false)
+                            te.remove("actionDir")
+                            te.addProperty("actionDir","HORIZONTAL_RL_VERTICAL_UD")
+                        }
+                        "VERTICAL_UP_DOWN" ->
+                        {
+                            (matchingInstrument as JsonObject).addProperty("horizontalToActionB",true)
+                            te.remove("actionDir")
+                            te.addProperty("actionDir","HORIZONTAL_LR_VERTICAL_UD")
+                        }
+                        "VERTICAL_DOWN_UP" ->
+                        {
+                            (matchingInstrument as JsonObject).addProperty("horizontalToActionB",true)
+                            te.remove("actionDir")
+                            te.addProperty("actionDir","HORIZONTAL_LR_VERTICAL_DU")
+                        }
+                    }
+                }
+
+
+            return rootObj.toString()
+        }
+
+    }
+
 
 }
 

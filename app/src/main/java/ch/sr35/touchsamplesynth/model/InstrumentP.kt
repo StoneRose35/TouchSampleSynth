@@ -20,7 +20,13 @@ class PersistableInstrumentDeserializer: JsonDeserializer<InstrumentP> {
     }
 }
 
-open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC, var nVoices:Int=0, var name: String="", var id: String=""): Serializable, Cloneable {
+open class InstrumentP(var actionAmountToVolume: Float=0.0f,
+                       var actionAmountToPitchBend: Float=0.0f,
+                       var polyphonyDefinition: PolyphonyDefinition = PolyphonyDefinition.MONOPHONIC,
+                       var horizontalToActionB: Boolean=false,
+                       var nVoices:Int=0,
+                       var name: String="",
+                       var id: String=""): Serializable, Cloneable {
 
     init {
         val className = this.javaClass.name
@@ -30,6 +36,8 @@ open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefini
         name = i.name
         polyphonyDefinition = i.polyphonyDefinition
         actionAmountToVolume = i.getVolumeModulation()
+        actionAmountToPitchBend = i.getPitchBendAmount()
+        horizontalToActionB = i.horizontalToActionB
         nVoices = i.voicesCount()
     }
 
@@ -39,6 +47,8 @@ open class InstrumentP(var actionAmountToVolume: Float=0.0f, var polyphonyDefini
         i.polyphonyDefinition = polyphonyDefinition
         i.generateVoices(nVoices)
         i.setVolumeModulation(actionAmountToVolume)
+        i.setPitchBendAmount(actionAmountToPitchBend)
+        i.horizontalToActionB = horizontalToActionB
     }
 
 

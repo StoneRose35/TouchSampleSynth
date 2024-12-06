@@ -22,6 +22,7 @@ private:
     uint32_t sampleEndIndex;
     uint32_t currentIndex;
     uint8_t loopMode;
+    float phaseIncrement;
 
 
 public:
@@ -44,6 +45,7 @@ public:
     void trigger(uint8_t) override;
     int getType() override;
     bool isSounding() override;
+    void setPitchBend(float) override;
     explicit Sampler(float sr);
     ~Sampler();
 };

@@ -8,7 +8,7 @@
 #include "AdsrEnvelope.h"
 #include "SineOscillator.h"
 #include <cstdlib>
-
+#include <cmath>
 
 class SineMonoSynth: public MusicalSoundGenerator {
 private:
@@ -17,7 +17,10 @@ private:
     float sampleRate;
     int8_t envelopeUpdateInterval;
     int8_t currentSample;
+    float currentPitchBend,newPitchBend;
     float envelopeVals[2];
+    float note;
+    int modulatorsUpdateInSamples, currentPitchUpdateInSamples;
 public:
     float getNextSample() override;
 
@@ -29,6 +32,7 @@ public:
     void trigger(uint8_t) override;
     int getType() override;
     bool isSounding() override;
+    void setPitchBend(float) override;
 
     // specific interface
     void setAttack(float);

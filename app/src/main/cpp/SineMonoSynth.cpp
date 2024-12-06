@@ -5,11 +5,23 @@
 #include "SineMonoSynth.h"
 #include "AudioEngine.h"
 float SineMonoSynth::getNextSample() {
+    float im;
     if (env->isSounding()) {
         float nsample = osc->getNextSample();
         nsample = nsample * (envelopeVals[0] +
                              (envelopeVals[1] - envelopeVals[0]) / (float) envelopeUpdateInterval *
                              (float) currentSample);
+
+        if (currentPitchUpdateInSamples < modulatorsUpdateInSamples)
+        {
+            im = (newPitchBend - currentPitchBend)*((float)currentPitchUpdateInSamples / (float)(modulatorsUpdateInSamples)) + currentPitchBend;
+            osc->setNote(note + im);
+            currentPitchUpdateInSamples++;
+            if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
+            {
+                currentPitchBend = newPitchBend;
+            }
+        }
         currentSample++;
         if (currentSample == envelopeUpdateInterval) {
             envelopeVals[0] = envelopeVals[1];
@@ -36,11 +48,16 @@ SineMonoSynth::SineMonoSynth(float sr): MusicalSoundGenerator(sr) {
     envelopeVals[1]=0.0f;
     envelopeUpdateInterval=32;
     currentSample = 0;
+    modulatorsUpdateInSamples = floor(sr / 100);
+    currentPitchUpdateInSamples=modulatorsUpdateInSamples;
 }
 
-void SineMonoSynth::setNote(float note) {
-    osc->setNote(note);
-    MusicalSoundGenerator::setNote(note);
+void SineMonoSynth::setNote(float n) {
+    note = n;
+    currentPitchBend=0;
+    currentPitchUpdateInSamples=modulatorsUpdateInSamples;
+    osc->setNote(n);
+    MusicalSoundGenerator::setNote(n);
 }
 
 void SineMonoSynth::switchOn(uint8_t velocity) {
@@ -97,4 +114,11 @@ float SineMonoSynth::getRelease() {
 
 bool SineMonoSynth::isSounding() {
     return env->isSounding();
+}
+
+void SineMonoSynth::setPitchBend(float pb) {
+    if (env->isSounding()) {
+        newPitchBend = pb;
+        currentPitchUpdateInSamples = 0;
+    }
 }

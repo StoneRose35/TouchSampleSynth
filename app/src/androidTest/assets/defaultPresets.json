@@ -6,7 +6,7 @@
   "screenResolutionX": 2000,
   "screenResolutionY": 1200,
   "installDone": true,
-  "touchSampleSynthVersion": "1.10.0",
+  "touchSampleSynthVersion": "1.9.4",
   "scenes": [
     {
       "instruments": [

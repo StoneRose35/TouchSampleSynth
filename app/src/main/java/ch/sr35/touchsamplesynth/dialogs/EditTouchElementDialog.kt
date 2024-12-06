@@ -64,17 +64,17 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         rotationChangeTouchElement.actionDir = touchElement.actionDir
         rotationChangeTouchElement.setOnClickListener { it ->
             when(rotationChangeTouchElement.actionDir) {
-                ActionDir.HORIZONTAL_LEFT_RIGHT -> {
-                    rotationChangeTouchElement.actionDir= ActionDir.HORIZONTAL_RIGHT_LEFT
+                ActionDir.HORIZONTAL_LR_VERTICAL_DU -> {
+                    rotationChangeTouchElement.actionDir= ActionDir.HORIZONTAL_RL_VERTICAL_DU
                 }
-                ActionDir.HORIZONTAL_RIGHT_LEFT -> {
-                    rotationChangeTouchElement.actionDir= ActionDir.VERTICAL_DOWN_UP
+                ActionDir.HORIZONTAL_RL_VERTICAL_DU -> {
+                    rotationChangeTouchElement.actionDir= ActionDir.HORIZONTAL_RL_VERTICAL_UD
                 }
-                ActionDir.VERTICAL_DOWN_UP -> {
-                    rotationChangeTouchElement.actionDir= ActionDir.VERTICAL_UP_DOWN
+                ActionDir.HORIZONTAL_RL_VERTICAL_UD -> {
+                    rotationChangeTouchElement.actionDir= ActionDir.HORIZONTAL_LR_VERTICAL_UD
                 }
-                ActionDir.VERTICAL_UP_DOWN -> {
-                    rotationChangeTouchElement.actionDir = ActionDir.HORIZONTAL_LEFT_RIGHT
+                ActionDir.HORIZONTAL_LR_VERTICAL_UD -> {
+                    rotationChangeTouchElement.actionDir = ActionDir.HORIZONTAL_LR_VERTICAL_DU
                 }
             }
         }
@@ -181,7 +181,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         }
 
         findViewById<EditText>(R.id.midiControlChange).also {
-            (it as TextView).text = this.touchElement.midiCC.toString()
+            (it as TextView).text = this.touchElement.midiCCA.toString()
             it.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     try {
@@ -194,7 +194,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                         else
                         {
                             v.background=null
-                            this.touchElement.midiCC=midiCCInt
+                            this.touchElement.midiCCA=midiCCInt
                         }
                     }
                     catch (e: NumberFormatException)

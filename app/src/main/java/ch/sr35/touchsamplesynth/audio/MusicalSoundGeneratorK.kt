@@ -12,6 +12,7 @@ const val MIDI_MODE_ON_POLY=4
 const val MIDI_MODE_ON_MONO=6
 open class MusicalSoundGenerator {
     var actionAmountToVolume: Float=0.0f
+    var actionAmountToPitchBend: Float=0.0f
     var switchOnTime: Long=-1
     protected open var instance: Byte=-1
     private var engaged: Boolean=false
@@ -28,6 +29,7 @@ open class MusicalSoundGenerator {
     open external fun getMidiMode(): Int
     external fun getVolume(): Float
     external fun setVolume(v: Float): Boolean
+    external fun setPitchBend(bend: Float): Boolean
     private external fun switchOnExt(vel: Float): Boolean
     private external fun switchOffExt(vel: Float):Boolean
     private external fun triggerExt(vel: Float): Boolean
@@ -54,11 +56,18 @@ open class MusicalSoundGenerator {
     open fun copyParamsTo(other: MusicalSoundGenerator) {
         other.setMidiMode(this.getMidiMode())
         other.actionAmountToVolume = actionAmountToVolume
+        other.actionAmountToPitchBend = actionAmountToPitchBend
     }
 
-    open fun applyTouchAction(a: Float) {
-        if (a > 0.0f) {
+    open fun applyTouchActionA(a: Float) {
+        if (a >= -1.0f && a <= 1.0f) {
             setVolume(10.0f.pow(log10(a) * actionAmountToVolume))
+        }
+    }
+
+    open fun applyTouchActionB(b: Float) {
+        if (b >= -1.0f && b <= 1.0f) {
+            setPitchBend(b* actionAmountToPitchBend)
         }
     }
 

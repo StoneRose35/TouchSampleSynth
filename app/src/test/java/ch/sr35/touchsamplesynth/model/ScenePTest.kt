@@ -11,19 +11,19 @@ class ScenePTest {
     @Test
     fun toJsonTest()
     {
-        val synth1=SineMonoSynthP(0.684f,0.438f,0.1111f,0.93234f,0.1f,
-            PolyphonyDefinition.POLY_SATURATE,4,"HuntersMoon")
+        val synth1=SineMonoSynthP(0.684f,0.438f,0.1111f,0.93234f,0.1f,0.2f,
+            PolyphonyDefinition.POLY_SATURATE,false,4,"HuntersMoon")
         synth1.id = UUID.randomUUID().toString()
-        val synth2 = SamplerP(12532,5959594,13000,5700000,0,"/sdcard/searchlight.wav",0.25f,
-            PolyphonyDefinition.POLY_SATURATE,4,"WatcherInTheSky")
+        val synth2 = SamplerP(12532,5959594,13000,5700000,0,"/sdcard/searchlight.wav",0.25f,0.2f,
+            PolyphonyDefinition.POLY_SATURATE,false,4,"WatcherInTheSky")
         synth2.id = UUID.randomUUID().toString()
         val touchElement1 = TouchElementP(234,546,154,673,
-            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT, ArrayList(45),null,0,3,synth1.id)
+            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD, ArrayList(45),null,0,3,4,synth1.id)
         val touchElement2 = TouchElementP(24,541,354,273,
-            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,ArrayList(34),null,0,7,synth1.id)
+            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,ArrayList(34),null,0,7,8,synth1.id)
         val touchElement3 = TouchElementP(342,343,44,55,
-            TouchElement.ActionDir.HORIZONTAL_RIGHT_LEFT,ArrayList(45),null,0,11,synth1.id)
-        val touchElement4 = TouchElementP(563,92,100,200,TouchElement.ActionDir.VERTICAL_DOWN_UP,ArrayList(62),null,0,3,synth2.id)
+            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,ArrayList(45),null,0,11,12,synth1.id)
+        val touchElement4 = TouchElementP(563,92,100,200,TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_DU,ArrayList(62),null,0,3,4,synth2.id)
         val scene=SceneP()
         scene.instruments.add(synth1)
         scene.instruments.add(synth2)
