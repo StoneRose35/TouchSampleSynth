@@ -35,7 +35,6 @@ public:
 
     int8_t getActiveSoundGenerators();
     int8_t getNSoundGenerators() const;
-    void setNSoundGenerators(int8_t);
     MusicalSoundGenerator * getSoundGenerator(int8_t);
     int8_t addSoundGenerator(SoundGeneratorType);
     void removeSoundGenerator(int idx);
@@ -77,6 +76,7 @@ public:
 
 private:
     AAudioStream *stream_= nullptr;
+    AAudioStream *streamRecording_ = nullptr;
     int32_t samplingRate;
     MusicalSoundGenerator ** soundGenerators= nullptr;
     int32_t kBufferSizeInBursts = 2;
