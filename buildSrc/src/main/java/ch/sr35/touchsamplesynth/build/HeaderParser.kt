@@ -16,7 +16,8 @@ class FunctionDescription {
 class HeaderParser {
 
     var fileName = ""
-    private val filenameSoundGeneratorEnum = "../app/src/main/cpp/SoundGenerator.h"
+    var rootPath = ""
+
     var className = ""
     var magicNr: Int = -1
 
@@ -51,6 +52,7 @@ class HeaderParser {
         }
         className = clazzname.groups[1]?.value.toString()
 
+        val filenameSoundGeneratorEnum = "$rootPath/app/src/main/cpp/SoundGenerator.h"
         val fileSoundGeneratorEnum = File(filenameSoundGeneratorEnum)
         var soundGeneratorEnum = fileSoundGeneratorEnum.readText()
         soundGeneratorEnum = soundGeneratorEnum.replace(commentPattern, "")
@@ -150,6 +152,7 @@ class HeaderParser {
 
     fun obtainMagicNr(): Int
     {
+        val filenameSoundGeneratorEnum = "$rootPath/app/src/main/cpp/SoundGenerator.h"
         val fileSoundGeneratorEnum = File(filenameSoundGeneratorEnum)
         var soundGeneratorEnum = fileSoundGeneratorEnum.readText()
         val commentPattern = Regex("""/\*.*?\*/""", RegexOption.DOT_MATCHES_ALL)

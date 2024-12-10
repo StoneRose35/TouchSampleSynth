@@ -15,7 +15,7 @@ class InstrumentBuilder {
                 var props: List<FunctionDescription> = ArrayList()
                 if (f.extension == "h") {
                     // check if the header contains a class derived from MusicalSoundGenerator
-                    parser = HeaderParser()
+                    parser.rootPath = rootPath
                     parser.fileName = f.absolutePath
                     props = parser.parseHeaderForProperties()
                 }
@@ -80,6 +80,5 @@ abstract class InstrumentBuilderTask: DefaultTask() {
         val instrumentBuilder = InstrumentBuilder()
         instrumentBuilder.rootPath =  this.project.rootDir.absolutePath
         instrumentBuilder.generateAllInstrumentFiles()
-        this.project.rootDir.absolutePath
     }
 }
