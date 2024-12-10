@@ -9,9 +9,7 @@
 #include "AudioEngine.h"
 #include "SoundGenerator.h"
 #include "MusicalSoundGenerator.h"
-#include "SineMonoSynth.h"
-#include "SimpleSubtractiveSynth.h"
-#include "Sampler.h"
+#include "SoundRecorder.h"
 #include <ctime>
 
 #define APP_NAME "TouchSampleSynth"
@@ -129,6 +127,26 @@ aaudio_data_callback_result_t dataCallback(
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
 }
 
+aaudio_data_callback_result_t dataCallbackRecorder(
+        AAudioStream *stream,
+        void *,
+        void *audioData,
+        int32_t numFrames)
+{
+    auto * audioDataFloat = static_cast<float *>(audioData);
+    for(uint32_t i=0;i<numFrames;i++) {
+
+        for (int8_t c = 0; c < audioEngine->getNSoundGenerators(); c++) {
+            auto *  recorder = dynamic_cast<SoundRecorder*>(audioEngine->getSoundGenerator(c));
+            if (recorder != nullptr) {
+                recorder->processNextSample(*(audioDataFloat+i));
+            }
+        }
+    }
+
+    return AAUDIO_CALLBACK_RESULT_CONTINUE;
+}
+
 void errorCallback(AAudioStream *,
                    void *userData,
                    aaudio_result_t error){
@@ -140,7 +158,7 @@ void errorCallback(AAudioStream *,
 
 bool AudioEngine::start() {
 
-    if (stream_ != nullptr) {
+    if (stream_ != nullptr || streamRecording_ != nullptr) {
         return false;
     }
 
@@ -154,12 +172,31 @@ bool AudioEngine::start() {
     AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallback, nullptr);
     AAudioStreamBuilder_setErrorCallback(streamBuilder, ::errorCallback, this);
 
+
+    AAudioStreamBuilder *streamBuilderRecorder;
+    AAudio_createStreamBuilder(&streamBuilderRecorder);
+    AAudioStreamBuilder_setFormat(streamBuilderRecorder, AAUDIO_FORMAT_PCM_FLOAT);
+    AAudioStreamBuilder_setChannelCount(streamBuilderRecorder, 1);
+    AAudioStreamBuilder_setPerformanceMode(streamBuilderRecorder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
+    AAudioStreamBuilder_setFramesPerDataCallback(streamBuilderRecorder,framesPerDataCallback);
+    AAudioStreamBuilder_setBufferCapacityInFrames(streamBuilderRecorder,bufferCapacityInFrames);
+    AAudioStreamBuilder_setDirection(streamBuilderRecorder, AAUDIO_DIRECTION_INPUT);
+    AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallbackRecorder, nullptr);
+    AAudioStreamBuilder_setErrorCallback(streamBuilder, ::errorCallback, this);
+
     // Opens the stream.
     aaudio_result_t result = AAudioStreamBuilder_openStream(streamBuilder, &stream_);
     if (result != AAUDIO_OK) {
         __android_log_print(ANDROID_LOG_ERROR, "AudioEngine", "Error opening stream %s",
                             AAudio_convertResultToText(result));
         return false;
+    }
+
+    result = AAudioStreamBuilder_openStream(streamBuilderRecorder, &streamRecording_);
+    if (result != AAUDIO_OK) {
+        __android_log_print(ANDROID_LOG_ERROR, "AudioEngine", "Error opening stream %s",
+                            AAudio_convertResultToText(result));
+        streamRecording_ = nullptr;
     }
 
     // Retrieves the sample rate of the stream for our oscillator.
@@ -170,6 +207,12 @@ bool AudioEngine::start() {
             stream_, AAudioStream_getFramesPerBurst(stream_) * kBufferSizeInBursts);
 
 
+    if (streamRecording_ != nullptr)
+    {
+        AAudioStream_setBufferSizeInFrames(
+                streamRecording_, AAudioStream_getFramesPerBurst(streamRecording_) * kBufferSizeInBursts);
+    }
+
     // Starts the stream.
     result = AAudioStream_requestStart(stream_);
     if (result != AAUDIO_OK) {
@@ -178,6 +221,17 @@ bool AudioEngine::start() {
         return false;
     }
 
+    // Starts the stream for recording (if available).
+    if (streamRecording_ != nullptr) {
+        result = AAudioStream_requestStart(streamRecording_);
+        if (result != AAUDIO_OK) {
+            __android_log_print(ANDROID_LOG_ERROR, "AudioEngine", "Error starting stream %s",
+                                AAudio_convertResultToText(result));
+            return false;
+        }
+    }
+
+    AAudioStreamBuilder_delete(streamBuilderRecorder);
     AAudioStreamBuilder_delete(streamBuilder);
     return true;
 
@@ -238,6 +292,22 @@ void AudioEngine::stop() {
             //AAudioStream_waitForStateChange(stream_,aaudioStreamState,&nextState,10000000);
         }
         stream_ = nullptr;
+    }
+
+    if (streamRecording_ != nullptr)
+    {
+        aaudioResult = AAudioStream_requestStop(streamRecording_);
+        if (aaudioResult == AAUDIO_OK)
+        {
+            // wait until the stream has stopped
+            aaudioStreamState = AAudioStream_getState(streamRecording_);
+            AAudioStream_waitForStateChange(streamRecording_,aaudioStreamState,&nextState,10000000);
+
+            // close the stream, wait until the stream has closed
+            AAudioStream_close(streamRecording_);
+            //AAudioStream_waitForStateChange(stream_,aaudioStreamState,&nextState,10000000);
+        }
+        streamRecording_ = nullptr;
     }
 }
 
@@ -329,47 +399,7 @@ MusicalSoundGenerator *AudioEngine::getSoundGenerator(int8_t idx) {
     return nullptr;
 }
 
-int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
-    MusicalSoundGenerator *  sg;
-    int8_t idx=nSoundGenerators;
-    // get next free slot
-    for (int8_t c=0;c<nSoundGenerators;c++)
-    {
-        if(*(soundGenerators+c)==nullptr)
-        {
-            idx=c;
-            break;
-        }
-    }
-    switch(sgt)
-    {
-        case SINE_MONO_SYNTH:
-            sg=new SineMonoSynth((float) samplingRate);
-            sg->midiInputPort = midiInputPort;
-            if (idx < nSoundGenerators) {
-                soundGenerators[idx] = sg;
-            }
-            break;
-        case SIMPLE_SUBTRACTIVE_SYNTH:
-            sg= new SimpleSubtractiveSynth((float) samplingRate);
-            sg->midiInputPort = midiInputPort;
-            if (idx < nSoundGenerators) {
-                soundGenerators[idx] = sg;
-            }
-            break;
-        case FM_SYNTH:
-            break;
-        case SAMPLER:
-            sg=new Sampler((float) samplingRate);
-            sg->midiInputPort = midiInputPort;
-            if (idx < nSoundGenerators) {
-                soundGenerators[idx] = sg;
-            }
-            break;
-    }
 
-    return idx;
-}
 
 void AudioEngine::removeSoundGenerator(int idx) {
     if (*(soundGenerators + idx)!= nullptr)
@@ -392,9 +422,6 @@ void AudioEngine::emptySoundGenerators()
     }
 }
 
-void AudioEngine::setNSoundGenerators(int8_t nsg) {
-    nSoundGenerators = nsg;
-}
 
 AudioEngine * getAudioEngine()
 {

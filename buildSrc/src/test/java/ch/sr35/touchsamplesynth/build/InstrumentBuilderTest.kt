@@ -7,7 +7,9 @@ class InstrumentBuilderTest {
     @Test
     fun generateAllInstrumentFilesTest()
     {
-        InstrumentBuilder.generateAllInstrumentFiles()
+        val instrumentBuilder = InstrumentBuilder()
+        instrumentBuilder.rootPath = ".."
+        instrumentBuilder.generateAllInstrumentFiles()
     }
 
 }

@@ -44,7 +44,7 @@ class HeaderParser {
             .replace("\n","")
             .replace("\t","")
             .replace(Regex("\\s+")," ")
-        val clazzname = Regex("class\\s?([a-zA-Z0-9_]*)\\s?:\\s?(public|private|protected)\\s?MusicalSoundGenerator\\s?\\{").find(headerString)
+        val clazzname = Regex("class\\s?([a-zA-Z0-9_]*)\\s?:[\\s,a-zA-Z0-9]*\\s?(public|private|protected)\\s?MusicalSoundGenerator\\s?[\\s,a-zA-Z0-9]*\\{").find(headerString)
         if (clazzname == null)
         {
             return properties
