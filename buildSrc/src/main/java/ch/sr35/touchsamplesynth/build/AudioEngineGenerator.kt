@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.build
 
-import java.io.File
 
 class AudioEngineGenerator {
 

@@ -1,10 +1,8 @@
 package ch.sr35.touchsamplesynth.build
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
-import java.nio.file.Paths
 
 class InstrumentBuilder {
 
