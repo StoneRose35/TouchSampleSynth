@@ -11,7 +11,8 @@ class TouchElementP(var width: Int,
                     var height: Int,
                     var posX:Int,
                     var posY: Int,
-                    var actionDir: TouchElement.ActionDir,
+                    private var actionDir: TouchElement.ActionDir,
+                    private var touchMode: TouchElement.TouchMode,
                     var notes: ArrayList<Int>,
                     var color: RgbColor?,
                     var midiChannel: Int,
@@ -26,6 +27,7 @@ class TouchElementP(var width: Int,
         posX = (touchElement.layoutParams as ConstraintLayout.LayoutParams).leftMargin
         posY = (touchElement.layoutParams as ConstraintLayout.LayoutParams).topMargin
         actionDir = touchElement.actionDir
+        touchMode = touchElement.touchMode
         notes.addAll(touchElement.notes.stream().map { it.index }.collect(Collectors.toList()))
         midiChannel = touchElement.midiChannel
         midiCCA = touchElement.midiCCA
@@ -55,12 +57,13 @@ class TouchElementP(var width: Int,
         te.midiCCA = midiCCA
         te.midiCCB = midiCCB
         te.actionDir = actionDir
+        te.touchMode = touchMode
     }
 
     override fun toString(): String
     {
-        return "TouchElement, w: %d, h: %d, x: %d, y: %d, actionDir: %s, notes: %s, soundGen: %s"
-            .format(this.width,this.height,this.posX,this.posY,this.actionDir,this.notes, this.soundGeneratorId)
+        return "TouchElement, w: %d, h: %d, x: %d, y: %d, actionDir: %s, touchMode: %s, notes: %s, soundGen: %s"
+            .format(this.width,this.height,this.posX,this.posY,this.actionDir,this.notes, this.touchMode, this.soundGeneratorId)
     }
 
     public override fun clone(): Any {
@@ -69,6 +72,7 @@ class TouchElementP(var width: Int,
             this.posX,
             this.posY,
             this.actionDir,
+            this.touchMode,
             this.notes,
             this.color?.clone(),
             this.midiChannel,

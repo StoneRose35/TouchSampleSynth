@@ -111,7 +111,8 @@
     <string name="disable">Disable</string>
     <string name="rtpmidi">RTP/Apple Midi</string>
     <string name="midiChannel">Midi Channel</string>
-    <string name="midiCC">Midi CC</string>
+    <string name="midiCCA">Midi CC A</string>
+    <string name="midiCCB">Midi CC B</string>
     <string name="ipAdress">IP Address</string>
     <string name="rtpMidiPorts">RTP Midi Ports</string>
     <string name="offline">offline</string>
@@ -135,4 +136,5 @@
     <string name="pitchBendOrientation">Pitchbend Orientation</string>
     <string name="horizontal">Horizontal</string>
     <string name="vertical">Vertical</string>
+    <string name="touchModeToggled">Toggled</string>
 </resources>

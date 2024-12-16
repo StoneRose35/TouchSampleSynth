@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import ch.sr35.touchsamplesynth.R
+import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
 import ch.sr35.touchsamplesynth.graphics.Point
 import ch.sr35.touchsamplesynth.views.NO_DRAG_TOLERANCE
@@ -25,7 +26,7 @@ class TouchAction(val startPoint: Point)
     var relativeValue=0.0f
 
 }
-class TouchElementHandler(val touchElement: TouchElement) {
+open class TouchElementHandler(val touchElement: TouchElement) {
 
     private var dragStart: TouchElementDragAnchor? = null
     private var touchActionHorizontal: TouchAction= TouchAction(Point(0.0,0.0))
@@ -37,7 +38,7 @@ class TouchElementHandler(val touchElement: TouchElement) {
             if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
                 handleActionDownInPlayMode(event)
             } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP || event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP) {
-                handleActionUpInPlayMode()
+                handleActionUpInPlayMode(event)
             } else if (event?.action?.and(MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE) {
                 handleActionMoveInPlayMode(event)
             }
@@ -59,7 +60,7 @@ class TouchElementHandler(val touchElement: TouchElement) {
     }
 
 
-    private fun handleActionDownInPlayMode(event: MotionEvent): Boolean
+    protected open fun handleActionDownInPlayMode(event: MotionEvent): Boolean
     {
         touchActionHorizontal = TouchAction(Point(event.x.toDouble(),event.y.toDouble()))
         touchActionVertical = TouchAction(Point(event.x.toDouble(),event.y.toDouble()))
@@ -79,17 +80,23 @@ class TouchElementHandler(val touchElement: TouchElement) {
             touchActionHorizontal.absoluteValue = 1.0f - (event.x- PADDING) / (touchElement.measuredWidth.toFloat()- 2* PADDING)
             touchActionHorizontal.relativeValue = (touchActionHorizontal.startPoint.x.toFloat() - event.x) / (touchElement.measuredWidth.toFloat()- 2* PADDING)
         }
+        touchElement.performClick()
+        touchElement.invalidate()
+        touchElement.px = event.x
+        touchElement.py = event.y
+
+        return true
+    }
+
+    fun switchOnVoices(appContext: TouchSampleSynthMain) {
         var firstnote = true
         touchElement.notes.forEach { currentNote ->
             touchElement.soundGenerator?.getNextFreeVoice()?.let {
                 touchElement.currentVoices.add(it)
-                if (touchElement.soundGenerator!!.horizontalToActionB)
-                {
+                if (touchElement.soundGenerator!!.horizontalToActionB) {
                     it.applyTouchActionB(touchActionHorizontal.relativeValue)
                     it.applyTouchActionA(touchActionVertical.absoluteValue)
-                }
-                else
-                {
+                } else {
                     it.applyTouchActionB(touchActionVertical.relativeValue)
                     it.applyTouchActionA(touchActionHorizontal.absoluteValue)
                 }
@@ -104,12 +111,15 @@ class TouchElementHandler(val touchElement: TouchElement) {
                             if (it.isEnabled) {
                                 var sentNotes = 0
                                 while (sentNotes < (touchElement.appContext).rtpMidiNotesRepeat) {
-                                    touchElement.appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                    appContext.rtpMidiServer?.addToSendQueue(midiData)
                                     sentNotes += 1
                                 }
                             }
                         }
-                        it.sendMidiCC(touchElement.midiCCA, (touchActionHorizontal.absoluteValue * 127.0f).toInt())
+                        it.sendMidiCC(
+                            touchElement.midiCCA,
+                            (touchActionHorizontal.absoluteValue * 127.0f).toInt()
+                        )
                         touchElement.midiCCAOld = midiData[2]
                     }
                     midiData[1] = touchElement.midiCCB.toByte()
@@ -119,12 +129,15 @@ class TouchElementHandler(val touchElement: TouchElement) {
                             if (it.isEnabled) {
                                 var sentNotes = 0
                                 while (sentNotes < (touchElement.appContext).rtpMidiNotesRepeat) {
-                                    touchElement.appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                    appContext.rtpMidiServer?.addToSendQueue(midiData)
                                     sentNotes += 1
                                 }
                             }
                         }
-                        it.sendMidiCC(touchElement.midiCCB, (touchActionVertical.absoluteValue * 127.0f).toInt())
+                        it.sendMidiCC(
+                            touchElement.midiCCB,
+                            (touchActionVertical.absoluteValue * 127.0f).toInt()
+                        )
                         touchElement.midiCCAOld = midiData[2]
                     }
                     firstnote = false
@@ -132,12 +145,11 @@ class TouchElementHandler(val touchElement: TouchElement) {
 
                 touchElement.appContext?.rtpMidiServer?.let { rtpMidiServer ->
                     if (rtpMidiServer.isEnabled) {
-                        val midiData=ByteArray(3)
-                        touchElement.setMidiNoteOn(midiData,currentNote)
-                        var sentNotes=0
-                        while (sentNotes < (touchElement.appContext).rtpMidiNotesRepeat)
-                        {
-                            touchElement.appContext.rtpMidiServer?.addToSendQueue(midiData)
+                        val midiData = ByteArray(3)
+                        touchElement.setMidiNoteOn(midiData, currentNote)
+                        var sentNotes = 0
+                        while (sentNotes < (touchElement.appContext).rtpMidiNotesRepeat) {
+                            appContext.rtpMidiServer?.addToSendQueue(midiData)
                             sentNotes += 1
                         }
                     }
@@ -149,62 +161,45 @@ class TouchElementHandler(val touchElement: TouchElement) {
                 }
             }
         }
-        touchElement.performClick()
-        touchElement.invalidate()
-        touchElement.px = event.x
-        touchElement.py = event.y
+    }
 
+    protected open fun handleActionUpInPlayMode(event: MotionEvent): Boolean
+    {
+        touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+        if (touchElement.touchMode == TouchElement.TouchMode.MOMENTARY) {
+            touchElement.appContext?.let { switchOffVoices(it) }
+            touchElement.isEngaged = false
+        }
+        touchElement.invalidate()
         return true
     }
 
-    private fun handleActionUpInPlayMode(): Boolean
-    {
-        touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+    fun switchOffVoices(appContext: TouchSampleSynthMain) {
         touchElement.currentVoices.forEach { it.switchOff(1.0f) }
         touchElement.appContext?.rtpMidiServer?.let {
-            if (it.isEnabled )
-            {
+            if (it.isEnabled) {
                 touchElement.notes.forEach { currentNote ->
                     val midiData = ByteArray(3)
-                    touchElement.setMidiNoteOff(midiData,currentNote)
+                    touchElement.setMidiNoteOff(midiData, currentNote)
                     var sentNotes = 0
-                    while (sentNotes < touchElement.appContext.rtpMidiNotesRepeat) {
-                        touchElement.appContext.rtpMidiServer?.addToSendQueue(midiData)
+                    while (sentNotes < appContext.rtpMidiNotesRepeat) {
+                        appContext.rtpMidiServer?.addToSendQueue(midiData)
                         sentNotes += 1
                     }
                 }
             }
         }
         touchElement.currentVoices.clear()
-        touchElement.invalidate()
-        return true
     }
 
-    private fun handleActionMoveInPlayMode(event: MotionEvent): Boolean {
+    protected open fun handleActionMoveInPlayMode(event: MotionEvent) {
         if (event.y <= PADDING || event.y >= touchElement.measuredHeight - PADDING || event.x < PADDING || event.x >= touchElement.measuredWidth - PADDING) {
-            touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
-            touchElement.currentVoices.forEach {
-                if (it.isEngaged()) {
-                    it.switchOff(1.0f)
-
-                    touchElement.invalidate()
+            if (touchElement.touchMode == TouchElement.TouchMode.MOMENTARY) {
+                touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+                touchElement.appContext?.let {
+                    switchOffVoices(it)
                 }
             }
-            touchElement.appContext?.rtpMidiServer?.let { midiserver ->
-                if (midiserver.isEnabled) {
-                    touchElement.notes.forEach { currentNote ->
-                        val midiData = ByteArray(3)
-                        touchElement.setMidiNoteOff(midiData, currentNote)
-                        var sentNotes = 0
-                        while (sentNotes < (touchElement.appContext).rtpMidiNotesRepeat) {
-                            midiserver.addToSendQueue(midiData)
-                            sentNotes += 1
-                        }
-                    }
-                }
-            }
-            touchElement.currentVoices.clear()
-            return true
         } else if ((touchElement.actionDir == ActionDir.HORIZONTAL_LR_VERTICAL_DU || touchElement.actionDir == ActionDir.HORIZONTAL_RL_VERTICAL_DU) && event.y >= PADDING && event.y <= touchElement.measuredHeight - PADDING) {
             touchActionVertical.absoluteValue =
                 1.0f - ((event.y - PADDING) / (touchElement.measuredHeight.toFloat() - 2 * PADDING))
@@ -281,7 +276,6 @@ class TouchElementHandler(val touchElement: TouchElement) {
                 }
             }
         }
-        return true
     }
 
     private fun handleActionDownInEditMode(event: MotionEvent)

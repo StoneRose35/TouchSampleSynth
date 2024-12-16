@@ -27,4 +27,7 @@
     <attr name="pianoRollOctaveNoSelectionColor" format="color"/>
     <attr name="pianoRollOctaveSelectionColor" format="color"/>
     <attr name="pianoRollOctaveSelectionOutlineColor" format="color"/>
+    <declare-styleable name="TouchElement">
+        <attr name="touchElementPadding" format="float"/>
+    </declare-styleable>
 </resources>

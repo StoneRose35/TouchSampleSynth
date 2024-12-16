@@ -267,7 +267,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     }
 
 
-    // TODO Data migration to 1.10.0
+
     // touchelement.note to touchelement.notes (single value to array)
     // add className to all instruments
     // add actionAmountToPitchBend with value 0
@@ -276,6 +276,8 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     // VERTICAL_UP_DOWN to horizontalToActionB=true and VERTICAL_UD_HORIZONTAL_LR
     // VERTICAL_DOWN_UP to horizontalToActionB=true and VERTICAL_DU_HORIZONTAL_LR
     // change midiCC to midiCCA, add midiCCB (! critical change regarding functionality!)
+    // TODO: add touchMode: Momentary
+
     private class Updater6: DataUpdater(versionFrom = Version(1,9,4),versionTo = Version(1,10,0)) {
         override fun processData(jsonData: String): String? {
             val rootElement = JsonParser.parseString(jsonData)

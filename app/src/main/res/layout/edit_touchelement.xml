@@ -23,14 +23,7 @@
         android:layout_weight="1">
 
     </androidx.recyclerview.widget.RecyclerView>
-    <!--<NumberPicker
-        android:id="@+id/numberPickerNote"
-        android:layout_width="match_parent"
-        android:descendantFocusability="blocksDescendants"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        />-->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="160dp">
@@ -43,15 +36,24 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/edit_te_touchElement"
                  android:layout_width="0dp"/>
-            <ch.sr35.touchsamplesynth.views.TouchElement
+            <ch.sr35.touchsamplesynth.views.TouchElementRecorder
                 android:id="@+id/edit_te_touchElement"
-                android:layout_width="120dp"
-                android:layout_height="160dp"
+                android:layout_width="160dp"
+                android:layout_height="0dp"
+                app:touchElementPadding="8.0"
                 app:layout_constraintStart_toEndOf="@id/edit_te_pianoroll"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/checkboxToggled"
                 />
+        <CheckBox
+            android:id="@+id/checkboxToggled"
+            android:layout_width="0dp"
+            android:text="@string/touchModeToggled"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/edit_te_touchElement"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -61,13 +63,28 @@
         android:layout_height="wrap_content">
         <TableRow>
             <TextView
-                android:text="@string/midiCC"
+                android:text="@string/midiCCA"
                 android:layout_margin="10dp"
-                android:labelFor="@id/midiControlChange"
+                android:labelFor="@id/midiControlChangeA"
                 android:layout_gravity="center_vertical"
                 />
             <EditText
-                android:id="@+id/midiControlChange"
+                android:id="@+id/midiControlChangeA"
+                android:inputType="numberDecimal"
+                android:autofillHints="postalCode"
+                android:layout_width="match_parent"
+                android:text="@android:string/autofill"
+                android:layout_marginEnd="32dp"
+                android:minWidth="48dp"
+                />
+            <TextView
+                android:text="@string/midiCCB"
+                android:layout_margin="10dp"
+                android:labelFor="@id/midiControlChangeB"
+                android:layout_gravity="center_vertical"
+                />
+            <EditText
+                android:id="@+id/midiControlChangeB"
                 android:inputType="numberDecimal"
                 android:autofillHints="postalCode"
                 android:layout_width="match_parent"

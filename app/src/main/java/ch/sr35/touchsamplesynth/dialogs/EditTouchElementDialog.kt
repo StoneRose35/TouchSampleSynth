@@ -46,7 +46,6 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.edit_touchelement)
         val soundGenerators = (context as TouchSampleSynthMain).soundGenerators
-        //val touchElements = (context as TouchSampleSynthMain).touchElements
         val instrumentList = findViewById<RecyclerView>(R.id.edit_te_soundgenerator_list)
 
 
@@ -180,8 +179,35 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
             }
         }
 
-        findViewById<EditText>(R.id.midiControlChange).also {
+        findViewById<EditText>(R.id.midiControlChangeA).also {
             (it as TextView).text = this.touchElement.midiCCA.toString()
+            it.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    try {
+                        val midiCCInt =  v.text.toString().toInt()
+                        v.background=null
+                        if (midiCCInt < 0 || midiCCInt > 127)
+                        {
+                            v.background= ColorDrawable(Color.RED)
+                        }
+                        else
+                        {
+                            v.background=null
+                            this.touchElement.midiCCB=midiCCInt
+                        }
+                    }
+                    catch (e: NumberFormatException)
+                    {
+                        v.background= ColorDrawable(Color.RED)
+                    }
+                    return@setOnEditorActionListener true
+                }
+                return@setOnEditorActionListener false
+            }
+        }
+
+        findViewById<EditText>(R.id.midiControlChangeB).also {
+            (it as TextView).text = this.touchElement.midiCCB.toString()
             it.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     try {
@@ -204,6 +230,17 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
+            }
+        }
+
+        findViewById<CheckBox>(R.id.checkboxToggled).also {
+            it.isChecked = this.touchElement.touchMode == TouchElement.TouchMode.TOGGLED
+            it.setOnClickListener {
+                if (this.touchElement.touchMode == TouchElement.TouchMode.TOGGLED)
+                {
+                    this.touchElement.touchMode = TouchElement.TouchMode.MOMENTARY
+                }
+                this.touchElement.invalidate()
             }
         }
 

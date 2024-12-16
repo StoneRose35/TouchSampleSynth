@@ -42,7 +42,7 @@ val ARROW_DR = Converter.toPx(6)
 val ARROW_Q = 7.0
 val ARROW_BMAX = Converter.toPx(12)
 
-class TouchElement(context: Context, attributeSet: AttributeSet?) :
+open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     View(context, attributeSet) {
 
     enum class ActionDir: Serializable {
@@ -59,6 +59,11 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         EDITING_SELECTED
     }
 
+    enum class TouchMode {
+        MOMENTARY,
+        TOGGLED
+    }
+
     enum class TouchElementDragAnchor {
         BODY,
         TOP_LEFT,
@@ -67,17 +72,21 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         BOTTOM_RIGHT
     }
 
-    private class ArrowDefinition(val arrowB: Int, val arrowDr: Int, val onlyTriangle: Boolean)
+    class ArrowDefinition(val arrowB: Int, val arrowDr: Int, val onlyTriangle: Boolean)
 
     var actionDir: ActionDir = ActionDir.HORIZONTAL_LR_VERTICAL_DU
     val outLine: Paint = Paint()
     private val fillColor: Paint = Paint()
     var px: Float = 0.0f
     var py: Float = 0.0f
+    var padding: Float = PADDING
     private var defaultState = TouchElementState.PLAYING
+    var touchMode = TouchMode.MOMENTARY
+    var isEngaged = false
 
     private val arrowPath = Path()
-    private val arrowLine: Paint = Paint()
+    private val outlinePath = Path()
+    val contrastingFill: Paint = Paint()
     private val editDotFill: Paint = Paint()
     private val editBoxBackground: Paint = Paint()
     private val editText: Paint = Paint()
@@ -104,7 +113,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
     private val boundsSetSoundgen = Rect()
     private val boundsDelete = Rect()
     val appContext: TouchSampleSynthMain?
-    private val touchElementHandler: TouchElementHandler
+    protected var touchElementHandler: TouchElementHandler
 
     private val rotateSymbol = AppCompatResources.getDrawable(context,R.drawable.rotatesymbol)
     private val editSymbol = AppCompatResources.getDrawable(context,R.drawable.editsymbol)
@@ -139,14 +148,22 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
             null
         }
 
-        arrowLine.color = AutoContraster().generateContrastingColor(RgbColor.fromColorInt(fillColor.color)).toColorInt() //MaterialColors.getColor(this,R.attr.touchElementLine)
-        arrowLine.style = Paint.Style.FILL
-        arrowLine.isAntiAlias = true
+        contrastingFill.color = AutoContraster().generateContrastingColor(RgbColor.fromColorInt(fillColor.color)).toColorInt()
+        contrastingFill.style = Paint.Style.FILL
+        contrastingFill.isAntiAlias = true
 
-        outLine.color = arrowLine.color
+        outLine.color = contrastingFill.color
         outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
         outLine.style = Paint.Style.STROKE
         outLine.isAntiAlias = true
+
+        context.obtainStyledAttributes(attributeSet, R.styleable.TouchElement).also {
+            padding = it.getFloat(
+                R.styleable.TouchElement_touchElementPadding,
+                PADDING
+            )
+            it.recycle()
+        }
 
         touchElementHandler = TouchElementHandler(this)
     }
@@ -156,38 +173,59 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         return RgbColor.fromColorInt(fillColor.color)
     }
 
+    fun getContrastingColor(): RgbColor
+    {
+        return AutoContraster().generateContrastingColor(RgbColor.fromColorInt(fillColor.color))
+    }
+
     fun setColor(color: RgbColor)
     {
         fillColor.color = color.toColorInt()
-        arrowLine.color = AutoContraster().generateContrastingColor(RgbColor.fromColorInt(fillColor.color)).toColorInt()
-        outLine.color = arrowLine.color
+        contrastingFill.color = AutoContraster().generateContrastingColor(RgbColor.fromColorInt(fillColor.color)).toColorInt()
+        outLine.color = contrastingFill.color
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        val w = layoutParams.width.toFloat()
-        val h = layoutParams.height.toFloat()
+        val w = measuredWidth
+        val h = measuredHeight
 
         // draw oval
-        canvas.drawRoundRect(
-            0.0f + PADDING,
-            0.0f + PADDING,
-            w - PADDING,
-            h - PADDING,
-            cornerRadius,
-            cornerRadius,
-            fillColor
-        )
-        canvas.drawRoundRect(
-            0.0f + PADDING,
-            0.0f + PADDING,
-            w - PADDING,
-            h - PADDING,
-            cornerRadius,
-            cornerRadius,
-            outLine
-        )
+        if (touchMode == TouchMode.MOMENTARY) {
+            canvas.drawRoundRect(
+                0.0f + padding,
+                0.0f + padding,
+                w - padding,
+                h - padding,
+                cornerRadius,
+                cornerRadius,
+                fillColor
+            )
+            canvas.drawRoundRect(
+                0.0f + padding,
+                0.0f + padding,
+                w - padding,
+                h - padding,
+                cornerRadius,
+                cornerRadius,
+                outLine
+            )
+        } else if (touchMode == TouchMode.TOGGLED) {
+            outlinePath.reset()
+            outlinePath.moveTo(0.0f + padding + cornerRadius, 0.0f + padding)
+            outlinePath.lineTo(w - padding - cornerRadius, 0.0f + padding)
+            outlinePath.lineTo(w - padding, 0.0f + padding + cornerRadius)
+            outlinePath.lineTo(w - padding, h - padding - cornerRadius)
+            outlinePath.lineTo(w - padding - cornerRadius, h - padding)
+            outlinePath.lineTo(0.0f + padding + cornerRadius, h - padding)
+            outlinePath.lineTo(0.0f + padding, h - padding - cornerRadius)
+            outlinePath.lineTo(0.0f + padding, 0.0f + padding + cornerRadius)
+            outlinePath.lineTo(0.0f + padding + cornerRadius, 0.0f + padding)
+
+            canvas.drawPath(outlinePath, fillColor)
+            canvas.drawPath(outlinePath, outLine)
+        }
 
         // draw action arrow
         when(actionDir) {
@@ -327,7 +365,7 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
         }
     }
 
-    private fun computeArrowDefinition(sizePerpendicularToArrow: Int,sizeAlongArrow: Int): ArrowDefinition
+    protected fun computeArrowDefinition(sizePerpendicularToArrow: Int,sizeAlongArrow: Int): ArrowDefinition
     {
         val arrowDr: Int
         var arrowB: Int
@@ -481,17 +519,14 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
 
     override fun performClick(): Boolean {
-        /*currentVoices.clear()
-        notes.forEach { currentNote ->
-            soundGenerator?.getNextFreeVoice()?.let {
-                it.setNote(currentNote.value)
-                if (it.switchOn(1.0f)) {
-                    outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
-                }
-                currentVoices.add(it)
-            }
+        if (!isEnabled) {
+            touchElementHandler.switchOnVoices(context as TouchSampleSynthMain)
+            isEngaged = true
         }
-        invalidate()*/
+        else {
+            touchElementHandler.switchOffVoices(context as TouchSampleSynthMain)
+            isEngaged = false
+        }
         return super.performClick()
     }
 
@@ -528,70 +563,70 @@ class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     private fun drawArrowLeftRight(canvas: Canvas)
     {
-        val w = layoutParams.width.toFloat()
-        val h = layoutParams.height.toFloat()
+        val w = measuredWidth.toFloat()
+        val h = measuredHeight.toFloat()
         val arrowDef = computeArrowDefinition(h.toInt(),w.toInt())
         arrowPath.reset()
-        arrowPath.moveTo(w - PADDING - arrowDef.arrowDr - arrowDef.arrowB,h/2 - arrowDef.arrowB )
-        arrowPath.lineTo(w - PADDING - arrowDef.arrowDr,h/2)
-        arrowPath.lineTo(w - PADDING - arrowDef.arrowDr - arrowDef.arrowB,h/2 + arrowDef.arrowB )
+        arrowPath.moveTo(w - padding - arrowDef.arrowDr - arrowDef.arrowB,h/2 - arrowDef.arrowB )
+        arrowPath.lineTo(w - padding - arrowDef.arrowDr,h/2)
+        arrowPath.lineTo(w - padding - arrowDef.arrowDr - arrowDef.arrowB,h/2 + arrowDef.arrowB )
         if (!arrowDef.onlyTriangle) {
-            arrowPath.lineTo(PADDING + arrowDef.arrowDr,h / 2 + arrowDef.arrowB )
-            arrowPath.lineTo(PADDING + arrowDef.arrowDr,h / 2 - arrowDef.arrowB )
+            arrowPath.lineTo(padding + arrowDef.arrowDr,h / 2 + arrowDef.arrowB )
+            arrowPath.lineTo(padding + arrowDef.arrowDr,h / 2 - arrowDef.arrowB )
         }
         arrowPath.close()
-        canvas.drawPath(arrowPath,arrowLine)
+        canvas.drawPath(arrowPath,contrastingFill)
     }
 
     private fun drawArrowRightLeft(canvas: Canvas)
     {
-        val w = layoutParams.width.toFloat()
-        val h = layoutParams.height.toFloat()
+        val w = measuredWidth.toFloat()
+        val h = measuredHeight.toFloat()
         val arrowDef = computeArrowDefinition(h.toInt(),w.toInt())
         arrowPath.reset()
-        arrowPath.moveTo(PADDING + arrowDef.arrowDr + arrowDef.arrowB,h/2 + arrowDef.arrowB)
-        arrowPath.lineTo(PADDING + arrowDef.arrowDr, h/2 )
-        arrowPath.lineTo(PADDING + arrowDef.arrowDr + arrowDef.arrowB,h/2 - arrowDef.arrowB)
+        arrowPath.moveTo(padding + arrowDef.arrowDr + arrowDef.arrowB,h/2 + arrowDef.arrowB)
+        arrowPath.lineTo(padding + arrowDef.arrowDr, h/2 )
+        arrowPath.lineTo(padding + arrowDef.arrowDr + arrowDef.arrowB,h/2 - arrowDef.arrowB)
         if (!arrowDef.onlyTriangle) {
-            arrowPath.lineTo(w - PADDING - arrowDef.arrowDr,h / 2 - arrowDef.arrowB)
-            arrowPath.lineTo( w - PADDING - arrowDef.arrowDr,h / 2 + arrowDef.arrowB)
+            arrowPath.lineTo(w - padding - arrowDef.arrowDr,h / 2 - arrowDef.arrowB)
+            arrowPath.lineTo( w - padding - arrowDef.arrowDr,h / 2 + arrowDef.arrowB)
         }
         arrowPath.close()
-        canvas.drawPath(arrowPath,arrowLine)
+        canvas.drawPath(arrowPath,contrastingFill)
     }
 
     private fun drawArrowDownUp(canvas: Canvas)
     {
-        val w = layoutParams.width.toFloat()
-        val h = layoutParams.height.toFloat()
+        val w = measuredWidth.toFloat()
+        val h = measuredHeight.toFloat()
         val arrowDef = computeArrowDefinition(w.toInt(),h.toInt())
         arrowPath.reset()
-        arrowPath.moveTo(w/2 - arrowDef.arrowB, PADDING + arrowDef.arrowDr + arrowDef.arrowB)
-        arrowPath.lineTo(w/2, PADDING + arrowDef.arrowDr)
-        arrowPath.lineTo(w/2 + arrowDef.arrowB, PADDING + arrowDef.arrowDr + arrowDef.arrowB)
+        arrowPath.moveTo(w/2 - arrowDef.arrowB, padding + arrowDef.arrowDr + arrowDef.arrowB)
+        arrowPath.lineTo(w/2, padding + arrowDef.arrowDr)
+        arrowPath.lineTo(w/2 + arrowDef.arrowB, padding + arrowDef.arrowDr + arrowDef.arrowB)
         if (!arrowDef.onlyTriangle) {
-            arrowPath.lineTo(w / 2 + arrowDef.arrowB, h - PADDING - arrowDef.arrowDr)
-            arrowPath.lineTo(w / 2 - arrowDef.arrowB, h - PADDING - arrowDef.arrowDr)
+            arrowPath.lineTo(w / 2 + arrowDef.arrowB, h - padding - arrowDef.arrowDr)
+            arrowPath.lineTo(w / 2 - arrowDef.arrowB, h - padding - arrowDef.arrowDr)
         }
         arrowPath.close()
-        canvas.drawPath(arrowPath,arrowLine)
+        canvas.drawPath(arrowPath,contrastingFill)
     }
 
     private fun drawArrowUpDown(canvas: Canvas)
     {
-        val w = layoutParams.width.toFloat()
-        val h = layoutParams.height.toFloat()
+        val w = measuredWidth.toFloat()
+        val h = measuredHeight.toFloat()
         val arrowDef = computeArrowDefinition(w.toInt(),h.toInt())
         arrowPath.reset()
-        arrowPath.moveTo(w/2 + arrowDef.arrowB, h - PADDING - arrowDef.arrowDr - arrowDef.arrowB)
-        arrowPath.lineTo(w/2, h - PADDING - arrowDef.arrowDr )
-        arrowPath.lineTo(w/2 - arrowDef.arrowB, h - PADDING - arrowDef.arrowDr - arrowDef.arrowB)
+        arrowPath.moveTo(w/2 + arrowDef.arrowB, h - padding - arrowDef.arrowDr - arrowDef.arrowB)
+        arrowPath.lineTo(w/2, h - padding - arrowDef.arrowDr )
+        arrowPath.lineTo(w/2 - arrowDef.arrowB, h - padding - arrowDef.arrowDr - arrowDef.arrowB)
         if (!arrowDef.onlyTriangle) {
-            arrowPath.lineTo(w / 2 - arrowDef.arrowB, PADDING + arrowDef.arrowDr)
-            arrowPath.lineTo(w / 2 + arrowDef.arrowB, PADDING + arrowDef.arrowDr)
+            arrowPath.lineTo(w / 2 - arrowDef.arrowB, padding + arrowDef.arrowDr)
+            arrowPath.lineTo(w / 2 + arrowDef.arrowB, padding + arrowDef.arrowDr)
         }
         arrowPath.close()
-        canvas.drawPath(arrowPath,arrowLine)
+        canvas.drawPath(arrowPath,contrastingFill)
     }
 
     fun setMidiNoteOn(midiData: ByteArray,note: MusicalPitch)

@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.model
 import android.content.Context
 import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.views.TouchElement
+import ch.sr35.touchsamplesynth.views.TouchElementRecorder
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -36,8 +37,15 @@ class SceneP : Serializable, Cloneable {
             for (c in 0 until touchElements.size)
             {
                 val te = touchElements[c]
+                val touchElement: TouchElement
                 if (te.soundGeneratorId == pi.id) {
-                    val touchElement = TouchElement(context, null)
+                    if (instr.getType()=="Sampler")
+                    {
+                        touchElement = TouchElementRecorder(context,null)
+                    }
+                    else {
+                        touchElement = TouchElement(context, null)
+                    }
                     te.toTouchElement(touchElement)
                     touchElement.soundGenerator = instr
                     tels.add(touchElement)
@@ -72,7 +80,7 @@ class SceneP : Serializable, Cloneable {
         }
         for (te in touchEls)
         {
-            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,ArrayList<Int>(),null,0,3,4,"")
+            val pte = TouchElementP(0,0,0,0, TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,TouchElement.TouchMode.MOMENTARY,ArrayList<Int>(),null,0,3,4,"")
             pte.fromTouchElement(te)
             pte.soundGeneratorId = instrumentIWithIds[te.soundGenerator].toString()
             touchElements.add(pte)

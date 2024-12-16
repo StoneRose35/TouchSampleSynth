@@ -18,12 +18,12 @@ class ScenePTest {
             PolyphonyDefinition.POLY_SATURATE,false,4,"WatcherInTheSky")
         synth2.id = UUID.randomUUID().toString()
         val touchElement1 = TouchElementP(234,546,154,673,
-            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD, ArrayList(45),null,0,3,4,synth1.id)
+            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,TouchElement.TouchMode.MOMENTARY, ArrayList(45),null,0,3,4,synth1.id)
         val touchElement2 = TouchElementP(24,541,354,273,
-            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,ArrayList(34),null,0,7,8,synth1.id)
+            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,TouchElement.TouchMode.MOMENTARY,ArrayList(34),null,0,7,8,synth1.id)
         val touchElement3 = TouchElementP(342,343,44,55,
-            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,ArrayList(45),null,0,11,12,synth1.id)
-        val touchElement4 = TouchElementP(563,92,100,200,TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_DU,ArrayList(62),null,0,3,4,synth2.id)
+            TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_UD,TouchElement.TouchMode.MOMENTARY,ArrayList(45),null,0,11,12,synth1.id)
+        val touchElement4 = TouchElementP(563,92,100,200,TouchElement.ActionDir.HORIZONTAL_LR_VERTICAL_DU,TouchElement.TouchMode.MOMENTARY,ArrayList(62),null,0,3,4,synth2.id)
         val scene=SceneP()
         scene.instruments.add(synth1)
         scene.instruments.add(synth2)

@@ -10,7 +10,7 @@ class InstrumentBuilder {
 
         fun generateAllInstrumentFiles() {
             val classNames = ArrayList<String>()
-            var parser = HeaderParser()
+            val parser = HeaderParser()
             File("$rootPath/app/src/main/cpp").walk().forEach { f ->
                 var props: List<FunctionDescription> = ArrayList()
                 if (f.extension == "h") {

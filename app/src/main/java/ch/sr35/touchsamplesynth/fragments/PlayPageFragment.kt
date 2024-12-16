@@ -19,6 +19,7 @@ import ch.sr35.touchsamplesynth.graphics.TouchElementPlacementCalculator
 import ch.sr35.touchsamplesynth.views.InstrumentChip
 import ch.sr35.touchsamplesynth.views.PlayArea
 import ch.sr35.touchsamplesynth.views.TouchElement
+import ch.sr35.touchsamplesynth.views.TouchElementRecorder
 
 
 /**
@@ -77,7 +78,11 @@ class PlayPageFragment : Fragment() {
                     lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
                     lp.marginStart = Converter.toPx(60)
                     lp.topMargin = Converter.toPx(10)
-                    val te = TouchElement(context as TouchSampleSynthMain,null)
+                    val te: TouchElement = if (instrChip.getInstrument()!!.getType() == "Sampler") {
+                        TouchElementRecorder(context as TouchSampleSynthMain, null)
+                    } else {
+                        TouchElement(context as TouchSampleSynthMain, null)
+                    }
                     te.notes.add(MusicalPitch.generateAllNotes()[63])
                     te.soundGenerator = (ic as InstrumentChip).getInstrument()
                     te.defineDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)

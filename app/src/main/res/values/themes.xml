@@ -38,6 +38,7 @@
         <item name="pianoRollOctaveNoSelectionColor">@color/red_dark</item>
         <item name="pianoRollOctaveSelectionColor">@color/red_light</item>
         <item name="pianoRollOctaveSelectionOutlineColor">@color/medium_green</item>
+        <item name="touchElementPadding">32.0</item>
     </style>
     <style name="Theme.Instrument" parent="Theme.TouchSampleSynth">
         <item name="android:textColor">@color/black</item>
