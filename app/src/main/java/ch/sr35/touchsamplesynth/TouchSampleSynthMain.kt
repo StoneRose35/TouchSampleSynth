@@ -297,6 +297,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         {
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.READ_MEDIA_AUDIO,
+                    android.Manifest.permission.RECORD_AUDIO,
                     android.Manifest.permission.READ_MEDIA_IMAGES,
                     android.Manifest.permission.READ_MEDIA_IMAGES,
                     android.Manifest.permission.MANAGE_EXTERNAL_STORAGE,

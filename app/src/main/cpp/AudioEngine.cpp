@@ -167,6 +167,7 @@ bool AudioEngine::start() {
     AAudioStreamBuilder_setFormat(streamBuilder, AAUDIO_FORMAT_PCM_FLOAT);
     AAudioStreamBuilder_setChannelCount(streamBuilder, 1);
     AAudioStreamBuilder_setPerformanceMode(streamBuilder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
+    AAudioStreamBuilder_setSharingMode(streamBuilder,AAUDIO_SHARING_MODE_EXCLUSIVE);
     AAudioStreamBuilder_setFramesPerDataCallback(streamBuilder,framesPerDataCallback);
     AAudioStreamBuilder_setBufferCapacityInFrames(streamBuilder,bufferCapacityInFrames);
     AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallback, nullptr);
@@ -178,23 +179,24 @@ bool AudioEngine::start() {
     AAudioStreamBuilder_setFormat(streamBuilderRecorder, AAUDIO_FORMAT_PCM_FLOAT);
     AAudioStreamBuilder_setChannelCount(streamBuilderRecorder, 1);
     AAudioStreamBuilder_setPerformanceMode(streamBuilderRecorder, AAUDIO_PERFORMANCE_MODE_LOW_LATENCY);
+    AAudioStreamBuilder_setSharingMode(streamBuilder,AAUDIO_SHARING_MODE_EXCLUSIVE);
     AAudioStreamBuilder_setFramesPerDataCallback(streamBuilderRecorder,framesPerDataCallback);
     AAudioStreamBuilder_setBufferCapacityInFrames(streamBuilderRecorder,bufferCapacityInFrames);
     AAudioStreamBuilder_setDirection(streamBuilderRecorder, AAUDIO_DIRECTION_INPUT);
-    AAudioStreamBuilder_setDataCallback(streamBuilder, ::dataCallbackRecorder, nullptr);
-    AAudioStreamBuilder_setErrorCallback(streamBuilder, ::errorCallback, this);
+    AAudioStreamBuilder_setDataCallback(streamBuilderRecorder, ::dataCallbackRecorder, nullptr);
+    AAudioStreamBuilder_setErrorCallback(streamBuilderRecorder, ::errorCallback, this);
 
     // Opens the stream.
     aaudio_result_t result = AAudioStreamBuilder_openStream(streamBuilder, &stream_);
     if (result != AAUDIO_OK) {
-        __android_log_print(ANDROID_LOG_ERROR, "AudioEngine", "Error opening stream %s",
+        __android_log_print(ANDROID_LOG_ERROR, "AudioEngine", "Error opening playback stream %s",
                             AAudio_convertResultToText(result));
         return false;
     }
 
     result = AAudioStreamBuilder_openStream(streamBuilderRecorder, &streamRecording_);
     if (result != AAUDIO_OK) {
-        __android_log_print(ANDROID_LOG_ERROR, "AudioEngine", "Error opening stream %s",
+        __android_log_print(ANDROID_LOG_ERROR, "AudioEngine", "Error opening recording stream %s",
                             AAudio_convertResultToText(result));
         streamRecording_ = nullptr;
     }
