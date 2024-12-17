@@ -23,6 +23,10 @@ class InstrumentBuilder {
                 if (props.isNotEmpty()) {
                     classNames.add(parser.className)
                     // check which files are already generated
+                    val toLowerCaseRegex = Regex("[A-Z]")
+                    toLowerCaseRegex.replace(f.nameWithoutExtension,"-$0").lowercase().substring(1)
+                    var jniFileName = toLowerCaseRegex.replace(f.nameWithoutExtension,"-$0").lowercase().substring(1) + "-jni.cpp"
+                    val jniFile = File("$rootPath/app/src/main/cpp/$jniFileName")
                     val kfile =
                         File(rootPath + "/app/src/main/java/ch/sr35/touchsamplesynth/audio/voices/${f.nameWithoutExtension}K.kt")
                     val ifile =
@@ -35,6 +39,19 @@ class InstrumentBuilder {
                         File(rootPath + "/app/src/main/res/drawable/${f.nameWithoutExtension.lowercase()}.xml")
                     // check whether a the SoundGeneratorType already contains the new instrument, add and generate a magic number, retrieve the magic number otherwise
                     val magicNr = parser.obtainMagicNr()
+                    if (!jniFile.exists())
+                    {
+                        val jniFileGenerator = JniGenerator();
+                        jniFileGenerator.className = parser.className
+                        jniFile.createNewFile()
+                        jniFile.writeText(jniFileGenerator.generateJniFile(props))
+                        val cMakeListsUpdater = CMakeListsUpdater()
+                        cMakeListsUpdater.rootPath = rootPath
+                        cMakeListsUpdater.className = parser.className
+                        cMakeListsUpdater.writeFile = true
+                        cMakeListsUpdater.updateCMakeLists()
+                    }
+
                     if (!kfile.exists()) {
                         val kfileGenerator = KFileGenerator()
                         kfileGenerator.className = parser.className
@@ -57,6 +74,8 @@ class InstrumentBuilder {
                     if (!fragment.exists()) {
                         fragment.createNewFile()
                         fragment.writeText(FragmentGenerator().also {
+                            it.className = parser.className
+                            it.rootPath = rootPath
                             it.className = parser.className
                         }.generateFragment())
                     }

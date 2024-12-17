@@ -49,7 +49,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
-import ch.sr35.touchsamplesynth.audio.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.voices.%1${'$'}sK
 

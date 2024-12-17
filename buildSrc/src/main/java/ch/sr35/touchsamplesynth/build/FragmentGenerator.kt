@@ -5,6 +5,7 @@ import java.io.File
 class FragmentGenerator {
 
     var className: String = ""
+    var rootPath: String = ""
 
     fun generateFragment(): String
     {
@@ -12,7 +13,9 @@ class FragmentGenerator {
             .replace(Regex("[A-Z]")) { m -> "_" + m.value.lowercase() }
                 .replaceFirst("_","")
 
-        val layoutfile = File("src/main/res/layout/fragment_$classname_lowercase.xml")
+        val layoutfile = File("$rootPath/app/src/main/res/layout/fragment_$classname_lowercase.xml")
+        if (!layoutfile.exists())
+            layoutfile.createNewFile()
         layoutfile.writeText(TEMPLATE_LAYOUT.format(className))
         return TEMPLATE_FRAGMENT.format(className,className.lowercase(),classname_lowercase)
     }
@@ -59,8 +62,7 @@ class %1${'$'}sFragment() : Fragment() {
     }
 }
 """
-        const val TEMPLATE_LAYOUT = """
-<?xml version="1.0" encoding="utf-8"?>
+        const val TEMPLATE_LAYOUT = """<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="358dp"

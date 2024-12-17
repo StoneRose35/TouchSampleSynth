@@ -32,7 +32,7 @@ class PFileGenerator {
         res.append(TEMPLATE_BODY_2.format(className))
         for (prop in props.filter { p -> p.type == FunctionType.SETTER }) {
             val propertyNameInPFile = prop.functionName
-                .replaceFirst("get","")
+                .replaceFirst("set","")
                 .replaceFirstChar {  if (it.isUpperCase()) it.lowercaseChar() else it }
             res.append("            i.${prop.functionName}(this.$propertyNameInPFile)\n")
         }
@@ -73,8 +73,8 @@ class PFileGenerator {
     companion object {
     const val TEMPLATE_HEADER = """
 package ch.sr35.touchsamplesynth.model
-import ch.sr35.touchsamplesynth.audio.InstrumentI
-import ch.sr35.touchsamplesynth.audio.PolyphonyDefinition
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.%1${'$'}sI
 import java.io.Serializable
 
@@ -82,10 +82,12 @@ class %1${'$'}sP(
 """
 
     const val TEMPLATE_BODY_1 = """    actionAmountToVolume: Float=0.0f,
+    actionAmountToPitchBend: Float=0.0f,    
     polyphonyDefinition: PolyphonyDefinition=PolyphonyDefinition.MONOPHONIC,
+    horizontalToActionB: Boolean=false,
     nVoices: Int=0,
     name: String=""
-): InstrumentP(actionAmountToVolume,polyphonyDefinition,nVoices,name),Serializable, Cloneable {
+): InstrumentP(actionAmountToVolume,actionAmountToPitchBend,polyphonyDefinition,horizontalToActionB,nVoices,name),Serializable, Cloneable {
     private val className: String=this.javaClass.name
     override fun fromInstrument(i: InstrumentI) {
         super.fromInstrument(i)
@@ -131,10 +133,11 @@ class %1${'$'}sP(
 
         const val TEMPLATE_TAIL = """ 
             this.actionAmountToVolume,
+            this.actionAmountToPitchBend,
             this.polyphonyDefinition,
+            this.horizontalToActionB,
             this.nVoices,
-            this.name
-        )
+            this.name)
     }
 }
     """

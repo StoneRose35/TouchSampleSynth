@@ -48,7 +48,7 @@ class KFileGenerator {
                         "set",
                         "get"
                     )
-                })\n")
+                }())\n")
             }
         }
         res.append("    }\n")
@@ -67,7 +67,7 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
-class %2${'$'}s(context: Context): MusicalSoundGenerator() {
+class %2${'$'}sK(context: Context): MusicalSoundGenerator() {
 
     override fun bindToAudioEngine() {
         val audioEngine= AudioEngineK()
@@ -80,7 +80,8 @@ class %2${'$'}s(context: Context): MusicalSoundGenerator() {
         return (MAGIC_NR*1000) + instance
     }
 
-    val icon= AppCompatResources.getDrawable(context, R.drawable.%1${'$'}s)"""
+    val icon= AppCompatResources.getDrawable(context, R.drawable.%1${'$'}s)
+"""
 
         // first argument: magic nr, second argument: class name capitalized
         const val TEMPLATE_TAIL = """ 
