@@ -5,8 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
-import ch.sr35.touchsamplesynth.graphics.AutoContraster
-import ch.sr35.touchsamplesynth.graphics.RgbColor
 import ch.sr35.touchsamplesynth.handlers.TouchElementRecorderHandler
 import kotlin.math.sqrt
 

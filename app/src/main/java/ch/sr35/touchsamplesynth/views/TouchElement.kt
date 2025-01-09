@@ -173,10 +173,6 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
         return RgbColor.fromColorInt(fillColor.color)
     }
 
-    fun getContrastingColor(): RgbColor
-    {
-        return AutoContraster().generateContrastingColor(RgbColor.fromColorInt(fillColor.color))
-    }
 
     fun setColor(color: RgbColor)
     {

@@ -1,6 +1,5 @@
 package ch.sr35.touchsamplesynth.views
 
-import android.os.Looper
 import android.view.MotionEvent
 import androidx.test.core.view.MotionEventBuilder
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -9,7 +8,6 @@ import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.R
-import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

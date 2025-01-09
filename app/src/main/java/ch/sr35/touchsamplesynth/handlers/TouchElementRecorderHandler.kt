@@ -1,9 +1,7 @@
 package ch.sr35.touchsamplesynth.handlers
 
 import android.view.MotionEvent
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.audio.SoundRecorder
-import ch.sr35.touchsamplesynth.audio.voices.LooperK
 import ch.sr35.touchsamplesynth.views.OUTLINE_STROKE_WIDTH_DEFAULT
 import ch.sr35.touchsamplesynth.views.OUTLINE_STROKE_WIDTH_ENGAGED
 import ch.sr35.touchsamplesynth.views.TouchElement
@@ -130,7 +128,7 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
     }
 
     override fun handleActionUpInPlayMode(event: MotionEvent): Boolean {
-        if ((touchElement as TouchElementRecorder).isRecording && (touchElement as TouchElementRecorder).touchMode == TouchElement.TouchMode.MOMENTARY) {
+        if ((touchElement as TouchElementRecorder).isRecording && touchElement.touchMode == TouchElement.TouchMode.MOMENTARY) {
             if (event.x > touchElement.measuredWidth/2
                 && event.x < touchElement.measuredWidth - touchElement.padding
                 && event.y < touchElement.measuredHeight/2

@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.instruments.LooperI
 
