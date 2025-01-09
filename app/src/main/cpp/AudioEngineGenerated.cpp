@@ -2,6 +2,7 @@
 #include "SineMonoSynth.h"
 #include "Sampler.h"
 #include "SimpleSubtractiveSynth.h"
+#include "Looper.h"
 
 
 int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
@@ -37,6 +38,14 @@ int8_t AudioEngine::addSoundGenerator(SoundGeneratorType sgt) {
         
         case SIMPLE_SUBTRACTIVE_SYNTH:
             sg=new SimpleSubtractiveSynth((float) samplingRate);
+            sg->midiInputPort = midiInputPort;
+            if (idx < nSoundGenerators) {
+                soundGenerators[idx] = sg;
+            }
+            break;
+        
+        case LOOPER:
+            sg=new Looper((float) samplingRate);
             sg->midiInputPort = midiInputPort;
             if (idx < nSoundGenerators) {
                 soundGenerators[idx] = sg;

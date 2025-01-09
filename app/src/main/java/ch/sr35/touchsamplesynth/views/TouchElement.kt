@@ -76,7 +76,7 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     var actionDir: ActionDir = ActionDir.HORIZONTAL_LR_VERTICAL_DU
     val outLine: Paint = Paint()
-    private val fillColor: Paint = Paint()
+    val fillColor: Paint = Paint()
     var px: Float = 0.0f
     var py: Float = 0.0f
     var padding: Float = PADDING
@@ -519,12 +519,12 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
 
     override fun performClick(): Boolean {
-        if (!isEnabled) {
-            touchElementHandler.switchOnVoices(context as TouchSampleSynthMain)
+        if (!isEngaged) {
+            touchElementHandler.switchOnVoices(appContext)
             isEngaged = true
         }
         else {
-            touchElementHandler.switchOffVoices(context as TouchSampleSynthMain)
+            touchElementHandler.switchOffVoices(appContext)
             isEngaged = false
         }
         return super.performClick()
