@@ -373,9 +373,8 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
                             te.addProperty("actionDir","HORIZONTAL_LR_VERTICAL_DU")
                         }
                     }
+                    te.addProperty("touchMode","MOMENTARY")
                 }
-
-
             return rootObj.toString()
         }
 

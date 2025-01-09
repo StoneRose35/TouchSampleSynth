@@ -235,10 +235,14 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
 
         findViewById<CheckBox>(R.id.checkboxToggled).also {
             it.isChecked = this.touchElement.touchMode == TouchElement.TouchMode.TOGGLED
-            it.setOnClickListener {
-                if (this.touchElement.touchMode == TouchElement.TouchMode.TOGGLED)
+            it.setOnClickListener { _ ->
+                this.touchElement.touchMode = if (it.isChecked)
                 {
-                    this.touchElement.touchMode = TouchElement.TouchMode.MOMENTARY
+                    TouchElement.TouchMode.TOGGLED
+                }
+                else
+                {
+                    TouchElement.TouchMode.MOMENTARY
                 }
                 this.touchElement.invalidate()
             }
