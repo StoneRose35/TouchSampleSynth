@@ -35,7 +35,8 @@ class TouchSampleSynthMainTest {
     init {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU)
             permissionRule = grant(
-                    android.Manifest.permission.READ_MEDIA_AUDIO,
+            android.Manifest.permission.READ_MEDIA_AUDIO,
+            android.Manifest.permission.RECORD_AUDIO,
             android.Manifest.permission.READ_MEDIA_IMAGES,
             android.Manifest.permission.READ_MEDIA_VIDEO,
             android.Manifest.permission.INTERNET
@@ -44,6 +45,7 @@ class TouchSampleSynthMainTest {
         {
             permissionRule = grant(
                 android.Manifest.permission.READ_MEDIA_AUDIO,
+                android.Manifest.permission.RECORD_AUDIO,
                 android.Manifest.permission.READ_MEDIA_IMAGES,
                 android.Manifest.permission.READ_MEDIA_VIDEO,
                 android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED,

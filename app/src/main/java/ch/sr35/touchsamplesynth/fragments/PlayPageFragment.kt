@@ -78,7 +78,7 @@ class PlayPageFragment : Fragment() {
                     lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
                     lp.marginStart = Converter.toPx(60)
                     lp.topMargin = Converter.toPx(10)
-                    val te: TouchElement = if (instrChip.getInstrument()!!.getType() == "Sampler") {
+                    val te: TouchElement = if (instrChip.getInstrument()!!.getType() == "Looper") {
                         TouchElementRecorder(context as TouchSampleSynthMain, null)
                     } else {
                         TouchElement(context as TouchSampleSynthMain, null)

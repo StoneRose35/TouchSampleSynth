@@ -2,8 +2,11 @@ package ch.sr35.touchsamplesynth.views
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import ch.sr35.touchsamplesynth.graphics.AutoContraster
+import ch.sr35.touchsamplesynth.graphics.RgbColor
 import ch.sr35.touchsamplesynth.handlers.TouchElementRecorderHandler
 import kotlin.math.sqrt
 
@@ -11,16 +14,24 @@ import kotlin.math.sqrt
 class TouchElementRecorder(context: Context, attributeSet: AttributeSet?) :
     TouchElement(context, attributeSet) {
 
-        val isRecording = true
-        val hasRecordedContent = true
+        var isRecording = false
+        var hasRecordedContent = false
         private val playButtonPadding: Float = 12.0f
         private val symbolPath: Path = Path()
+        private val outlineDeleteSymbol: Paint = Paint()
 
     init {
+
         touchElementHandler = TouchElementRecorderHandler(this)
+
+        outlineDeleteSymbol.color = outLine.color
+        outlineDeleteSymbol.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
+        outlineDeleteSymbol.style = Paint.Style.STROKE
+        outlineDeleteSymbol.isAntiAlias = true
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        outlineDeleteSymbol.color = outLine.color
         if (isRecording) {
             drawPlayButton(canvas)
             drawStopButton(canvas)
@@ -133,8 +144,8 @@ class TouchElementRecorder(context: Context, attributeSet: AttributeSet?) :
             sidelength = w/2 - arrowDefs.arrowB - padding - playButtonPadding*2
         }
         if (sidelength > 0) {
-            canvas.drawLine(centerX - sidelength/2,centerY - sidelength/2,centerX + sidelength/2,centerY + sidelength/2,outLine)
-            canvas.drawLine(centerX + sidelength/2,centerY - sidelength/2,centerX - sidelength/2,centerY + sidelength/2,outLine)
+            canvas.drawLine(centerX - sidelength/2,centerY - sidelength/2,centerX + sidelength/2,centerY + sidelength/2,outlineDeleteSymbol)
+            canvas.drawLine(centerX + sidelength/2,centerY - sidelength/2,centerX - sidelength/2,centerY + sidelength/2,outlineDeleteSymbol)
         }
     }
 }

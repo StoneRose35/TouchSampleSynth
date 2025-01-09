@@ -39,12 +39,10 @@ class SceneP : Serializable, Cloneable {
                 val te = touchElements[c]
                 val touchElement: TouchElement
                 if (te.soundGeneratorId == pi.id) {
-                    if (instr.getType()=="Sampler")
-                    {
-                        touchElement = TouchElementRecorder(context,null)
-                    }
-                    else {
-                        touchElement = TouchElement(context, null)
+                    touchElement = if (instr.getType()=="Looper") {
+                        TouchElementRecorder(context,null)
+                    } else {
+                        TouchElement(context, null)
                     }
                     te.toTouchElement(touchElement)
                     touchElement.soundGenerator = instr

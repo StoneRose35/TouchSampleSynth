@@ -8,7 +8,10 @@
 
 class SoundRecorder {
     public:
-        virtual void processNextSample(float)=0;
+        virtual void processNextSample(float){}
+        virtual void startRecording(){}
+        virtual void stopRecording(){}
+        virtual void resetSample(){}
 };
 
 

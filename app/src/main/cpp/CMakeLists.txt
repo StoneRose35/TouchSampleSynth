@@ -44,7 +44,9 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         simple-subtractive-synth-jni.cpp
         Sampler.cpp
         sampler-jni.cpp
+        Looper.cpp
         musical-sound-generator-jni.cpp
+        looper-jni.cpp
         )
 
 # Specifies libraries CMake should link to your target library. You
