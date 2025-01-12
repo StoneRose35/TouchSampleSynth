@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
-import ch.sr35.touchsamplesynth.audio.SoundRecorder
 import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.audio.instruments.LooperI
 import ch.sr35.touchsamplesynth.handlers.TouchElementRecorderHandler

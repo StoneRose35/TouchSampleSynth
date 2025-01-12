@@ -728,7 +728,7 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
 
     fun getSoundGenerator(): InstrumentI?
     {
-        return soundGenerator;
+        return soundGenerator
     }
 
     override fun equals(other: Any?): Boolean {
