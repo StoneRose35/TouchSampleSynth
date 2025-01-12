@@ -91,9 +91,9 @@ open class TouchElementHandler(val touchElement: TouchElement) {
     fun switchOnVoices(appContext: TouchSampleSynthMain?) {
         var firstnote = true
         touchElement.notes.forEach { currentNote ->
-            touchElement.soundGenerator?.getNextFreeVoice()?.let {
+            touchElement.getSoundGenerator()?.getNextFreeVoice()?.let {
                 touchElement.currentVoices.add(it)
-                if (touchElement.soundGenerator!!.horizontalToActionB) {
+                if (touchElement.getSoundGenerator()!!.horizontalToActionB) {
                     it.applyTouchActionB(touchActionHorizontal.relativeValue)
                     it.applyTouchActionA(touchActionVertical.absoluteValue)
                 } else {
@@ -229,7 +229,7 @@ open class TouchElementHandler(val touchElement: TouchElement) {
         var firstnote = true
 
         touchElement.currentVoices.forEach {
-            if (touchElement.soundGenerator!!.horizontalToActionB) {
+            if (touchElement.getSoundGenerator()!!.horizontalToActionB) {
                 it.applyTouchActionB(touchActionHorizontal.relativeValue)
                 it.applyTouchActionA(touchActionVertical.absoluteValue)
             } else {

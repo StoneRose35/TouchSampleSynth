@@ -35,6 +35,8 @@ public:
     void setWritePointer(uint32_t);
     uint32_t getLoopEnd();
     void setLoopEnd(uint32_t);
+    void setSample(const float*, uint32_t);
+    uint32_t getSample(float**);
 
 
     float getNextSample() override;
@@ -54,6 +56,8 @@ public:
     void stopRecording() override;
 
     void resetSample() override;
+
+    bool hasRecordedContent() override;
 
     ~Looper();
 

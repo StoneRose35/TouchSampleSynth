@@ -84,7 +84,7 @@ class PlayPageFragment : Fragment() {
                         TouchElement(context as TouchSampleSynthMain, null)
                     }
                     te.notes.add(MusicalPitch.generateAllNotes()[63])
-                    te.soundGenerator = (ic as InstrumentChip).getInstrument()
+                    te.setSoundGenerator((ic as InstrumentChip).getInstrument())
                     te.defineDefaultMode((context as TouchSampleSynthMain).touchElementsDisplayMode)
                     te.setEditmode(TouchElement.TouchElementState.EDITING)
                     te.layoutParams = lp
@@ -94,7 +94,7 @@ class PlayPageFragment : Fragment() {
                         it.asRectangle() }.toTypedArray()
                     val neighbouringRectangles = (context as TouchSampleSynthMain).touchElements.filter {
                             te1 ->
-                        te1.soundGenerator!! == te.soundGenerator
+                        te1.getSoundGenerator()!! == te.getSoundGenerator()
                     }.map { it.asRectangle() }.toTypedArray()
 
 

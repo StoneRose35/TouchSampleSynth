@@ -82,7 +82,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         val deleteButton = view.findViewById<Button>(R.id.instruments_page_delete)
         deleteButton.setOnClickListener {
             if (selectedInstrument >=0 && !(context as TouchSampleSynthMain).touchElements.stream().anyMatch {
-                    it.soundGenerator == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]
+                    it.getSoundGenerator() == (context as TouchSampleSynthMain).soundGenerators[selectedInstrument]
                 })
             {
                 val alertDlgBuilder = AlertDialog.Builder(context as TouchSampleSynthMain)

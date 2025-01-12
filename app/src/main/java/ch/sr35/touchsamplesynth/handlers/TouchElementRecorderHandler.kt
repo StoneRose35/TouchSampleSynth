@@ -17,7 +17,7 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                 && event.y > touchElement.padding)
             {
                 // start recording /overdubbing
-                touchElement.soundGenerator?.getNextFreeVoice()?.let {
+                touchElement.getSoundGenerator()?.getNextFreeVoice()?.let {
                     touchElement.currentVoices.add(it)
                     (touchElement.currentVoices[0] as SoundRecorder).startRecording()
                     touchElement.isEngaged = true

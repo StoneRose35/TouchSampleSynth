@@ -5,6 +5,9 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import ch.sr35.touchsamplesynth.audio.SoundRecorder
+import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.LooperI
 import ch.sr35.touchsamplesynth.handlers.TouchElementRecorderHandler
 import kotlin.math.sqrt
 
@@ -21,7 +24,6 @@ class TouchElementRecorder(context: Context, attributeSet: AttributeSet?) :
     init {
 
         touchElementHandler = TouchElementRecorderHandler(this)
-
         outlineDeleteSymbol.color = outLine.color
         outlineDeleteSymbol.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
         outlineDeleteSymbol.style = Paint.Style.STROKE
@@ -47,6 +49,15 @@ class TouchElementRecorder(context: Context, attributeSet: AttributeSet?) :
     override fun performClick(): Boolean {
         super.performClick()
         return true
+    }
+
+    override fun setSoundGenerator(soundGenerator: InstrumentI?) {
+        soundGenerator?.let {
+            if (it is LooperI) {
+                hasRecordedContent = it.hasRecordedContent()
+            }
+            super.setSoundGenerator(it)
+        }
     }
 
     private fun drawPlayButton(canvas: Canvas) {

@@ -8,11 +8,14 @@ import ch.sr35.touchsamplesynth.BuildConfig
 import ch.sr35.touchsamplesynth.SCENES_FILE_NAME
 import ch.sr35.touchsamplesynth.TAG
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
+import com.google.gson.ExclusionStrategy
+import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import java.io.File
 import java.util.Date
+
 
 enum class importMode
 {
@@ -27,6 +30,21 @@ enum class importDoneFlag
     SET,
     UNSET
 }
+
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FIELD)
+annotation class ExcludeFromJson
+
+class AnnotationExclusionStrategy : ExclusionStrategy {
+    override fun shouldSkipField(f: FieldAttributes): Boolean {
+        return f.getAnnotation(ExcludeFromJson::class.java) != null
+    }
+
+    override fun shouldSkipClass(clazz: Class<*>?): Boolean {
+        return false
+    }
+}
+
 class SceneListP {
     val scenes=ArrayList<SceneP>()
     var screenResolutionX: Int=-1
@@ -110,8 +128,8 @@ class SceneListP {
         fun scenesToJsonString(context: Context,installDone: Boolean = false): String
         {
             val gson = GsonBuilder().apply {
-                registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
                 setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                setExclusionStrategies(AnnotationExclusionStrategy())
             }.create()
             val screenWidth: Int
             val screenHeight: Int

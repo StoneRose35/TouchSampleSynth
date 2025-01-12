@@ -5,4 +5,5 @@ interface SoundRecorder {
     fun startRecording(): Boolean
     fun stopRecording(): Boolean
     fun resetSample(): Boolean
+    fun hasRecordedContent(): Boolean
 }

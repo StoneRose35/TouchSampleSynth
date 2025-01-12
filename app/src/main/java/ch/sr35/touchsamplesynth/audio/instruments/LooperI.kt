@@ -86,5 +86,31 @@ class LooperI(private val context: Context,
             (voice as LooperK).setLoopEnd(v)
         }
     }
-        
+
+    fun setSample(sampleData: FloatArray)
+    {
+        for (voice in voices)
+        {
+            (voice as LooperK).setSample(sampleData)
+        }
+    }
+
+    fun hasRecordedContent(): Boolean
+    {
+        if (voices.isNotEmpty() )
+        {
+            return (voices[0] as LooperK).hasRecordedContent()
+        }
+        return false
+    }
+
+    fun getSample(): FloatArray
+    {
+        if (voices.isNotEmpty() )
+        {
+            return (voices[0] as LooperK).getSample()
+        }
+        return FloatArray(0)
+    }
+
 }

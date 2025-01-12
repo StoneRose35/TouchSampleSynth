@@ -35,7 +35,7 @@ class TouchElementTest {
         val te = TouchElement(context,null)
         val i1 = SineMonoSynthI(context,"Basic")
         i1.generateVoices(3)
-        te.soundGenerator=i1
+        te.setSoundGenerator(i1)
         te.notes.add(MusicalPitch(2,5))
 
 

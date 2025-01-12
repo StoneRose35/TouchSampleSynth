@@ -82,7 +82,7 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         buttonOk?.setOnClickListener {
 
             if (instrumentListAdapter.checkedPosition > -1) {
-                touchElement.soundGenerator = soundGenerators[instrumentListAdapter.checkedPosition]
+                touchElement.setSoundGenerator (soundGenerators[instrumentListAdapter.checkedPosition])
                 pickedColor?.let {
                     touchElement.setColor(RgbColor.fromColorInt( it.toColorInt()))
                 }
@@ -258,9 +258,9 @@ class SoundGeneratorListAdapter(private val instrumentIS: List<InstrumentI>,
 
     init {
 
-        checkedPosition = if (touchElement?.soundGenerator != null) {
+        checkedPosition = if (touchElement?.getSoundGenerator() != null) {
             IntStream.range(0, instrumentIS.size)
-                .filter { i -> (instrumentIS[i].name == touchElement.soundGenerator!!.name) && (instrumentIS[i].getType() == touchElement.soundGenerator!!.getType()) }
+                .filter { i -> (instrumentIS[i].name == touchElement.getSoundGenerator()!!.name) && (instrumentIS[i].getType() == touchElement.getSoundGenerator()!!.getType()) }
                 .findFirst()
                 .orElse(-1)
         } else if (instrumentIS.isNotEmpty()) {

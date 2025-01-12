@@ -151,3 +151,26 @@ void Looper::setLoopEnd(uint32_t) {
 void Looper::resetSample() {
     loopEnd=0;
 }
+
+void Looper::setSample(const float * data, uint32_t size) {
+    // virtually record from data array
+    uint8_t oldState= state;
+    state = LOOPER_STATE_RECORDING;
+    writePointer = 0;
+    loopEnd = 0;
+    for (uint32_t c=0;c<size;c++)
+    {
+        processNextSample(*(data + c));
+    }
+    loopEnd = writePointer;
+    state = oldState;
+}
+
+uint32_t Looper::getSample(float ** dataPtr) {
+    *dataPtr = sample;
+    return loopEnd;
+}
+
+bool Looper::hasRecordedContent() {
+    return loopEnd > 0;
+}

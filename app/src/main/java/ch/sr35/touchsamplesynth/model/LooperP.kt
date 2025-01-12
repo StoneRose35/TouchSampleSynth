@@ -1,14 +1,16 @@
 
 package ch.sr35.touchsamplesynth.model
 import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
-import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import ch.sr35.touchsamplesynth.audio.instruments.LooperI
+import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
 import java.io.Serializable
+
 
 class LooperP(
     private var readPointer: Int=0,
     private var writePointer: Int=0,
     private var loopEnd: Int=0,
+    @ExcludeFromJson var sample: FloatArray?=null,
     actionAmountToVolume: Float=0.0f,
     actionAmountToPitchBend: Float=0.0f,    
     polyphonyDefinition: PolyphonyDefinition=PolyphonyDefinition.MONOPHONIC,
@@ -24,6 +26,7 @@ class LooperP(
             readPointer = i.getReadPointer()
             writePointer = i.getWritePointer()
             loopEnd = i.getLoopEnd()
+            sample = i.getSample()
         }
     }
 
@@ -34,6 +37,7 @@ class LooperP(
             i.setReadPointer(this.readPointer)
             i.setWritePointer(this.writePointer)
             i.setLoopEnd(this.loopEnd)
+            this.sample?.let { i.setSample(it) }
         }
     }
 
@@ -61,7 +65,8 @@ class LooperP(
         return LooperP(
             this.readPointer,
             this.writePointer,
-            this.loopEnd, 
+            this.loopEnd,
+            this.sample,
             this.actionAmountToVolume,
             this.actionAmountToPitchBend,
             this.polyphonyDefinition,
@@ -70,4 +75,5 @@ class LooperP(
             this.name)
     }
 }
-    
+
+

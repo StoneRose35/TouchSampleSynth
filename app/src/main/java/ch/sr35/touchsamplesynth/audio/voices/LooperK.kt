@@ -28,6 +28,8 @@ class LooperK(context: Context): MusicalSoundGenerator(), SoundRecorder {
     external fun setWritePointer(v: Int): Boolean
     external fun getLoopEnd(): Int
     external fun setLoopEnd(v: Int): Boolean
+    external fun getSample(): FloatArray
+    external fun setSample(v: FloatArray): Boolean
 
 
     override fun copyParamsTo(other: MusicalSoundGenerator) {
@@ -42,6 +44,7 @@ class LooperK(context: Context): MusicalSoundGenerator(), SoundRecorder {
     external override fun stopRecording(): Boolean
 
     external override fun resetSample(): Boolean
+    external override fun hasRecordedContent(): Boolean
 
     override fun equals(other: Any?): Boolean {
         if (other is LooperK)

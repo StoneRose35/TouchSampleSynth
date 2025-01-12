@@ -99,7 +99,7 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     var oldLeftMargin: Int = 0
     var oldTopMargin: Int = 0
     var elementState: TouchElementState = defaultState
-    var soundGenerator: InstrumentI? = null
+    private var soundGenerator: InstrumentI? = null
     var currentVoices = ArrayList<MusicalSoundGenerator>()
     var notes = ArrayList<MusicalPitch>()
     var midiChannel: Int=0
@@ -719,6 +719,16 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 pt.x < (layoutParams as ConstraintLayout.LayoutParams).leftMargin + (layoutParams as ConstraintLayout.LayoutParams).width - padding &&
                 pt.y > (layoutParams as ConstraintLayout.LayoutParams).topMargin + padding &&
                 pt.y < (layoutParams as ConstraintLayout.LayoutParams).topMargin + (layoutParams as ConstraintLayout.LayoutParams).height - padding
+    }
+
+    open fun setSoundGenerator(soundGenerator: InstrumentI?)
+    {
+        this.soundGenerator = soundGenerator
+    }
+
+    fun getSoundGenerator(): InstrumentI?
+    {
+        return soundGenerator;
     }
 
     override fun equals(other: Any?): Boolean {

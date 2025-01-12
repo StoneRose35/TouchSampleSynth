@@ -62,7 +62,7 @@ class PlayArea(context: Context,attributeSet: AttributeSet): ConstraintLayout(co
                 c is InstrumentChip
             }?.forEach { ic ->
                 appCtx.touchElements
-                    .filter { te -> te.soundGenerator == (ic as InstrumentChip).getInstrument() }
+                    .filter { te -> te.getSoundGenerator() == (ic as InstrumentChip).getInstrument() }
                     .forEach { touchEl ->
                         path.reset()
                         val sourceX = ic.x + ic.width / 2

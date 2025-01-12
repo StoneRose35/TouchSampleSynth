@@ -97,6 +97,48 @@ Java_ch_sr35_touchsamplesynth_audio_voices_LooperK_resetSample(JNIEnv *env, jobj
     return false;
 }
 
+JNIEXPORT jboolean JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_LooperK_setSample(JNIEnv *env, jobject me,
+                                                              jfloatArray sample_data) {
+    auto msg = getAudioEngine()->getSoundGeneratorFromJni<Looper>(env, me);
+    if (msg != nullptr) {
+        jsize sample_data_length = env->GetArrayLength(sample_data);
+        jfloat *sampleArrayPtr = env->GetFloatArrayElements(sample_data, nullptr);
+        msg->setSample(sampleArrayPtr, sample_data_length);
+        return true;
+    }
+    return false;
+}
+
+JNIEXPORT jfloatArray JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_LooperK_getSample(JNIEnv *env, jobject me) {
+    float * samplePtr;
+    jfloatArray sampleData;
+    auto msg = getAudioEngine()->getSoundGeneratorFromJni<Looper>(env, me);
+    if (msg != nullptr) {
+        uint32_t sampleLength = msg->getSample(&samplePtr);
+        sampleData = env->NewFloatArray(sampleLength);
+        jfloat *fltArrayPtr = env->GetFloatArrayElements(sampleData, nullptr);
+        for (uint32_t c = 0; c < sampleLength; c++) {
+            *(fltArrayPtr + c) = *(samplePtr + c);
+        }
+        return sampleData;
+    }
+    return nullptr;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_LooperK_hasRecordedContent(JNIEnv *env, jobject me) {
+    float * samplePtr;
+    jfloatArray sampleData;
+    auto msg = getAudioEngine()->getSoundGeneratorFromJni<Looper>(env, me);
+    if (msg != nullptr) {
+
+        return msg->getLoopEnd() > 0;
+    }
+    return false;
+}
+
 }
 
 
