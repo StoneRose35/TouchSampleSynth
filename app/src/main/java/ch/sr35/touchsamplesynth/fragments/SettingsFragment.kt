@@ -140,8 +140,16 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
 
         if ((listViewMidiDevicesIn.adapter as MidiDevicesListAdapter).midiDevices.isNotEmpty() || (listViewMidiDevicesIn.adapter as MidiDevicesListAdapter).midiDevices.isNotEmpty()) {
             val usbManager = (context?.getSystemService(Context.USB_SERVICE) as UsbManager)
-            val hasUsbAccessories = usbManager.accessoryList.isNotEmpty()
-            val hasUsbDevices = usbManager.deviceList.isNotEmpty()
+            val hasUsbAccessories = if (usbManager.accessoryList == null) {
+                false
+            } else {
+                usbManager.accessoryList.isNotEmpty()
+            }
+            val hasUsbDevices = if (usbManager.deviceList == null) {
+                false
+            } else {
+                usbManager.deviceList.isNotEmpty()
+            }
 
             view.findViewById<CheckBox>(R.id.settingCheckboxMidiHostMode)?.isChecked = hasUsbDevices
             view.findViewById<CheckBox>(R.id.settingCheckboxMidiDeviceMode)?.isChecked = hasUsbAccessories
