@@ -13,7 +13,7 @@ import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.graphics.Converter
 import com.google.android.material.color.MaterialColors
-
+import kotlin.math.roundToInt
 
 
 class PianoRoll(context: Context, attributes: AttributeSet): View(context,attributes)   {
@@ -523,6 +523,49 @@ class PianoRoll(context: Context, attributes: AttributeSet): View(context,attrib
                     keysBitmapXAnchor=0.0f
                     return true
                 }
+                val selectedOctave = ((event.x - width.toFloat()/2.0f)/octaveIndicatorSize).roundToInt()
+                if (selectedOctave < octave)
+                {
+                    // shift down
+                    ValueAnimator.ofFloat(0.0f,width.toFloat()).apply {
+                        duration = 200
+                        repeatMode = ValueAnimator.RESTART
+                        repeatCount = 0
+                        interpolator = AccelerateDecelerateInterpolator()
+                        addUpdateListener {
+                            keysBitmapXAnchor = this.animatedValue as Float
+                            updateKeyDisplay = false
+                            invalidate()
+                        }
+                        start()
+                    }
+                    octave = selectedOctave
+                    updateKeyDisplay =true
+                    invalidate()
+                    keysBitmapXAnchor=0.0f
+                    return true
+                }
+                else if (selectedOctave > octave) {
+                    ValueAnimator.ofFloat(0.0f,-width.toFloat()).apply {
+                        duration = 200
+                        repeatMode = ValueAnimator.RESTART
+                        repeatCount = 0
+                        interpolator = AccelerateDecelerateInterpolator()
+                        addUpdateListener {
+                            keysBitmapXAnchor = this.animatedValue as Float
+                            updateKeyDisplay = false
+                            invalidate()
+                        }
+                        start()
+                    }
+                    octave = selectedOctave
+                    updateKeyDisplay = true
+                    invalidate()
+                    keysBitmapXAnchor=0.0f
+                    return true
+                }
+
+
             }
             else
             {
