@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="358dp"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.TouchSampleSynth.Instrument"
+    android:orientation="vertical"
+    tools:context=".fragments.LooperFragment">
+</LinearLayout>
+        
