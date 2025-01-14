@@ -25,6 +25,27 @@ Java_ch_sr35_touchsamplesynth_audio_voices_LooperK_setReadPointer(JNIEnv *env, j
     return false;
 }
 
+JNIEXPORT jfloat JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_LooperK_getRecordGain(JNIEnv *env, jobject me) {
+    auto msg = getAudioEngine()->getSoundGeneratorFromJni<Looper>(env, me);
+    if (msg != nullptr) {
+        return msg->getRecordGain();
+    }
+    return -1.0f;
+}
+
+
+JNIEXPORT jboolean JNICALL
+Java_ch_sr35_touchsamplesynth_audio_voices_LooperK_setRecordGain(JNIEnv *env, jobject me,jfloat val) {
+    auto msg = getAudioEngine()->getSoundGeneratorFromJni<Looper>(env, me);
+    if (msg != nullptr) {
+        msg->setRecordGain(val);
+        return true;
+    }
+    return false;
+}
+
+
 JNIEXPORT jint JNICALL
 Java_ch_sr35_touchsamplesynth_audio_voices_LooperK_getWritePointer(JNIEnv *env, jobject me) {
     auto msg = getAudioEngine()->getSoundGeneratorFromJni<Looper>(env, me);

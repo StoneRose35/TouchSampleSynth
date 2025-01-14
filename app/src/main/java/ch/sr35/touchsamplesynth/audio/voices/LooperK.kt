@@ -46,6 +46,9 @@ class LooperK(context: Context): MusicalSoundGenerator(), SoundRecorder {
     external override fun resetSample(): Boolean
     external override fun hasRecordedContent(): Boolean
 
+    external fun getRecordGain(): Float
+    external fun setRecordGain(v: Float): Boolean
+
     override fun equals(other: Any?): Boolean {
         if (other is LooperK)
         {

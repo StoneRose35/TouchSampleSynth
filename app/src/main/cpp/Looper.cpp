@@ -19,6 +19,7 @@ Looper::Looper(float sr) : MusicalSoundGenerator(sr) {
         state=LOOPER_STATE_STOPPED;
         sample = ((float*)malloc(sizeof(float)*MIN_SAMPLE_SIZE));
         currentBufferSize = MIN_SAMPLE_SIZE;
+        recordGain = 1.0f;
         clearSample();
 }
 
@@ -39,11 +40,11 @@ void Looper::processNextSample(float s) {
     if (state == LOOPER_STATE_RECORDING) {
         if (loopEnd > 0)
         {
-            *(sample + writePointer++) = (s + *(sample + writePointer));
+            *(sample + writePointer++) = (s*recordGain + *(sample + writePointer));
         }
         else
         {
-            *(sample + writePointer++) = s;
+            *(sample + writePointer++) = s*recordGain;
         }
 
         if (loopEnd > 0 && writePointer >= loopEnd)
@@ -124,7 +125,7 @@ void Looper::clearSample() {
 
 }
 
-uint32_t Looper::getReadPointer() {
+uint32_t Looper::getReadPointer() const {
     return readPointer;
 }
 
@@ -132,7 +133,7 @@ void Looper::setReadPointer(uint32_t) {
 
 }
 
-uint32_t Looper::getWritePointer() {
+uint32_t Looper::getWritePointer() const {
     return writePointer;
 }
 
@@ -140,7 +141,7 @@ void Looper::setWritePointer(uint32_t) {
 
 }
 
-uint32_t Looper::getLoopEnd() {
+uint32_t Looper::getLoopEnd() const {
     return loopEnd;
 }
 
@@ -173,4 +174,12 @@ uint32_t Looper::getSample(float ** dataPtr) {
 
 bool Looper::hasRecordedContent() {
     return loopEnd > 0;
+}
+
+void Looper::setRecordGain(float rg) {
+    recordGain = rg;
+}
+
+float Looper::getRecordGain() const {
+    return recordGain;
 }

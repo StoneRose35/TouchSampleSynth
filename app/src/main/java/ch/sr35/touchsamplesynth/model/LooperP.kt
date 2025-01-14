@@ -10,6 +10,7 @@ class LooperP(
     private var readPointer: Int=0,
     private var writePointer: Int=0,
     private var loopEnd: Int=0,
+    private var recordGain: Float=1.0f,
     @ExcludeFromJson var sample: FloatArray?=null,
     actionAmountToVolume: Float=0.0f,
     actionAmountToPitchBend: Float=0.0f,    
@@ -27,6 +28,7 @@ class LooperP(
             writePointer = i.getWritePointer()
             loopEnd = i.getLoopEnd()
             sample = i.getSample()
+            recordGain = i.getRecordGain()
         }
     }
 
@@ -37,6 +39,7 @@ class LooperP(
             i.setReadPointer(this.readPointer)
             i.setWritePointer(this.writePointer)
             i.setLoopEnd(this.loopEnd)
+            i.setRecordGain(recordGain)
             this.sample?.let { i.setSample(it) }
         }
     }
@@ -66,6 +69,7 @@ class LooperP(
             this.readPointer,
             this.writePointer,
             this.loopEnd,
+            this.recordGain,
             this.sample,
             this.actionAmountToVolume,
             this.actionAmountToPitchBend,

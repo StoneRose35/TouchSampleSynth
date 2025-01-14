@@ -15,7 +15,7 @@ class LooperPTest {
         {
             sample[i] = sin(i.toFloat()/48000.0f*432.0f*2.0f*Math.PI.toFloat())
         }
-        val synth=LooperP(3,2,512,sample)
+        val synth=LooperP(3,2,512,1.0f,sample)
         val gson = GsonBuilder().apply {
             setExclusionStrategies(AnnotationExclusionStrategy())
         }.create()

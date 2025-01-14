@@ -6,10 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.instruments.LooperI
 
-class LooperFragment() : Fragment() {
+class LooperFragment() : Fragment(),  SeekBar.OnSeekBarChangeListener {
 
     constructor(s: LooperI): this()
     {
@@ -34,6 +35,21 @@ class LooperFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         synth?.let {
+            val recordGain = view.findViewById<SeekBar>(R.id.seekBarRecordGain)
+            recordGain.progress = ((it.getRecordGain()-1.0f)/15.0f*1000.0f).toInt()
+            recordGain.setOnSeekBarChangeListener(this)
         }
+    }
+
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        synth?.setRecordGain(progress.toFloat()/1000.0f*15.0f+1.0f)
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
     }
 }

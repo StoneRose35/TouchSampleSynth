@@ -6,5 +6,55 @@
     android:theme="@style/Theme.TouchSampleSynth.Instrument"
     android:orientation="vertical"
     tools:context=".fragments.LooperFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTintMode="src_in"
+        android:fontFamily="monospace"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp"
+        android:text="@string/looper_name"
+        android:textColor="?attr/instrumentPageTitleTextColor"
+        android:textSize="20sp">
+
+    </TextView>
+    <TableLayout
+    android:baselineAligned="false"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="1"
+    android:theme="@style/Theme.TouchSampleSynth.Instrument"
+    >
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <SeekBar
+            android:id="@+id/seekBarRecordGain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="center_vertical"
+            android:min="0"
+            android:max="1000"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:progressBackgroundTintMode="src_over"
+            android:progressTintMode="src_over"
+            android:thumb="?attr/sliderDrawable" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_margin="10dp"
+            android:text="@string/looper_record_gain"
+            android:labelFor="@id/seekBarAttack"
+            android:layout_column="2"
+            />
+    </TableRow>
+    </TableLayout>
 </LinearLayout>
         

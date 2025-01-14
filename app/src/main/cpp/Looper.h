@@ -24,19 +24,23 @@ private:
     uint8_t state;
     float * sample;
     uint32_t currentBufferSize;
+    float recordGain;
 
     void clearSample();
 public:
     explicit Looper(float sr);
 
-    uint32_t getReadPointer();
+    uint32_t getReadPointer() const;
     void setReadPointer(uint32_t);
-    uint32_t getWritePointer();
+    uint32_t getWritePointer() const;
     void setWritePointer(uint32_t);
-    uint32_t getLoopEnd();
+    uint32_t getLoopEnd() const;
     void setLoopEnd(uint32_t);
     void setSample(const float*, uint32_t);
     uint32_t getSample(float**);
+    void setRecordGain(float);
+    float getRecordGain() const;
+
 
 
     float getNextSample() override;

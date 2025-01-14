@@ -113,4 +113,19 @@ class LooperI(private val context: Context,
         return FloatArray(0)
     }
 
+    fun getRecordGain(): Float
+    {
+        if (voices.isNotEmpty() )
+        {
+            return (voices[0] as LooperK).getRecordGain()
+        }
+        return -1.0f
+    }
+
+    fun setRecordGain(v: Float) {
+        for (voice in voices) {
+            (voice as LooperK).setRecordGain(v)
+        }
+    }
+
 }

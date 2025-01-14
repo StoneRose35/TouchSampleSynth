@@ -12,7 +12,7 @@ class SoundRecorder {
         virtual void startRecording(){}
         virtual void stopRecording(){}
         virtual void resetSample(){}
-        virtual bool hasRecordedContent(){}
+        virtual bool hasRecordedContent(){return false;}
 };
 
 
