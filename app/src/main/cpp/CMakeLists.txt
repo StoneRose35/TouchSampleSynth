@@ -28,11 +28,13 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         AudioEngine.cpp
         AudioEngineGenerated.cpp
-        SineOscillator.cpp
-        SawOscillator.cpp
-        AdsrEnvelope.cpp
-        StilsonMoogFilter.cpp
-        SecondOrderIirFilter.cpp
+        components/SineOscillator.cpp
+        components/SawOscillator.cpp
+        components/AdsrEnvelope.cpp
+        components/StilsonMoogFilter.cpp
+        components/SecondOrderIirFilter.cpp
+        tools/maths.cpp
+        tools/maths-jni.cpp
         SoundGenerator.cpp
         SoundProcessor.cpp
         MusicalSoundGenerator.cpp

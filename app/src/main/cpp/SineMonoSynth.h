@@ -5,8 +5,8 @@
 #ifndef TOUCHSAMPLESYNTH_SINEMONOSYNTH_H
 #define TOUCHSAMPLESYNTH_SINEMONOSYNTH_H
 #include "MusicalSoundGenerator.h"
-#include "AdsrEnvelope.h"
-#include "SineOscillator.h"
+#include "components/AdsrEnvelope.h"
+#include "components/SineOscillator.h"
 #include <cstdlib>
 #include <cmath>
 

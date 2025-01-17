@@ -19,13 +19,16 @@
       <SelectionState runConfigName="app.unitTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="All Tests">
+      <SelectionState runConfigName="fastSineTest()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="virtuallyPlayTouchElement()">
+      <SelectionState runConfigName="MathsTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="upgradeTo110Test()">
+      <SelectionState runConfigName="fastSinePerformanceTest()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Tests in 'ch.sr35.touchsamplesynth'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

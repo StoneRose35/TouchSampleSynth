@@ -7,9 +7,9 @@
 
 
 #include "MusicalSoundGenerator.h"
-#include "AdsrEnvelope.h"
-#include "SawOscillator.h"
-#include "StilsonMoogFilter.h"
+#include "components/AdsrEnvelope.h"
+#include "components/SawOscillator.h"
+#include "components/StilsonMoogFilter.h"
 
 class SimpleSubtractiveSynth: public MusicalSoundGenerator {
 

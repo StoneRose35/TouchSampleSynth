@@ -6,7 +6,7 @@
 #define TOUCHSAMPLESYNTH_STILSONMOOGFILTER_H
 
 #include <cmath>
-#include "SoundProcessor.h"
+#include "../SoundProcessor.h"
 
 static inline float saturate( float input ) { //clamp without branching
 #define _limit 0.95f

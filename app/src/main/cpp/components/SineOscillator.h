@@ -6,7 +6,7 @@
 #define TOUCHSAMPLESYNTH_SINEOSCILLATOR_H
 
 
-#include "SoundGenerator.h"
+#include "../SoundGenerator.h"
 
 
 class SineOscillator: SoundGenerator {

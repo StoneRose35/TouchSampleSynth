@@ -6,7 +6,7 @@
 #define TOUCHSAMPLESYNTH_SAWOSCILLATOR_H
 
 
-#include "SoundGenerator.h"
+#include "../SoundGenerator.h"
 #include "SecondOrderIirFilter.h"
 
 class SawOscillator: SoundGenerator {

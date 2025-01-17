@@ -4,7 +4,7 @@
 
 #include "SawOscillator.h"
 #include "cmath"
-#include "FloatMath.h"
+#include "../tools/FloatMath.h"
 #define FOURTIMES_OVERSAMPLING
 #ifdef NAIVE_OVERSAMPLING
 float SawOscillator::getNextSample() {

@@ -8,5 +8,7 @@
 #define COMBINE(A,B) A ## B
 #define EVAL(A,B) COMBINE(A,B)
 #define M_PI_F EVAL(M_PI,F)
+#define M_2_PI_F EVAL(M_2_PI,F)
+#define M_PI_2_F EVAL(M_PI_2,F)
 
 #endif //TOUCHSAMPLESYNTH_FLOATMATH_H

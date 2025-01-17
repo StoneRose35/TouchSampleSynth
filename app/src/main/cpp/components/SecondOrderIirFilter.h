@@ -6,7 +6,7 @@
 #define TOUCHSAMPLESYNTH_SECONDORDERIIRFILTER_H
 
 
-#include "SoundProcessor.h"
+#include "../SoundProcessor.h"
 
 class SecondOrderIirFilter: SoundProcessor {
 private:

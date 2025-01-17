@@ -4,7 +4,7 @@
 
 #include "SineOscillator.h"
 #include <cmath>
-#include "FloatMath.h"
+#include "../tools/FloatMath.h"
 
 float SineOscillator::getNextSample() {
     currentPhase += phaseIncrement;
