@@ -57,7 +57,8 @@ class EditTouchElementFragmentDialog(private var touchElement: TouchElement,
         pianoRollSelector.selectionMode = PianoRoll.SelectionMode.MULTIPLE
         pianoRollSelector.selectedKeys.clear()
         pianoRollSelector.selectedKeys.addAll(touchElement.notes)
-        pianoRollSelector.octave = touchElement.notes.minByOrNull { it.index }!!.getOctave()
+        pianoRollSelector.octave = 0
+        touchElement.notes.minByOrNull { it.index }?.let { pianoRollSelector.octave =  it.getOctave()}
 
         val rotationChangeTouchElement = findViewById<TouchElement>(R.id.edit_te_touchElement)
         rotationChangeTouchElement.actionDir = touchElement.actionDir
