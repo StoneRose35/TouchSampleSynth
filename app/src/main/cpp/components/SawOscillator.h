@@ -9,10 +9,10 @@
 #include "../SoundGenerator.h"
 #include "SecondOrderIirFilter.h"
 
-class SawOscillator: SoundGenerator {
+class SawOscillator: public SoundGenerator {
 public:
-    float getNextSample();
-    void setNote(float);
+    float getNextSample() override;
+    void setNote(float) override;
     SawOscillator(float);
 
     SawOscillator();
