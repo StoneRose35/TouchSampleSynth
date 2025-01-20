@@ -7,11 +7,11 @@ import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.AudioTest
 import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
+import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import ch.sr35.touchsamplesynth.views.TouchElement
 import org.junit.Assert
 import org.junit.Test
-import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.graphics.Converter
 
 class ScenePTest: AudioTest() {
@@ -37,10 +37,10 @@ class ScenePTest: AudioTest() {
         i1.setRelease(0.4f)
         val i2 = SimpleSubtractiveSynthI(themedContext, "PortoTipp")
         i2.generateVoices(1)
-        i2.setAttack(0.01f)
-        i2.setDecay(0.4f)
-        i2.setSustain(0.0f)
-        i2.setRelease(0.56f)
+        i2.setVolumeAttack(0.01f)
+        i2.setVolumeDecay(0.4f)
+        i2.setVolumeSustain(0.0f)
+        i2.setVolumeRelease(0.56f)
         instrumentIS.add(i1)
         instrumentIS.add(i2)
 

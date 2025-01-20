@@ -1,5 +1,6 @@
 package ch.sr35.touchsamplesynth.model
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.AudioTest
 import ch.sr35.touchsamplesynth.audio.instruments.PolyphonyDefinition
@@ -7,7 +8,9 @@ import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.audio.instruments.SineMonoSynthI
 import org.junit.Assert
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class InstrumentPITest : AudioTest(){
 
 
@@ -53,10 +56,10 @@ class InstrumentPITest : AudioTest(){
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val i1 = SimpleSubtractiveSynthI(context,"Breiss")
         i1.generateVoices(1)
-        i1.setAttack(0.1f)
-        i1.setDecay(0.2f)
-        i1.setSustain(0.3f)
-        i1.setRelease(0.4f)
+        i1.setVolumeAttack(0.1f)
+        i1.setVolumeDecay(0.2f)
+        i1.setVolumeSustain(0.3f)
+        i1.setVolumeRelease(0.4f)
         i1.setInitialCutoff(0.5f)
         i1.setActionAmountToFilter(0.6f)
         i1.setResonance(0.7f)
@@ -64,11 +67,11 @@ class InstrumentPITest : AudioTest(){
         Assert.assertTrue(pi1 is SimpleSubtractiveSynthP)
 
         val ii1 = PersistableInstrumentFactory.toInstrument(pi1, context)
-        Assert.assertTrue(inRange((ii1 as SimpleSubtractiveSynthI).getAttack(),i1.getAttack()))
-        Assert.assertTrue(inRange(ii1.getAttack(),i1.getAttack()))
-        Assert.assertTrue(inRange(ii1.getDecay(),i1.getDecay()))
-        Assert.assertTrue(inRange(ii1.getSustain(),i1.getSustain()))
-        Assert.assertTrue(inRange(ii1.getRelease(),i1.getRelease()))
+        Assert.assertTrue(inRange((ii1 as SimpleSubtractiveSynthI).getVolumeAttack(),i1.getVolumeAttack()))
+        Assert.assertTrue(inRange(ii1.getVolumeAttack(),i1.getVolumeAttack()))
+        Assert.assertTrue(inRange(ii1.getVolumeDecay(),i1.getVolumeDecay()))
+        Assert.assertTrue(inRange(ii1.getVolumeSustain(),i1.getVolumeSustain()))
+        Assert.assertTrue(inRange(ii1.getVolumeRelease(),i1.getVolumeRelease()))
         Assert.assertTrue(inRange(ii1.getInitialCutoff(),i1.getInitialCutoff()))
         Assert.assertTrue(inRange(ii1.getActionAmountToFilter(),i1.getActionAmountToFilter()))
         Assert.assertTrue(inRange(ii1.getResonance(), i1.getResonance()))
@@ -102,5 +105,12 @@ class InstrumentPITest : AudioTest(){
     {
         val EPS= 0.00000001
         return (a - b > -EPS && a - b < EPS)
+    }
+
+    companion object {
+        // Used to load the 'touchsamplesynth' library on application startup.
+        init {
+            System.loadLibrary("touchsamplesynth")
+        }
     }
 }
