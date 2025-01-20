@@ -6,10 +6,7 @@ import ch.sr35.touchsamplesynth.TAG
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.log10
-import kotlin.math.sin
 import kotlin.system.measureTimeMillis
 
 @RunWith(AndroidJUnit4::class)
