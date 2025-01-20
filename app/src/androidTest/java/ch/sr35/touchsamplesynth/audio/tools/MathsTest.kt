@@ -17,6 +17,7 @@ class MathsTest {
 
 
         @Test
+        @Ignore("Perfomance test")
         fun logTest(){
             val mathobj = Maths()
             var x: Float

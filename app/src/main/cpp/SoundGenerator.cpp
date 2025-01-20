@@ -11,3 +11,7 @@ float SoundGenerator::getNextSample() {
 int SoundGenerator::getType() {
     return -1;
 }
+
+void SoundGenerator::setNote(float d) {
+
+}

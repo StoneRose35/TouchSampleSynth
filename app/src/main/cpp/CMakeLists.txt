@@ -30,6 +30,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         AudioEngineGenerated.cpp
         components/SineOscillator.cpp
         components/SawOscillator.cpp
+        components/SquareOscillator.cpp
         components/AdsrEnvelope.cpp
         components/StilsonMoogFilter.cpp
         components/SecondOrderIirFilter.cpp
@@ -43,12 +44,12 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         SimpleSubtractiveSynth.cpp
         jni-bridge.cpp
         sine-mono-synth-jni.cpp
-        simple-subtractive-synth-jni.cpp
         Sampler.cpp
         sampler-jni.cpp
         Looper.cpp
         musical-sound-generator-jni.cpp
         looper-jni.cpp
+simple-subtractive-synth-jni.cpp
         )
 
 # Specifies libraries CMake should link to your target library. You

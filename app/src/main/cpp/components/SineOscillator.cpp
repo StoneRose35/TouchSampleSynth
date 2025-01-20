@@ -8,7 +8,7 @@
 
 float SineOscillator::getNextSample() {
     currentPhase += phaseIncrement;
-    if (currentPhase > 2.0f*M_PI_F)
+    while (currentPhase > 2.0f*M_PI_F)
     {
         currentPhase -= 2.0f*M_PI_F;
     }

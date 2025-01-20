@@ -21,7 +21,7 @@ static float gaintable[199] = { 0.999969, 0.990082, 0.980347, 0.970764, 0.961304
 
 float StilsonMoogFilter::processSample(float input) {
 
-    output = 0.25 * ( input - output ); //negative feedback
+    output = 0.25f * ( input - output ); //negative feedback
     float temp,outVal;
     for(int pole = 0; pole < 4; pole++) {
         temp = state[pole];
@@ -39,11 +39,22 @@ float StilsonMoogFilter::processSample(float input) {
 }
 
 void StilsonMoogFilter::SetCutoff(float frequency) {
+    if ( frequency >= samplingRate/2.0f)
+    {
+        frequency = samplingRate/2.0f;
+    }
+    else if (frequency < 0.0f)
+    {
+        frequency = 0.0f;
+    }
     float fc = 2 * frequency / samplingRate;
-    float x2 = fc*fc;
-    float x3 = fc*x2;
+    float x2 = fc * fc;
+    float x3 = fc * x2;
     cutoff = frequency;
-    p = -0.69346f * x3 - 0.59515f * x2 + 3.2937f * fc - 1.0072f; //cubic fit by DFL, not 100% accurate but better than nothing...
+    p = -0.69346f * x3 - 0.59515f * x2 + 3.2937f * fc -
+        1.0072f; //cubic fit by DFL, not 100% accurate but better than nothing...
+
+
 }
 
 StilsonMoogFilter::StilsonMoogFilter(float sr) {

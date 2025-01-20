@@ -12,7 +12,7 @@ static inline float saturate( float input ) { //clamp without branching
 #define _limit 0.95f
     float x1 = fabsf( input + _limit );
     float x2 = fabsf( input - _limit );
-    return 0.5 * (x1 - x2);
+    return 0.5f * (x1 - x2);
 }
 
 static inline float crossfade( float amount, float a, float b ) {
@@ -25,7 +25,7 @@ private:
     float samplingRate;
     float output, state[4];
 public:
-    float processSample(float);
+    float processSample(float) override;
     void SetCutoff(float);
     void SetResonance(float);
     StilsonMoogFilter(float);
