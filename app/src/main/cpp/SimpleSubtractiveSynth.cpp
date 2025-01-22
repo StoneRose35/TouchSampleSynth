@@ -289,6 +289,36 @@ void SimpleSubtractiveSynth::setFilterEnvelopeLevel(float el) {
     filterEnvelopeLevel = el;
 }
 
+float SimpleSubtractiveSynth::getOsc1PulseWidth() {
+    return osc1Pulsewidth;
+}
+
+void SimpleSubtractiveSynth::setOsc1PulseWidth(float pw) {
+    if (pw > -1.0f && pw < 1.0f)
+    {
+        osc1Pulsewidth = pw;
+        if (osc1Type == OSCILLATOR_TYPE_SQUARE)
+        {
+            ((SquareOscillator*)osc1)->setPulseWidth(pw);
+        }
+    }
+}
+
+float SimpleSubtractiveSynth::getOsc2PulseWidth() {
+    return osc2Pulsewidth;
+}
+
+void SimpleSubtractiveSynth::setOsc2PulseWidth(float pw) {
+    if (pw > -1.0f && pw < 1.0f )
+    {
+        osc2Pulsewidth=pw;
+        if (osc2Type == OSCILLATOR_TYPE_SQUARE)
+        {
+            ((SquareOscillator*)osc2)->setPulseWidth(pw);
+        }
+    }
+}
+
 
 
 

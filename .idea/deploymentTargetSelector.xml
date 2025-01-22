@@ -19,19 +19,19 @@
       <SelectionState runConfigName="app.unitTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MathsTest">
+      <SelectionState runConfigName="All Tests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="fastSinePerformanceTest()">
+      <SelectionState runConfigName="SimpleSubtractiveSynthTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Tests in 'ch.sr35.touchsamplesynth'">
+      <SelectionState runConfigName="InstrumentPITest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="logTest()">
+      <SelectionState runConfigName="persistableInstrumentFactoryTest1()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SimpleSubtractiveSynthPTest">
+      <SelectionState runConfigName="persistableInstrumentFactoryTest2()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

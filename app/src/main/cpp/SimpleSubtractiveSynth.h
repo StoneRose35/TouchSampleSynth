@@ -32,6 +32,8 @@ private:
     uint8_t osc2Octave;
     float osc2Detune;
     float osc2Volume;
+    float osc1Pulsewidth;
+    float osc2Pulsewidth;
     float currentFilterCutoff, currentResonance, newFilterCutoff;
     float currentPitchBend,newPitchBend;
     float filterEnvelopeLevel;
@@ -81,7 +83,10 @@ public:
     float getOsc2Volume();
     void setOsc2Volume(float);
 
-
+    float getOsc1PulseWidth();
+    void setOsc1PulseWidth(float);
+    float getOsc2PulseWidth();
+    void setOsc2PulseWidth(float);
 
 
     void setCutoff(float);
