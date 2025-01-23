@@ -11,6 +11,7 @@ class SimpleSubtractiveSynthPTest {
     {
         val synth=SimpleSubtractiveSynthP(0.1f,0.23f,0.98f,0.564f,0.2323f,0.78f,0.6754f,0.2323f,0.6237f,
             0,1,1,0.1f,0.2f,10.0f,0.74f,0.23f,0.45f,0.12f,0.26f,0.987f,
+            0.425f,
             PolyphonyDefinition.POLY_SATURATE,false,4,"TestIt")
         val gson = Gson()
         val json = gson.toJson(synth)
