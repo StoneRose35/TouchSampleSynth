@@ -31,9 +31,6 @@
       <SelectionState runConfigName="persistableInstrumentFactoryTest1()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="persistableInstrumentFactoryTest2()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
     </selectionStates>
   </component>
 </project>

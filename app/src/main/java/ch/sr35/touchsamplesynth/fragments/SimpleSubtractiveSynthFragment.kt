@@ -10,6 +10,7 @@ import android.widget.SeekBar
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioUtils
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
+import ch.sr35.touchsamplesynth.views.Knob
 
 
 /**
@@ -77,6 +78,14 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
                 sb.setOnSeekBarChangeListener(this)
             }
 
+            view.findViewById<Knob>(R.id.knobOsc2Octave).let { sb ->
+                sb.isDiscrete = true
+                sb.min = -4
+                sb.max = 4
+                sb.onChangeListener = this
+                sb.progress = it.getOsc2Octave().toInt()
+            }
+
             view.findViewById<RadioGroup>(R.id.radioGroupPitchBendOrientation).let { rg ->
                 if (it.horizontalToActionB) {
                     rg.check(R.id.radioButtonHorizontalToActionB)
@@ -132,6 +141,9 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
             }
             R.id.seekBarTouchToPitchBend -> {
                 synth?.setPitchBendAmount(p0.progress.toFloat() / 100.0f)
+            }
+            R.id.knobOsc2Octave -> {
+                synth?.setOsc2Octave(p0.progress.toByte())
             }
         }
     }

@@ -35,6 +35,10 @@
         android:textColor="?attr/instrumentPageTitleTextColor"
         android:text="@string/volume_envelope"
         />
+    <ch.sr35.touchsamplesynth.views.Knob
+        android:id="@+id/knobOsc2Octave"
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
     <TableLayout
         android:baselineAligned="false"
         android:layout_width="match_parent"
