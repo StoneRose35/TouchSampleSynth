@@ -71,7 +71,6 @@ dependencies {
 }
 
 tasks.register<InstrumentBuilderTask>("instrumentBuilder") {
-
 }
 
 tasks.preBuild.dependsOn(tasks.named("instrumentBuilder"))
