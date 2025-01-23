@@ -9,8 +9,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.RotateDrawable
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
-import android.widget.ProgressBar
 import android.widget.SeekBar
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
@@ -34,7 +32,7 @@ class Knob : androidx.appcompat.widget.AppCompatSeekBar {
     private var scalePaintThin: Paint = Paint()
     private lateinit var knobDrawable: Drawable
     private lateinit var rotateKnob: RotateDrawable
-    var onChangeListener: SeekBar.OnSeekBarChangeListener? = null
+    private var onChangeListener: OnSeekBarChangeListener? = null
 
 
 
@@ -96,6 +94,10 @@ class Knob : androidx.appcompat.widget.AppCompatSeekBar {
             }
         }
         return false
+    }
+
+    override fun setOnSeekBarChangeListener(l: OnSeekBarChangeListener?) {
+        onChangeListener = l
     }
 
     override fun onDraw(canvas: Canvas) {

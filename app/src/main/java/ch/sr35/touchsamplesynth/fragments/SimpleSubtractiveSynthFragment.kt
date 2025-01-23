@@ -82,7 +82,7 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
                 sb.isDiscrete = true
                 sb.min = -4
                 sb.max = 4
-                sb.onChangeListener = this
+                sb.setOnSeekBarChangeListener(this)
                 sb.progress = it.getOsc2Octave().toInt()
             }
 

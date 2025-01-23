@@ -1,8 +1,6 @@
 package ch.sr35.touchsamplesynth.build
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.file.ConfigurableFileCollection
-import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
@@ -61,7 +59,7 @@ class InstrumentBuilder {
                 val magicNr = parser.obtainMagicNr()
                 if (!jniFile.exists())
                 {
-                    val jniFileGenerator = JniGenerator();
+                    val jniFileGenerator = JniGenerator()
                     jniFileGenerator.className = parser.className
                     jniFile.createNewFile()
                     jniFile.writeText(jniFileGenerator.generateJniFile(props))
