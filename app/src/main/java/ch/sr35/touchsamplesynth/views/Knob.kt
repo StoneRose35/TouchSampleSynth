@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import ch.sr35.touchsamplesynth.graphics.Converter
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.RotateDrawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.content.res.AppCompatResources

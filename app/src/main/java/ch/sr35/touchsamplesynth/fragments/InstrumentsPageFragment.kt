@@ -19,7 +19,6 @@ import android.widget.ImageView
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.RadioGroup
-import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout

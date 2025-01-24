@@ -1,10 +1,7 @@
 package ch.sr35.touchsamplesynth.views
 
 import android.content.Context
-import android.graphics.Rect
 import android.util.AttributeSet
-import android.view.MotionEvent
-import android.view.WindowInsets
 import android.widget.SeekBar
 import ch.sr35.touchsamplesynth.R
 import kotlin.math.pow
