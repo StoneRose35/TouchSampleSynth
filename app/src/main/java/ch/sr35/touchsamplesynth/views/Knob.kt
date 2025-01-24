@@ -9,11 +9,11 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.RotateDrawable
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.widget.SeekBar
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sin
 
 private var PADDING_KNOB = Converter.toPx(3.0f)
@@ -31,8 +31,8 @@ class Knob : androidx.appcompat.widget.AppCompatSeekBar {
     private var scalePaint: Paint = Paint()
     private var scalePaintThin: Paint = Paint()
     private lateinit var knobDrawable: Drawable
-    private lateinit var rotateKnob: RotateDrawable
     private var onChangeListener: OnSeekBarChangeListener? = null
+    private var linearity=1.0f
 
 
 
@@ -54,9 +54,6 @@ class Knob : androidx.appcompat.widget.AppCompatSeekBar {
 
     private fun init(attrs: AttributeSet?, defStyle: Int) {
         knobDrawable = AppCompatResources.getDrawable(context,R.drawable.knob)!!
-        rotateKnob = RotateDrawable()
-        rotateKnob.drawable = knobDrawable
-        rotateKnob.level = 10000
         scalePaint.color = Color.BLACK
         scalePaint.strokeWidth = Converter.toPx(3.0f)
         scalePaint.isAntiAlias = true
@@ -65,6 +62,13 @@ class Knob : androidx.appcompat.widget.AppCompatSeekBar {
         scalePaintThin.strokeWidth = Converter.toPx(1.0f)
         scalePaintThin.isAntiAlias = true
         scalePaintThin.style = Paint.Style.STROKE
+        attrs?.let {
+            context.obtainStyledAttributes(attrs, R.styleable.Knob).also {
+                linearity = it.getFloat(R.styleable.Knob_linearity,1.0f)
+                isDiscrete = it.getBoolean(R.styleable.Knob_isDiscrete,false)
+                it.recycle()
+            }
+        }
 
     }
 
@@ -72,6 +76,7 @@ class Knob : androidx.appcompat.widget.AppCompatSeekBar {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 knobValueStart = progress
+                parent.requestDisallowInterceptTouchEvent(true)
                 startValY = event.y
                 return true
             }
@@ -92,14 +97,31 @@ class Knob : androidx.appcompat.widget.AppCompatSeekBar {
                 postInvalidate()
                 return true
             }
+            MotionEvent.ACTION_UP ->
+            {
+                parent.requestDisallowInterceptTouchEvent(false)
+                return true
+            }
         }
         return false
     }
+
 
     override fun setOnSeekBarChangeListener(l: OnSeekBarChangeListener?) {
         onChangeListener = l
     }
 
+    private fun progressSkew(): Int
+    {
+        return if (linearity == 1.0f)
+        {
+            progress
+        }
+        else
+        {
+            ((((progress.toFloat()-min)/(max - min)).pow(linearity))*(max-min) + min).toInt()
+        }
+    }
     override fun onDraw(canvas: Canvas) {
         //super.onDraw(canvas)
 

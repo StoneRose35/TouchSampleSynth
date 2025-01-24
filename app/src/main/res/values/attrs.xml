@@ -30,4 +30,9 @@
     <declare-styleable name="TouchElement">
         <attr name="touchElementPadding" format="float"/>
     </declare-styleable>
+
+    <declare-styleable name="Knob">
+        <attr name="linearity" format="string"/>
+        <attr name="isDiscrete" format="boolean"/>
+    </declare-styleable>
 </resources>

@@ -40,19 +40,19 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
         super.onViewCreated(view, savedInstanceState)
 
         synth?.let {
-            val attack = view.findViewById<SeekBar>(R.id.seekBarAttack)
+            val attack = view.findViewById<SeekBar>(R.id.seekBarVolAttack)
             attack.progress = (it.getVolumeAttack() / 2.0f * 1000.0f).toInt()
             attack.setOnSeekBarChangeListener(this)
 
-            val decay = view.findViewById<SeekBar>(R.id.seekBarDecay)
+            val decay = view.findViewById<SeekBar>(R.id.seekBarVolDecay)
             decay.progress = (it.getVolumeDecay() / 2.0f * 1000.0f).toInt()
             decay.setOnSeekBarChangeListener(this)
 
-            val sustain = view.findViewById<SeekBar>(R.id.seekBarSustain)
+            val sustain = view.findViewById<SeekBar>(R.id.seekBarVolSustain)
             sustain.progress = (it.getVolumeSustain() * 1000.0f).toInt()
             sustain.setOnSeekBarChangeListener(this)
 
-            val release = view.findViewById<SeekBar>(R.id.seekBarRelease)
+            val release = view.findViewById<SeekBar>(R.id.seekBarVolRelease)
             release.progress = (it.getVolumeRelease() / 2.0f * 1000.0f).toInt()
             release.setOnSeekBarChangeListener(this)
 
@@ -78,10 +78,7 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
                 sb.setOnSeekBarChangeListener(this)
             }
 
-            view.findViewById<Knob>(R.id.knobOsc2Octave).let { sb ->
-                sb.isDiscrete = true
-                sb.min = -4
-                sb.max = 4
+            view.findViewById<Knob>(R.id.osc2Octave).let { sb ->
                 sb.setOnSeekBarChangeListener(this)
                 sb.progress = it.getOsc2Octave().toInt()
             }
@@ -142,7 +139,7 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
             R.id.seekBarTouchToPitchBend -> {
                 synth?.setPitchBendAmount(p0.progress.toFloat() / 100.0f)
             }
-            R.id.knobOsc2Octave -> {
+            R.id.osc2Octave -> {
                 synth?.setOsc2Octave(p0.progress.toByte())
             }
         }
