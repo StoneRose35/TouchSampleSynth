@@ -32,7 +32,7 @@ class NonLinearSeekBar: androidx.appcompat.widget.AppCompatSeekBar, SeekBar.OnSe
     private lateinit var sliderDrawable: Drawable
     private lateinit var sliderDrawableVertical: RotateDrawable
     private lateinit var linePaint: Paint
-    private var nonLinearProgressChangeListener: SeekBar.OnSeekBarChangeListener?=null
+    private var nonLinearProgressChangeListener: OnSeekBarChangeListener?=null
     constructor(context: Context): super(context)
     {
         init(null,0)
@@ -98,7 +98,7 @@ class NonLinearSeekBar: androidx.appcompat.widget.AppCompatSeekBar, SeekBar.OnSe
         }
     }
 
-    override fun setOnSeekBarChangeListener(l: SeekBar.OnSeekBarChangeListener?) {
+    override fun setOnSeekBarChangeListener(l: OnSeekBarChangeListener?) {
         nonLinearProgressChangeListener = l
     }
 

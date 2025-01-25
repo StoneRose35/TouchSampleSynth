@@ -2,14 +2,12 @@ package ch.sr35.touchsamplesynth.views
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import ch.sr35.touchsamplesynth.graphics.Converter
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
 import ch.sr35.touchsamplesynth.R
 import kotlin.math.PI
