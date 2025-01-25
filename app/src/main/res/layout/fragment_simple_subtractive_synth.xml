@@ -183,29 +183,29 @@
 
         android:layout_width="180dp"
         android:paddingStart="0dp"
-        android:paddingEnd="-70dp"
+        android:paddingEnd="0dp"
         android:orientation="vertical"
         android:layout_height="200dp">
         <LinearLayout
             android:layout_gravity="center_horizontal"
-            android:layout_width="200dp"
+            android:layout_width="180dp"
             android:layout_height="220dp"
-            android:rotation="270"
-            android:orientation="vertical">
+
+            android:orientation="horizontal">
             <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                 android:id="@+id/seekBarVolAttack"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:max="1000"
                 android:min="1"
-                android:paddingStart="40dp"
+                android:paddingStart="0dp"
                 android:paddingEnd="0dp"
                 android:layout_marginBottom="20dp"
                 android:layout_gravity="center_vertical"
                 android:progressTint="#454545"
-                android:rotation="0"
+                android:orientation="vertical"
                 tss:linearity="0.2"
-                android:thumb="?attr/sliderDrawable" />
+                />
 
             <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                 android:id="@+id/seekBarVolDecay"
@@ -521,24 +521,25 @@
         android:text="@string/modulation"
         />
 
-        <SeekBar
-            android:id="@+id/seekBarCutoffModulation"
-            tss:layout_constraintTop_toBottomOf="@id/modulationTitle"
-            tss:layout_constraintStart_toStartOf="parent"
-            tss:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingStart="30dp"
-            android:paddingEnd="30dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="80dp"
-            android:layout_marginTop="10dp"
-            android:thumb="?attr/sliderDrawable"
-            android:progressTint="#454545"
-            android:layout_column="1"
-            android:layout_gravity="center_vertical"
-            android:max="1000" />
-        <TextView
+    <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
+        android:id="@+id/seekBarCutoffModulation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="80dp"
+        android:max="1000"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:progressTint="#454545"
+        android:thumb="?attr/sliderDrawable"
+        tss:layout_constraintEnd_toEndOf="parent"
+        tss:layout_constraintStart_toStartOf="parent"
+        tss:layout_constraintTop_toBottomOf="@id/modulationTitle" />
+
+    <TextView
             android:id="@+id/tvCutoffModulation"
             android:layout_width="wrap_content"
             tss:layout_constraintTop_toTopOf="@id/seekBarCutoffModulation"

@@ -7,8 +7,10 @@ import android.graphics.Paint
 import ch.sr35.touchsamplesynth.graphics.Converter
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.ResourcesCompat
 import ch.sr35.touchsamplesynth.R
 import kotlin.math.PI
 import kotlin.math.cos
@@ -52,12 +54,15 @@ class Knob : androidx.appcompat.widget.AppCompatSeekBar {
     }
 
     private fun init(attrs: AttributeSet?, defStyle: Int) {
-        knobDrawable = AppCompatResources.getDrawable(context,R.drawable.knob)!!
-        scalePaint.color = Color.BLACK
+        val tv=TypedValue()
+        context.theme.resolveAttribute(R.attr.knobImage,tv,true)
+        knobDrawable = ResourcesCompat.getDrawable(context.resources, tv.resourceId,context.theme)!!
+        context.theme.resolveAttribute(R.attr.knobScaleColor,tv,true)
+        scalePaint.color = ResourcesCompat.getColor(context.resources,tv.resourceId,context.theme)
         scalePaint.strokeWidth = Converter.toPx(3.0f)
         scalePaint.isAntiAlias = true
         scalePaint.style = Paint.Style.STROKE
-        scalePaintThin.color = Color.BLACK
+        scalePaintThin.color = scalePaint.color
         scalePaintThin.strokeWidth = Converter.toPx(1.0f)
         scalePaintThin.isAntiAlias = true
         scalePaintThin.style = Paint.Style.STROKE

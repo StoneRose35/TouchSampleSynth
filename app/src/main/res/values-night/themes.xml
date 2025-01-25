@@ -21,6 +21,7 @@
         <item name="touchElementEditBoxBgColor">@color/white</item>
         <item name="touchElementEditTextColor">@color/light_grey</item>
         <item name="sliderDrawable">@drawable/slider</item>
+        <item name="seekBarLineColor">@color/white</item>
 
         <item name="instrumentPageTitleTextColor">@color/red_light</item>
         <item name="instrumentBackgroundColor">@color/medium_gray</item>
@@ -38,6 +39,9 @@
         <item name="pianoRollOctaveNoSelectionColor">@color/red_dark</item>
         <item name="pianoRollOctaveSelectionColor">@color/red_light</item>
         <item name="pianoRollOctaveSelectionOutlineColor">@color/medium_green</item>
+
+        <item name="knobImage">@drawable/knob_white</item>
+        <item name="knobScaleColor">@color/white</item>
     </style>
     <style name="Theme.TouchSampleSynth.Instrument">
         <item name="android:textColor">@color/vu_meter_background</item>

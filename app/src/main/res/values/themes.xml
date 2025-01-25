@@ -26,6 +26,7 @@
         <item name="instrumentBackgroundColor">@color/very_light_gray</item>
         <item name="instrumentPageTitleTextColor">@color/red_dark</item>
         <item name="sliderDrawable">@drawable/slider_dark</item>
+        <item name="seekBarLineColor">@color/black</item>
         <item name="sceneEditBackgroundColor">@color/very_light_gray</item>
         <item name="touchElementLinkColor">@color/vu_meter_green</item>
         <item name="touchElementLinkSize">8.0</item>
@@ -39,6 +40,10 @@
         <item name="pianoRollOctaveSelectionColor">@color/red_light</item>
         <item name="pianoRollOctaveSelectionOutlineColor">@color/medium_green</item>
         <item name="touchElementPadding">32.0</item>
+
+
+        <item name="knobImage">@drawable/knob</item>
+        <item name="knobScaleColor">@color/black</item>
     </style>
     <style name="Theme.Instrument" parent="Theme.TouchSampleSynth">
         <item name="android:textColor">@color/black</item>

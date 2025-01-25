@@ -10,6 +10,7 @@
     <attr name="touchElementLinkColor" format="color"/>
 
     <attr name="sliderDrawable" format="reference"/>
+    <attr name="seekBarLineColor" format="color" />
     <attr name="instrumentBackgroundColor" format="color"/>
     <attr name="sceneEditBackgroundColor" format="color"/>
     <attr name="instrumentParameterTextColor" format="color" />
@@ -30,9 +31,16 @@
     <declare-styleable name="TouchElement">
         <attr name="touchElementPadding" format="float"/>
     </declare-styleable>
+    <attr name="knobImage" format="reference"/>
+    <attr name="knobScaleColor" format="reference"/>
 
+    <attr name="linearity" format="string"/>
     <declare-styleable name="Knob">
-        <attr name="linearity" format="string"/>
+        <attr name="linearity"/>
         <attr name="isDiscrete" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="NonLinearSeekBar">
+        <attr name="android:orientation"/>
+        <attr name="linearity"/>
     </declare-styleable>
 </resources>
