@@ -24,6 +24,7 @@ float SimpleSubtractiveSynth::getNextSample() {
             if (currentFilterUpdateSamples == modulatorsUpdateInSamples)
             {
                 currentFilterCutoff = newFilterCutoff;
+                currentFilterUpdateSamples=0;
             }
         }
         if (currentPitchUpdateInSamples < modulatorsUpdateInSamples)
@@ -59,7 +60,7 @@ float SimpleSubtractiveSynth::getNextSample() {
 
 void SimpleSubtractiveSynth::setNote(float n) {
     osc1->setNote(n);
-    osc2->setNote(n + (float)osc2Octave*12.0f + osc2Detune);
+    osc2->setNote(n + (float)((int8_t)osc2Octave)*12.0f + osc2Detune);
     currentPitchBend=0;
     currentPitchUpdateInSamples=modulatorsUpdateInSamples;
     MusicalSoundGenerator::setNote(n);

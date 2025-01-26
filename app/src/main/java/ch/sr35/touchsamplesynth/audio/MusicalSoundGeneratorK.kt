@@ -60,7 +60,7 @@ open class MusicalSoundGenerator {
     }
 
     open fun applyTouchActionA(a: Float) {
-        if (a >= -1.0f && a <= 1.0f) {
+        if (a > 0.0f && a <= 1.0f) {
             setVolume(10.0f.pow(log10(a) * actionAmountToVolume))
         }
     }

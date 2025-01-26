@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.appcompat.content.res.AppCompatResources
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioEngineK
+import ch.sr35.touchsamplesynth.audio.AudioUtils
 import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 
 class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
@@ -14,6 +15,15 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
         if (instance == (-1).toByte()) {
             instance = audioEngine.addSoundGenerator(MAGIC_NR)
         }
+    }
+
+    override fun applyTouchActionA(a: Float) {
+        if (AudioUtils.NoteToFreq (AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmountToFilter) > 20.0f &&
+            AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff()) + a*actionAmountToFilter) < 20000.0f)
+        {
+            setCutoff(AudioUtils.NoteToFreq(AudioUtils.FreqToNote(getInitialCutoff())+a*actionAmountToFilter))
+        }
+        super.applyTouchActionA(a)
     }
 
     override fun hashCode(): Int {

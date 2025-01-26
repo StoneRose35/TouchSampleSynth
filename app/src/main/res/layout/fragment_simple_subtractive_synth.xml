@@ -73,6 +73,8 @@
         tss:layout_constraintTop_toBottomOf="@id/tvOsc1"
         android:clickable="true"
         android:focusable="true"
+        android:min="-1000"
+        android:max="1000"
         android:layout_width="60dp"
         android:layout_height="60dp" />
     <TextView
@@ -94,6 +96,8 @@
         android:id="@+id/osc2PWSymmetry"
         tss:layout_constraintEnd_toStartOf="@id/osc2Volume"
         tss:layout_constraintTop_toBottomOf="@id/tvOsc2"
+        android:min="-1000"
+        android:max="1000"
         android:layout_width="60dp"
         android:layout_height="60dp" />
     <TextView
@@ -109,6 +113,8 @@
         android:id="@+id/osc2Volume"
         tss:layout_constraintEnd_toStartOf="@id/osc2Octave"
         tss:layout_constraintTop_toTopOf="@id/osc2PWSymmetry"
+        android:min="0"
+        android:max="1000"
         android:layout_width="60dp"
         android:layout_height="60dp" />
     <TextView
@@ -141,8 +147,9 @@
         android:id="@+id/osc2Detune"
         tss:layout_constraintEnd_toEndOf="parent"
         tss:layout_constraintTop_toTopOf="@id/osc2PWSymmetry"
+        android:min="-1200"
+        android:max="1200"
         android:layout_width="60dp"
-
         android:layout_height="60dp" />
     <TextView
         android:id="@+id/tvOsc2Detune"
@@ -171,86 +178,54 @@
         android:text="@string/volume_envelope"
         />
 
-    <LinearLayout
+    <TableLayout
         android:id="@+id/volumeEnvelopeLayout"
         tss:layout_constraintStart_toStartOf="parent"
         tss:layout_constraintTop_toBottomOf="@id/volumeEnvelopeTitle"
         android:layout_width="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_height="wrap_content"
+        android:layout_height="220dp"
         android:orientation="vertical">
-    <LinearLayout
 
-        android:layout_width="180dp"
-        android:paddingStart="0dp"
-        android:paddingEnd="0dp"
-        android:orientation="vertical"
-        android:layout_height="200dp">
-        <LinearLayout
-            android:layout_gravity="center_horizontal"
-            android:layout_width="180dp"
-            android:layout_height="220dp"
-
-            android:orientation="horizontal">
+        <TableRow>
             <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                 android:id="@+id/seekBarVolAttack"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 android:max="1000"
                 android:min="1"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp"
-                android:layout_marginBottom="20dp"
-                android:layout_gravity="center_vertical"
-                android:progressTint="#454545"
                 android:orientation="vertical"
-                tss:linearity="0.2"
+                tss:linearity="1.5"
                 />
 
             <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                 android:id="@+id/seekBarVolDecay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:thumb="?attr/sliderDrawable"
-                android:progressTint="#454545"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:min="1"
-                android:paddingStart="40dp"
-                android:paddingEnd="0dp"
+                android:orientation="vertical"
+                tss:linearity="1.5"
                 android:max="1000" />
             <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                 android:id="@+id/seekBarVolSustain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:thumb="?attr/sliderDrawable"
-                android:progressTint="#454545"
-                android:paddingStart="40dp"
-                android:paddingEnd="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:max="1000" />
             <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                 android:id="@+id/seekBarVolRelease"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:thumb="?attr/sliderDrawable"
-                android:progressTint="#454545"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:min="1"
-                android:paddingStart="40dp"
-                android:paddingEnd="0dp"
                 android:max="1000" />
 
-        </LinearLayout>
-    </LinearLayout>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*"
-            >
-            <TableRow>
+        </TableRow>
+
+        <TableRow>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
-                android:layout_margin="0dp"
                 android:text="@string/synth_attack"
                 android:labelFor="@id/seekBarVolAttack"
 
@@ -258,7 +233,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
-                android:layout_margin="0dp"
                 android:text="@string/synth_decay"
                 android:labelFor="@id/seekBarVolDecay"
 
@@ -266,7 +240,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
-                android:layout_margin="0dp"
                 android:text="@string/synth_sustain"
                 android:labelFor="@id/seekBarVolSustain"
 
@@ -274,13 +247,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
-                android:layout_margin="0dp"
                 android:text="@string/synth_release"
                 android:labelFor="@id/seekBarVolRelease"
                 />
-            </TableRow>
+        </TableRow>
         </TableLayout>
-    </LinearLayout>
+
 
 
 
@@ -302,84 +274,52 @@
         android:text="@string/filter_envelope"
         />
 
-    <LinearLayout
+    <TableLayout
         android:id="@+id/filterEnvelopeLayout"
         tss:layout_constraintEnd_toEndOf="parent"
         tss:layout_constraintTop_toBottomOf="@id/filterEnvelopeTitle"
         android:layout_marginEnd="30dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="220dp"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="180dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="-70dp"
-            android:orientation="vertical"
-            android:layout_height="200dp">
-            <LinearLayout
-                android:layout_gravity="center_horizontal"
-                android:layout_width="200dp"
-                android:layout_height="220dp"
-                android:rotation="270"
-                android:orientation="vertical">
+
+            <TableRow>
                 <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                     android:id="@+id/seekBarFilterAttack"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
                     android:max="1000"
                     android:min="1"
-                    android:paddingStart="40dp"
-                    android:paddingEnd="0dp"
-                    android:layout_marginBottom="20dp"
                     android:layout_gravity="center_vertical"
-                    android:progressTint="#454545"
-                    android:rotation="0"
-                    android:thumb="?attr/sliderDrawable" />
+                    android:orientation="vertical"
+                    />
 
                 <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                     android:id="@+id/seekBarFilterDecay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:thumb="?attr/sliderDrawable"
-                    android:progressTint="#454545"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:min="1"
-                    android:paddingStart="40dp"
-                    android:paddingEnd="0dp"
                     android:max="1000" />
                 <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                     android:id="@+id/seekBarFilterSustain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:thumb="?attr/sliderDrawable"
-                    android:progressTint="#454545"
-                    android:paddingStart="40dp"
-                    android:paddingEnd="0dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:max="1000" />
                 <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
                     android:id="@+id/seekBarFilterRelease"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:thumb="?attr/sliderDrawable"
-                    android:progressTint="#454545"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:min="1"
-                    android:paddingStart="40dp"
-                    android:paddingEnd="0dp"
                     android:max="1000" />
 
-            </LinearLayout>
-        </LinearLayout>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*"
-            >
+            </TableRow>
             <TableRow>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
-                    android:layout_margin="0dp"
                     android:text="@string/synth_attack"
                     android:labelFor="@id/seekBarVolAttack"
 
@@ -387,7 +327,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
-                    android:layout_margin="0dp"
                     android:text="@string/synth_decay"
                     android:labelFor="@id/seekBarVolDecay"
 
@@ -395,7 +334,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
-                    android:layout_margin="0dp"
                     android:text="@string/synth_sustain"
                     android:labelFor="@id/seekBarVolSustain"
 
@@ -403,13 +341,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
-                    android:layout_margin="0dp"
                     android:text="@string/synth_release"
                     android:labelFor="@id/seekBarVolRelease"
                     />
             </TableRow>
         </TableLayout>
-    </LinearLayout>
+
 
 
     <TextView
@@ -489,7 +426,7 @@
         android:progressTint="#454545"
         android:layout_column="1"
         android:layout_gravity="center_vertical"
-        android:max="1000" />
+        android:max="7000" />
     <TextView
         android:id="@+id/tvFilterEnvelopeAmount"
         tss:layout_constraintTop_toBottomOf="@id/seekBarCutoff"
@@ -533,8 +470,6 @@
         android:max="1000"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
-        android:progressTint="#454545"
-        android:thumb="?attr/sliderDrawable"
         tss:layout_constraintEnd_toEndOf="parent"
         tss:layout_constraintStart_toStartOf="parent"
         tss:layout_constraintTop_toBottomOf="@id/modulationTitle" />
@@ -552,67 +487,66 @@
             android:layout_column="2"
             />
 
-            <SeekBar
-                android:id="@+id/seekBarTouchToVolume"
-                tss:layout_constraintTop_toBottomOf="@id/seekBarCutoffModulation"
-                tss:layout_constraintStart_toStartOf="parent"
-                tss:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:max="1000"
-                android:layout_gravity="center_vertical"
-                android:layout_column="1"
-                android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="80dp"
-                android:layout_marginTop="20dp"
-                android:progress="0"
-                android:thumb="?attr/sliderDrawable"
-                />
-            <TextView
-                android:id="@+id/tvTouchToVolume"
-                tss:layout_constraintEnd_toEndOf="parent"
-                tss:layout_constraintTop_toTopOf="@id/seekBarTouchToVolume"
-                tss:layout_constraintBottom_toBottomOf="@id/seekBarTouchToVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_margin="10dp"
-                android:text="@string/touch_to_volume"
-                android:labelFor="@id/seekBarAttack"
-                android:layout_column="2"
-                />
+    <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
+        android:id="@+id/seekBarTouchToVolume"
+        tss:layout_constraintTop_toBottomOf="@id/seekBarCutoffModulation"
+        tss:layout_constraintStart_toStartOf="parent"
+        tss:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="1000"
+        android:layout_gravity="center_vertical"
+        android:layout_column="1"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="20dp"
+        android:progress="0"
+        />
+    <TextView
+        android:id="@+id/tvTouchToVolume"
+        tss:layout_constraintEnd_toEndOf="parent"
+        tss:layout_constraintTop_toTopOf="@id/seekBarTouchToVolume"
+        tss:layout_constraintBottom_toBottomOf="@id/seekBarTouchToVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_margin="10dp"
+        android:text="@string/touch_to_volume"
+        android:labelFor="@id/seekBarAttack"
+        android:layout_column="2"
+        />
 
-            <SeekBar
-                android:id="@+id/seekBarTouchToPitchBend"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                tss:layout_constraintStart_toStartOf="parent"
-                tss:layout_constraintEnd_toEndOf="parent"
-                tss:layout_constraintTop_toBottomOf="@id/seekBarTouchToVolume"
-                android:max="2400"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="80dp"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_column="1"
-                android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:progress="0"
-                android:thumb="?attr/sliderDrawable"
-                />
-            <TextView
-                android:id="@+id/tvTouchToPitchBend"
-                tss:layout_constraintEnd_toEndOf="parent"
-                tss:layout_constraintTop_toTopOf="@id/seekBarTouchToPitchBend"
-                tss:layout_constraintBottom_toBottomOf="@id/seekBarTouchToPitchBend"
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_margin="10dp"
-                android:text="@string/pitchBendAmount"
-                android:labelFor="@id/seekBarAttack"
-                android:layout_column="2"
-                />
+    <ch.sr35.touchsamplesynth.views.NonLinearSeekBar
+        android:id="@+id/seekBarTouchToPitchBend"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tss:layout_constraintStart_toStartOf="parent"
+        tss:layout_constraintEnd_toEndOf="parent"
+        tss:layout_constraintTop_toBottomOf="@id/seekBarTouchToVolume"
+        android:max="2400"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_column="1"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:progress="0"
+        android:thumb="?attr/sliderDrawable"
+        />
+    <TextView
+        android:id="@+id/tvTouchToPitchBend"
+        tss:layout_constraintEnd_toEndOf="parent"
+        tss:layout_constraintTop_toTopOf="@id/seekBarTouchToPitchBend"
+        tss:layout_constraintBottom_toBottomOf="@id/seekBarTouchToPitchBend"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_margin="10dp"
+        android:text="@string/pitchBendAmount"
+        android:labelFor="@id/seekBarAttack"
+        android:layout_column="2"
+        />
 
 
 

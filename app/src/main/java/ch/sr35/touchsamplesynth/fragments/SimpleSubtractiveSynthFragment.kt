@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup
 import android.widget.SeekBar
+import androidx.appcompat.widget.SwitchCompat
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioUtils
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
@@ -40,47 +41,122 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
         super.onViewCreated(view, savedInstanceState)
 
         synth?.let {
-            val attack = view.findViewById<SeekBar>(R.id.seekBarVolAttack)
-            attack.progress = (it.getVolumeAttack() / 2.0f * 1000.0f).toInt()
+            var attack = view.findViewById<SeekBar>(R.id.seekBarVolAttack)
             attack.setOnSeekBarChangeListener(this)
+            attack.progress = (it.getVolumeAttack() / 2.0f * 1000.0f).toInt()
 
-            val decay = view.findViewById<SeekBar>(R.id.seekBarVolDecay)
-            decay.progress = (it.getVolumeDecay() / 2.0f * 1000.0f).toInt()
+            var decay = view.findViewById<SeekBar>(R.id.seekBarVolDecay)
             decay.setOnSeekBarChangeListener(this)
+            decay.progress = (it.getVolumeDecay() / 2.0f * 1000.0f).toInt()
 
-            val sustain = view.findViewById<SeekBar>(R.id.seekBarVolSustain)
-            sustain.progress = (it.getVolumeSustain() * 1000.0f).toInt()
+            var sustain = view.findViewById<SeekBar>(R.id.seekBarVolSustain)
             sustain.setOnSeekBarChangeListener(this)
+            sustain.progress = (it.getVolumeSustain() * 1000.0f).toInt()
 
-            val release = view.findViewById<SeekBar>(R.id.seekBarVolRelease)
-            release.progress = (it.getVolumeRelease() / 2.0f * 1000.0f).toInt()
+            var release = view.findViewById<SeekBar>(R.id.seekBarVolRelease)
             release.setOnSeekBarChangeListener(this)
+            release.progress = (it.getVolumeRelease() / 2.0f * 1000.0f).toInt()
+
+            attack = view.findViewById<SeekBar>(R.id.seekBarFilterAttack)
+            attack.setOnSeekBarChangeListener(this)
+            attack.progress = (it.getFilterAttack() / 2.0f * 1000.0f).toInt()
+
+            decay = view.findViewById<SeekBar>(R.id.seekBarFilterDecay)
+            decay.setOnSeekBarChangeListener(this)
+            decay.progress = (it.getFilterDecay() / 2.0f * 1000.0f).toInt()
+
+            sustain = view.findViewById<SeekBar>(R.id.seekBarFilterSustain)
+            sustain.setOnSeekBarChangeListener(this)
+            sustain.progress = (it.getFilterSustain() * 1000.0f).toInt()
+
+            release = view.findViewById<SeekBar>(R.id.seekBarFilterRelease)
+            release.setOnSeekBarChangeListener(this)
+            release.progress = (it.getFilterRelease() / 2.0f * 1000.0f).toInt()
+
+            view.findViewById<SeekBar>(R.id.seekBarEnvelopeAmount).let {
+                sb ->
+                sb.progress = (it.getFilterEnvelopeLevel()).toInt()
+                sb.setOnSeekBarChangeListener(this)
+            }
 
             val cutoff = view.findViewById<SeekBar>(R.id.seekBarCutoff)
+            cutoff.setOnSeekBarChangeListener(this)
             cutoff.progress =
                 ((AudioUtils.FreqToNote(it.getInitialCutoff()) + 39.0f) * 1000.0 / 105.0f).toInt()
-            cutoff.setOnSeekBarChangeListener(this)
+
 
             val resonance = view.findViewById<SeekBar>(R.id.seekBarResonance)
-            resonance.progress = (it.getResonance() * 1000.0f).toInt()
             resonance.setOnSeekBarChangeListener(this)
+            resonance.progress = (it.getResonance() * 1000.0f).toInt()
+
+            view.findViewById<SwitchCompat>(R.id.switchOsc1Waveform).let { sw ->
+                sw.isChecked =  it.getOsc1Type().toInt()==1
+                sw.setOnCheckedChangeListener { _, isChecked ->
+                   if (isChecked)
+                   {
+                       it.setOsc1Type(1)
+                   }
+                    else
+                   {
+                       it.setOsc1Type(0)
+                   }
+                }
+            }
+
+            view.findViewById<SwitchCompat>(R.id.switchOsc2Waveform).let { sw ->
+                sw.isChecked =  it.getOsc2Type().toInt()==1
+                sw.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked)
+                    {
+                        it.setOsc2Type(1)
+                    }
+                    else
+                    {
+                        it.setOsc2Type(0)
+                    }
+                }
+            }
 
             val actionAmount = view.findViewById<SeekBar>(R.id.seekBarCutoffModulation)
-            actionAmount.progress = (it.getActionAmountToFilter() / 50.0f * 1000.0f).toInt()
             actionAmount.setOnSeekBarChangeListener(this)
+            actionAmount.progress = (it.getActionAmountToFilter() / 50.0f * 1000.0f).toInt()
+
 
             val actionAmountToVolume = view.findViewById<SeekBar>(R.id.seekBarTouchToVolume)
-            actionAmountToVolume.progress = (it.getVolumeModulation() * 1000.0f).toInt()
             actionAmountToVolume.setOnSeekBarChangeListener(this)
+            actionAmountToVolume.progress = (it.getVolumeModulation() * 1000.0f).toInt()
+
 
             view.findViewById<SeekBar>(R.id.seekBarTouchToPitchBend).let {  sb ->
                 sb.progress = (it.getPitchBendAmount() * 100.0f).toInt()
                 sb.setOnSeekBarChangeListener(this)
             }
 
+            view.findViewById<Knob>(R.id.osc1PWSymmetry).let { sb ->
+                sb.setOnSeekBarChangeListener(this)
+                sb.progress = (it.getOsc1PulseWidth() * 1000.0f).toInt()
+            }
+
+            view.findViewById<Knob>(R.id.osc2PWSymmetry).let { sb ->
+                sb.setOnSeekBarChangeListener(this)
+                sb.progress = (it.getOsc1PulseWidth() * 1000.0f).toInt()
+            }
+
+
             view.findViewById<Knob>(R.id.osc2Octave).let { sb ->
                 sb.setOnSeekBarChangeListener(this)
                 sb.progress = it.getOsc2Octave().toInt()
+            }
+
+            view.findViewById<Knob>(R.id.osc2Volume).let { sb ->
+                sb.setOnSeekBarChangeListener(this)
+                sb.progress = (it.getOsc2Volume() * 1000.0f).toInt()
+            }
+
+            view.findViewById<Knob>(R.id.osc2Detune).let {
+                sb ->
+                sb.setOnSeekBarChangeListener(this)
+                sb.progress = (it.getOsc2Detune() * 100.0f).toInt()
             }
 
             view.findViewById<RadioGroup>(R.id.radioGroupPitchBendOrientation).let { rg ->
@@ -111,17 +187,51 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
 
     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
         when(p0?.id){
-            R.id.seekBarAttack -> {
+            R.id.seekBarVolAttack -> {
                 synth?.setVolumeAttack(p0.progress.toFloat() / 1000.0f * 2.0f)
             }
-            R.id.seekBarDecay -> {
+            R.id.seekBarVolDecay -> {
                 synth?.setVolumeDecay(p0.progress.toFloat() / 1000.0f * 2.0f)
             }
-            R.id.seekBarSustain -> {
+            R.id.seekBarVolSustain -> {
                 synth?.setVolumeSustain(p0.progress.toFloat() / 1000.0f)
             }
-            R.id.seekBarRelease -> {
+            R.id.seekBarVolRelease -> {
                 synth?.setVolumeRelease(p0.progress.toFloat() / 1000.0f * 2.0f)
+            }
+            R.id.seekBarFilterAttack -> {
+                synth?.setFilterAttack(p0.progress.toFloat() / 1000.0f * 2.0f)
+            }
+            R.id.seekBarFilterDecay -> {
+                synth?.setFilterDecay(p0.progress.toFloat() / 1000.0f * 2.0f)
+            }
+            R.id.seekBarFilterSustain -> {
+                synth?.setFilterSustain(p0.progress.toFloat() / 1000.0f)
+            }
+            R.id.seekBarFilterRelease -> {
+                synth?.setFilterRelease(p0.progress.toFloat() / 1000.0f * 2.0f)
+            }
+            R.id.seekBarEnvelopeAmount -> {
+                synth?.setFilterEnvelopeLevel(p0.progress.toFloat())
+            }
+            R.id.osc2Octave -> {
+                synth?.setOsc2Octave(p0.progress.toByte())
+            }
+            R.id.osc2Volume ->
+            {
+                synth?.setOsc2Volume(p0.progress.toFloat()/1000.0f)
+            }
+            R.id.osc2Detune ->
+            {
+                synth?.setOsc2Detune(p0.progress.toFloat()/100.0f)
+            }
+            R.id.osc2PWSymmetry ->
+            {
+                synth?.setOsc2PulseWidth(p0.progress.toFloat()/1000.0f)
+            }
+            R.id.osc1PWSymmetry ->
+            {
+                synth?.setOsc1PulseWidth(p0.progress.toFloat()/1000.0f)
             }
             R.id.seekBarCutoff -> {
                 synth?.setInitialCutoff( AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f))
@@ -138,9 +248,6 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
             }
             R.id.seekBarTouchToPitchBend -> {
                 synth?.setPitchBendAmount(p0.progress.toFloat() / 100.0f)
-            }
-            R.id.osc2Octave -> {
-                synth?.setOsc2Octave(p0.progress.toByte())
             }
         }
     }

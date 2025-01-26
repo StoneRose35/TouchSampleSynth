@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.views
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RotateDrawable
 import android.graphics.drawable.VectorDrawable
@@ -31,6 +32,7 @@ class NonLinearSeekBar: androidx.appcompat.widget.AppCompatSeekBar, SeekBar.OnSe
     private var progressStart = 0
     private lateinit var sliderDrawable: Drawable
     private lateinit var sliderDrawableVertical: RotateDrawable
+    private var verticalBounds: Rect?=null
     private lateinit var linePaint: Paint
     private var nonLinearProgressChangeListener: OnSeekBarChangeListener?=null
     constructor(context: Context): super(context)
@@ -84,6 +86,7 @@ class NonLinearSeekBar: androidx.appcompat.widget.AppCompatSeekBar, SeekBar.OnSe
             minWidth = sliderHeight
             minHeight = sliderWidth
         }
+        verticalBounds = Rect()
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -134,6 +137,12 @@ class NonLinearSeekBar: androidx.appcompat.widget.AppCompatSeekBar, SeekBar.OnSe
                     sliderCenterVal.toInt() - sliderHeight/2,
                     lineXPos.toInt() + sliderWidth/2,
                     sliderCenterVal.toInt() + sliderHeight/2)
+                verticalBounds?.set(lineXPos.toInt() - sliderHeight/2,
+                    sliderCenterVal.toInt() - sliderWidth/2,
+                    lineXPos.toInt() + sliderHeight/2,
+                    sliderCenterVal.toInt() + sliderWidth/2)
+
+
                 sliderDrawableVertical.draw(canvas)
             }
         }
@@ -151,8 +160,9 @@ class NonLinearSeekBar: androidx.appcompat.widget.AppCompatSeekBar, SeekBar.OnSe
                     parent.requestDisallowInterceptTouchEvent(true)
                     return true
                 }
-                else if (orientation == VERTICAL && sliderDrawableVertical.bounds.contains(event.x.toInt(),event.y.toInt()))
+                else if (orientation == VERTICAL && verticalBounds?.contains(event.x.toInt(),event.y.toInt())==true)
                 {
+
                     touchStartVal = event.y
                     progressStart = progress
                     parent.requestDisallowInterceptTouchEvent(true)
