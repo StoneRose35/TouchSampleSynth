@@ -176,6 +176,12 @@ SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) : MusicalSoundGenerator
     osc1Type = OSCILLATOR_TYPE_SAW;
     osc2=new SawOscillator(sr);
     osc2Type = OSCILLATOR_TYPE_SAW;
+    osc2Octave = 0;
+    osc2Detune = 0.0f;
+    osc2Volume= 0.0f;
+    osc1Pulsewidth=0.0;
+    osc2Pulsewidth = 0.0f;
+    filterEnvelopeLevel = 0.0f;
 
 }
 
@@ -256,7 +262,7 @@ uint8_t SimpleSubtractiveSynth::getOsc2Octave() {
 }
 
 void SimpleSubtractiveSynth::setOsc2Octave(uint8_t oct) {
-    int8_t osc2OctCurrent = (int8_t)osc2Octave;
+    auto osc2OctCurrent = (int8_t)osc2Octave;
     if ((int8_t)oct >-5 && (int8_t)oct < 4 && osc2OctCurrent != (int8_t)oct)
     {
         osc2Octave = oct;

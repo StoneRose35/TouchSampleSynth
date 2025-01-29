@@ -22,10 +22,12 @@ float PolyBLEP::pb_step(float t) {
 
 PolyBLEP::PolyBLEP() {
     samplingRate = 48000.0f;
+    dt=0.5;
 }
 
 PolyBLEP::PolyBLEP(float sr) {
     samplingRate = sr;
+    dt=0.5;
 }
 
 void PolyBLEP::setFrequency(float f) {

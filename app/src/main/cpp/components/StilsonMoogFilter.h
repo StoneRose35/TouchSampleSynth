@@ -28,7 +28,7 @@ public:
     float processSample(float) override;
     void SetCutoff(float);
     void SetResonance(float);
-    StilsonMoogFilter(float);
+    explicit StilsonMoogFilter(float);
     StilsonMoogFilter();
     float reso, cutoff;
 };

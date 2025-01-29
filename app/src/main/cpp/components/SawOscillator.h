@@ -14,7 +14,7 @@ class SawOscillator: public SoundGenerator {
 public:
     float getNextSample() override;
     void setNote(float) override;
-    SawOscillator(float);
+    explicit SawOscillator(float);
 
     SawOscillator();
 private:

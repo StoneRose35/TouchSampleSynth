@@ -6,7 +6,7 @@
 #define TOUCHSAMPLESYNTH_SQUAREOSCILLATOR_H
 
 
-#include <stdint.h>
+#include <cstdint>
 #include "../SoundGenerator.h"
 #include "SecondOrderIirFilter.h"
 #include "PolyBLEP.h"
@@ -15,7 +15,7 @@ class SquareOscillator : public SoundGenerator {
 public:
     float getNextSample() override ;
     void setNote(float) override;
-    SquareOscillator(float);
+    explicit SquareOscillator(float);
     float getPulseWidth() const;
     uint8_t setPulseWidth(float);
 
