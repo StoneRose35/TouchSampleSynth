@@ -5,12 +5,12 @@
 #include "SimpleSubtractiveSynth.h"
 #include "AudioEngine.h"
 #include "components/SquareOscillator.h"
-
+#define FILTER_SCALE_FACTOR 0.67f
 float SimpleSubtractiveSynth::getNextSample() {
     float im;
     if (volumeEnv->isSounding()) {
         float nsample = osc1->getNextSample()/2.0f + osc2->getNextSample()*osc2Volume;
-        nsample = filter->processSample(nsample);
+        nsample = filter->processSample(nsample*FILTER_SCALE_FACTOR)/FILTER_SCALE_FACTOR;
         nsample = nsample * (volumeEnvelopeVals[0] +
                              (volumeEnvelopeVals[1] - volumeEnvelopeVals[0]) / (float) envelopeUpdateInterval *
                              (float) currentSample);
@@ -31,7 +31,7 @@ float SimpleSubtractiveSynth::getNextSample() {
         {
             im = (newPitchBend - currentPitchBend)*((float)currentPitchUpdateInSamples / (float)(modulatorsUpdateInSamples)) + currentPitchBend;
             osc1->setNote(note + im);
-            osc2->setNote(note + (float)osc2Octave*12.0f + osc2Detune + im);
+            osc2->setNote(note + (float)((int8_t)osc2Octave)*12.0f + osc2Detune + im);
             currentPitchUpdateInSamples++;
             if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
             {
@@ -138,6 +138,8 @@ void SimpleSubtractiveSynth::trigger(uint8_t vel) {
 
 void SimpleSubtractiveSynth::switchOn(uint8_t vel) {
     MusicalSoundGenerator::switchOn(vel);
+    filter->SetCutoff(initialCutoff);
+    filter->SetResonance(currentResonance);
     volumeEnv->switchOn();
     filterEnv->switchOn();
 }
@@ -254,9 +256,14 @@ uint8_t SimpleSubtractiveSynth::getOsc2Octave() {
 }
 
 void SimpleSubtractiveSynth::setOsc2Octave(uint8_t oct) {
-    if ((int8_t)oct >-5 && (int8_t)oct < 4)
+    int8_t osc2OctCurrent = (int8_t)osc2Octave;
+    if ((int8_t)oct >-5 && (int8_t)oct < 4 && osc2OctCurrent != (int8_t)oct)
     {
         osc2Octave = oct;
+        if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
+        {
+            currentPitchUpdateInSamples = 0;
+        }
     }
 }
 
@@ -265,9 +272,13 @@ float SimpleSubtractiveSynth::getOsc2Detune() {
 }
 
 void SimpleSubtractiveSynth::setOsc2Detune(float det) {
-    if (det > -12.0f && det< 12.0f)
+    if (det > -12.0f && det< 12.0f && det != osc2Detune)
     {
         osc2Detune = det;
+        if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
+        {
+            currentPitchUpdateInSamples = 0;
+        }
     }
 }
 

@@ -5,6 +5,8 @@
 #include "SquareOscillator.h"
 #include "cmath"
 #include "../tools/FloatMath.h"
+
+
 float SquareOscillator::getNextSample() {
     float val1;
     for (uint8_t c=0;c<4;c++) {
@@ -21,6 +23,8 @@ float SquareOscillator::getNextSample() {
         {
             val1 = 1.0f;
         }
+        val1 -= polyBlep->pb_step(currentPhase/(2*M_PI_F));
+        val1 += polyBlep->pb_step(fmod(currentPhase/(2*M_PI_F) + (pulseWidth+1.0f)/2.0f,1.0f));
         val1 = decimatingFilter->processSample(val1);
         val1 = decimatingFilter2->processSample(val1);
     }
@@ -41,6 +45,7 @@ SquareOscillator::SquareOscillator(float sr) {
     calculateFilterCoefficients(decimatingFilter);
     decimatingFilter2=new SecondOrderIirFilter();
     calculateFilterCoefficients(decimatingFilter2);
+    polyBlep = new PolyBLEP(samplingRate*4);
 }
 
 SquareOscillator::SquareOscillator() {
@@ -52,6 +57,7 @@ SquareOscillator::SquareOscillator() {
     calculateFilterCoefficients(decimatingFilter);
     decimatingFilter2=new SecondOrderIirFilter();
     calculateFilterCoefficients(decimatingFilter2);
+    polyBlep = new PolyBLEP(samplingRate*4);
 
 }
 

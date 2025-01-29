@@ -34,6 +34,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         components/AdsrEnvelope.cpp
         components/StilsonMoogFilter.cpp
         components/SecondOrderIirFilter.cpp
+        components/PolyBLEP.cpp
         tools/maths.cpp
         tools/maths-jni.cpp
         SoundGenerator.cpp

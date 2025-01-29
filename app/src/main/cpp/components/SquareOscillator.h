@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include "../SoundGenerator.h"
 #include "SecondOrderIirFilter.h"
+#include "PolyBLEP.h"
 
 class SquareOscillator : public SoundGenerator {
 public:
@@ -27,6 +28,7 @@ private:
     SecondOrderIirFilter * decimatingFilter;
     SecondOrderIirFilter * decimatingFilter2;
     void calculateFilterCoefficients(SecondOrderIirFilter*) const;
+    PolyBLEP * polyBlep;
 };
 
 

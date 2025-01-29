@@ -24,9 +24,20 @@ float SawOscillator::getNextSample() {
     }
     val2 = (currentPhase-M_PI)/M_PI;
 
-    return (val1 + val2)*0.5f;
+    return (val1 + val2)*0.5f - polyBlep->pb_step(currentPhase/(2*M_PI_F));;
 }
+
 #endif
+#ifdef FOURTIMES_OVERSAMPLING
+#define OVERSAMPLING_RATE 4
+#else
+#ifdef EIGHTTIMES_OVERSAMPLING
+#define OVERSAMPLING_RATE 8
+#else
+#define OVERSAMPLING_RATE 2
+#endif
+#endif
+
 
 #ifdef FOURTIMES_OVERSAMPLING
 float SawOscillator::getNextSample() {
@@ -36,7 +47,7 @@ float SawOscillator::getNextSample() {
         while (currentPhase > 2 * M_PI_F) {
             currentPhase -= 2 * M_PI_F;
         }
-        val1 = (currentPhase - M_PI_F) / M_PI_F;
+        val1 = (currentPhase - M_PI_F) / M_PI_F - polyBlep->pb_step(currentPhase/(2*M_PI_F));
         val1 = decimatingFilter->processSample(val1);
         val1 = decimatingFilter2->processSample(val1);
     }
@@ -52,7 +63,7 @@ float SawOscillator::getNextSample() {
         while (currentPhase > 2 * M_PI_F) {
             currentPhase -= 2 * M_PI_F;
         }
-        val1 = (currentPhase - M_PI_F) / M_PI_F;
+        val1 = (currentPhase - M_PI_F) / M_PI_F - polyBlep->pb_step(currentPhase/(2*M_PI_F));
         val1 = decimatingFilter->processSample(val1);
         //val1 = decimatingFilter2->processSample(val1);
     }
@@ -62,6 +73,7 @@ float SawOscillator::getNextSample() {
 #endif
 void SawOscillator::setNote(float n) {
     float freq = powf(2.0f,n/12.0f)*440.0f;
+    polyBlep->setFrequency(freq);
     phaseIncrement = freq/samplingRate*2.0f*M_PI_F;
 }
 
@@ -69,6 +81,7 @@ SawOscillator::SawOscillator(float sr) {
     samplingRate = sr;
     currentPhase=0.0f;
     phaseIncrement = 432.0f/samplingRate*M_PI_F*2.0f;
+    polyBlep = new PolyBLEP(samplingRate*OVERSAMPLING_RATE);
 #ifdef OVERSAMPLING
     /*
      * coefficient calculation is based on https://stackoverflow.com/questions/20924868/calculate-coefficients-of-2nd-order-butterworth-low-pass-filter#:~:text=Let%20C%20%3D%20tan(wd*,%3D%202%2FT*C%20.&text=The%20best%20way%20would%20be,the%20code%20to%20your%20microcon.
@@ -84,6 +97,7 @@ SawOscillator::SawOscillator() {
     samplingRate=48000.0f;
     currentPhase=0.0f;
     phaseIncrement = 432.0f/samplingRate*M_PI_F*2.0f;
+    polyBlep = new PolyBLEP(samplingRate*OVERSAMPLING_RATE);
 #ifdef OVERSAMPLING
     decimatingFilter=new SecondOrderIirFilter();
     calculateFilterCoefficients(decimatingFilter);
