@@ -19,7 +19,6 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchElementSelectedListener
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
-import ch.sr35.touchsamplesynth.audio.MusicalSoundGenerator
 import ch.sr35.touchsamplesynth.graphics.AutoContraster
 import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.graphics.Point
