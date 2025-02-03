@@ -61,11 +61,21 @@
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchOsc1Waveform"
         tss:layout_constraintTop_toTopOf="@id/osc1PWSymmetry"
-        tss:layout_constraintBottom_toBottomOf="@id/osc1PWSymmetry"
+
         tss:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <ch.sr35.touchsamplesynth.views.Waveform
+        android:id="@+id/osc1Waveform"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="2dp"
+        tss:layout_constraintTop_toBottomOf="@id/switchOsc1Waveform"
+        tss:layout_constraintBottom_toBottomOf="@id/osc1PWSymmetry"
+        tss:layout_constraintStart_toStartOf="@id/switchOsc1Waveform"
+        tss:layout_constraintEnd_toEndOf="@id/switchOsc1Waveform"
+        />
 
     <ch.sr35.touchsamplesynth.views.Knob
         android:id="@+id/osc1PWSymmetry"
@@ -88,10 +98,20 @@
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchOsc2Waveform"
         tss:layout_constraintTop_toTopOf="@id/osc2PWSymmetry"
-        tss:layout_constraintBottom_toBottomOf="@id/osc2PWSymmetry"
+
         tss:layout_constraintEnd_toStartOf="@id/osc2PWSymmetry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <ch.sr35.touchsamplesynth.views.Waveform
+        android:id="@+id/osc2Waveform"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="2dp"
+        tss:layout_constraintTop_toBottomOf="@id/switchOsc2Waveform"
+        tss:layout_constraintBottom_toBottomOf="@id/osc2PWSymmetry"
+        tss:layout_constraintStart_toStartOf="@id/switchOsc2Waveform"
+        tss:layout_constraintEnd_toEndOf="@id/switchOsc2Waveform"
+        />
     <ch.sr35.touchsamplesynth.views.Knob
         android:id="@+id/osc2PWSymmetry"
         tss:layout_constraintEnd_toStartOf="@id/osc2Volume"
