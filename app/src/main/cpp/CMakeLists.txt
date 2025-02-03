@@ -31,6 +31,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         components/SineOscillator.cpp
         components/SawOscillator.cpp
         components/SquareOscillator.cpp
+        components/SawTriangleOscillator.cpp
         components/AdsrEnvelope.cpp
         components/StilsonMoogFilter.cpp
         components/SecondOrderIirFilter.cpp

@@ -5,6 +5,8 @@
 #include "SimpleSubtractiveSynth.h"
 #include "AudioEngine.h"
 #include "components/SquareOscillator.h"
+#include "components/SawTriangleOscillator.h"
+
 #define FILTER_SCALE_FACTOR 0.67f
 float SimpleSubtractiveSynth::getNextSample() {
     float im;
@@ -17,16 +19,19 @@ float SimpleSubtractiveSynth::getNextSample() {
         if (currentFilterUpdateSamples < modulatorsUpdateInSamples)
         {
             im = (newFilterCutoff - currentFilterCutoff)*((float)currentFilterUpdateSamples / (float)(modulatorsUpdateInSamples)) + currentFilterCutoff;
-            float filterEnvelopeVal = (filterEnvelopeVals[0] + (filterEnvelopeVals[1] - filterEnvelopeVals[0])/(float)envelopeUpdateInterval);
-            filter->SetCutoff(im + filterEnvelopeVal*filterEnvelopeLevel);
-            filter->SetResonance(currentResonance);
             currentFilterUpdateSamples++;
             if (currentFilterUpdateSamples == modulatorsUpdateInSamples)
             {
                 currentFilterCutoff = newFilterCutoff;
-                currentFilterUpdateSamples=0;
             }
         }
+        else
+        {
+            im = currentFilterCutoff;
+        }
+        float filterEnvelopeVal = (filterEnvelopeVals[0] + (filterEnvelopeVals[1] - filterEnvelopeVals[0])/(float)envelopeUpdateInterval*(float)currentSample);
+        filter->SetCutoff(im + filterEnvelopeVal*filterEnvelopeLevel);
+        filter->SetResonance(currentResonance);
         if (currentPitchUpdateInSamples < modulatorsUpdateInSamples)
         {
             im = (newPitchBend - currentPitchBend)*((float)currentPitchUpdateInSamples / (float)(modulatorsUpdateInSamples)) + currentPitchBend;
@@ -38,6 +43,8 @@ float SimpleSubtractiveSynth::getNextSample() {
                 currentPitchBend = newPitchBend;
             }
         }
+
+
         currentSample++;
         if (currentSample == envelopeUpdateInterval) {
             volumeEnvelopeVals[0] = volumeEnvelopeVals[1];
@@ -62,7 +69,6 @@ void SimpleSubtractiveSynth::setNote(float n) {
     osc1->setNote(n);
     osc2->setNote(n + (float)((int8_t)osc2Octave)*12.0f + osc2Detune);
     currentPitchBend=0;
-    currentPitchUpdateInSamples=modulatorsUpdateInSamples;
     MusicalSoundGenerator::setNote(n);
 }
 
@@ -140,6 +146,7 @@ void SimpleSubtractiveSynth::switchOn(uint8_t vel) {
     MusicalSoundGenerator::switchOn(vel);
     filter->SetCutoff(initialCutoff);
     filter->SetResonance(currentResonance);
+    currentFilterCutoff = initialCutoff;
     volumeEnv->switchOn();
     filterEnv->switchOn();
 }
@@ -160,6 +167,8 @@ SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) : MusicalSoundGenerator
     envelopeUpdateInterval=32;
     volumeEnvelopeVals[0]=0.0f;
     volumeEnvelopeVals[1]=0.0f;
+    filterEnvelopeVals[0]=0.0f;
+    filterEnvelopeVals[1]=0.0f;
     initialCutoff=20000.0f;
     currentFilterCutoff=0.0f;
     currentResonance=0.0f;
@@ -172,9 +181,9 @@ SimpleSubtractiveSynth::SimpleSubtractiveSynth(float sr) : MusicalSoundGenerator
     volumeEnv=new AdsrEnvelope();
     filterEnv=new AdsrEnvelope();
     filter=new StilsonMoogFilter();
-    osc1=new SawOscillator(sr);
+    osc1=new SawTriangleOscillator(sr);
     osc1Type = OSCILLATOR_TYPE_SAW;
-    osc2=new SawOscillator(sr);
+    osc2=new SawTriangleOscillator(sr);
     osc2Type = OSCILLATOR_TYPE_SAW;
     osc2Octave = 0;
     osc2Detune = 0.0f;
@@ -224,40 +233,60 @@ float SimpleSubtractiveSynth::getFilterRelease() {
 void SimpleSubtractiveSynth::setOsc1Type(uint8_t t) {
     switch (t) {
         case OSCILLATOR_TYPE_SAW:
-            osc1 = new SawOscillator();
+            osc1 = new SawTriangleOscillator();
+            ((SawTriangleOscillator*)osc1)->setPulseWidth(osc1Pulsewidth);
+            if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
+            {
+                currentPitchUpdateInSamples = 0;
+            }
             osc1Type = OSCILLATOR_TYPE_SAW;
             break;
         case OSCILLATOR_TYPE_SQUARE:
             osc1 = new SquareOscillator();
+            ((SquareOscillator*)osc1)->setPulseWidth(osc1Pulsewidth);
+            if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
+            {
+                currentPitchUpdateInSamples = 0;
+            }
             osc1Type = OSCILLATOR_TYPE_SQUARE;
         default:
             break;
     }
 }
 
-uint8_t SimpleSubtractiveSynth::getOsc1Type() {
+uint8_t SimpleSubtractiveSynth::getOsc1Type() const {
     return osc1Type;
 }
 
 void SimpleSubtractiveSynth::setOsc2Type(uint8_t t) {
     switch (t) {
         case OSCILLATOR_TYPE_SAW:
-            osc2 = new SawOscillator();
+            osc2 = new SawTriangleOscillator(sampleRate);
+            ((SawTriangleOscillator*)osc2)->setPulseWidth(osc2Pulsewidth);
+            if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
+            {
+                currentPitchUpdateInSamples = 0;
+            }
             osc2Type = OSCILLATOR_TYPE_SAW;
             break;
         case OSCILLATOR_TYPE_SQUARE:
-            osc2 = new SquareOscillator();
+            osc2 = new SquareOscillator(sampleRate);
+            ((SquareOscillator*)osc2)->setPulseWidth(osc2Pulsewidth);
+            if (currentPitchUpdateInSamples == modulatorsUpdateInSamples)
+            {
+                currentPitchUpdateInSamples = 0;
+            }
             osc2Type = OSCILLATOR_TYPE_SQUARE;
         default:
             break;
     }
 }
 
-uint8_t SimpleSubtractiveSynth::getOsc2Type() {
+uint8_t SimpleSubtractiveSynth::getOsc2Type() const {
     return osc2Type;
 }
 
-uint8_t SimpleSubtractiveSynth::getOsc2Octave() {
+uint8_t SimpleSubtractiveSynth::getOsc2Octave() const {
     return osc2Octave;
 }
 
@@ -273,7 +302,7 @@ void SimpleSubtractiveSynth::setOsc2Octave(uint8_t oct) {
     }
 }
 
-float SimpleSubtractiveSynth::getOsc2Detune() {
+float SimpleSubtractiveSynth::getOsc2Detune() const {
     return osc2Detune;
 }
 
@@ -288,7 +317,7 @@ void SimpleSubtractiveSynth::setOsc2Detune(float det) {
     }
 }
 
-float SimpleSubtractiveSynth::getOsc2Volume() {
+float SimpleSubtractiveSynth::getOsc2Volume() const {
     return osc2Volume;
 }
 
@@ -299,7 +328,7 @@ void SimpleSubtractiveSynth::setOsc2Volume(float v) {
     }
 }
 
-float SimpleSubtractiveSynth::getFilterEnvelopeLevel() {
+float SimpleSubtractiveSynth::getFilterEnvelopeLevel() const {
     return filterEnvelopeLevel;
 }
 
@@ -307,7 +336,7 @@ void SimpleSubtractiveSynth::setFilterEnvelopeLevel(float el) {
     filterEnvelopeLevel = el;
 }
 
-float SimpleSubtractiveSynth::getOsc1PulseWidth() {
+float SimpleSubtractiveSynth::getOsc1PulseWidth() const {
     return osc1Pulsewidth;
 }
 
@@ -319,10 +348,14 @@ void SimpleSubtractiveSynth::setOsc1PulseWidth(float pw) {
         {
             ((SquareOscillator*)osc1)->setPulseWidth(pw);
         }
+        else if (osc1Type == OSCILLATOR_TYPE_SAW)
+        {
+            ((SawTriangleOscillator*)osc1)->setPulseWidth(pw);
+        }
     }
 }
 
-float SimpleSubtractiveSynth::getOsc2PulseWidth() {
+float SimpleSubtractiveSynth::getOsc2PulseWidth() const {
     return osc2Pulsewidth;
 }
 
@@ -333,6 +366,10 @@ void SimpleSubtractiveSynth::setOsc2PulseWidth(float pw) {
         if (osc2Type == OSCILLATOR_TYPE_SQUARE)
         {
             ((SquareOscillator*)osc2)->setPulseWidth(pw);
+        }
+        else if (osc2Type == OSCILLATOR_TYPE_SAW)
+        {
+            ((SawTriangleOscillator*)osc2)->setPulseWidth(pw);
         }
     }
 }

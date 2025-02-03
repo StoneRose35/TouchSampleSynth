@@ -24,7 +24,7 @@ private:
     SecondOrderIirFilter * decimatingFilter;
     SecondOrderIirFilter * decimatingFilter2;
     void calculateFilterCoefficients(SecondOrderIirFilter*) const;
-    PolyBLEP*polyBlep;
+    PolyBLEP * polyBlep;
 };
 
 

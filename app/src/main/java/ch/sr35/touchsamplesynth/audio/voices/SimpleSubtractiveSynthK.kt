@@ -92,6 +92,7 @@ class SimpleSubtractiveSynthK(context: Context): MusicalSoundGenerator() {
         other.setOsc2PulseWidth(this.getOsc2PulseWidth())
         other.setCutoff(this.getCutoff())
         other.setResonance(this.getResonance())
+        other.setInitialCutoff(this.getInitialCutoff())
     }
  
     override fun equals(other: Any?): Boolean {

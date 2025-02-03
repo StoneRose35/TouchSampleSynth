@@ -68,24 +68,24 @@ public:
     float getFilterSustain();
     void setFilterRelease(float);
     float getFilterRelease();
-    float getFilterEnvelopeLevel();
+    float getFilterEnvelopeLevel() const;
     void setFilterEnvelopeLevel(float);
 
     void setOsc1Type(uint8_t);
-    uint8_t getOsc1Type();
+    uint8_t getOsc1Type() const;
     void setOsc2Type(uint8_t);
-    uint8_t getOsc2Type();
+    uint8_t getOsc2Type() const;
 
-    uint8_t getOsc2Octave();
+    uint8_t getOsc2Octave() const;
     void setOsc2Octave(uint8_t);
-    float getOsc2Detune();
+    float getOsc2Detune() const;
     void setOsc2Detune(float);
-    float getOsc2Volume();
+    float getOsc2Volume() const;
     void setOsc2Volume(float);
 
-    float getOsc1PulseWidth();
+    float getOsc1PulseWidth() const;
     void setOsc1PulseWidth(float);
-    float getOsc2PulseWidth();
+    float getOsc2PulseWidth() const;
     void setOsc2PulseWidth(float);
 
 
