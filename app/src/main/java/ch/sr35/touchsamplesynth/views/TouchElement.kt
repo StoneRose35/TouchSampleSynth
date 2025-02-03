@@ -100,7 +100,6 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     var oldTopMargin: Int = 0
     var elementState: TouchElementState = defaultState
     private var soundGenerator: InstrumentI? = null
-    var currentVoices = ArrayList<MusicalSoundGenerator>()
     var notes = ArrayList<MusicalPitch>()
     var midiChannel: Int=0
     var midiCCA: Int=3
@@ -431,11 +430,20 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
             touchActionHorizontal.relativeValue = (touchActionHorizontal.startPoint.x.toFloat() - event.x) / (measuredWidth.toFloat()- 2* PADDING)
         }
 
-        currentVoices.clear()
         var firstnote = true
         notes.forEach { currentNote ->
             soundGenerator?.getNextFreeVoice()?.let {
-                currentVoices.add(it)
+
+                // CHECK_LAST_STOLEN_FROM_TOUCHELEMENT
+                it.relatedTouchElement?.let{ rte ->
+                    if (!soundGenerator!!.voices.any { sg -> sg.relatedTouchElement==rte && sg!=it})
+                    {
+                        rte.isEngaged = false
+                        rte.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+                        rte.invalidate()
+                    }
+                }
+                it.relatedTouchElement = this
 
                 if (soundGenerator!!.horizontalToActionB)
                 {

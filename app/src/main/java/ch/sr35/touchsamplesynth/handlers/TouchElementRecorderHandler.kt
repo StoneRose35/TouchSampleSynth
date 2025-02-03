@@ -18,8 +18,8 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
             {
                 // start recording /overdubbing
                 touchElement.getSoundGenerator()?.getNextFreeVoice()?.let {
-                    touchElement.currentVoices.add(it)
-                    (touchElement.currentVoices[0] as SoundRecorder).startRecording()
+                    it.relatedTouchElement = touchElement
+                    (it as SoundRecorder).startRecording()
                     touchElement.isEngaged = true
                     touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_ENGAGED
                     (touchElement as TouchElementRecorder).isRecording = true
@@ -34,7 +34,7 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                 && (touchElement as TouchElementRecorder).hasRecordedContent)
             {
                 // delete sample
-                (touchElement.currentVoices[0] as SoundRecorder).resetSample()
+                (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).resetSample()
                 touchElement.hasRecordedContent = false
                 touchElement.invalidate()
             }
@@ -52,8 +52,8 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                     && event.y > touchElement.padding)
                 {
                     // switch to playback
-                    (touchElement.currentVoices[0] as SoundRecorder).stopRecording()
-                    touchElement.currentVoices[0].switchOn(1.0f)
+                    (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).stopRecording()
+                    touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement }?.switchOn(1.0f)
                     touchElement.isRecording = false
                     touchElement.invalidate()
                 }
@@ -63,8 +63,8 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                     && event.y < touchElement.measuredHeight - touchElement.padding)
                 {
                     // stop and disengage
-                    (touchElement.currentVoices[0] as SoundRecorder).stopRecording()
-                    touchElement.currentVoices[0].switchOff(1.0f)
+                    (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).stopRecording()
+                    touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement }?.switchOff(1.0f)
                     touchElement.isRecording = false
                     touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                     touchElement.isEngaged = false
@@ -76,9 +76,9 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                     && event.y < touchElement.measuredHeight - touchElement.padding)
                 {
                     // stop, disengage and delete sample
-                    (touchElement.currentVoices[0] as SoundRecorder).stopRecording()
-                    touchElement.currentVoices[0].switchOff(1.0f)
-                    (touchElement.currentVoices[0] as SoundRecorder).resetSample()
+                    (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).stopRecording()
+                    touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement }?.switchOff(1.0f)
+                    (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).resetSample()
                     touchElement.isRecording = false
                     touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                     touchElement.isEngaged = false
@@ -99,7 +99,7 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                 {
                     // switch to overdub
                     //touchElement.currentVoices[0].switchOff(1.0f)
-                    (touchElement.currentVoices[0] as SoundRecorder).startRecording()
+                    (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).startRecording()
                     touchElement.isRecording = true
                     touchElement.invalidate()
                 }
@@ -109,9 +109,9 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                     && event.y < touchElement.measuredHeight - touchElement.padding)
                 {
                     // stop, disengage and delete sample
-                    (touchElement.currentVoices[0] as SoundRecorder).stopRecording()
-                    touchElement.currentVoices[0].switchOff(1.0f)
-                    (touchElement.currentVoices[0] as SoundRecorder).resetSample()
+                    (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).stopRecording()
+                    touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement }?.switchOff(1.0f)
+                    (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).resetSample()
                     touchElement.isRecording = false
                     touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
                     touchElement.isEngaged = false
@@ -135,8 +135,8 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                 && event.y > touchElement.padding)
             {
                 // switch to playback
-                (touchElement.currentVoices[0] as SoundRecorder).stopRecording()
-                touchElement.currentVoices[0].switchOn(1.0f)
+                (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).stopRecording()
+                touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement }?.switchOn(1.0f)
                 touchElement.isRecording = false
                 touchElement.invalidate()
                 return true
@@ -147,8 +147,8 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                 && event.y < touchElement.measuredHeight - touchElement.padding)
             {
                 // stop and disengage
-                (touchElement.currentVoices[0] as SoundRecorder).stopRecording()
-                touchElement.currentVoices[0].switchOff(1.0f)
+                (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).stopRecording()
+                touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement }?.switchOff(1.0f)
                 touchElement.isRecording = false
                 touchElement.isEngaged = false
                 touchElement.invalidate()
@@ -160,9 +160,9 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
                 && event.y < touchElement.measuredHeight - touchElement.padding)
             {
                 // stop, disengage and delete sample
-                (touchElement.currentVoices[0] as SoundRecorder).stopRecording()
-                touchElement.currentVoices[0].switchOff(1.0f)
-                (touchElement.currentVoices[0] as SoundRecorder).resetSample()
+                (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).stopRecording()
+                touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement }?.switchOff(1.0f)
+                (touchElement.getSoundGenerator()?.voices?.first { vc -> vc.relatedTouchElement == touchElement } as SoundRecorder).resetSample()
                 touchElement.isRecording = false
                 touchElement.isEngaged = false
                 touchElement.invalidate()

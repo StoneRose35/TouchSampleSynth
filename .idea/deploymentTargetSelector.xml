@@ -22,13 +22,7 @@
       <SelectionState runConfigName="All Tests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SimpleSubtractiveSynthTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="InstrumentPITest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="persistableInstrumentFactoryTest1()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

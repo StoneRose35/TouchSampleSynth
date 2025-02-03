@@ -1,5 +1,7 @@
 package ch.sr35.touchsamplesynth
 
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
 import org.junit.Test
 
@@ -35,6 +37,19 @@ class dumbTests {
 
 
         Assert.assertTrue(arrList.size == 1)
+    }
+
+    @Test
+    fun putBackOnTopTest()
+    {
+        val arrList = ArrayList<String>()
+        val why = "why"
+        arrList.addAll(listOf("P","O","P","P",why, "i'm", "Poppy?"))
+        arrList.remove(why)
+        arrList.add(0,why)
+        assertThat(arrList[0] , equalTo(why))
+        Assert.assertTrue(arrList.size==7)
+
     }
 
 

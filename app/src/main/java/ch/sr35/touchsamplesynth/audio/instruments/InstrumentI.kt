@@ -38,12 +38,7 @@ sealed class InstrumentI(var name: String) {
             voices.stream().map { a -> a as MusicalSoundGenerator } // return a voice which isn't sounding, if this doesnt exist the oldest
                 .filter { v -> !(v.isSounding()) }
                 .findFirst()
-                .orElse(
-                    voices.stream()
-                        .map { a -> a as MusicalSoundGenerator }
-                        .sorted(Comparator.comparingLong { msg -> -msg.switchOnTime })
-                        .findFirst()
-                        .orElse(voices[0]) )
+                .orElse(voices.last())
         }
     }
 

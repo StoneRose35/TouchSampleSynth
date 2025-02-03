@@ -12,6 +12,8 @@ import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.audio.AudioUtils
 import ch.sr35.touchsamplesynth.audio.instruments.SimpleSubtractiveSynthI
 import ch.sr35.touchsamplesynth.views.Knob
+import ch.sr35.touchsamplesynth.views.Waveform
+import ch.sr35.touchsamplesynth.views.WaveformType
 
 
 /**
@@ -21,12 +23,11 @@ import ch.sr35.touchsamplesynth.views.Knob
 class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     private var synth: SimpleSubtractiveSynthI? = null
+    private var osc1Waveform:  Waveform? = null
+    private var osc2Waveform:  Waveform? = null
 
     constructor(s: SimpleSubtractiveSynthI) : this() {
         synth = s
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -39,7 +40,8 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        osc1Waveform = view.findViewById(R.id.osc1Waveform)
+        osc2Waveform = view.findViewById(R.id.osc2Waveform)
         synth?.let {
             var attack = view.findViewById<SeekBar>(R.id.seekBarVolAttack)
             attack.setOnSeekBarChangeListener(this)
@@ -95,11 +97,22 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
                    if (isChecked)
                    {
                        it.setOsc1Type(1)
+                       osc1Waveform?.waveFormType = WaveformType.RECTANGLE
                    }
                     else
                    {
                        it.setOsc1Type(0)
+                       osc1Waveform?.waveFormType = WaveformType.SAW_TRIANGLE
                    }
+
+                }
+                if (sw.isChecked)
+                {
+                    osc1Waveform?.waveFormType = WaveformType.RECTANGLE
+                }
+                else
+                {
+                    osc1Waveform?.waveFormType = WaveformType.SAW_TRIANGLE
                 }
             }
 
@@ -109,11 +122,21 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
                     if (isChecked)
                     {
                         it.setOsc2Type(1)
+                        osc2Waveform?.waveFormType = WaveformType.RECTANGLE
                     }
                     else
                     {
                         it.setOsc2Type(0)
+                        osc2Waveform?.waveFormType = WaveformType.SAW_TRIANGLE
                     }
+                }
+                if (sw.isChecked)
+                {
+                    osc2Waveform?.waveFormType = WaveformType.RECTANGLE
+                }
+                else
+                {
+                    osc2Waveform?.waveFormType = WaveformType.SAW_TRIANGLE
                 }
             }
 
@@ -135,11 +158,13 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
             view.findViewById<Knob>(R.id.osc1PWSymmetry).let { sb ->
                 sb.setOnSeekBarChangeListener(this)
                 sb.progress = (it.getOsc1PulseWidth() * 1000.0f).toInt()
+                osc1Waveform?.pulseWidth = it.getOsc1PulseWidth()
             }
 
             view.findViewById<Knob>(R.id.osc2PWSymmetry).let { sb ->
                 sb.setOnSeekBarChangeListener(this)
-                sb.progress = (it.getOsc1PulseWidth() * 1000.0f).toInt()
+                sb.progress = (it.getOsc2PulseWidth() * 1000.0f).toInt()
+                osc2Waveform?.pulseWidth = it.getOsc2PulseWidth()
             }
 
 
@@ -181,9 +206,7 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
         }
     }
 
-    companion object {
-
-    }
+    companion object;
 
     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
         when(p0?.id){
@@ -228,10 +251,13 @@ class SimpleSubtractiveSynthFragment() : Fragment(), SeekBar.OnSeekBarChangeList
             R.id.osc2PWSymmetry ->
             {
                 synth?.setOsc2PulseWidth(p0.progress.toFloat()/1000.0f)
+                osc2Waveform?.pulseWidth = p0.progress.toFloat()/1000.0f
             }
             R.id.osc1PWSymmetry ->
             {
                 synth?.setOsc1PulseWidth(p0.progress.toFloat()/1000.0f)
+                osc1Waveform?.pulseWidth = p0.progress.toFloat()/1000.0f
+
             }
             R.id.seekBarCutoff -> {
                 synth?.setInitialCutoff( AudioUtils.NoteToFreq(p0.progress.toFloat()/1000.0f*105.0f-39.0f))

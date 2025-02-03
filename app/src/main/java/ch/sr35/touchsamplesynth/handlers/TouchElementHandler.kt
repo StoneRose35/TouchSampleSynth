@@ -92,7 +92,20 @@ open class TouchElementHandler(val touchElement: TouchElement) {
         var firstnote = true
         touchElement.notes.forEach { currentNote ->
             touchElement.getSoundGenerator()?.getNextFreeVoice()?.let {
-                touchElement.currentVoices.add(it)
+
+                // CHECK_LAST_STOLEN_FROM_TOUCHELEMENT
+                it.relatedTouchElement?.let{ rte ->
+                    if (!touchElement.getSoundGenerator()!!.voices.any { sgen -> sgen.relatedTouchElement==rte && sgen!=it})
+                    {
+                        rte.isEngaged = false
+                        rte.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
+                        rte.invalidate()
+                    }
+                }
+                touchElement.getSoundGenerator()?.voices?.remove(it)
+                touchElement.getSoundGenerator()?.voices?.add(0,it)
+                it.relatedTouchElement = touchElement
+
                 if (touchElement.getSoundGenerator()!!.horizontalToActionB) {
                     it.applyTouchActionB(touchActionHorizontal.relativeValue)
                     it.applyTouchActionA(touchActionVertical.absoluteValue)
@@ -176,7 +189,11 @@ open class TouchElementHandler(val touchElement: TouchElement) {
     }
 
     fun switchOffVoices(appContext: TouchSampleSynthMain?) {
-        touchElement.currentVoices.forEach { it.switchOff(1.0f) }
+        touchElement.getSoundGenerator()?.let {
+            it.voices.filter { sgen -> sgen.relatedTouchElement == touchElement }.forEach { sg ->
+                sg.switchOff(1.0f)
+            }
+        }
         touchElement.outLine.strokeWidth = OUTLINE_STROKE_WIDTH_DEFAULT
         touchElement.isEngaged = false
         touchElement.appContext?.rtpMidiServer?.let {
@@ -192,7 +209,6 @@ open class TouchElementHandler(val touchElement: TouchElement) {
                 }
             }
         }
-        touchElement.currentVoices.clear()
     }
 
     protected open fun handleActionMoveInPlayMode(event: MotionEvent) {
@@ -228,7 +244,7 @@ open class TouchElementHandler(val touchElement: TouchElement) {
         }
         var firstnote = true
 
-        touchElement.currentVoices.forEach {
+        touchElement.getSoundGenerator()?.voices?.filter { vc -> vc.relatedTouchElement == touchElement }?.forEach {
             if (touchElement.getSoundGenerator()!!.horizontalToActionB) {
                 it.applyTouchActionB(touchActionHorizontal.relativeValue)
                 it.applyTouchActionA(touchActionVertical.absoluteValue)

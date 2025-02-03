@@ -1,6 +1,7 @@
 package ch.sr35.touchsamplesynth.audio
 
 import android.content.Context
+import ch.sr35.touchsamplesynth.views.TouchElement
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.math.log10
@@ -14,6 +15,7 @@ open class MusicalSoundGenerator {
     var actionAmountToVolume: Float=0.0f
     var actionAmountToPitchBend: Float=0.0f
     var switchOnTime: Long=-1
+    var relatedTouchElement: TouchElement?=null
     protected open var instance: Byte=-1
     private var engaged: Boolean=false
 
