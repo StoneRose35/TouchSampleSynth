@@ -4,7 +4,6 @@
     android:layout_height="match_parent">
 
     <ch.sr35.touchsamplesynth.views.Knob
-        style="@style/Widget.Theme.TouchSampleSynth.MyView"
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:linearity="0.2"
