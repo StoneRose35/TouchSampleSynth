@@ -252,7 +252,7 @@ class RtpMidiServer {
             midiDataCopy[cnt] = it
             cnt += 1
         }
-        midiSendQueue.add(midiData)
+        midiSendQueue.add(midiDataCopy)
     }
 
     private fun sendCommand(command: String,client: ClientConnectionData,onDataPort: Boolean,s: DatagramSocket)
