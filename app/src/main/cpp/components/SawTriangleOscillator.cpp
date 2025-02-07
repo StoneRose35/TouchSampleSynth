@@ -83,7 +83,7 @@ SawTriangleOscillator::SawTriangleOscillator(float sr) {
     calculateFilterCoefficients(decimatingFilter);
     decimatingFilter2=new SecondOrderIirFilter();
     calculateFilterCoefficients(decimatingFilter2);
-    polyBlep = new PolyBLEP(samplingRate);
+    polyBlep = new PolyBLEP(samplingRate*4);
 }
 
 float SawTriangleOscillator::getPulseWidth() const {
