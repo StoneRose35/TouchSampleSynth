@@ -40,3 +40,12 @@ creating and your current mood. Then proceed with coding.
 
 * Test and Debug your Instrument
 * finally, take your time to learn a little song, beat or melody using the TSS extension you crafted!
+
+#Debug RTP Midi in Linux
+* get binaries for rtp midi from https://github.com/davidmoreno/rtpmidid
+* install rtpmidi
+* connect PC and tablet to the same WiFi Network
+* start rtp midi daemon with ```rtpmidid``` 
+* In TSS: Enable RTP/Apple Midi
+* obtain midi port of TouchSampleSynth with ``aseqdump -l | grep TouchSampleSynth``
+* connect to the highest port found with ```aseqdump -p <portnr>`` example aseqdump -p 129:3

@@ -2,21 +2,29 @@ package ch.sr35.touchsamplesynth.handlers
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import ch.sr35.touchsamplesynth.MusicalPitch
 import ch.sr35.touchsamplesynth.R
 import ch.sr35.touchsamplesynth.TouchSampleSynthMain
 import ch.sr35.touchsamplesynth.dialogs.EditTouchElementFragmentDialog
+import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.graphics.Point
+import ch.sr35.touchsamplesynth.graphics.Rectangle
+import ch.sr35.touchsamplesynth.graphics.TouchElementPlacementCalculator
+import ch.sr35.touchsamplesynth.views.InstrumentChip
 import ch.sr35.touchsamplesynth.views.NO_DRAG_TOLERANCE
 import ch.sr35.touchsamplesynth.views.OUTLINE_STROKE_WIDTH_DEFAULT
 import ch.sr35.touchsamplesynth.views.OUTLINE_STROKE_WIDTH_ENGAGED
 import ch.sr35.touchsamplesynth.views.PADDING
+import ch.sr35.touchsamplesynth.views.PlayArea
 import ch.sr35.touchsamplesynth.views.TouchElement
 import ch.sr35.touchsamplesynth.views.TouchElement.ActionDir
 import ch.sr35.touchsamplesynth.views.TouchElement.TouchElementDragAnchor
 import ch.sr35.touchsamplesynth.views.TouchElement.TouchElementState
+import ch.sr35.touchsamplesynth.views.TouchElementRecorder
 import kotlin.math.abs
 
 
@@ -259,11 +267,11 @@ open class TouchElementHandler(val touchElement: TouchElement) {
                 midiData[1] = touchElement.midiCCA.toByte()
                 midiData[2] = (touchActionHorizontal.absoluteValue * 127.0f).toInt().toByte()
                 if (midiData[2] != touchElement.midiCCAOld) {
-                    touchElement.appContext?.rtpMidiServer?.let {
-                        if (it.isEnabled) {
+                    touchElement.appContext?.rtpMidiServer?.let { rtpMidiServer ->
+                        if (rtpMidiServer.isEnabled) {
                             var sentNotes = 0
                             while (sentNotes < (touchElement.appContext).rtpMidiNotesRepeat) {
-                                touchElement.appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                rtpMidiServer.addToSendQueue(midiData)
                                 sentNotes += 1
                             }
                         }
@@ -277,11 +285,11 @@ open class TouchElementHandler(val touchElement: TouchElement) {
                 midiData[1] = touchElement.midiCCB.toByte()
                 midiData[2] = (touchActionVertical.absoluteValue * 127.0f).toInt().toByte()
                 if (midiData[2] != touchElement.midiCCBOld) {
-                    touchElement.appContext?.rtpMidiServer?.let {
-                        if (it.isEnabled) {
+                    touchElement.appContext?.rtpMidiServer?.let { rtpMidiServer ->
+                        if (rtpMidiServer.isEnabled) {
                             var sentNotes = 0
                             while (sentNotes < (touchElement.appContext).rtpMidiNotesRepeat) {
-                                touchElement.appContext.rtpMidiServer?.addToSendQueue(midiData)
+                                rtpMidiServer.addToSendQueue(midiData)
                                 sentNotes += 1
                             }
                         }
@@ -290,7 +298,7 @@ open class TouchElementHandler(val touchElement: TouchElement) {
                         touchElement.midiCCB,
                         (touchActionVertical.absoluteValue * 127.0f).toInt()
                     )
-                    touchElement.midiCCAOld = midiData[2]
+                    touchElement.midiCCBOld = midiData[2]
 
                     firstnote = false
                 }
@@ -326,7 +334,46 @@ open class TouchElementHandler(val touchElement: TouchElement) {
                         it.show()
                     }
             }
-        } else {
+        } else if (touchElement.copyRect.contains(touchElement.px.toInt(), touchElement.py.toInt()) && touchElement.elementState != TouchElementState.EDITING_SELECTED) {
+            val lp = ConstraintLayout.LayoutParams(touchElement.measuredWidth, touchElement.measuredHeight)
+            lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            lp.marginStart = Converter.toPx(60)
+            lp.topMargin = Converter.toPx(10)
+            val teCopied: TouchElement = if (touchElement.getSoundGenerator()!!.getType() == "Looper") {
+                TouchElementRecorder(touchElement.context as TouchSampleSynthMain, null)
+            } else {
+                TouchElement(touchElement.context as TouchSampleSynthMain, null)
+            }
+            teCopied.notes.addAll(touchElement.notes)
+            teCopied.setSoundGenerator(touchElement.getSoundGenerator())
+            teCopied.defineDefaultMode((touchElement.context as TouchSampleSynthMain).touchElementsDisplayMode)
+            teCopied.setEditmode(TouchElementState.EDITING)
+            teCopied.touchMode = touchElement.touchMode
+            teCopied.actionDir = touchElement.actionDir
+            teCopied.midiChannel = touchElement.midiChannel
+            teCopied.midiCCA = touchElement.midiCCA
+            teCopied.midiCCB = touchElement.midiCCB
+            teCopied.setColor(touchElement.getMainColor())
+            teCopied.layoutParams = lp
+
+
+            val allrectrangles = (touchElement.context as TouchSampleSynthMain).touchElements.map {
+                it.asRectangle() }.toTypedArray()
+            val neighbouringRectangles = (touchElement.context as TouchSampleSynthMain).touchElements.filter {
+                    te1 ->
+                te1.getSoundGenerator()!! == teCopied.getSoundGenerator()
+            }.map { it.asRectangle() }.toTypedArray()
+            
+            val playPageAreaRect = Rectangle(Point(0.0,0.0),Point((touchElement.onSelectedListener as PlayArea).width.toDouble(),(touchElement.onSelectedListener as PlayArea).height.toDouble()))
+            val finalLocation = TouchElementPlacementCalculator.calculateBestPlacement(teCopied.asRectangle(),neighbouringRectangles,allrectrangles,playPageAreaRect)
+            (teCopied.layoutParams as ConstraintLayout.LayoutParams).topMargin= finalLocation.topLeft.y.toInt()
+            (teCopied.layoutParams as ConstraintLayout.LayoutParams).marginStart = finalLocation.topLeft.x.toInt()
+            (touchElement.context as TouchSampleSynthMain).touchElements.add(teCopied)
+            (touchElement.onSelectedListener as PlayArea).addView(teCopied)
+            teCopied.onSelectedListener = touchElement.onSelectedListener
+        }
+        else {
             val layoutParams: ConstraintLayout.LayoutParams? =
                 touchElement.layoutParams as ConstraintLayout.LayoutParams?
             if (layoutParams != null) {

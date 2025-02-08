@@ -107,15 +107,16 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
     var midiCCBOld: Byte=0
     var setSoundgenRect: Rect = Rect()
     var deleteRect: Rect = Rect()
+    var copyRect: Rect = Rect()
     private val boundsRotate = Rect()
     private val boundsSetSoundgen = Rect()
     private val boundsDelete = Rect()
     val appContext: TouchSampleSynthMain?
     protected var touchElementHandler: TouchElementHandler
 
-    private val rotateSymbol = AppCompatResources.getDrawable(context,R.drawable.rotatesymbol)
     private val editSymbol = AppCompatResources.getDrawable(context,R.drawable.editsymbol)
     private val deleteSymbol = AppCompatResources.getDrawable(context,R.drawable.deletesymbol)
+    private val copySymbol = AppCompatResources.getDrawable(context,R.drawable.copysymbol)
     var onSelectedListener: TouchElementSelectedListener? = null
     init {
 
@@ -274,10 +275,7 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
                     descriptionOffset + (iconHeight * 0.7).toInt()+ smallText.textSize * 2 + 10,
                     smallText
                 )
-
             }
-
-
         }
 
         if (elementState == TouchElementState.EDITING || elementState == TouchElementState.EDITING_SELECTED) {
@@ -311,16 +309,6 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
             editText.getTextBounds("Set SoundGen",0,"Set SoundGen".length,boundsSetSoundgen)
             editText.getTextBounds("Delete",0,"Delete".length,boundsDelete)
             val editRectangleWidth = 70//IntStream.of(boundsRotate.width(),boundsSetSoundgen.width(),boundsDelete.width()).max().orElse(1)
-
-            rotateSymbol?.let {
-                it.setBounds(
-                    40,
-                    EDIT_CIRCLE_OFFSET.toInt() + 50,
-                    (40 +50/it.intrinsicHeight.toFloat()*it.intrinsicWidth.toFloat()).toInt(),
-                    EDIT_CIRCLE_OFFSET.toInt() + 50 + 50
-                )
-                it.draw(canvas)
-            }
 
             setSoundgenRect.left = 40
             setSoundgenRect.right = setSoundgenRect.left + editRectangleWidth + Converter.toPx(3)
@@ -356,6 +344,20 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
                 it.draw(canvas)
             }
 
+            copyRect.left = setSoundgenRect.right + 10
+            copyRect.right = copyRect.left + editRectangleWidth + Converter.toPx(3)
+            copyRect.top = setSoundgenRect.top
+            copyRect.bottom = copyRect.top + editText.textSize.toInt() + 8
+
+            canvas.drawRect(copyRect, editBoxBackground)
+            copySymbol?.let {
+                it.setBounds(
+                    setSoundgenRect.right + 10,
+                    setSoundgenRect.top,
+                    setSoundgenRect.right + deleteSymbol!!.bounds.width() + 10,
+                    EDIT_CIRCLE_OFFSET.toInt() + 50 + 50)
+                it.draw(canvas)
+            }
         }
     }
 
@@ -489,7 +491,7 @@ open class TouchElement(context: Context, attributeSet: AttributeSet?) :
                             }
                         }
                         it.sendMidiCC(midiCCB, (touchActionVertical.absoluteValue * 127.0f).toInt())
-                        midiCCAOld = midiData[2]
+                        midiCCBOld = midiData[2]
                     }
                     firstnote = false
                 }
