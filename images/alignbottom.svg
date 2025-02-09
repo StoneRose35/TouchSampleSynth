@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="34.783237mm"
+   height="34.411251mm"
+   viewBox="0 0 34.783237 34.411251"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (1:1.4+202410161351+e7c3feb100)"
+   sodipodi:docname="alignbottom.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.74208053"
+     inkscape:cx="51.207381"
+     inkscape:cy="210.89355"
+     inkscape:window-width="1850"
+     inkscape:window-height="1016"
+     inkscape:window-x="70"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-91.281248,-92.868749)">
+    <g
+       id="g5"
+       transform="translate(19.717467,-34.11175)">
+      <rect
+         style="fill:#00c92f;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+         id="rect1-7-2-0"
+         width="26.459538"
+         height="7.8439407"
+         x="131.89671"
+         y="-92.984169"
+         transform="rotate(90)" />
+      <rect
+         style="fill:#00c92f;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"
+         id="rect1-2-0-6-2"
+         width="28.854622"
+         height="7.8439407"
+         x="129.50163"
+         y="-83.191185"
+         transform="rotate(90)" />
+      <rect
+         style="fill:#00c92f;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"
+         id="rect1-5-9-1-3"
+         width="31.37575"
+         height="7.8439374"
+         x="126.9805"
+         y="-102.77715"
+         transform="rotate(90)" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"
+         d="M 105.84702,160.89175 H 72.063781"
+         id="path2-3-8-7" />
+    </g>
+  </g>
+</svg>
