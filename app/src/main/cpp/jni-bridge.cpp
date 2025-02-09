@@ -165,6 +165,20 @@ Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_closeMidiDeviceOut(JNIEnv* , jo
     }
 }
 
+JNIEXPORT jbyte JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_getMidiMode(JNIEnv* , jobject)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    return (int8_t)audioEngine->midiMode;
+}
+
+JNIEXPORT void JNICALL
+Java_ch_sr35_touchsamplesynth_audio_AudioEngineK_setMidiMode(JNIEnv* , jobject,jbyte midiMode)
+{
+    AudioEngine * audioEngine = getAudioEngine();
+    audioEngine->midiMode = midiMode;
+}
+
 JNIEXPORT void JNICALL
 Java_ch_sr35_touchsamplesynth_audio_MusicalSoundGenerator_sendMidiCC(JNIEnv* env, jobject  me,jint ccNumber,jint ccValue)
 {

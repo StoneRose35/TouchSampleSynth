@@ -22,4 +22,6 @@ class AudioEngineK {
     external fun setBufferCapacityInFrames(bcif: Int): Int
     external fun getBufferCapacityInFrames(): Int
     external fun emptySoundGenerators(): Byte
+    external fun getMidiMode(): Byte
+    external fun setMidiMode(midiMode: Byte)
 }

@@ -24,6 +24,16 @@
 #define MIDI_NOTE_CHANGE_MSK 0x100
 #define MIDI_TAKEN_MSK 0x80
 
+#define MIDI_MODE_SATURATE 0
+#define MIDI_MODE_NOTE_STEAL 1
+#define MIDI_MODE_MONOPHONIC_HIGHPRIO 2
+#define MIDI_MODE_MONOPHONIC_LOWPRIO 3
+
+typedef struct {
+    int8_t note;
+    int8_t sgIndex;
+} noteAndSGIndex;
+
 class AudioEngine {
 
 public:
@@ -32,7 +42,7 @@ public:
     void stop();
     void restart();
     int32_t getSamplingRate() const;
-
+    noteAndSGIndex notesPlaying[MAX_SOUND_GENERATORS];
     int8_t getActiveSoundGenerators();
     int8_t getNSoundGenerators() const;
     MusicalSoundGenerator * getSoundGenerator(int8_t);
@@ -43,6 +53,7 @@ public:
     ~AudioEngine();
     float averageVolume;
     float cpuLoad;
+    uint8_t midiMode;
     AMidiOutputPort * midiOutputPort;
     AMidiInputPort * midiInputPort;
     AMidiDevice * midiDevice;
@@ -55,11 +66,11 @@ public:
     // and idle
     // midiData[0] is the voice nr and mididata[1] is the velocity
     // returns true, if a voice is assigned, false otherwise
-    static bool startNextVoice(uint8_t *midiData);
+    bool startNextVoice(uint8_t *midiData);
     // switches off the voice which has the given midi note assigned and which is on
     // midiData[0] is the voice nr and mididata[1] is the velocity
     // returns true if a voice could be found and is switched off, false otherwise
-    static bool stopVoice(uint8_t * midiData);
+    bool stopVoice(uint8_t * midiData);
 
     template <typename T> T* getSoundGeneratorFromJni(JNIEnv * env,jobject me)
     {
@@ -83,6 +94,14 @@ private:
     int32_t framesPerDataCallback = 64;
     int32_t bufferCapacityInFrames = 1024;
     int8_t nSoundGenerators=24;
+    uint8_t pushOnNoteStack(int8_t,int8_t);
+    uint8_t popNoteFromStack(int8_t,int8_t);
+    int8_t removeFromNoteStack(int8_t);
+    int8_t getAndPopOldest();
+    int8_t getHighest();
+    int8_t assignSoundgeneratorToNote(int8_t,int8_t);
+    int8_t assignNoteToSoundgenerator(int8_t,int8_t);
+    uint8_t getLowest();
 
 
 };

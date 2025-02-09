@@ -75,21 +75,21 @@ aaudio_data_callback_result_t dataCallback(
                 {
                     lastMidiStatus = MIDI_NOTE_ON;
                     //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note on: %d",midiDataBuffer[1]);
-                    AudioEngine::startNextVoice(midiDataBuffer+1);
+                    audioEngine->startNextVoice(midiDataBuffer+1);
                 }
                 // note on with velocity 0, this is effectively a note off
                 else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_ON && midiBytesReceived==3 && midiDataBuffer[2] == 0x0)
                 {
                     lastMidiStatus = MIDI_NOTE_ON;
                     //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note on with vel 0: %d",midiDataBuffer[1]);
-                    AudioEngine::stopVoice(midiDataBuffer+1);
+                    audioEngine->stopVoice(midiDataBuffer+1);
                 }
                 // ordinary note off
                 else if ((*(midiDataBuffer + 0) & 0xF0) == MIDI_NOTE_OFF && midiBytesReceived==3)
                 {
                     lastMidiStatus = MIDI_NOTE_OFF;
                     //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"midi note off: %d",midiDataBuffer[1]);
-                    AudioEngine::stopVoice(midiDataBuffer+1);
+                    audioEngine->stopVoice(midiDataBuffer+1);
                 }
                 // unhandled midi command
                 else if ((*(midiDataBuffer + 0) & 0x80) != 0) // unhandled midi command
@@ -104,13 +104,13 @@ aaudio_data_callback_result_t dataCallback(
                     if (lastMidiStatus==MIDI_NOTE_ON && midiDataBuffer[1] != 0)
                     {
                         //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note on: %d",midiDataBuffer[0]);
-                        AudioEngine::startNextVoice(midiDataBuffer);
+                        audioEngine->startNextVoice(midiDataBuffer);
                     }
                     // running status note on with velocity zero -> note off
                     else if ((lastMidiStatus==MIDI_NOTE_ON && midiDataBuffer[1] == 0) || lastMidiStatus==MIDI_NOTE_OFF)
                     {
                         //__android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"running status, note on with vel 0: %d",midiDataBuffer[0]);
-                        AudioEngine::stopVoice(midiDataBuffer);
+                        audioEngine->stopVoice(midiDataBuffer);
                     }
                 }
             }
@@ -241,19 +241,94 @@ bool AudioEngine::start() {
 
 bool AudioEngine::startNextVoice(uint8_t *midiData) {
     uint8_t midiProcessed=0;
-    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
-    {
-        if (audioEngine->getSoundGenerator(c) != nullptr
-            && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
-            && (((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) == 0)
-                || ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_NOTE_CHANGE_MSK) != 0))
-            && midiProcessed == 0) {
-            __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching on voice %d",c);
-            audioEngine->getSoundGenerator(c)->setNote((float)midiData[0]-69.0f);
-            audioEngine->getSoundGenerator(c)->setVolumeImmediate(1.0f - audioEngine->getSoundGenerator(c)->midiVelocityScaling + ((float)midiData[1])/127.0f*audioEngine->getSoundGenerator(c)->midiVelocityScaling);
-            audioEngine->getSoundGenerator(c)->switchOn(midiData[1]);
-            audioEngine->getSoundGenerator(c)->availableForMidi |= MIDI_TAKEN_MSK | midiData[0];
+    if (midiMode==MIDI_MODE_SATURATE || midiMode == MIDI_MODE_NOTE_STEAL) {
+        for (int8_t c = 0; c < getNSoundGenerators(); c++) {
+            if (getSoundGenerator(c) != nullptr
+                && ((getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
+                && ((getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) == 0)
+                && midiProcessed == 0) {
+
+
+                getSoundGenerator(c)->setNote((float) midiData[0] - 69.0f);
+                getSoundGenerator(c)->setVolumeImmediate(
+                        1.0f - getSoundGenerator(c)->midiVelocityScaling +
+                        ((float) midiData[1]) / 127.0f *
+                        getSoundGenerator(c)->midiVelocityScaling);
+                getSoundGenerator(c)->switchOn(midiData[1]);
+                getSoundGenerator(c)->availableForMidi |= MIDI_TAKEN_MSK | midiData[0];
+                midiProcessed = 1;
+                pushOnNoteStack((int8_t)midiData[0],c);
+            }
+        }
+        if (midiMode == MIDI_MODE_NOTE_STEAL && midiProcessed == 0)
+        {
+            int8_t stolenIndex = getAndPopOldest();
+            getSoundGenerator(stolenIndex)->setNote((float) midiData[0] - 69.0f);
+            getSoundGenerator(stolenIndex)->setVolumeImmediate(
+                    1.0f - getSoundGenerator(stolenIndex)->midiVelocityScaling +
+                    ((float) midiData[1]) / 127.0f *
+                    getSoundGenerator(stolenIndex)->midiVelocityScaling);
+            //getSoundGenerator(stolenIndex)->switchOn(midiData[1]);
+            getSoundGenerator(stolenIndex)->availableForMidi &= ~(0xFF);
+            getSoundGenerator(stolenIndex)->availableForMidi |= MIDI_TAKEN_MSK | midiData[0];
             midiProcessed = 1;
+            pushOnNoteStack((int8_t)midiData[0],stolenIndex);
+        }
+    }
+    else if (midiMode==MIDI_MODE_MONOPHONIC_LOWPRIO)
+    {
+        uint8_t currentLowest = getLowest();
+        if (midiData[0] < currentLowest)
+        {
+            if (currentLowest == 128) { // first note playing: switch on
+                getSoundGenerator(0)->setNote((float) midiData[0] - 69.0f);
+                getSoundGenerator(0)->setVolumeImmediate(
+                        1.0f - getSoundGenerator(0)->midiVelocityScaling +
+                        ((float) midiData[1]) / 127.0f *
+                        getSoundGenerator(0)->midiVelocityScaling);
+                getSoundGenerator(0)->switchOn(midiData[1]);
+                getSoundGenerator(0)->availableForMidi |=
+                        MIDI_TAKEN_MSK | midiData[0];
+                midiProcessed = 1;
+                pushOnNoteStack((int8_t) midiData[0], 0);
+            }
+            else
+            {
+                getSoundGenerator(0)->setNote((float) midiData[0] - 69.0f);
+                assignSoundgeneratorToNote(-1,currentLowest);
+                pushOnNoteStack(midiData[0],0);
+            }
+        }
+        else
+        {
+            pushOnNoteStack((int8_t)midiData[0],-1);
+        }
+    }
+    else if (midiMode==MIDI_MODE_MONOPHONIC_HIGHPRIO)
+    {
+        int8_t currentHighest = getHighest();
+        if (midiData[0] > currentHighest) {
+            if (currentHighest == -1)
+            {
+                getSoundGenerator(0)->setNote((float) midiData[0] - 69.0f);
+                getSoundGenerator(0)->setVolumeImmediate(
+                        1.0f - getSoundGenerator(0)->midiVelocityScaling +
+                        ((float) midiData[1]) / 127.0f *
+                        getSoundGenerator(0)->midiVelocityScaling);
+                getSoundGenerator(0)->switchOn(midiData[1]);
+                getSoundGenerator(0)->availableForMidi |=
+                        MIDI_TAKEN_MSK | midiData[0];
+                midiProcessed = 1;
+                pushOnNoteStack((int8_t) midiData[0], 0);
+            } else {
+                getSoundGenerator(0)->setNote((float) midiData[0] - 69.0f);
+                assignSoundgeneratorToNote(-1,currentHighest);
+                pushOnNoteStack(midiData[0],0);
+            }
+        }
+        else
+        {
+            pushOnNoteStack((int8_t)midiData[0],-1);
         }
     }
     return (bool)midiProcessed;
@@ -261,17 +336,74 @@ bool AudioEngine::startNextVoice(uint8_t *midiData) {
 
 bool AudioEngine::stopVoice(uint8_t * midiData) {
     uint8_t midiProcessed = 0;
-    for (int8_t c=0;c<audioEngine->getNSoundGenerators();c++)
+    uint8_t soundGeneratorFreed = 0xFF;
+    if (midiMode == MIDI_MODE_SATURATE || midiMode == MIDI_MODE_NOTE_STEAL) {
+        for (int8_t c = 0; c < getNSoundGenerators(); c++) {
+            if (getSoundGenerator(c) != nullptr
+                && ((getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0)
+                && ((getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) != 0)
+                && ((getSoundGenerator(c)->availableForMidi & 0x7F) == midiData[0])
+                    ) {
+                getSoundGenerator(c)->switchOff(midiData[1]);
+                getSoundGenerator(c)->availableForMidi &= ~(0xFF);
+                soundGeneratorFreed = c;
+                midiProcessed = 1;
+                popNoteFromStack(c,(int8_t)midiData[0]);
+            }
+        }
+    }
+    else if (midiMode==MIDI_MODE_MONOPHONIC_HIGHPRIO)
     {
-        if (audioEngine->getSoundGenerator(c) != nullptr
-            && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_AVAILABLE_MSK) != 0 )
-            && ((audioEngine->getSoundGenerator(c)->availableForMidi & MIDI_TAKEN_MSK) != 0)
-            && ((audioEngine->getSoundGenerator(c)->availableForMidi & 0x7F) == midiData[0] )
-            ) {
-            __android_log_print(ANDROID_LOG_VERBOSE,APP_NAME,"switching off voice %d",c);
-            audioEngine->getSoundGenerator(c)->switchOff(midiData[1]);
-            audioEngine->getSoundGenerator(c)->availableForMidi &= ~(0xFF);
-            midiProcessed = 1;
+        int8_t highestNote = getHighest();
+        if (midiData[0] == highestNote)
+        {
+            int8_t sgIdx = removeFromNoteStack(highestNote);
+            highestNote = getHighest();
+            if (highestNote > -1)
+            {
+                // still a key depressed, only change frequency
+                // -> assign the sound generator to the next highest note
+                assignSoundgeneratorToNote(0,highestNote);
+                getSoundGenerator(sgIdx)->setNote((float) highestNote - 69.0f);
+            }
+            else
+            {
+                // switch off sound generator
+                getSoundGenerator(sgIdx)->switchOff(midiData[1]);
+                getSoundGenerator(sgIdx)->availableForMidi &= ~(0xFF);
+                midiProcessed = 1;
+            }
+        }
+        else
+        {
+            removeFromNoteStack((int8_t)midiData[0]);
+        }
+    }
+    else if (midiMode==MIDI_MODE_MONOPHONIC_LOWPRIO)
+    {
+        uint8_t lowestNote = getLowest();
+        if (midiData[0] == lowestNote)
+        {
+            int8_t sgIdx = removeFromNoteStack(lowestNote);
+            lowestNote = getLowest();
+            if (lowestNote < 128)
+            {
+                // still a key depressed, only change frequency
+                // -> assign the sound generator to the next highest note
+                assignSoundgeneratorToNote(0,lowestNote);
+                getSoundGenerator(sgIdx)->setNote((float) lowestNote - 69.0f);
+            }
+            else
+            {
+                // switch off sound generator
+                getSoundGenerator(sgIdx)->switchOff(midiData[1]);
+                getSoundGenerator(sgIdx)->availableForMidi &= ~(0xFF);
+                midiProcessed = 1;
+            }
+        }
+        else
+        {
+            removeFromNoteStack((int8_t)midiData[0]);
         }
     }
     return (bool)midiProcessed;
@@ -353,6 +485,9 @@ AudioEngine::AudioEngine() {
     for (uint16_t c=0;c<MAX_SOUND_GENERATORS;c++)
     {
         *(soundGenerators + c) = nullptr;
+        (notesPlaying + c)->note = -1;
+        (notesPlaying + c)->sgIndex = -1;
+
     }
     averageVolume = 0.0f;
 
@@ -375,7 +510,7 @@ int8_t AudioEngine::setBufferCapacityInFrames(int32_t bcif){
         return 1;
     }
     bufferCapacityInFrames = bcif;
-    audioEngine->restart();
+    restart();
     return 0;
 }
 int32_t AudioEngine::getFramesPerDataCallback() const
@@ -389,7 +524,7 @@ int8_t AudioEngine::setFramesPerDataCallback(int32_t fpdc)
         return 1;
     }
     framesPerDataCallback = fpdc;
-    audioEngine->restart();
+    restart();
     return 0;
 }
 
@@ -422,6 +557,131 @@ void AudioEngine::emptySoundGenerators()
             *(soundGenerators + c) = nullptr;
         }
     }
+}
+
+uint8_t AudioEngine::pushOnNoteStack(int8_t note,int8_t sgIndex) {
+    uint8_t len=0;
+    int8_t bfr=0;
+    int8_t bfr2;
+    while(bfr != -1)
+    {
+        bfr = (notesPlaying + len++)->note;
+    }
+    for (uint8_t c = len;c > 0; c--)
+    {
+        *(notesPlaying+c)=*(notesPlaying + c - 1);
+    }
+    notesPlaying->note = note;
+    notesPlaying->sgIndex = sgIndex;
+    return len+1;
+}
+
+int8_t AudioEngine::removeFromNoteStack(int8_t note) {
+    uint8_t c=0;
+    int8_t idx=-1;
+    int8_t sgIndex=-1;
+    while((notesPlaying+c)->note != note && (notesPlaying+c)->note != -1)
+    {
+        c++;
+    }
+    if ((notesPlaying + c)->note == -1 )
+    {
+        return -1;
+    }
+    sgIndex =(notesPlaying + c)->sgIndex;
+    while((notesPlaying + c)->note != -1)
+    {
+        *(notesPlaying+c) = *(notesPlaying + c + 1);
+        c++;
+    }
+    return sgIndex;
+}
+
+int8_t AudioEngine::getAndPopOldest() {
+    uint8_t c=0;
+    int8_t res;
+
+    while((notesPlaying + c)->note != -1)
+    {
+        c++;
+    }
+    res = (notesPlaying + c - 1)->sgIndex;
+    (notesPlaying +c-1)->note =-1;
+    (notesPlaying+c-1)->sgIndex=-1;
+    return res;
+}
+
+int8_t AudioEngine::getHighest() {
+    int8_t highestNote=-1;
+    uint8_t  c=0;
+    while((notesPlaying+c)->note != -1)
+    {
+        if ((notesPlaying+c)->note > highestNote)
+        {
+            highestNote = (notesPlaying+c)->note;
+        }
+        c++;
+    }
+    return highestNote;
+}
+
+int8_t AudioEngine::assignSoundgeneratorToNote(int8_t sg, int8_t note) {
+    uint8_t c=0;
+    while((notesPlaying+c)->note != note && (notesPlaying+c)->note != -1)
+    {
+        c++;
+    }
+    if ((notesPlaying + c)->note==-1)
+    {
+        return 1;
+    }
+    (notesPlaying + c)->sgIndex = sg;
+    return 0;
+}
+
+int8_t AudioEngine::assignNoteToSoundgenerator(int8_t note,int8_t sg)
+{
+    uint8_t c=0;
+    while((notesPlaying+c)->sgIndex != sg && c < MAX_SOUND_GENERATORS)
+    {
+        c++;
+    }
+    if (c==MAX_SOUND_GENERATORS)
+    {
+        return 1;
+    }
+    (notesPlaying + c)->note = note;
+    return 0;
+
+}
+
+uint8_t AudioEngine::getLowest() {
+    uint8_t lowestNote=128;
+    uint8_t  c=0;
+    while((notesPlaying+c)->note != -1)
+    {
+        if ((uint8_t)((notesPlaying+c)->note) < lowestNote)
+        {
+            lowestNote = (notesPlaying+c)->note;
+        }
+        c++;
+    }
+    return lowestNote;
+}
+
+uint8_t AudioEngine::popNoteFromStack(int8_t sg, int8_t nt) {
+    uint8_t c=0;
+    while((notesPlaying + c)-> note != nt || (notesPlaying + c)->sgIndex != sg)
+    {
+        c++;
+    }
+    while((notesPlaying + c)->note != -1)
+    {
+        (notesPlaying + c)->note = (notesPlaying + c + 1)->note;
+        (notesPlaying + c)->sgIndex = (notesPlaying + c + 1)->sgIndex;
+        c++;
+    }
+    return 0;
 }
 
 

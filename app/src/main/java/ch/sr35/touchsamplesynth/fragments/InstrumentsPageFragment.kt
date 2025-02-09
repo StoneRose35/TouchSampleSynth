@@ -128,6 +128,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                     {
                         (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition = PolyphonyDefinition.POLY_SATURATE
                     }
+                    (context as TouchSampleSynthMain).audioEngine.setMidiMode(0)
                     voicesSpinner.isEnabled = true
                 }
                 R.id.instrument_page_rg_poly_ns -> {
@@ -135,6 +136,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                     {
                         (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition = PolyphonyDefinition.POLY_NOTE_STEAL
                     }
+                    (context as TouchSampleSynthMain).audioEngine.setMidiMode(1)
                     voicesSpinner.isEnabled = true
                 }
                 R.id.instrument_page_rg_mono -> {
@@ -142,6 +144,7 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
                     {
                         (context as TouchSampleSynthMain).soundGenerators[selectedInstrument].polyphonyDefinition = PolyphonyDefinition.MONOPHONIC
                     }
+                    (context as TouchSampleSynthMain).audioEngine.setMidiMode(2) // high note prio by default
                     voicesSpinner.apply {
                         setSelection(0)
                         isEnabled = false
