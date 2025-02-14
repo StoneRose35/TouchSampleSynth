@@ -30,7 +30,7 @@ class TouchElementRecorderHandler(te: TouchElementRecorder) : TouchElementHandle
             else if (event.x < touchElement.measuredWidth/2
                 && event.x >  touchElement.padding
                 && event.y > touchElement.measuredHeight/2
-                && event.y > touchElement.measuredHeight - touchElement.padding
+                && event.y < touchElement.measuredHeight - touchElement.padding
                 && (touchElement as TouchElementRecorder).hasRecordedContent)
             {
                 // delete sample
