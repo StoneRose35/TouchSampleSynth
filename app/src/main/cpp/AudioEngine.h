@@ -94,6 +94,7 @@ private:
     int32_t framesPerDataCallback = 64;
     int32_t bufferCapacityInFrames = 1024;
     int8_t nSoundGenerators=24;
+    int8_t monophonicSoundGeneratorIndex;
     uint8_t pushOnNoteStack(int8_t,int8_t);
     uint8_t popNoteFromStack(int8_t,int8_t);
     int8_t removeFromNoteStack(int8_t);
