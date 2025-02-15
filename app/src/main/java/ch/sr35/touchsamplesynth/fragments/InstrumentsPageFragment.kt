@@ -41,9 +41,9 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
     var selectedInstrument: Int=-1
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onSaveInstanceState(outState: Bundle)
+    {
+        outState.putInt("lastInstrumentSelected",selectedInstrument)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -170,6 +170,10 @@ class InstrumentsPageFragment : Fragment(), ListAdapter,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        savedInstanceState?.let {
+            selectedInstrument = it.getInt("lastInstrumentSelected")
+        }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_instruments_page, container, false)
     }

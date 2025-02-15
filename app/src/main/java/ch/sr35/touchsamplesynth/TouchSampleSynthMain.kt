@@ -64,6 +64,7 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
     var scenesListDirty=false
     var sceneIsLoading= AtomicBoolean(false)
     var scenesArrayAdapter: ArrayAdapter<SceneP>?=null
+    private val fragmentSaveStates = mutableMapOf<String,Fragment.SavedState?>()
 
     // global settings
     var rtpMidiNotesRepeat=1 // defines how many times note on and note off commands are repeated over rtp midi
@@ -393,10 +394,19 @@ class TouchSampleSynthMain : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
 
         if (frag != null) {
+
             supportFragmentManager.beginTransaction().let {
-                if (supportFragmentManager.findFragmentById(R.id.mainLayout) != null) {
+                val currentFragment = supportFragmentManager.findFragmentById(R.id.mainLayout)
+                if (currentFragment != null) {
+                    fragmentSaveStates[currentFragment.tag!!] = supportFragmentManager.saveFragmentInstanceState(currentFragment)
+                    fragmentSaveStates[tag]?.let { fss ->
+                        frag.setInitialSavedState(fss)
+                    }
                     it.replace(R.id.mainLayout, frag, tag)
                 } else {
+                    fragmentSaveStates[tag]?.let { fss ->
+                        frag.setInitialSavedState(fss)
+                    }
                     it.add(R.id.mainLayout, frag, tag)
                 }
                 it.commit()
