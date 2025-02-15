@@ -87,16 +87,6 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         framesPerDataCallback.onItemSelectedListener = this
 
         val bufferCapacityInFrames = view.findViewById<Spinner>(R.id.spinnerBufferCapacityInFrames)
-        /*ArrayAdapter.createFromResource(
-            view.context,
-            R.array.bufferCapacityInFramesValues,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
-            bufferCapacityInFrames.adapter = adapter
-        }*/
         val bcifVals = resources.getStringArray(R.array.bufferCapacityInFramesValues)
         val currentBcif = audioEngine.getBufferCapacityInFrames()
         idx = 0
@@ -115,8 +105,12 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         }
         bufferCapacityInFrames.onItemSelectedListener = this
 
-        view.findViewById<ToggleButton>(R.id.toggleButtonShowConnectors).setOnCheckedChangeListener { _, isChecked ->
-            (context as TouchSampleSynthMain).connectorDisplay = isChecked
+        view.findViewById<ToggleButton>(R.id.toggleButtonShowConnectors).also { tb ->
+            tb.isChecked = (context as TouchSampleSynthMain).connectorDisplay
+            tb.setOnCheckedChangeListener { _, isChecked ->
+                (context as TouchSampleSynthMain).connectorDisplay = isChecked
+            }
+
         }
 
         val spinnerTouchElementStyle = view.findViewById<Spinner>(R.id.spinnerTouchElementsDisplay)
@@ -162,6 +156,9 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
 
         view.findViewById<ToggleButton>(R.id.toggleButtonRtpMidi).also { it ->
 
+            (context as TouchSampleSynthMain).rtpMidiServer?.let { rms ->
+                it.isChecked = rms.isEnabled
+            }
             it.setOnCheckedChangeListener { toggleButtonView, isChecked ->
                 if (isChecked) {
                     context?.let { it1 ->
@@ -191,8 +188,8 @@ class SettingsFragment : Fragment(), AdapterView.OnItemSelectedListener, MidiDev
         }
 
         val spinnerRtpMidiNoteRepeat = view.findViewById<Spinner>(R.id.spinnerRtpMidiNoteRepeat)
+        spinnerRtpMidiNoteRepeat.setSelection( view.resources.getStringArray(R.array.rtpMidiNoteRepeatValues).indexOf((context as TouchSampleSynthMain).rtpMidiNotesRepeat.toString()))
         spinnerRtpMidiNoteRepeat.onItemSelectedListener=this
-
         val ipAdressTextView = view.findViewById<TextView>(R.id.ipAddress)
         try {
             val ifaces = NetworkInterface.getNetworkInterfaces()
