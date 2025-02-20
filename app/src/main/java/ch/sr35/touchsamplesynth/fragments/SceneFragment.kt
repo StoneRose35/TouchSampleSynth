@@ -177,9 +177,10 @@ class SceneFragment() : Fragment() {
             val sb = Snackbar.make(it, resources.getText(R.string.importSuccessful), 1000)
             sb.show()
             jsonobj.importOntoDevice(context as TouchSampleSynthMain,importMode.REPLACE,importDoneFlag.DO_NOT_CHANGE)
+            scenesList?.adapter?.notifyDataSetChanged()
+            (context as TouchSampleSynthMain).scenesArrayAdapter?.notifyDataSetChanged()
             (context as TouchSampleSynthMain).scenesListDirty = true
             (context as TouchSampleSynthMain).loadSceneWithWaitIndicator(0)
-            scenesList?.adapter?.notifyDataSetChanged()
         }
 
         return view
