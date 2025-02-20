@@ -7,6 +7,7 @@ import android.graphics.Path
 import android.util.AttributeSet
 import ch.sr35.touchsamplesynth.audio.instruments.InstrumentI
 import ch.sr35.touchsamplesynth.audio.instruments.LooperI
+import ch.sr35.touchsamplesynth.graphics.Converter
 import ch.sr35.touchsamplesynth.handlers.TouchElementRecorderHandler
 import kotlin.math.sqrt
 
@@ -16,7 +17,7 @@ class TouchElementRecorder(context: Context, attributeSet: AttributeSet?) :
 
         var isRecording = false
         var hasRecordedContent = false
-        private val playButtonPadding: Float = 12.0f
+        private val playButtonPadding: Float = Converter.toPx(24).toFloat()
         private val symbolPath: Path = Path()
         private val outlineDeleteSymbol: Paint = Paint()
 
@@ -107,7 +108,7 @@ class TouchElementRecorder(context: Context, attributeSet: AttributeSet?) :
         {
             radius = (w/2 - arrowDefs.arrowB - padding - playButtonPadding)/2
         }
-        canvas.drawCircle(w*3/4 ,h/4,radius,contrastingFill)
+        canvas.drawCircle(padding + 0.75f*(w - 2*padding) ,padding + (h - 2*padding)/4,radius,contrastingFill)
     }
 
     private fun drawStopButton(canvas: Canvas) {
