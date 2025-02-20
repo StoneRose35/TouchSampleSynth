@@ -3,6 +3,7 @@ package ch.sr35.touchsamplesynth.model
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.sr35.touchsamplesynth.BuildConfig
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.junit.Assert
 import org.junit.Test
 
@@ -50,7 +51,11 @@ class DataMigrationTest {
     {
         val currentJson = InstrumentationRegistry.getInstrumentation().context.assets.open("defaultPresets_1_9_4.json").reader().readText()
         val newJson = DataUpdater.upgradeToCurrent(currentJson)
-        val newScenes = Gson().fromJson(newJson,SceneListP::class.java)
+        val gson= GsonBuilder().apply {
+            registerTypeAdapter(InstrumentP::class.java,PersistableInstrumentDeserializer())
+            setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        }.create()
+        val newScenes = gson.fromJson(newJson,SceneListP::class.java)
         Assert.assertTrue(newScenes.screenResolutionX >= 0)
         Assert.assertTrue(newScenes.screenResolutionY >= 0)
         Assert.assertTrue(newScenes.scenes.size==9)

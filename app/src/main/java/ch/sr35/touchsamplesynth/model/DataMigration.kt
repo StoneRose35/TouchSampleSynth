@@ -276,7 +276,6 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     // VERTICAL_UP_DOWN to horizontalToActionB=true and VERTICAL_UD_HORIZONTAL_LR
     // VERTICAL_DOWN_UP to horizontalToActionB=true and VERTICAL_DU_HORIZONTAL_LR
     // change midiCC to midiCCA, add midiCCB (! critical change regarding functionality!)
-    // TODO: add touchMode: Momentary
 
     private class Updater6: DataUpdater(versionFrom = Version(1,9,4),versionTo = Version(1,10,0)) {
         override fun processData(jsonData: String): String? {
@@ -375,13 +374,45 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
                     }
                     te.addProperty("touchMode","MOMENTARY")
                 }
+            // extend fields of simple subtractive synth
+            rootObj.getAsJsonArray("scenes")
+                .flatMap { scn -> (scn as JsonObject).getAsJsonArray("instruments") }
+                .filter { i -> (i as JsonObject).get("className").asString.contains("SimpleSubtractiveSynthP") }
+                .forEach {
+                    instr ->
+                        replaceAttributeNameOfInstrument("attack","volumeAttack",instr)
+                        replaceAttributeNameOfInstrument("decay", "volumeDecay", instr)
+                        replaceAttributeNameOfInstrument("sustain", "volumeSustain", instr)
+                        replaceAttributeNameOfInstrument("release", "volumeRelease", instr)
+                        (instr as JsonObject).addProperty("filterAttack", 0.0f)
+                        instr.addProperty("filterDecay", 0.0f)
+                        instr.addProperty("filterSustain", 1.0f)
+                        instr.addProperty("filterRelease", 0.0f)
+                        instr.addProperty("filterEnvelopeLevel",0.0f)
+                        instr.addProperty("osc1Type",0)
+                        instr.addProperty("osc2Type",0)
+                        instr.addProperty("osc2Octave",0)
+                        instr.addProperty("osc2Detune",0.0f)
+                        instr.addProperty("osc2Volume",0.0f)
+                        instr.addProperty("osc1PulseWidth",0.0f)
+                        instr.addProperty("osc2PulseWidth" ,0.0f)
+                }
             return rootObj.toString()
+        }
+
+        private fun replaceAttributeNameOfInstrument(nameOld: String,nameNew: String,instr: JsonElement)
+        {
+            val v = (instr as JsonObject).get(nameOld).asFloat
+            instr.remove(nameOld)
+            instr.addProperty(nameNew,v)
         }
 
     }
 
 
 }
+
+
 
 class JsonComparator
 {
