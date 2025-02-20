@@ -3,7 +3,10 @@ package ch.sr35.touchsamplesynth
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.util.function.BinaryOperator
+import java.util.stream.IntStream
 
 
 class dumbTests {
@@ -43,14 +46,12 @@ class dumbTests {
     fun putBackOnTopTest()
     {
         val arrList = ArrayList<String>()
-        val why = "why"
+        val why = "Y"
         arrList.addAll(listOf("P","O","P","P",why, "i'm", "Poppy?"))
         arrList.remove(why)
         arrList.add(0,why)
         assertThat(arrList[0] , equalTo(why))
         Assert.assertTrue(arrList.size==7)
-
     }
-
 
 }
