@@ -84,6 +84,10 @@ class SamplerFragment() : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBa
                     var mode = it.getMode()
                     mode = mode.or(1)
                     it.setMode(mode)
+                    if (modeTriggeredSwitch!!.isChecked)
+                    {
+                        modeTriggeredSwitch!!.isChecked = false
+                    }
                 } else {
                     var mode = it.getMode()
                     mode = mode.and(-2)
@@ -96,6 +100,10 @@ class SamplerFragment() : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBa
                     var mode = it.getMode()
                     mode = mode.or(2)
                     it.setMode(mode)
+                    if (modeLoopedSwitch!!.isChecked)
+                    {
+                        modeLoopedSwitch!!.isChecked = false
+                    }
                 } else {
                     var mode = it.getMode()
                     mode = mode.and(-3)
