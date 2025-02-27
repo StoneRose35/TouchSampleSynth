@@ -52,23 +52,29 @@ float Sampler::getNextSample() {
     {
         if ((loopMode & (1 << SAMPLER_MODE_LOOP))== (1 << SAMPLER_MODE_LOOP))
         {
-            if (currentIndex >= loopEndIndex)
+            if ((currentIndex >> FRAC_SAMPLE_INDEX_POSITION) >= loopEndIndex)
             {
-                currentIndex = loopStartIndex + (currentIndex - loopEndIndex);
+                currentIndex = (loopStartIndex + ((currentIndex >> FRAC_SAMPLE_INDEX_POSITION) - loopEndIndex)) << FRAC_SAMPLE_INDEX_POSITION;
             }
         }
-        if (currentIndex>=sampleEndIndex)
+        if ((currentIndex >> FRAC_SAMPLE_INDEX_POSITION)>=sampleEndIndex)
         {
             currentIndex=0xFFFFFFFF;
         }
         else
         {
-            currentIndex = (uint32_t)((float)currentIndex + phaseIncrement);
+            currentIndex = (currentIndex + phaseIncrement);
         }
     }
     if (currentIndex != 0xFFFFFFFF)
     {
-        return getNextSampleVolume()*sampleData[currentIndex];
+        uint32_t nextIndex = (currentIndex >> FRAC_SAMPLE_INDEX_POSITION) + 1;
+        if (nextIndex >= loopEndIndex)
+        {
+            nextIndex = (loopStartIndex + ((currentIndex >> FRAC_SAMPLE_INDEX_POSITION) - loopEndIndex)) << FRAC_SAMPLE_INDEX_POSITION;
+        }
+        return getNextSampleVolume()*(sampleData[currentIndex >> FRAC_SAMPLE_INDEX_POSITION] +
+        (sampleData[nextIndex >> FRAC_SAMPLE_INDEX_POSITION] - sampleData[currentIndex >> FRAC_SAMPLE_INDEX_POSITION])*((float)(currentIndex & FRAC_SAMPLE_MASK)/(float)(1 << FRAC_SAMPLE_INDEX_POSITION)));
     }
     else
     {
@@ -154,10 +160,14 @@ uint32_t Sampler::getSampleEndIndex() const {
 void Sampler::setPitchBend(float pb) {
     if (pb < 0.0f)
     {
-        phaseIncrement = 1.0f + pb/4.0f;
+        phaseIncrement = 0x100 + (int32_t)((pb/4.0f)*255.0f);
+        if ((phaseIncrement & 0x80000000) > 0)
+        {
+            phaseIncrement = 1;
+        }
     }
     else
     {
-        phaseIncrement = 1.0f + pb*4;
+        phaseIncrement = 0x100 + (int32_t)((pb*4.0f)*255.0f);
     }
 }

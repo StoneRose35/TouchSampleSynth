@@ -43,6 +43,7 @@ class SamplerFragment() : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBa
     private var waveViewer: WaveDisplay?=null
     private var buttonLoadSample: Button?=null
     private var sliderVolModulation: SeekBar?=null
+    private var sliderPitchBendAmount: SeekBar?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +67,7 @@ class SamplerFragment() : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBa
         waveViewer=view.findViewById(R.id.sampler_wave_viewer)
         buttonLoadSample=view.findViewById(R.id.sampler_button_load_sample)
         sliderVolModulation=view.findViewById(R.id.seekBarTouchToVolume)
+        sliderPitchBendAmount=view.findViewById(R.id.seekBarPitchBendAmount)
         waveViewer?.onChangeListener=this
         synth?.let {
             waveViewer?.waveViewBuffer = it.waveformImg
@@ -111,7 +113,6 @@ class SamplerFragment() : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBa
                 }
             }
         }
-        sliderVolModulation?.setOnSeekBarChangeListener(this)
         var loadPath = File(DialogConfigs.DEFAULT_DIR)
         buttonLoadSample?.setOnClickListener {
             AlertDialog.Builder(context)
@@ -189,8 +190,12 @@ class SamplerFragment() : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBa
         }
         synth?.let {
             sliderVolModulation?.progress = (it.getVolumeModulation() * 1000.0f).toInt()
+            sliderPitchBendAmount?.progress = (it.getPitchBendAmount() * 100.0f).toInt()
         }
         sliderVolModulation?.setOnSeekBarChangeListener(this)
+
+
+        sliderPitchBendAmount?.setOnSeekBarChangeListener(this)
     }
 
     companion object {
@@ -227,6 +232,9 @@ class SamplerFragment() : Fragment(), WaveDisplayChangeListener,SeekBar.OnSeekBa
             R.id.seekBarTouchToVolume ->
             {
                 synth?.setVolumeModulation(seekBar.progress.toFloat() / 1000.0f)
+            }
+            R.id.seekBarPitchBendAmount -> {
+                synth?.setPitchBendAmount(seekBar.progress.toFloat() / 100.0f)
             }
         }
     }

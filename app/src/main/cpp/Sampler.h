@@ -10,6 +10,8 @@
 #define DEFAULT_SAMPLE_SIZE 2880000
 #define SAMPLER_MODE_LOOP 0
 #define SAMPLE_MODE_TRIGGERED 1
+#define FRAC_SAMPLE_INDEX_POSITION 8
+#define FRAC_SAMPLE_MASK 0xFF
 
 class Sampler: public MusicalSoundGenerator  {
 
@@ -20,9 +22,9 @@ private:
     uint32_t loopEndIndex;
     uint32_t sampleStartIndex;
     uint32_t sampleEndIndex;
-    uint32_t currentIndex;
+    uint32_t currentIndex; // fixed-point, comma after LSB, thus 0x000000.00
     uint8_t loopMode;
-    float phaseIncrement;
+    uint32_t phaseIncrement;
 
 
 public:
