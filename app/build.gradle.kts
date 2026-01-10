@@ -1,5 +1,6 @@
 import ch.sr35.touchsamplesynth.build.InstrumentBuilderTask
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import org.jetbrains.kotlin.config.JvmTarget
 
 plugins {
     id("com.android.application")
@@ -8,14 +9,14 @@ plugins {
 
 android {
     namespace = "ch.sr35.touchsamplesynth"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ch.sr35.touchsamplesynth"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 1000
-        versionName = "1.10.0"
+        targetSdk = 35
+        versionCode = 1002
+        versionName = "1.10.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,12 +34,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
@@ -53,20 +52,20 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.13.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("io.github.tutorialsandroid:filepicker:9.2.5")
     implementation("codes.side:andcolorpicker:0.6.2")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.7.0")
     implementation(kotlin("reflect"))
 }
 

@@ -87,6 +87,28 @@
                 android:layout_column="2"
                 />
         </TableRow>
+        <TableRow>
+            <SeekBar
+                android:id="@+id/seekBarPitchBendAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:max="2400"
+                android:layout_gravity="center_vertical"
+                android:layout_column="1"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:progress="0"
+                android:thumb="?attr/sliderDrawable"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:layout_margin="10dp"
+                android:text="@string/pitchBendAmount"
+                android:labelFor="@id/seekBarPitchBendAmount"
+                android:layout_column="2"
+                />
+        </TableRow>
     </TableLayout>
     <Button
         android:layout_width="wrap_content"
