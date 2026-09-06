@@ -13,10 +13,10 @@ android {
 
     defaultConfig {
         applicationId = "ch.sr35.touchsamplesynth"
-        minSdk = 29
-        targetSdk = 35
-        versionCode = 1002
-        versionName = "1.10.2"
+        minSdk = 35
+        targetSdk = 36
+        versionCode = 1003
+        versionName = "1.10.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

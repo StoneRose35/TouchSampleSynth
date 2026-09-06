@@ -10,7 +10,7 @@
         android:id="@+id/sceneList"
         android:name="ch.sr35.touchsamplesynth.SceneFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/sceneList"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sceneList"
+        app:layout_constraintBottom_toBottomOf="parent"
         >
 
         <Button
@@ -42,18 +42,14 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/exportToJson"
-            tools:layout_editor_absoluteX="239dp"
-            tools:layout_editor_absoluteY="687dp" />
+            android:text="@string/exportToJson" />
 
         <Button
             android:id="@+id/sceneImport"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/importFromJson"
-            tools:layout_editor_absoluteX="323dp"
-            tools:layout_editor_absoluteY="692dp" />
+            android:text="@string/importFromJson" />
 
 
     </LinearLayout>

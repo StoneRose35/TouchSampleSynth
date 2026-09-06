@@ -19,16 +19,16 @@
       <SelectionState runConfigName="app.unitTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="checkExistenceOfInvisibleLabels()">
+      <SelectionState runConfigName="All Tests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Tests in 'ch.sr35.touchsamplesynth'">
+      <SelectionState runConfigName="rotatePlayPage()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="noLoopAndTriggeredTest()">
+      <SelectionState runConfigName="TouchSampleSynthMainTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="upgradeTo110Test()">
+      <SelectionState runConfigName="DataMigrationTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

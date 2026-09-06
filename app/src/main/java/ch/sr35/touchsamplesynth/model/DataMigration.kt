@@ -277,7 +277,7 @@ abstract class DataUpdater protected constructor(val versionFrom: Version?=null,
     // VERTICAL_DOWN_UP to horizontalToActionB=true and VERTICAL_DU_HORIZONTAL_LR
     // change midiCC to midiCCA, add midiCCB (! critical change regarding functionality!)
 
-    private class Updater6: DataUpdater(versionFrom = Version(1,9,4),versionTo = Version(1,10,0)) {
+    private class Updater6: DataUpdater(versionFrom = Version(1,9,4),versionTo = Version(1,10,3)) {
         override fun processData(jsonData: String): String? {
             val rootElement = JsonParser.parseString(jsonData)
             val rootObj = rootElement.asJsonObject
